@@ -28,7 +28,7 @@
                 confirmButtonText:"确定"
             });
         }
-        
+
   </script>
 </head>
 <body ng-app="linkApp" ng-controller="linkController">
@@ -61,7 +61,7 @@
             <option value="1">分享链接和图片</option>
            </select>
         </p>
-        
+
         <p style="margin-top:20px;" class="inputSpan">
           <span>原地址</span>
           <input type="text" style="width:150px;height:35px;" ng-model="add.link">
@@ -89,10 +89,10 @@
         <p  style="margin-top:20px;margin-right: 160px;" class="inputSpan">
         	<a class="btn btn-success btn-rounded btn-blueW btn-blueWb" href="#" ng-click="reset()"><i class="fa fa-refresh"></i> <span>生成链接</span></a>
         </p>
-        
+
       </div>
       <div class="boxb-b">
-        
+
         <p style="margin-top:20px;" class="inputSpan"  ng-show="add.type=='0'">
           <span>链接地址</span>
           <textarea id="link0"  style="resize:none;width: 390px;height: 270px;overflow-y: scroll;" readonly="readonly">  {{add.link}}?shareOptions={"shareUrl":"{{add.shareLink}}","shareText": "{{add.shareTile}}","shareContent": "{{add.shareContent}}","image": "{{add.image}}","bigImageUrl":"","type":"1"}</textarea>
@@ -106,9 +106,9 @@
           <textarea id="link2"  style="resize:none;width: 390px;height: 270px;overflow-y: scroll;" readonly="readonly">   {{add.link}}?shareOptions={"shareUrl":"","shareText": "","shareContent": "","image": "","bigImageUrl":"{{add.bigImage}}","type":"2"} </textarea>
         </p>
         <p style="margin-top:20px;margin-left: 180px;" class="inputSpan" >
-          <a class="btn btn-success btn-rounded btn-blueW btn-blueWb" href="#" ng-click="copy(add.type)"><i class="fa fa-refresh"></i> <span>复制</span></a>     
+          <a class="btn btn-success btn-rounded btn-blueW btn-blueWb" href="#" ng-click="copy(add.type)"><i class="fa fa-refresh"></i> <span>复制</span></a>
         </p>
-       
+
       </div>
     </div>
   </div>
@@ -126,11 +126,6 @@
         alert('chengg')
     }
 </script>
---------------------- 
-作者：justforuse 
-来源：CSDN 
-原文：https://blog.csdn.net/u014291497/article/details/52967924 
-版权声明：本文为博主原创文章，转载请附上博文链接！
 <!-- Mainly scripts -->
 <script src="${jsRoot}/jquery-2.1.1.js"></script>
 <script src="${jsRoot}/plugins/jquery-ui/jquery-ui.min.js"></script>
@@ -151,7 +146,7 @@
 <!-- Custom and plugin javascript -->
 <script src="${jsRoot}/inspinia.js"></script>
 <script src="${jsRoot}/plugins/pace/pace.min.js"></script>
-<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload.js"></script> 
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload.js"></script>
 <script src="${jsRoot}/plugins/fileUpload/jquery.iframe-transport.js"></script>
 <script src="${jsRoot}/plugins/fileUpload/jquery.ui.widget.js"></script>
 <script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-process.js"></script>
@@ -168,57 +163,6 @@
   var navHight = $('.navbar-static-side').height()
   $('.navbar-static-side').css('height', navHight - 60)
   $('.content-box').css('height', navHight - 60)
- /*  // 添加浮标
-  $('.btn-gradienta').click(function(){
-    $('.add-start-bg').show()
-    $('.start-btna').click(function(){
-      $('.add-start-bg').hide()
-    })
-    $('.start-btnb').click(function(){
-      $('.add-start-bg').hide()
-    })
-  })
-  // 优先级排序
-  $('.btn-gradientb').click(function(){
-    $('.priority-ranking').show()
-    $('.bottom-btna').click(function(){
-      $('.priority-ranking').hide()
-    })
-    $('.bottom-btnb').click(function(){
-      $('.priority-ranking').hide()
-    })
-  })
-  // 查看浮标
-  $('.look-start').click(function(){
-    $('.look-start-box').show()
-    $('.bottom-btna').click(function(){
-      $('.look-start-box').hide()
-    })
-    $('.bottom-btnb').click(function(){
-      $('.look-start-box').hide()
-    })
-  })
-  // 修改浮标
-  $('.modify-start').click(function(){
-    $('.modify-start-box').show()
-    $('.bottom-btna').click(function(){
-      $('.modify-start-box').hide()
-    })
-    $('.bottom-btnb').click(function(){
-      $('.modify-start-box').hide()
-    })
-  })
-  // 失效浮标
-  $('.take-start').click(function(){
-    $('.take-start-box').show()
-    $('.bottom-btna').click(function(){
-      $('.take-start-box').hide()
-    })
-    $('.bottom-btnb').click(function(){
-      $('.take-start-box').hide()
-    })
-  }) */
-  
 </script>
 </body>
 </html>

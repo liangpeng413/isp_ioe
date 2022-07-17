@@ -28,19 +28,6 @@
                 });
             }
         </script>
-    </head>
-
-    <body>
-        <div id="wrapper">
-            <div class="header-box">
-                <#include "/common/top.html" encoding="UTF-8" />
-            </div>
-            <div class="left-box">
-                <div class="sidebar-collapse" style="height: 100%;overflow-y: scroll;">
-                    <#include "/common/left.html" encoding="UTF-8" />
-                </div>
-            </div>
-        </div>
 
         <!-- Mainly scripts -->
         <script src="${jsRoot}/jquery-2.1.1.js"></script>
@@ -120,6 +107,20 @@
                 font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
                 vertical-align: middle;
             }
+
         </style>
+    </head>
+
+    <body>
+        <div id="wrapper" style="width: 100%; height: 100%;">
+            <div class="header-box" style="position: relative;height: 60px; margin-left: 200px;">
+                <#include "/common/top.html" encoding="UTF-8" />
+            </div>
+            <div class="left-box">
+                <div class="sidebar-collapse" style="height: 100%;overflow-y: scroll;">
+                    <#include "/common/left.html" encoding="UTF-8" />
+                </div>
+            </div>
+        </div>
     </body>
 </html>

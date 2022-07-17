@@ -29,4 +29,14 @@ public class IndexController {
         return "/cookbook/create";
     }
 
+    /**
+     * @deprecated 跳转至菜谱数据创建
+     * @return
+     */
+    @RequestMapping(value="/scripts/jiaobook")
+    public String jiaoBook(){
+        return "/scripts/jiaobook";
+    }
+
+
 }

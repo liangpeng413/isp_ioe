@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruixi.ioe.mapper.ScriptTableMapper" >
+  <resultMap id="BaseResultMap" type="com.ruixi.ioe.dao.ScriptTable" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="script_name" property="scriptName" jdbcType="VARCHAR" />
+    <result column="script_url" property="scriptUrl" jdbcType="VARCHAR" />
+    <result column="script_type" property="scriptType" jdbcType="VARCHAR" />
+    <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="usage_count" property="usageCount" jdbcType="INTEGER" />
+    <result column="script_desc" property="scriptType" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, script_name, script_url, script_type, create_user_name, create_time, usage_count, script_desc
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from script_table
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from script_table
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.ruixi.ioe.dao.ScriptTable" >
+    insert into script_table (id, script_name, script_url,
+      script_type, create_user_name, create_time,
+      usage_count, script_desc)
+    values (#{id,jdbcType=INTEGER}, #{scriptName,jdbcType=VARCHAR}, #{scriptUrl,jdbcType=VARCHAR},
+      #{scriptType,jdbcType=VARCHAR}, #{createUserName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+      #{usageCount,jdbcType=INTEGER}, #{scriptDesc,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ruixi.ioe.dao.ScriptTable" >
+    insert into script_table
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="scriptName != null" >
+        script_name,
+      </if>
+      <if test="scriptUrl != null" >
+        script_url,
+      </if>
+      <if test="scriptType != null" >
+        script_type,
+      </if>
+      <if test="createUserName != null" >
+        create_user_name,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="usageCount != null" >
+        usage_count,
+      </if>
+      <if test="scriptDesc != null" >
+        script_desc,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="scriptName != null" >
+        #{scriptName,jdbcType=VARCHAR},
+      </if>
+      <if test="scriptUrl != null" >
+        #{scriptUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="scriptType != null" >
+        #{scriptType,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserName != null" >
+        #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="usageCount != null" >
+        #{usageCount,jdbcType=INTEGER},
+      </if>
+      <if test="scriptDesc != null" >
+        #{script_desc,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ruixi.ioe.dao.ScriptTable" >
+    update script_table
+    <set >
+      <if test="scriptName != null" >
+        script_name = #{scriptName,jdbcType=VARCHAR},
+      </if>
+      <if test="scriptUrl != null" >
+        script_url = #{scriptUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="scriptType != null" >
+        script_type = #{scriptType,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserName != null" >
+        create_user_name = #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="usageCount != null" >
+        usage_count = #{usageCount,jdbcType=INTEGER},
+      </if>
+      <if test="scriptDesc != null" >
+        script_desc = #{scriptDesc,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ruixi.ioe.dao.ScriptTable" >
+    update script_table
+    set script_name = #{scriptName,jdbcType=VARCHAR},
+      script_url = #{scriptUrl,jdbcType=VARCHAR},
+      script_type = #{scriptType,jdbcType=VARCHAR},
+      create_user_name = #{createUserName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      usage_count = #{usageCount,jdbcType=INTEGER},
+      script_desc = #{scriptDesc,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectByList" resultMap="BaseResultMap" parameterType="com.ruixi.ioe.dao.ScriptQuery">
+    select
+    <include refid="Base_Column_List" />
+    from script_table
+    where 1=1
+    <if test="scriptName != null and scriptName != '' "  >
+      AND script_name LIKE CONCAT('%',#{scriptName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="scriptUrl != null and scriptUrl != '' "  >
+      AND script_url LIKE CONCAT('%',#{scriptUrl,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="scriptType != null and scriptType != '' "  >
+      AND script_type = #{scriptType,jdbcType=VARCHAR}
+    </if>
+    order by create_time desc
+    limit #{startPage},#{pageSize}
+  </select>
+
+  <select id="countList" resultType="java.lang.Integer" parameterType="com.ruixi.ioe.dao.ScriptQuery">
+    select
+        count(*)
+    from script_table
+    where 1=1
+    <if test="scriptName != null and scriptName != '' "  >
+      AND script_name LIKE CONCAT('%',#{scriptName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="scriptUrl != null and scriptUrl != '' "  >
+      AND script_url LIKE CONCAT('%',#{scriptUrl,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="scriptType != null and scriptType != '' "  >
+      AND script_type = #{scriptType,jdbcType=VARCHAR}
+    </if>
+  </select>
+</mapper>

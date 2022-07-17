@@ -1,15 +1,12 @@
 package com.ruixi.ioe.listener;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
-import javax.servlet.http.HttpServletRequest;
 import java.util.Random;
 
 /**
@@ -40,11 +37,7 @@ public class WebConfigListener implements ServletContextListener {
         servletContext.setAttribute("imgRoot",imgRoot);
         servletContext.setAttribute("fileRoot",fileRoot);
         servletContext.setAttribute("staticRoot",ctx+"/static");
-//        servletContext.setAttribute("loginUrl", SSOProps.getLoginUrl());
-//        servletContext.setAttribute("authUrl", SSOProps.getAuthUrl());
         servletContext.setAttribute("random", PAGE_RANDOM);
-//        servletContext.setAttribute("vipactRedirectUrl", vipactRedirectUrl);
-//        servletContext.setAttribute("getIntoRedirectUrl", getIntoRedirectUrl);
         log.info("web配置初始化ctx:{},jsRoot:{},cssRoot:{},imgRoot:{}","fileRoot",ctx,jsRoot,cssRoot,imgRoot,fileRoot);
 
     }
