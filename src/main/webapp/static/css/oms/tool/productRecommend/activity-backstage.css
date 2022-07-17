@@ -1,0 +1,125 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+img, button {
+  float: left;
+}
+
+.ibox-content {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+}
+
+.ibox-content h1 {
+  margin: 0;
+  font-weight: 700;
+  border-bottom: 1px solid #ccc;
+  padding: 10px 0 10px 20px;
+}
+
+.componentLibrary {
+  width: 300px;
+  border-right: 1px solid #ccc;
+}
+
+.componentLibrary .assemblyContent {
+  height: 300px;
+}
+
+.componentLibrary .assemblyContent button {
+  width: 70px;
+  height: 30px;
+  margin: 5px 0 0 10px;
+  border: none;
+}
+
+.componentLibrary .assemblyContent .active {
+  background: red;
+  color: #fff;
+}
+
+.componentLibrary .historicalRecords {
+  height: 40px;
+}
+
+.componentLibrary .historicalRecords h1 {
+  background: #ccc;
+}
+
+.componentLibrary .historicalRecords ul {
+  height: 345px;
+  overflow-y: auto;
+}
+
+.componentLibrary .historicalRecords ul li {
+  height: 30px;
+  margin-left: 10px;
+  line-height: 30px;
+  list-style: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.h5preview {
+  width: 750px;
+  border-right: 1px solid #ccc;
+}
+
+.h5preview h1 {
+  background: #fff;
+}
+
+.h5preview .lookH5 {
+  height: 700px;
+  overflow: auto;
+}
+
+.h5preview .lookH5 img {
+  max-width: 100%;
+}
+
+.setFunction {
+  width: 300px;
+  border-right: 1px solid #ccc;
+}
+
+.setFunction div {
+  margin-left: 10px;
+  font-size: 14px;
+}
+
+.setFunction div p {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.setFunction div p span {
+  display: inline-block;
+  margin-bottom: 5px;
+  width: 80px;
+  line-height: 30px;
+}
+
+.setFunction div p input {
+  font-size: 18px;
+  width: 150px;
+  height: 20px;
+  font-size: 14px;
+  margin-top: 5px;
+  padding-left: 5px;
+}
+
+.setFunction div .buttonMessageBtn {
+  margin-top: 10px;
+}
+
+.structureTree {
+  width: 300px;
+}
+/*# sourceMappingURL=activity-backstage.css.map */

@@ -1,0 +1,124 @@
+<link rel="shortcut icon"
+      href="${imgRoot}/favicon/favicon.ico" type="image/x-icon">
+<link rel="icon" href="${imgRoot}/favicon/favicon.ico"
+      type="image/x-icon">
+<link href="${cssRoot}/bootstrap.min.css" rel="stylesheet"/>
+<link href="${ctx}/static/font-awesome/css/font-awesome.css" rel="stylesheet"/>
+<!-- Data Tables -->
+<link href="${cssRoot}/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet"/>
+<link href="${cssRoot}/plugins/dataTables/dataTables.responsive.css" rel="stylesheet"/>
+<link href="${cssRoot}/plugins/dataTables/dataTables.tableTools.min.css" rel="stylesheet"/>
+<link href="${cssRoot}/animate.css" rel="stylesheet"/>
+<link href="${cssRoot}/style.css" rel="stylesheet"/>
+<link href="${jsRoot}/angular/ng-pagination.min.css" rel="stylesheet"/>
+<link href="${cssRoot}/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<script src="${jsRoot}/jquery-2.1.1.js"></script>
+<script src="${jsRoot}/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="${jsRoot}/bootstrap.min.js"></script>
+<script src="${jsRoot}/angular/angular.min.js"></script>
+<script src="${jsRoot}/angular/ng-pagination.min.js"></script>
+<script src="${jsRoot}/angular/angular-chosen.min.js"></script>
+<script src="${jsRoot}/plugins/laydate/laydate.js"></script>
+<script src="${jsRoot}/plugins/validate/jquery.validate.min.js"></script>
+<script src="${jsRoot}/messages_zh.js"></script>
+<script src="${jsRoot}/plugins/sweetalert/sweetalert.min.js"></script>
+<script src="${jsRoot}/plugins/laydate/laydate.js"></script>
+<script src="${jsRoot}/DateUtil.js"></script>
+
+<script >
+    (function($){
+        //备份jquery的ajax方法
+        var _ajax=$.ajax;
+
+        //重写jquery的ajax方法
+        $.ajax=function(opt){
+            //备份opt中error和success方法
+            var fn = {
+                error:function(XMLHttpRequest, textStatus, jqXHR,xxx){},
+                success:function(data, textStatus,jqXHR){}
+            }
+            if(opt.error){
+                fn.error=opt.error;
+            }
+            if(opt.success){
+                fn.success=opt.success;
+            }
+
+            //扩展增强处理
+            var _opt = $.extend(opt,{
+                error:function(XMLHttpRequest, textStatus, errorThrown){
+                    //错误方法增强处理
+                    fn.error(XMLHttpRequest, textStatus, errorThrown);
+                },
+                success:function(data, textStatus,jqXHR){
+                    console.log(data);
+                    if(data.code === '402'){
+                        window.location.reload(true);
+                        return;
+                    }
+                    if(data.code === '401'){
+                        window.location.href="${ctx}/autherror";
+                        return;
+                    }
+                    if(data.code == '000'){
+                        fn.success(data, textStatus);
+                        return;
+                    }else{
+                        //成功回调方法增强处理
+                        swal("操作失败", data.message, "error");
+                        return;
+                    }
+                }
+            });
+            return _ajax(_opt);
+        };
+    })(jQuery);
+
+</script>
+<style>
+    .btn-white.active:focus {
+        color: inherit;
+        border: 1px solid #d2d2d2;
+    }
+    .btn-white:active,
+    .btn-white.active {
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15) inset;
+        background-color: #1ab394;
+        color: #fff;
+    }
+    .btn-white.active:hover{
+        color: #fff;
+    }
+
+    .side-div{
+        position: absolute;border: 1px solid #e5e6e7;
+        width: 170px;
+        display: none;
+        background: #ffffff;
+        margin-top: -10px;
+        padding: 8px;
+    }
+
+    /*自定义form组*/
+    .form-custom {
+        padding-top: 20px;
+    }
+    .form-custom .form-group .control-label{
+        width: 80px;
+        float: left;
+        padding-top: 7px;
+    }
+    .form-custom .form-group .control-label-l{
+        width: 100px;
+        float: left;
+        padding-top: 7px;
+    }
+    .form-custom .form-group {
+        float: left;
+        margin-right: 20px;
+    }
+    .form-custom .form-group .form-control{
+        float: left;
+        width: 150px;
+    }
+</style>

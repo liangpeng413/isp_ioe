@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>特殊日期配置</title>
+    <link href="${cssRoot}/bootstrap.min.css" rel="stylesheet">
+    <link href="${cssRoot}/../font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="${cssRoot}/../font-awesome/css/select2.min.css" rel="stylesheet">
+
+    <!-- FooTable -->
+    <link href="${cssRoot}/plugins/footable/footable.core.css" rel="stylesheet">
+
+    <link href="${cssRoot}/animate.css" rel="stylesheet">
+    <link href="${cssRoot}/style.css?rand=${random}" rel="stylesheet">
+    <link href="${cssRoot}/styleT.css?rand=${random}" rel="stylesheet">
+    <style>
+        ul,li{
+            list-style:none;
+        }
+    </style>
+    <script>
+        var globalConfig = {
+            basePath: "${ctx}",
+            staticRoot: "${staticRoot}",
+            loginName: "${Session.sessionUser.loginName}"
+        };
+    </script>
+</head>
+<body ng-app="callTask" ng-controller="callTaskController">
+<div id="wrapper">
+    <div class="header-box">
+        <#include "/common/top.html" encoding="UTF-8" />
+    </div>
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse"  style="height: 675px;overflow-y: scroll;">
+            <#include "/common/left.html" encoding="UTF-8" />
+        </div>
+    </nav>
+</div>
+<div class="content-box">
+    <div class="small-content">
+        <!-- 第一部分 -->
+        <div class="small-boxb col-md-12">
+            <a class="ivr-button btn btn-danger btn-rounded btn-gradient btn-gradienta" ng-click="showAddTab()">
+                <i class="fa fa-plus-square-o"></i>
+                <span>创建外呼任务</span>
+            </a>
+        </div>
+        <!-- 第一部分完 -->
+
+        <!--第二部分-->
+        <div class="small-boxb col-md-12">
+            <div class="boxb-a">
+                <p style="margin-top:20px;">任务名称：
+                    <input style="width:255px;" type="text" maxlength="30"  ng-model="search.taskName">
+                </p>
+                <p >任务状态：
+                    <select id="taskStatus" class="chosen-select" style="width:255px;" tabindex="2" ng-model="search.taskStatus">
+                        <option value="">全部</option>
+                        <option value="100">删除</option>
+                        <option value="101">任务初始入库</option>
+                        <option value="201">用户ID获取进行中</option>
+                        <option value="203">用户ID获取成功完成</option>
+                        <option value="202">用户ID获取失败</option>
+                        <option value="301">任务手机号获取进行中</option>
+                        <option value="303">任务手机号获取完成</option>
+                        <option value="302">任务手机号获取失败</option>
+                        <option value="401">任务话术获取进行中</option>
+                        <option value="403">任务话术获取完成</option>
+                        <option value="402">任务话术获取失败</option>
+                        <option value="501">任务发送R3进行中</option>
+                        <option value="502">任务发送R3失败</option>
+                        <option value="503">任务发送R3批量成功</option>
+                        <option value="603">任务项下无用户</option>
+                    </select>
+                </p>
+            </div>
+            <!--<div class="boxb-b">-->
+            <!--<p >产品渠道：-->
+            <!--<select id="productChannel" class="chosen-select" style="width:120px;" tabindex="2" ng-model="search.platform" >-->
+            <!--<option value="">全部</option>-->
+            <!--<option value="1">悟空理财</option>-->
+            <!--<option value="2">玖富钱包</option>-->
+            <!--</select>-->
+            <!--</p>-->
+            <!--</div>-->
+
+            <div class="boxb-b">
+                <p >产品渠道：
+                    <select id="productChannel" class="chosen-select" style="width:120px;" tabindex="2" ng-model="search.platform" >
+                        <option value="">全部</option>
+                        <option value="1">悟空理财</option>
+                        <option value="2">玖富钱包</option>
+                    </select>
+                </p>
+
+                <p >外呼类型：
+                    <select class="chosen-select" style="width:120px;" tabindex="2" ng-model="search.memberListName">
+                        <option value="">全部</option>
+                        <option value="0">固定批次</option>
+                        <option value="1">单次</option>
+                    </select>
+                </p>
+            </div>
+            <!--<div class="boxb-b">-->
+            <!--<p >批次：-->
+            <!--<select class="chosen-select" style="width:120px;" tabindex="2" ng-model="search.memberListName">-->
+            <!--<option value="">全部</option>-->
+            <!--<option value="0">固定批次</option>-->
+            <!--<option value="1">单次</option>-->
+            <!--</select>-->
+            <!--</p>-->
+            <!--</div>-->
+
+            <div class="boxb-c">
+                <p>
+                    <a class="btn btn-success btn-rounded btn-blueW btn-blueWa"  ng-click="pageQueryCallTask(1)"><i class="fa fa-search"></i> <span>查询</span></a>
+                    <a class="btn btn-success btn-rounded btn-blueW btn-blueWb"  ng-click="reset()"><i class="fa fa-refresh"></i> <span>重置</span></a>
+                </p>
+            </div>
+        </div>
+        <!--第二部分完-->
+
+        <!-- 第三部分 -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins" style="margin-top:10px;">
+                    <div class="ibox-content">
+                        <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+                            <thead>
+                            <tr>
+                                <th>任务ID</th>
+                                <th>任务名称</th>
+                                <th>产品渠道</th>
+                                <th>用户数</th>
+                                <th>成功分发数</th>
+                                <th>任务创建时间</th>
+                                <th>名单分发日期</th>
+                                <th>任务状态</th>
+                                <th>任务更新时间</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="x in callTasktList">
+                                <!--<td class="actived"></td>-->
+                                <td>{{x.id}}</td>
+                                <td>{{x.taskName}}</td>
+                                <td>{{x.platform == 1 && '悟空理财' || x.platform == 2 && '玖富钱包' || '--'}}</td>
+                                <td>{{x.memberCount}}</td>
+                                <td>{{x.memberSuccCount}}</td>
+                                <td>{{x.createTime}}</td>
+                                <td>{{x.lastSendTime}}</td>
+                                <td>{{x.taskStatus==100 && '删除' || x.taskStatus==101 && '任务初始入库' ||
+                                    x.taskStatus==201 && '用户ID获取进行中' ||
+                                    x.taskStatus==203 && '用户ID获取成功完成' ||
+                                    x.taskStatus==202 && '用户ID获取失败' ||
+                                    x.taskStatus==301 && '任务手机号获取进行中' ||
+                                    x.taskStatus==303 && '任务手机号获取完成' ||
+                                    x.taskStatus==302 && '任务手机号获取失败' ||
+                                    x.taskStatus==401 && '任务话术获取进行中' ||
+                                    x.taskStatus==403 && '任务话术获取完成' ||
+                                    x.taskStatus==402 && '任务话术获取失败' ||
+                                    x.taskStatus==501 && '任务发送R3进行中' ||
+                                    x.taskStatus==502 && '任务发送R3失败' ||
+                                    x.taskStatus==503 && '任务发送R3批量成功'||
+                                    x.taskStatus==603 && '任务项下无用户' ||'--'}}
+                                </td>
+                                <td>{{x.updateTime}}</td>
+                                <td>
+                                    <span class="modify-start" ng-click="updateTaskShow(x)" ng-show="x.memberListName!='0'">详情</span>
+                                    <span class="modify-start" ng-show="x.memberListName=='0'">固定批次</span>
+                                    <span class="look-start" ng-show="x.taskStatus==100">已删除</span>
+                                    <span class="look-start" ng-click="delButton(x.id)" ng-show="x.taskStatus==101">删除</span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="bottom-page">
+                            <div class="bottom-pageb">
+                                <i class="fa fa-step-backward" ng-click="pageQueryCallTask(1)"></i>
+                                <i style="font-size:16px;" class="fa fa-caret-left" ng-click="pageQueryCallTask(search.pageNo-1)"></i>
+                                <p>第<span class="pageN">{{search.pageNo}}</span class="commonN">共<span>{{search.pageCount}}</span>页</p>
+                                <i style="font-size:16px;" class="fa fa-caret-right" ng-click="pageQueryCallTask(search.pageNo+1)"></i>
+                                <i style="margin-left:8px;" class="fa fa-step-forward" ng-click="pageQueryCallTask(search.pageCount)"></i>
+                                <i class="fa fa-refresh" ng-click="pageQueryCallTask(search.pageNo)"></i>
+                            </div>
+
+                            <div class="bottom-pagec">
+                                <p>显示<span>{{(search.pageNo-1)*search.perPageRowSize+1}}</span>到{{search.pageNo*search.perPageRowSize}}条，共<span>{{search.totalRowSize}}</span>记录
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 第三部分完 -->
+    </div>
+</div>
+
+
+<script src="${jsRoot}/angular/angular.min.js"></script>
+<script src="${jsRoot}/plugins/laydate/laydate.js"></script>
+<!-- Mainly scripts -->
+<script src="${jsRoot}/jquery-2.1.1.js"></script>
+<script src="${jsRoot}/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="${jsRoot}/bootstrap.min.js"></script>
+<script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="${jsRoot}/plugins/jeditable/jquery.jeditable.js"></script>
+<!--下拉搜索-->
+<script src="${jsRoot}/plugins/jeditable/select2.full.min.js"></script>
+
+<!-- Data Tables -->
+<script src="${jsRoot}/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.responsive.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.tableTools.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="${jsRoot}/inspinia.js"></script>
+<script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.iframe-transport.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.ui.widget.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-process.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-validate.js"></script>
+<script src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+<script type="text/javascript" src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+
+
+<script src="${jsRoot}/oms/ruleconfig/jquery.searchableSelect.js"></script>
+
+<script type="text/javascript" charset="utf-8">
+    $(function(){
+        $('.mySelect').select2();
+    })
+
+
+    var navHight = $('.navbar-static-side').height();
+    $('.navbar-static-side').css('height', navHight - 60);
+    $('.content-box').css('height', navHight - 60);
+    $("#menus li").removeClass("active");
+    $("#calendar-li").addClass("active");
+    $("#calendar-date").addClass("active");
+</script>
+
+<script>
+    $(function() {
+        $('.take-start-box').on('click', function () {
+            $('#imgShow').hide();
+        })
+    })
+
+    var stickStartTime = laydate({
+        elem:'#stickStartTime',
+        istime: true,
+        format: 'YYYY-mm-DD hh:mm:ss',
+        event:'click'
+    });
+</script>
+</body>
+</html>

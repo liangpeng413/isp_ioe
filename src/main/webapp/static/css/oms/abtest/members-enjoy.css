@@ -1,0 +1,94 @@
+body,html{
+  width: 100%;
+  height: 100%;
+}
+.wrap {
+  width:1650px;
+  height:970px;
+  box-sizing: border-box;
+  border: solid 1px #ccc;
+  margin-left:220px;
+  margin-top: 70px;
+}
+.title {
+  font-size: 16px;
+  margin: 31px 0 0 41px;
+}
+.list {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 32px;
+}
+.list-box {
+  width: 360px;
+  height: 140px;
+  display: flex;
+  margin: 40px 20px;
+  box-shadow:0px 0px 5px 0px rgba(39,54,69,0.1);
+}
+.list-box dt {
+  padding: 30px 20px 30px;
+}
+.list-box > img {
+  width: 80px;
+  display: block;
+}
+.list-box dd {
+  width: 100%;
+  padding-top: 30px;
+}
+.list-box .list-name {
+  width:83px;
+  font-size:20px;
+  color:rgba(51,51,51,1);
+  line-height:1;
+  font-weight: bold; 
+}
+.flex {
+  width: 100%;
+  display: flex;
+  margin-top: 13px;
+}
+.list-box .status, .status-num {
+  font-size:16px;
+  color: #666666;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.status, .status-num {
+  position: relative;
+}
+.status-num span{
+  width:65px;
+  padding-left:15px;
+}
+.status span:nth-child(3), .status-num span:nth-child(3) {
+  font-size:20px;
+  padding-top:13px;
+  font-weight: bold; 
+  color: #333333;
+} 
+ .list-box .status img {
+   position: absolute;
+   top:3px;
+   left: 0;
+   width: 12px;
+}
+.list-box .status span {
+  padding-left:20px;
+}
+.status-num {
+  margin-left:25px;
+}
+.list-box .circle {
+  position: absolute;
+  left:-8px;
+  top:0;
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: solid 1px #ccc;
+  border-radius: 50%;
+}

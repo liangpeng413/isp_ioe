@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--<meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <meta http-equiv="X-UA-Compatible" content="ie=edge">
+ <title>A/B测试</title>
+   <link href="${cssRoot}/infor-statistics.css" rel="stylesheet">-->
+    <!--<link rel="stylesheet" href="../assets/style/common.css">
+    <link rel="stylesheet" href="./style/infor-statistics.css">-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>实验信息</title>
+    <link href="${cssRoot}/bootstrap.min.css" rel="stylesheet">
+    <link href="${staticRoot}/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <!-- FooTable -->
+    <link href="${cssRoot}/plugins/footable/footable.core.css" rel="stylesheet">
+    <link href="${cssRoot}/animate.css" rel="stylesheet">
+    <link href="${cssRoot}/style.css?rand=${random}" rel="stylesheet">
+    <link href="${cssRoot}/styleT.css?rand=${random}" rel="stylesheet">
+    <link href="${staticRoot}/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <link href="${cssRoot}/oms/abtest/infor-statistics.css" rel="stylesheet">
+    <link href="${cssRoot}/oms/abtest/configuration.css" rel="stylesheet">
+    <link href="${cssRoot}/oms/abtest/modalBox.css" rel="stylesheet">
+    <link href="${cssRoot}/oms/ruleconfig/jquery.searchableSelect.css" rel="stylesheet" type="text/css">
+
+    <style type="text/css">
+
+        .boxb-a > div {
+            margin: 20px 0;
+        }
+
+        #addPage .small-boxb div {
+            float: none
+        }
+
+        #addPage .small-boxb div label {
+            vertical-align: top;
+            margin-right: 10px;
+        }
+
+        #add-task-rule > div {
+            margin: 10px 0;
+        }
+
+        .addShowType div {
+            display: flex;
+            margin-left: 0;
+            align-items: center;
+        }
+
+        .addShowType div select {
+            margin-top: 10px;
+        }
+
+        .addShowType div span {
+            margin: 5px 0 0 15px;
+        }
+
+        .addShowType div input {
+            margin-top: 7px;
+        }
+
+        .addShowType div p {
+            margin: 0;
+        }
+
+        .bottom-pageb i {
+            cursor: pointer;
+        }
+        .add-btn2 {
+            margin: 20px auto 0;
+            width:120px;
+            height:36px;
+            background:rgba(255,255,255,1);
+            border:1px solid rgba(133, 155, 236, 1);
+            box-shadow:0px 2px 2px 0px rgba(255,255,255,0.2), 0px 4px 6px 0px rgba(133,155,236,0.5);
+            border-radius:18px;
+        }
+    </style>
+    <script>
+        var globalConfig = {
+            basePath: "${ctx}",
+            staticRoot: "${staticRoot}",
+            loginName: "${Session.sessionUser.loginName}",
+            strategyId: "${Session.strategyId}",
+            userName: "${Session.sessionUser.name}",
+        };
+        function swalMsg(msg) {
+            swal({
+                title: "",
+                text: msg,
+                confirmButtonColor: "#1ab394",
+                confirmButtonText: "确定"
+            });
+        }
+    </script>
+
+</head>
+<body>
+<div id="wrapper">
+    <div class="header-box">
+        <#include "/common/top.html" encoding="UTF-8" />
+    </div>
+    <nav class="navbar-default navbar-static-side nav-boxa" role="navigation" id="HeadTitle">
+        <div class="sidebar-collapse"  style="height: 675px;overflow-y: scroll;">
+            <#include "/common/left.html" encoding="UTF-8" />
+        </div>
+    </nav>
+</div>
+<div class="wrap">
+    <div id="disss">
+        <div class="popup-layer" id="dis">
+            <h5 class="title">确定发布?</h5>
+            <p class="issue-title">发布后，该版本将变为普通策略,可编辑查看，其他版本将失效</p>
+            <ul class="form-layer">
+                <li>
+                    <span>名单类型:</span>
+                    <select id="usertype">
+                        <option value="NO_RULE">全部用户</option>
+                        <option value="RULE_GROUP">智能画像</option>
+                        <option value="RULE_LIST">用户名单</option>
+                    </select>
+                </li>
+                <li id="userNameLikeSearch">
+                    <span>用户名单:&nbsp;&nbsp;&nbsp;</span>
+                    <select id="userNames" class="filter-select"><label id="不能删用于模糊搜索占位"></label>
+                    </select>
+                </li>
+                <li>
+                    <span>上线时间:</span>
+                    <input type="text" id="startTime" required="required">
+                </li>
+                <li>
+                    <span>下线时间:</span>
+                    <input type="text" id="endTime" required="required">
+                </li>
+            </ul>
+            <div class="button-flex">
+                <button class="btn" id="qx">取消</button>
+                <button class="btn sure-btn" id="bc">保存</button>
+            </div>
+        </div>
+
+        <div class="popup-layer" id="diss">
+            <h5 class="title">版本详情</h5>
+            <ul class="form-layer" id="xqid">
+
+            </ul>
+            <div class="button-flex">
+                <button class="btn" id="gb">关闭</button>
+            </div>
+        </div>
+
+        <div class="popup-layer" id="stop">
+            <h5 class="title">确定停止?</h5>
+            <p class="issue-title">停止后不可再进行操作</p>
+            <div class="button-flex">
+                <button class="btn" id="cancel">取消</button>
+                <button class="btn sure-btn" id="notarize">确认</button>
+            </div>
+        </div>
+
+
+
+
+        <button class="back-btn Return">返回</button>
+        <div class="message-box">
+            <div class="test-title"><p><b style="font-size: 22px">实验信息</b></p></div>
+            <!--实验信息展示-->
+            <div class="flex-layout" id="detail">
+            </div>
+            <button class="begin-btn" id="butt1">开始</button>
+            <button class="begin-btn" id="butt2">结束</button>
+            <button class="begin-btn checkService" id="butt3">审核</button>
+
+        </div>
+        <div class="message-box flow-box" id="llfp">
+            <div class="test-title">
+                <p><b style="font-size: 22px">流量分配</b></p>
+            </div>
+            <p class="category">受众分组：全部用户</p>
+        </div>
+
+        <div class="message-box data-box">
+            <div class="test-title"><p><b style="font-size: 22px">数据统计</b></p></div>
+            <p class="category float-right" id="deadlineTime"></p>
+            <p class="category" id="runTime"></p>
+            <p class="category" id="chufa"></p>
+            <p class="category" id="chenggong"></p>
+
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <td>版本号</td>
+                    <td>版本</td>
+                    <td>版本描述</td>
+                    <td>触发数</td>
+                    <td>成功数</td>
+                    <td>成功率</td>
+                    <td>置信区间</td>
+                    <td>R方</td>
+                    <td>操作</td>
+                </tr>
+                </thead>
+
+                <tbody id="tbody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--特征分析-->
+    <div class="content-box anx" id="tz" style="display:none;">
+        <div class="look-pagea">
+            <button class="back-btn Return">返回</button>
+        </div>
+        <!-- 第二部分 -->
+        <div class="small-boxb col-md-12 look-pagea" style="height: 210px">
+            <h2 style="color: #0e0e0e">服务策略信息</h2>
+            <hr/>
+            <div >
+                <p style="margin-top:20px;" id="qd"></p>
+                <p style="margin-top:20px;" id="servicetype"></p>
+            </div>
+            <div >
+                <p style="margin-top:20px;" id="xw"></p>
+                <p style="margin-top:20px;" id="cfjd"></p>
+            </div>
+            <div >
+                <p style="margin-top:20px;" id="strategy"></p>
+                <p style="margin-top:20px;" id="serviceId"></p>
+            </div>
+        </div>
+
+        <div class="small-boxb col-md-12 look-pagea" style="height: 200px">
+            <h2 style="color: #0e0e0e">名单信息</h2>
+            <hr/>
+            <div class="boxb-a">
+                <p style="margin-top:20px;" id="rosterName"></p>
+                <p style="margin-top:20px;" id="createTime"></p>
+            </div>
+            <div class="boxb-a">
+                <p style="margin-top:20px;" id="channelCode1"></p>
+                <p style="margin-top:20px;" id="updateTime"></p>
+            </div>
+            <div class="boxb-a">
+                <p style="margin-top:20px;" id="type"></p>
+                <p style="margin-top:20px;" id="createPeople"></p>
+            </div>
+            <div class="boxb-a">
+                <p style="margin-top:20px;" id="rosterNumber"></p>
+            </div>
+        </div>
+
+
+        <div class="small-boxb col-md-12 look-pagea" style="height: auto;">
+            <h2>策略信息报告</h2>
+            <hr/>
+            <h4 style="margin-left: 30px;">用户特征成功率</h4>
+
+            <div class="boxb-a">
+                <p style="margin-top:20px;">用户标签：
+                    <select class="chosen-select" style="width:160px;" id="testSelect" onchange="change()">
+                        <option value="1">性别</option>
+                        <option value="2">年龄</option>
+                        <option value="3">手机号地区</option>
+                        <option value="4">网贷出借次数</option>
+                        <option value="5">网贷出借偏好期限</option>
+                        <option value="6">会员等级</option>
+                        <option value="7">推广渠道</option>
+                        <option value="8">来源渠道</option>
+                        <option value="9">可用卡券数</option>
+                    </select>
+                    </n>
+                    </n>
+                </p>
+
+            </div>
+            <div id="container" ></div>
+
+
+
+
+        </div>
+
+        <div class="ibox float-e-margins" style="margin-top:10px;">
+            <h4 style="margin-left: 30px;">每日触发数据</h4>
+            <div class="ibox-content">
+                <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+                    <thead>
+                    <tr>
+                        <!-- <th></th> -->
+                        <th>日期</th>
+                        <th>累计总触发数</th>
+                        <th>当日触发数</th>
+                        <th>累计成功数</th>
+                        <th>当日成功数</th>
+                    </tr>
+                    </thead>
+                    <tbody id="daily">
+                    </tbody>
+                </table>
+                <div class="bottom-page">
+                    <div class="bottom-pagea">
+                        <select style="width:58px;height:23px;" id="pageSize"
+                                onchange="querySmartList()">
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                        </select>
+                    </div>
+                    <div class="bottom-pageb">
+                        <i class="fa fa-step-backward" onclick="querySmartList()"></i>
+                        <i style="font-size:16px;" class="fa fa-caret-left"
+                           onclick="querySmartList(parseInt($('#pageNo').text())-1)"></i>
+                        <p>第<span class="pageN" id="pageNo"></span>共<span id="pageCount"></span>页
+                        </p>
+                        <i style="font-size:16px;" class="fa fa-caret-right"
+                           onclick="querySmartList(parseInt($('#pageNo').text())+1)"></i>
+                        <i style="margin-left:8px;" class="fa fa-step-forward"
+                           onclick="querySmartList($('#pageCount').text())"></i>
+                        <i class="fa fa-refresh" onclick="querySmartList($('#pageNo').text())"></i>
+                        <p>显示<span id="startPage"></span>到<span id="endPage"></span>条，共<span id="totalCount"></span>记录
+                        </p>
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 模态框 -->
+    <div id="chcnkModal" class="modal">
+        <div class="modal-content" style="width: 600px; align-items: center">
+            <div class="modal-body">
+                <button id="checkPassBtn" class="add-btn2">审核通过</button>
+                <button id="checkNoPassBtn" class="add-btn2" style="margin-left: 10px">审核不通过</button>
+            </div>
+            <div class="modal-footer">
+                <button id="closeCheckBtn" class="add-btn2">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="${jsRoot}/angular/angular.min.js"></script>
+<script src="${jsRoot}/jquery-2.1.1.js"></script>
+<script src="${jsRoot}/bootstrap.min.js"></script>
+<script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="${jsRoot}/plugins/jeditable/jquery.jeditable.js"></script>
+<script src="${jsRoot}/plugins/jquery-ui/jquery-ui.min.js"></script>
+
+<script src="${jsRoot}/plugins/laydate/laydate.js"></script>
+
+<script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="${jsRoot}/plugins/jeditable/jquery.jeditable.js"></script>
+<script src="${jsRoot}/oms/effectAnalysis.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.iframe-transport.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.ui.widget.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-process.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-validate.js"></script>
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<!-- Data Tables -->
+<script src="${jsRoot}/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.responsive.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.tableTools.min.js"></script>
+<script src="${jsRoot}/DateUtil.js"></script>
+<!-- Custom and plugin javascript -->
+<script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+<!--  日期控件  -->
+<script src="${jsRoot}/plugins/datapicker/bootstrap-datepicker.js"></script>
+<script src="${jsRoot}/plugins/datapicker/bootstrap-datepicker.zh-CN.min.js"></script>
+<!-- 提示弹窗 -->
+<script type="text/javascript" src="${staticRoot}/js/plugins/sweetalert/sweetalert.min.js"></script>
+
+<script src="${jsRoot}/oms/ruleconfig/jquery.searchableSelect.js"></script>
+
+<script>
+    var rosterInfo;
+    var re;
+    var res;
+    var list;
+    var strategyId;
+    var userTag2;
+    function change() {
+
+
+
+            showBarCharts();
+
+
+
+    }
+
+        function querySmartList(pageNum) {
+            var process = {};
+            if (!pageNum) {
+                process.pageNo = 1;
+            } else {
+                if (pageNum > $('#pageCount').text() && $('#pageCount').text() > 0) {
+                    process.pageNo = $('#pageCount').text();
+                } else {
+                    process.pageNo = pageNum;
+                }
+            }
+            process.channel = res.channelCodeKey;
+            process.pageSize = $('#pageSize option:selected').val();
+            process.strategyId = strategyId;
+            process.rosterId = res.userTag;
+            $.ajax({
+                type: 'POST',
+                url: globalConfig.basePath + "/abTest/dailytouch",
+                data: JSON.stringify(process),
+                contentType: "application/json",
+                dataType: "json",
+                success: function (data) {
+                    var str1 = "";
+                    list = data.resp.list;
+                    for (var i = 0; i < list.length; i++) {
+                        str1 += "<tr class=\"tr\">" +
+                            "<td>" + list[i].createTime + "</td>" +
+                            "<td>" + list[i].sumReachNumDaily + "</td>" +
+                            "<td>" + list[i].reachNumDaily + "</td>" +
+                            "<td>" + list[i].sumSuccessNumDaily + "</td>" +
+                            "<td>" + list[i].successNumDaily + "</td>" +
+                            "</tr>"
+                    }
+                    $('#pageCount').text(data.resp.pages);
+                    $("#daily").html(str1);
+                    $('#totalCount').text(data.resp.total);
+                    $('#startPage').text(((parseInt(process.pageNo) - 1) * parseInt($('#pageSize option:selected').val()) + 1).toString());
+                    if (parseInt(process.pageNo) * parseInt($('#pageSize option:selected').val()) > parseInt(data.resp.total)) {
+                        $('#endPage').text(data.resp.total.toString());
+                    }
+                    else {
+                        $('#endPage').text(parseInt(process.pageNo) * parseInt($('#pageSize option:selected').val()));
+                    }
+                    $('#pageNo').text(process.pageNo.toString());
+                },
+                error: function (data) {
+                    alert(data.message);
+                }
+
+            })
+        }
+
+
+        function showBarCharts() {
+            var process = {};
+            process.featureType = $('#testSelect option:selected').val();
+            process.channel = res.channelCodeKey;
+            process.rosterId = res.userTag;
+            process.strategyId = strategyId;
+            var url = globalConfig.basePath + "/abTest/rateofsuccess";
+            $.ajax({
+                    type: 'POST',
+                    url: globalConfig.basePath + "/abTest/rateofsuccess",
+                    data: JSON.stringify(process),
+                    contentType: "application/json",
+                    dataType: "json",
+                    success: function (data) {
+                        console.log(data);
+                        if (data.code == '000') {
+                            var chart = {
+                                type: 'column'
+                            };
+                            var typeName = "";
+                            if ($('#testSelect option:selected').val() == 2) {
+                                typeName = "年龄";
+                            }else if ($('#testSelect option:selected').val() == 1) {
+                                typeName = "性别";
+                            } else if ($('#testSelect option:selected').val() == 3) {
+                                typeName = "手机号地区";
+                            } else if ($('#testSelect option:selected').val() == 4) {
+                                typeName = "出借次数";
+                            } else if ($('#testSelect option:selected').val() == 5) {
+                                typeName = "网贷出借偏好期限";
+                            } else if ($('#testSelect option:selected').val() == 6) {
+                                typeName = "会员等级";
+                            } else if ($('#testSelect option:selected').val() == 7) {
+                                typeName = "推广渠道";
+                            } else if ($('#testSelect option:selected').val() == 8) {
+                                typeName = "来源渠道";
+                            } else if ($('#testSelect option:selected').val() == 9) {
+                                typeName = "可用卡券数";
+                            }
+                            var title = {
+                                text: "用户在不同" + typeName + "的策略成功率"
+                            };
+                            var subtitle = {
+                                text: ''
+                            };
+                            /**拼装柱形图数据-开始*/
+                            var names = [];
+                            var values = [];
+                            var values2 = [];
+                            for (var i = 0; i < data.resp.data.length; i++) {
+                                names.push(data.resp.data[i].feature);
+                                var param = {};
+                                var featureParam = {};
+                                param.y = parseInt(data.resp.data[i].successNum);
+                                param.total = parseInt(data.resp.data[i].successRate * 100) + "%";
+                                values.push(param);
+                                featureParam.y = parseInt(data.resp.data[i].featureNum);
+                                featureParam.total = parseInt(data.resp.data[i].featureRate * 100) + "%";
+                                values2.push(featureParam);
+                            }
+                            var xAxis = {
+                                categories: names,
+                                crosshair: true
+                            };
+                            var yAxis = {
+                                min: 0,
+                                title: {
+                                    text: '人（数）'
+                                }
+                            };
+                            // var tooltip = {
+                            //     headerFormat: '<span style="font-size:10px;color:{series.color};padding:0">{point.key}</span>',
+                            //     pointFormat: '<table><tr><td style="color:{series.color};padding:0">人数:</td>' +
+                            //         '<td style="padding:0"><b>{point.y} </b></td></tr>',
+                            //     footerFormat: '</table>',
+                            //     shared: true,
+                            //     useHTML: true
+                            // };
+                            var tooltip = {
+                                headerFormat: '<table><span style="font-size:10px">{point.key}</span>',
+                                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                                    '<td style="padding:0"><b>({point.y:.1f})&nbsp;&nbsp;{point.total}&nbsp;&nbsp;&nbsp;' +
+                                    '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></td></tr>',
+                                footerFormat: '</table>',
+                                shared: true,
+                                useHTML: true
+                            };
+                            var plotOptions = {
+                                column: {
+                                    pointPadding: 0.2,
+                                    borderWidth: 0
+                                }
+                            };
+                            var credits = {
+                                enabled: false
+                            };
+                            var series = [{
+                                name: "成功数",
+                                data: values
+                            },
+                                {name: "用户数", data: values2}
+
+                            ];
+                            var json = {};
+                            json.chart = chart;
+                            json.title = title;
+                            json.subtitle = subtitle;
+                            json.tooltip = tooltip;
+                            json.xAxis = xAxis;
+                            json.yAxis = yAxis;
+                            json.series = series;
+                            json.plotOptions = plotOptions;
+                            json.credits = credits;
+                            $('#container').highcharts(json);
+
+                        }
+
+                    },
+                    error: function (data) {
+                        alert("请求成功率接口失败!")
+                    }
+
+                }
+            )
+
+
+        }
+
+
+        function pageContext(data) {
+            if (data.code != "000") {
+                alert(data.message);
+                return;
+            }
+            var resp = data.resp;
+            console.log(resp);
+
+            res = resp.testStrategyDto;
+            re = resp.touchVersionDtoList[0].strategyId.toString();
+            var list = resp.touchVersionDtoList;
+            var str = "";
+            $("#detail").html(str);
+            str += "<ul class=\"message-left\">" +
+                "<li>实验名称：<span>" + res.testName + "</span><input type='hidden' id='testStrategyId' value='" + res.testStrategyId + "'></li>" +
+                "<li>服务类型：<span>" + res.serviceTypeCode + "</span><input type='hidden' id='userTagType' value='" + res.userTagType + "'</li>" +
+                "<li>预期状态：<span>" + res.strategyResult + "</span><input type='hidden' id='channelCode' value='" + res.channelCodeKey + "'</li>" +
+                "<li>触发策略：<span>" + res.touchStrategy + "</span></li>" +
+                "</ul>" +
+                "<ul class=\"message-right\">" +
+                "<li>实验状态：<span>" + res.testStatus + "</span></li>" +
+                "<li>用户行为：<span>" + res.userCode + "</span></li>" +
+                "<li>触发节点：<span>" + res.touchCode + "</span></li>" +
+                "<li>创建时间：<span>" + res.createTime + "</span></li>" +
+                "</ul>"
+            $("#detail").html(str);
+            var str1 = "";
+            $("#tbody").html(str1);
+
+            if (res.strategyStatus == 0) {
+                $("#butt1").hide();
+                $("#butt2").hide();
+                $("#butt3").show();
+            }
+            else if (res.strategyStatus == 3) {
+                $("#butt1").hide();
+                $("#butt2").hide();
+                $("#butt3").hide();
+            }
+            else if (res.testStatusKey == 0) {
+                $("#butt2").hide();
+                $("#butt3").hide();
+                $("#butt1").show();
+            } else if (res.testStatusKey == 1) {
+                $("#butt1").hide();
+                $("#butt3").hide();
+                $("#butt2").show();
+            } else if ((res.testStatusKey == 2 || res.testStatusKey == 3)) {
+                $("#butt1").hide();
+                $("#butt2").hide();
+                $("#butt3").hide();
+            }
+
+            $("#butt2").on("click", function () {
+                //alert("点击了结束")
+                $("#stop").show()
+                /* var testStrategyId =res.testStrategyId;
+             $.post("${ctx}/abTest/updateTestStatus","testStrategyId="+testStrategyId+"&testStatus=3",function(data){
+                 if(data.code != '000'){
+                     alert(data.message);
+                 }else {
+                     var strategyId = globalConfig.strategyId;
+                     var param = "testStrategyId=" + strategyId;
+                     // 页面初始化
+                     $.post("${ctx}/abTest/detail", param, function (data) {
+                         //alert("返回到页面");
+                         pageContext(data);
+                     }, "json");
+                 }
+
+             },"json")*/
+            })
+            $("#butt1").on("click", function () {
+                //("点击了开始")
+                //var testStatus =res.testStatusKey;
+                var testStrategyId = res.testStrategyId;
+                $.post(globalConfig.basePath + "/abTest/updateTestStatus", "testStrategyId=" + testStrategyId + "&testStatus=1", function (data) {
+                    if (data.code != '000') {
+                        alert(data.message);
+                    } else {
+                        var strategyId = globalConfig.strategyId;
+                        var param = "testStrategyId=" + strategyId;
+                        // 页面初始化
+                        $.post(globalConfig.basePath + "/abTest/detail", param, function (data) {
+                            //alert("返回到页面");
+                            pageContext(data);
+                        }, "json");
+                    }
+                }, "json")
+            })
+            var userTag = res.userTag;
+            userTag2 = res.userTag;
+            var rosterName;
+            if (userTag != null && userTag != "") {
+                $.ajax({
+                    type: "get",
+                    url: globalConfig.basePath + "/abTest/getTagInfo",
+                    data: "userTagCode=" + userTag,
+                    async: false,
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.code != '000') {
+                            alert(data.message);
+                        } else {
+                            rosterName = data.resp.rosterName;
+                            var str2 = "";
+                            str2 += "<div class=\"test-title\">\n" +
+                                "<p><b style='font-size: 22px'>流量分配</b></p>\n" +
+                                "</div>" +
+                                "<p class=\"category\">受众分组：" + rosterName + "</p>"
+
+                            $("#llfp").html(str2);
+                        }
+                    }
+                });
+            }
+            var chufa = 0;
+            var chenggong = 0;
+            for (var i = 0; i < list.length; i++) {
+                str1 += "<tr class=\"tr\">" +
+                    "<td>" + list[i].strategyVersion + "</td>" +
+                    "<td>" + list[i].versionName + "</td>" +
+                    "<td>" + list[i].remark + "</td>" +
+                    "<td>" + list[i].touchCount + "</td>" +
+                    "<td>" + list[i].successCount + "</td>" +
+                    "<td>" + list[i].successRate + "</td>" +
+                    "<td>" + list[i].confidenceInterval + "</td>" +
+                    "<td>" + list[i].rpower + "</td>" +
+                    "<td><a href='javascript:void(0)' class='look-start bb' name='" + list[i].versionId + "'>版本详情</a>&nbsp;&nbsp;&nbsp;" +
+                    "<a href='javascript:void(0)' class='look-start fb' name='" + list[i].versionId + "'>发布</a>&nbsp;&nbsp;&nbsp;" +
+                    "<a href='javascript:void(0)' class='look-start nb' name='" + list[i].versionId + "'>效果分析</a>" +
+                    "</td>" +
+                    "</tr>"
+                chufa = Number(list[i].touchCount) + Number(chufa);
+                chenggong = Number(list[i].successCount) + Number(chenggong);
+            }
+            var runTime = "运行时长：" + res.runTime;
+            var chufaStr = "总触发数：" + chufa;
+            var chenggongStr = "总成功数：" + chenggong;
+            var deadlineTimeStr = "数据截止于：" + list[1].deadlineTime;
+            $("#runTime").html(runTime);
+            $("#chufa").html(chufaStr);
+            $("#chenggong").html(chenggongStr);
+            $("#deadlineTime").html(deadlineTimeStr);
+            $("#tbody").html(str1);
+            if (res.testStatusKey == 2) {
+                //$("a[name='release']").hide();
+                $("a.fb").hide();
+            } else {
+                //$("a[name='release']").show();
+                $("a.fb").show();
+            }
+
+        }
+
+
+        //初始化方法
+        function initPage() {
+            var strategyId = globalConfig.strategyId;
+            var param = "testStrategyId=" + strategyId;
+            // 页面初始化
+            $.post(globalConfig.basePath + "/abTest/detail", param, function (data) {
+                if (data.code != '000') {
+                    alert(data.message);
+                    self.location = document.referrer;
+                } else {
+                    pageContext(data);
+                }
+            }, "json");
+
+        }
+
+        $(document).on("click", ".nb", function () {
+            document.getElementById("tz").style.display = "inline";
+            document.getElementById("disss").style.display = "none";
+            $('#qd').text("渠道:" + res.channelCode);
+            $('#servicetype').text("服务类型:" + res.serviceTypeCode);
+            $('#xw').text("用户行为:" + res.userCode);
+            $('#cfjd').text("触发节点:" + res.touchCode);
+            res.touchStrategy = res.touchStrategy.replace("/", ";").replace("/", ";").replace("/", ";").replace("/", ";")
+                .replace("/", ";").replace("/", ";").replace("/", ";").replace("/", ";");
+            $('#strategy').text("触发策略:" + res.touchStrategy);
+            var $this = $(this);
+            var parents = $this.parent().siblings();
+            strategyId = parents.eq(0).text();
+            $('#serviceId').text("版本号:" + strategyId);
+            console.log(res);
+
+
+            if (res.userTag == null) {
+                res.userTag = 0;
+            }
+            var param = "id=" + res.userTag;
+            if (!userTag2) {
+                $.ajax({
+                    type: 'GET',
+                    url: globalConfig.basePath + "/ruleConfigAddDetail/queryUserCount?channel=" + res.channelCodeKey,
+                    data: res.channelCodeKey,
+                    contentType: "application/json",
+                    dataType: "json",
+                    success: function (data) {
+                        console.log(data);
+                        $('#rosterName').text("名单名称:全部用户");
+                        $('#channelCode1').text("渠道:" + res.channelCode);
+                        $('#type').text("类型:" + "-");
+                        $('#rosterNumber').text("名单人数:" + data.resp);
+                    },
+                    error: function (data) {
+                        alert(data.message);
+                    }
+                })
+            } else {
+                $.post(globalConfig.basePath + "/abTest/listname", param, function (data) {
+                    if (data.code != '000') {
+                        alert(data.message);
+                        self.location = document.referrer;
+                    } else {
+                        console.log(data);
+                        rosterInfo = data.resp.data;
+                        $('#rosterName').text("名单名称:" + rosterInfo.rosterName);
+                        if (rosterInfo.channelCode == "WK") {
+                            $('#channelCode').text("渠道:悟空理财");
+                        } else {
+                            $('#channelCode').text("渠道:玖富钱包");
+                        }
+                        if (rosterInfo.rosterType == "1") {
+                            rosterInfo.rosterType = "用户智能画像";
+                        } else {
+                            rosterInfo.rosterType = "用户名单";
+                        }
+                        $('#type').text("类型:" + rosterInfo.rosterType);
+                        $('#rosterNumber').text("名单人数:" + rosterInfo.rosterCount);
+                        var oldTime = (new Date(rosterInfo.createTime)).getTime();
+                        var curTime = new Date(oldTime).format("yyyy-MM-dd");
+                        var oldTime2 = (new Date(rosterInfo.updateTime)).getTime();
+                        var curTime2 = new Date(oldTime2).format("yyyy-MM-dd");
+                        $('#createTime').text("创建时间:" + curTime);
+                        $('#updateTime').text("更新时间:" + curTime2);
+                        $('#createPeople').text("创建人:" + rosterInfo.createUser);
+
+                    }
+                }, "json");
+            }
+            $('#testSelect option:selected').val(1);
+
+            change();
+
+            querySmartList();
+
+
+        });
+
+        $(function () {
+
+            initPage();
+
+        });
+
+        Date.prototype.format = function (fmt) {
+            var o = {
+                "M+": this.getMonth() + 1,                 //月份
+                "d+": this.getDate(),                    //日
+                "h+": this.getHours(),                   //小时
+                "m+": this.getMinutes(),                 //分
+                "s+": this.getSeconds(),                 //秒
+                "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                "S": this.getMilliseconds()             //毫秒
+            };
+            if (/(y+)/.test(fmt)) {
+                fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            }
+            for (var k in o) {
+                if (new RegExp("(" + k + ")").test(fmt)) {
+                    fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                }
+            }
+            return fmt;
+        }
+        //详情页 版本详情
+        $(document).on("click", ".bb", function () {
+            //alert($(this).prop("name"));
+            $("#diss").show();
+            var versionId = $(this).prop("name");
+            var param = "versionId=" + versionId;
+            $.post(globalConfig.basePath + "/abTest/versionDetail", param, function (data) {
+                if (data.code != '000') {
+                    alert(data.message);
+                    return;
+                }
+                var resp = data.resp;
+                var list = resp.touchContent;
+                var str = "";
+                $("#xqid").html(str);
+                str += "<li>版本名称:<span>" + resp.versionName + "</span></li>" +
+                    "<li>版本描述:<span>" + resp.remark + "</span></li>" +
+                    "<li>触达类型:<span>" + resp.touchType + "</span></li>" +
+                    "<li>触达方式:<span>" + resp.touchWay + "</span></li>" +
+                    "<li>触达时间:<span>" + resp.touchTime + "</span></li>"
+                for (var i = 0; i < list.length; i++) {
+                    str += "<li>" + list[i].attrKey + ":<span>" + list[i].attrValue + "</span></li>"
+                }
+                $("#xqid").html(str);
+            }, "json");
+        })
+        //当前待发布的versionId
+        var pubVersionId = "";
+
+
+        $('#userNameLikeSearch').hide();
+        //详情页 发布按钮
+        $(document).on("click", ".fb", function () {
+            //alert("发布");
+            //显示DIV
+            $("#dis").show();
+            pubVersionId = $(this).prop("name");
+            $(document).on("change", "#usertype", function () {
+                var userTagType = $("#usertype").val();
+                var channelCode = $("#channelCode").val();
+
+                //$('#userNames').searchableSelect();
+                if ($("#usertype").val() == "NO_RULE") {
+                    //$("#userNames").html("");
+                    $("#userNames").html("<option value=''></option>");
+                    $("#userNames").next().remove();
+                    $('#userNames').searchableSelect();
+                    $('#userNameLikeSearch').hide();
+                } else {
+                    $.post(globalConfig.basePath + "/ruleConfig/FindChannelGroups", "channelCode=" + channelCode + "&rosterType=" + userTagType, function (data) {
+                        var strChannelGroups = "";
+                        if (data.code != '000') {
+                            alert(data.message);
+                            initPage();
+                            return;
+                        }
+                        if (data.resp.length > 0) {
+                            $('#userNameLikeSearch').show();
+                        }
+                        for (var i = 0; i < data.resp.length; i++) {
+                            strChannelGroups += "<option value='" + data.resp[i].rosterId + "'>" + data.resp[i].rosterName + "</option>"
+                        }
+                        $("#userNames").html(strChannelGroups);
+                        $("#userNames").next().remove();
+                        $('#userNames').searchableSelect();
+                        initPage();
+                    }, "json");
+                }
+            })
+
+        })
+
+        //返回
+        $(document).on("click", ".Return", function () {
+            self.location = document.referrer;
+        })
+
+
+        //取消按钮绑定事件
+        $("#qx").click(function () {
+            //alert("点击取消");
+            $("#dis").hide()
+        });
+
+        //关闭按钮绑定事件
+        $("#gb").click(function () {
+            //alert("点击关闭");
+            $("#diss").hide()
+        });
+
+        //取消按钮绑定事件
+        $("#cancel").click(function () {
+            //alert("点击取消");
+            $("#stop").hide()
+        });
+
+        $("#notarize").click(function () {
+            var testStrategyId = $("#testStrategyId").val();//实验策略ID
+            $.post(globalConfig.basePath + "/abTest/updateTestStatus", "testStrategyId=" + testStrategyId + "&testStatus=3", function (data) {
+                if (data.code != '000') {
+                    alert(data.message);
+                } else {
+                    var strategyId = globalConfig.strategyId;
+                    var param = "testStrategyId=" + strategyId;
+                    // 页面初始化
+                    $.post(globalConfig.basePath + "/abTest/detail", param, function (data) {
+                        //alert("返回到页面");
+                        pageContext(data);
+                    }, "json");
+                }
+
+            }, "json")
+            $("#stop").hide()
+
+        });
+
+
+        //发布保存按钮绑定事件
+        $("#bc").click(function () {
+            //alert("点击保存");
+            var $this = $(this);
+            //var parents = $this.parent().siblings();
+            var invalidTime = $("#endTime").val();//下线时间
+            var validTime = $("#startTime").val();//上线时间
+            var versionId = pubVersionId;//版本id
+            var testStrategyId = $("#testStrategyId").val();//实验策略ID
+            var userTag = $("#userNames").val();//用户标签ID
+            var userTagType = $("#usertype").val();//用户标签类型
+            var param = "invalidTime=" + invalidTime + "&validTime=" + validTime + "&strategyVersionId=" + versionId + "&testStrategyId=" + testStrategyId + "&userTag=" + userTag + "&userTagType=" + userTagType
+            $.post(globalConfig.basePath + "/abTest/publishStrategy", param, function (data) {
+                alert(data.message);
+                $("#dis").hide();
+            }, "json");
+        });
+
+        //查询渠道现有分组
+        /* function findChannelGroups(){
+
+     }*/
+
+        //时间插件使用
+        var queryStartTime = laydate({
+            elem: '#startTime',
+            istime: true,
+            format: 'YYYY-mm-DD hh:mm:ss',
+            event: 'click'
+        });
+        var queryEndTime = laydate({
+            elem: '#endTime',
+            istime: true,
+            format: 'YYYY-mm-DD hh:mm:ss',
+            event: 'click'
+        });
+
+
+        //审核
+        var currentTestStrategyId;
+        $(document).on("click", ".checkService", function () {
+            currentTestStrategyId = $("#testStrategyId").val()
+            check_modalBox.show();
+        })
+
+        var check_modalBox = {};
+        check_modalBox.modal = document.getElementById("chcnkModal");
+        check_modalBox.checkPassBtn = document.getElementById("checkPassBtn");
+        check_modalBox.checkNoPassBtn = document.getElementById("checkNoPassBtn");
+        check_modalBox.closeCheckBtn = document.getElementById("closeCheckBtn");
+
+        check_modalBox.show = function () {
+            this.modal.style.display = "block";
+        }
+        check_modalBox.close = function () {
+            this.modal.style.display = "none";
+        }
+
+        check_modalBox.init = function () {
+            var that = this;
+
+            this.checkPassBtn.onclick = function () {
+                $.ajax({
+                    type: "post",
+                    url: globalConfig.basePath + "/abTest/check",
+                    data: "testStrategyId=" + currentTestStrategyId + "&status=1",
+                    async: false,
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.code == '000') {
+                            initPage();
+                            that.close();
+                        } else {
+                            alert("审核失败：" + data.message);
+                            that.close();
+                        }
+                    }
+                });
+            };
+
+            this.checkNoPassBtn.onclick = function () {
+                $.ajax({
+                    type: "post",
+                    url: globalConfig.basePath + "/abTest/check",
+                    data: "testStrategyId=" + currentTestStrategyId + "&status=3",
+                    async: false,
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.code == '000') {
+                            initPage();
+                            that.close();
+                        } else {
+                            alert(data.message);
+                            that.close();
+                        }
+
+                    }
+                });
+            };
+
+            this.closeCheckBtn.onclick = function () {
+                that.close();
+            };
+
+        }
+
+        check_modalBox.init();
+
+
+</script>
+</body>
+</html>

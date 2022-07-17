@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>添加实验</title>
+<link href="${cssRoot}/bootstrap.min.css" rel="stylesheet">
+<link href="${staticRoot}/font-awesome/css/font-awesome.css"
+	rel="stylesheet">
+<link href="${cssRoot}/plugins/footable/footable.core.css"
+	rel="stylesheet">
+<link href="${cssRoot}/animate.css" rel="stylesheet">
+<link href="${cssRoot}/style.css?rand=${random}" rel="stylesheet">
+<link href="${cssRoot}/styleT.css?rand=${random}" rel="stylesheet">
+<link href="${cssRoot}/plugins/sweetalert/sweetalert.css"
+	rel="stylesheet">
+<link href="${cssRoot}/oms/abtest/configuration.css" rel="stylesheet">
+<link href="${cssRoot}/oms/abtest/modalBox.css" rel="stylesheet">
+<link href="${cssRoot}/oms/ruleconfig/jquery.searchableSelect.css" rel="stylesheet" type="text/css">
+
+<script>
+	var globalConfig = {
+		basePath : "${ctx}",
+		staticRoot : "${staticRoot}",
+		loginName : "${Session.sessionUser.loginName}",
+		userName : "${Session.sessionUser.name}",
+		fId : "${(Session.fId)!''}",
+		channel : "${(Session.channel)!''}",
+		channelCode : "${(Session.channelCode)!''}",
+		fType : "${(Session.fType)!''}",
+		serviceCode : "${(Session.serviceCode)!''}",
+		userWay : "${(Session.userWay)!''}",
+		userActionCode : "${(Session.userActionCode)!''}",
+		strategyId : "${(Session.strategyId)!''}",
+		addStrategyType : "${(Session.addStrategyType)!''}",
+		cloneTestStartegyId : "${Session.cloneTestStartegyId}"
+	};
+
+</script>
+</head>
+<body>
+	<div id="wrapper">
+		<div class="header-box">
+	        <#include "/common/top.html" encoding="UTF-8" />
+	    </div>
+	    
+	    <nav class="navbar-default navbar-static-side nav-boxa" role="navigation" id="HeadTitle">
+	        <div class="sidebar-collapse"  style="height: 675px;overflow-y: scroll;">
+	            <#include "/common/left.html" encoding="UTF-8" />
+	        <div>
+    	</nav>
+		
+	</div>
+	
+	<div class="wrap">
+		<div class="return">
+			<a class="btn btn-blueW " id="returnBack" href="javascript:void(0)">返回</a>
+		</div>
+		
+
+		<div class="plan-bar">
+			<span class="s-step s-step0"> <b><b class="active">1</b></b>
+				<p class="active"></p> <em class="active">基础配置</em>
+			</span> 
+			
+			<span class="s-step s-step1"> <b><b>2</b></b>
+				<p></p> <em>场景配置</em>
+			</span> 
+			
+			<span class="s-step s-step2"> <b><b>3</b></b>
+				<p></p> <em>编辑版本</em>
+			</span> 
+			
+			<span class="s-step s-step3"> <b><b>4</b></b> <em>完成配置</em>
+			</span>
+		</div>
+		
+		
+		
+		<div class="deploy basis-deploy-1">
+			<ul class="deploy-box">
+				<li class="deploy-item">理财渠道：
+                    <select class="chosen-select" style="width:160px;" tabindex="2" id="channel">
+                        <option value="WK">悟空理财</option>
+                        <option value="QB">玖富钱包</option>
+                    </select>
+				</li>
+				<li class="deploy-item">服务类型： 
+					<select class="chosen-select" style="width: 160px;" tabindex="2" id="service">
+					</select>
+				</li>
+				<li class="deploy-item">用户行为：
+				 	<select class="chosen-select" style="width:160px;" tabindex="2" id="user">
+                    </select>
+				</li>
+				<li class="deploy-item">预期状态： 
+					<select id="expResultStatus" name="expResultStatus">
+					</select>
+				</li>
+				<li class="deploy-item">
+					<label>执行触达后</label> 
+					<input type="number" min="1" max="7" required="required" placeholder="1-7" style="width: 80px; margin: 0px 15px;" id="strategyCycle" name="strategyCycle">
+					<label>自然日内有效</label>
+				</li>
+				<li class="deploy-item">名单类型：
+				 	<select id="userStrategy" name="userTagType" class="selected-nav">
+					</select>
+				</li>
+		        <li class="deploy-item-filter" id="userNameLikeSearch">
+		                                模糊搜索：
+		             <select name="userTag" id="userNames" class="filter-select"></select>
+		             <label id="不能删用于模糊搜索占位"></label>
+		             <a href='javascript:void(0)' id="queryUserNumberBtn">查询</a> 用户数量 <label id="showUserNumber"></label>
+		        </li>
+				<li class="deploy-item">
+					<label>限制配置：<input placeholder='1-30' min='1' max='30' type='number' style='margin-left: 15px; width:80px' name='touchTimeCount' id='touchTimeCount'/>个自然日内最多触发</label>
+					<input placeholder='1-10' min='1' max='10' type='number' style='margin-left: 15px; width:80px' id='touchCount' name='touchCount'/>次 
+					<input type='hidden' name='touchCountType' value='DAY'></li>
+			</ul>
+			<button class="next-btn next-btn0">下一步</button>
+		</div>
+		
+		<div class="deploy scene-deploy-2">
+			<ul class="deploy-box scene-box">
+			
+				<li class="deploy-item"><span>服务类型：</span> <label id="showService"></label></li>
+				
+				<li class="deploy-item"><span>用户行为：</span> <label id="showUserAction"></label></li>
+				
+				<li class="deploy-item"><span>触发节点：</span> 
+					<select id="triggerNode" name="touchCode">
+					</select>
+				</li>
+				
+				<li class="deploy-item radio-flex">
+			        <span>是否配触发策略：</span> 
+			        <p class="radio"><input id="yesInputConfig" type="radio" value="1" checked="checked" name="IS_EFFECT"><label for="yesInputConfig" class="lable">是</label></p> 
+			        <p class="radio" id="radio-css"><input id="noConfig" type="radio" value="0" name="IS_EFFECT"><label for="noConfig" class="label-no">否</label></p>
+		        </li>	
+		        
+		        <li class="deploy-item fold">
+		        	<label id="triggerStrategy">触发策略：</label>
+					<div id="triggerStrategyContext"></div>
+				</li>
+			</ul>
+			<div class="btn-flex">
+				<button class="back-btn1 flex-btn">上一步</button>
+				<button class="next-btn1 flex-btn">下一步</button>
+			</div>
+		</div>
+		
+		<div class="deploy compile-deploy-3">
+			<ul class="deploy-box compile-box">
+				<li class="deploy-item">原始版本：
+					<button class="deploy-btn" id="openChuDaBtn"><label id="showBasicConfig">配置</label></button>
+				</li>
+				<li class="deploy-item">添加变量：<label id="showVariableConfig"></label> <b class="add" id="openVarConfig">+</b>
+				</li>
+				<li class="deploy-item table-item">
+					<p style="white-space: nowrap">添加版本：</p>
+					<table class="table" id="versionTable">
+						<thead>
+							<tr>
+								<th style="width: 30%;">版本名称</th>
+								<th style="width: 30%;">版本描述</th>
+								<th style="width: 40%;">操作</th>
+							</tr>
+						</thead>
+					</table>
+				</li>
+				<button class="add-btn" id="addChuDaBtn">添加</button>
+			</ul>
+			<div class="btn-flex">
+				<button class="back-btn2 flex-btn">上一步</button>
+				<button class="next-btn2 flex-btn">下一步</button>
+			</div>
+		</div>
+		
+		<div class="deploy finish-deploy-4">
+			<ul class="deploy-box finish-box">
+				<li class="deploy-item"><span>理财渠道：</span> <label id="showChannel2"></label></span></li>
+				<li class="deploy-item"><span>服务类型：</span><label id="showService2"></label></li>
+				<li class="deploy-item"><span>用户行为：</span><label id="showUserAction2"></label></li>
+				<li class="deploy-item"><span>预期状态：</span><label id="showExpResultStatus2"></label></li>
+				<li class="deploy-item"><span>用户分组：</span><label id="showUserNames2"></label></li>
+				<li class="deploy-item"><span>版本数量：</span><label id="showVerCount2"></label></li>
+				<li class="deploy-item"><span>实验名称：</span>
+					<input type="text" id="testName" name="testName"/> 
+				</li>
+				<li class="deploy-item"><span>审核人：</span>
+					<select style="width: 200px;" id="approverId" name="approverId"></select>
+				</li>
+			</ul>
+			<div class="btn-flex">
+				<button class="back-btn3 flex-btn">上一步</button>
+				<button id="saveTestBtn" class="flex-btn save-btn">保存</button>
+			</div>
+		</div>
+
+    	<div id="chuDaConfigModal" class="modal">
+	        <div class="modal-content">
+	        	<div class="modal-header">
+	                <h2 style="margin:0 auto;"><span id='headVerName'></span></h2>
+	                <span id="closeChuDaBtn2" class="close"><b>×</b></span>
+	            </div>
+	        	<form id="verForm">
+		            <div class="modal-body">
+		            
+		            	<li class="deploy-item">
+		            		<label>版本名称：</label>
+		            		<input id="verName" name="verName" type="text"/> 
+		            	</li>
+		            	
+		            	<li class="deploy-item">
+		            		<label>版本描述：</label>
+		            		<input id="verDesc" name="verDesc" type="text"/> 
+		            	</li>
+		            	
+		                <!-- <li class="deploy-item"><span><label id="showCurrentVerName"></label></span> </li> -->
+		                <li class="deploy-item"><label>触达类型：</label> <select id="strategyType" name="strategyType"></select></li>
+						<li class="deploy-item" id="strategyWay" name="strategyWay"><label>触达方式：</label><span class="noneConfig">无配置</span></li>
+						<li class="deploy-item" id="strategyTime" name="strategyTime"><label>触达时间：</label><span class="noneConfig">无配置</span></li>
+						<li class="deploy-item" id="strategyPage" name="strategyPage"><label>触达页面：</label><span class="noneConfig">无配置</span></li>
+						<li class="deploy-item" id="strategyConfig" name="strategyConfig"><label>触达配置：</label><span class="noneConfig">无配置</span></li>
+		            </div>
+	            </form>
+	            <div class="modal-footer">
+						<button class='add-btn' id="closeChuDaBtn">关闭</button>
+						<button class='add-btn' id="saveChuDaBtn">保存</button>
+		        </div>
+	        </div>
+    	</div>
+    	
+    	<div id="variableModal" class="modal">
+	    	<div class="modal-content">
+	    		<div class="modal-body">
+		    		<p>添加变量</p>
+		    		<span>是否修改触达方式：</span> 
+					    <p>
+					    	<input id="yesSetCdfs" type="radio" value="1" checked="checked" name="IS_SET_CDFS">是
+					    	<input id="noSetCdfs" type="radio" value="0" name="IS_SET_CDFS">否
+					    </p>
+		    		<div id="variableDiv">
+	    		</div>
+	    		 <div class="modal-footer">
+						<button class='add-btn'  id="closeVarBtn">关闭</button>
+						<button class='add-btn'  id="saveVarBtn">保存</button>
+		        </div>
+	    	</div>
+    	</div>
+
+	</div>
+
+	<script src="${jsRoot}/jquery-2.1.1.js"></script>
+	<script src="${jsRoot}/bootstrap.min.js"></script>
+	<script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+	<script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+	<script src="${jsRoot}/plugins/jeditable/jquery.jeditable.js"></script>
+
+	<script src="${jsRoot}/jquery-2.1.1.js"></script>
+	<script src="${jsRoot}/plugins/jquery-ui/jquery-ui.min.js"></script>
+	<script src="${jsRoot}/angular/angular.min.js"></script>
+	<script type="text/javascript"
+		src="${staticRoot}/js/plugins/sweetalert/sweetalert.min.js"></script>
+	<script src="${jsRoot}/plugins/laydate/laydate.js"></script>
+	<script src="${jsRoot}/bootstrap.min.js"></script>
+
+	<script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+	<script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+	<script src="${jsRoot}/plugins/jeditable/jquery.jeditable.js"></script>
+
+
+	<!-- Custom and plugin javascript -->
+	<script src="${jsRoot}/inspinia.js"></script>
+	<script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+	<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload.js"></script>
+	<script src="${jsRoot}/plugins/fileUpload/jquery.iframe-transport.js"></script>
+	<script src="${jsRoot}/plugins/fileUpload/jquery.ui.widget.js"></script>
+	<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-process.js"></script>
+	<script
+		src="${jsRoot}/plugins/fileUpload/jquery.fileupload-validate.js"></script>
+	<script src="${jsRoot}/plugins/ajaxfileupload/ajaxfileupload.js"></script>
+
+	<!-- Data Tables -->
+	<script src="${jsRoot}/plugins/dataTables/jquery.dataTables.js"></script>
+	<script src="${jsRoot}/plugins/dataTables/dataTables.bootstrap.js"></script>
+	<script src="${jsRoot}/plugins/dataTables/dataTables.responsive.js"></script>
+	<script src="${jsRoot}/plugins/dataTables/dataTables.tableTools.min.js"></script>
+	<script src="${jsRoot}/plugins/laydate/laydate.js"></script>
+	<script src="${jsRoot}/DateUtil.js"></script>
+	<!-- Custom and plugin javascript -->
+	<script src="${jsRoot}/inspinia.js"></script>
+	<script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+	<script type="text/javascript" src="${jsRoot}/angular/angular.min.js"></script>
+	<!--  日期控件  -->
+	<script src="${jsRoot}/plugins/datapicker/bootstrap-datepicker.js"></script>
+	<script
+		src="${jsRoot}/plugins/datapicker/bootstrap-datepicker.zh-CN.min.js"></script>
+	<!-- 提示弹窗 -->
+	<script type="text/javascript"
+		src="${staticRoot}/js/plugins/sweetalert/sweetalert.min.js"></script>
+	<script type="text/javascript"
+		src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+	<script type="text/javascript"
+		src="${jsRoot}/oms/taskQuery.js?rand=${random}"></script>
+	<script type="text/javascript"
+		src="${jsRoot}/oms/taskDetail.js?rand=${random}"></script>
+		
+	<script src="${jsRoot}/oms/ruleconfig/jquery.searchableSelect.js"></script>
+	<script src="${jsRoot}/biz/abtest/addAbTest.js?rand=${random}"></script>
+
+</body>
+</html>

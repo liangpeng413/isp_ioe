@@ -1,0 +1,48 @@
+<div class="bottom-page" ng-cloak>
+    <div class="bottom-pagea">
+        <select style="width:58px;height:23px;" name="perPageRowSize" ng-model="page.perPageRowSize" ng-change="page.goto(1)">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+        </select>
+    </div>
+    <div class="bottom-pageb">
+        <i class="fa fa-step-backward" ng-click="page.goto(1)"></i>
+        <i class="fa fa-caret-left" ng-click="page.go(-1)"></i>
+        <p>第<span class="pageN">{{page.currPage}}</span>共<span>{{page.lastPage}}</span>页</p>
+        <i class="fa fa-caret-right" ng-click="page.go(+1)" style="margin-left:8px;"></i>
+        <i class="fa fa-step-forward" ng-click="page.goto(page.lastPage)"></i>
+        <i class="fa fa-refresh" ng-click="page.goto(page.currPage)"></i>
+    </div>
+    <div class="bottom-pagec">
+        <p>显示<span>{{page.startRow}}</span>到{{page.endRow}}，共<span>{{page.totalRowSize}}</span>记录</p>
+    </div>
+</div>
+<script>
+    window.defaultPageParam = {
+        currPage: 1,//当前页页码
+        lastPage: 1,//最后一页页码
+        pageList: [1],//翻页数字集合
+        perPageRowSize:'5',
+        fetchPageContent: function () {
+            alert("please override function window.defaultPageParam.fetchPageContent");
+        },
+        go: function (offset) {
+            if (offset > 0) {
+                if(this.lastPage>0){
+                    this.currPage = Math.min(this.currPage + offset, this.lastPage);
+                } else {
+                    this.currPage = 1;
+                }
+            } else {
+                this.currPage = Math.max(this.currPage + offset, 1);
+            }
+            this.fetchPageContent();
+        },
+        goto: function (toPage) {
+            this.currPage = toPage < 1 ? 1 : Math.min(toPage, this.lastPage);
+            this.fetchPageContent();
+        }
+    };
+
+</script>

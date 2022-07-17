@@ -1,0 +1,635 @@
+*{
+  margin: 0;
+  padding: 0;
+  outline: none;
+}
+button{
+  outline: none;
+}
+img{
+  width: 100px;
+  height: 50px;
+}
+#HeadTitle{
+  position: fixed;
+  bottom: 0;
+}
+@media screen and (max-height: 650px) {
+    .add-start{
+        height:450px;
+        overflow-y: scroll;
+    }
+}
+@media screen and (max-height: 650px) {
+    .add-look-start{
+        height:450px;
+        overflow-y: scroll;
+    }
+}
+.huiSize li{
+  width: auto;
+  overflow: hidden;
+}
+.checkAlla{
+  height: 16px;
+}
+/* icon图片左浮 */
+#FloatImg p,img{
+  float: left;
+}
+.sidebar-collapse{
+  height: 100%;
+  position: fixed;
+  width: 195px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 60px;
+}
+.big-box{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:#e8eaec;
+  height:100%;
+  width:100%
+}
+.big-box p{
+  font-size: 14px;
+  margin-top: 70px;
+  margin-left: 300px;
+}
+.header-box{
+  width: 100%;
+  height: 60px;
+  background: #fff;
+  position: fixed;
+  z-index: 999;
+}
+tr span{
+  color: #4d64eb;
+}
+.navbar-default{
+  height: 100%;
+  background: #31346b;
+  float: left;
+}
+.Index-box{
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 195px;
+  height: 60px;
+  color: #fff;
+  background: #2b2f3a;
+  text-align: center;
+  font-size: 24px;
+  float: left;
+  line-height: 60px;
+  margin-bottom: 60px;
+  z-index: 99;
+}
+.Index-title{
+  z-index:9999;
+  position: fixed;
+  left: 195px;
+  top: 0;
+  float: left;
+  width: 80%;
+  height: 60px;
+  line-height: 60px;
+}
+.Index-title p{
+  font-size: 16px;
+  margin-left: 30px;
+  float: left;
+}
+.Index-title .title-box{
+  float: right;
+}
+.Index-title .title-box span{
+  margin-left: 40px;
+}
+.Index-title .title-box span:hover{
+  cursor:pointer
+}
+/*    开机屏   */
+.content-box{
+  width: 100%;
+  height: 100%;
+  background: #e8eaec;
+  float: left;
+  padding-top: 60px;
+}
+.small-content{
+  width: 83%;
+  height: 100%;
+  margin:0 36px 0 215px;
+  padding-top: 15px;
+}
+.small-boxa{
+  background: #fff;
+  border:1px solid #e0e2e4;
+}
+/*  开机屏第一部分  */
+.btn-gradient{
+  background: -webkit-linear-gradient(left, #ff866b , #fd6873);
+  background: -o-linear-gradient(right, #ff866b, #fd6873);
+  background: -moz-linear-gradient(right, #ff866b, #fd6873);
+  background: linear-gradient(to right, #ff866b , #fd6873);
+  margin: 20px 0 20px 20px;
+  box-shadow: 0 5px 5px #feccce;
+  font-size: 14px;
+}
+
+/*  开机屏第二部分  */
+.btn-blueW{
+  box-shadow: 0 5px 5px #d5e1fa;
+  border: 1px solid #829af3;
+  font-size: 14px;
+}
+.btn-blueW i{
+  padding: 5px 7px 5px 27px;
+}
+.btn-blueW span{
+  padding-right: 27px;
+}
+.btn-blueWa{
+  background: -webkit-linear-gradient(left, #82b9f3 , #8295f3);
+  background: -o-linear-gradient(right, #82b9f3, #8295f3);
+  background: -moz-linear-gradient(right, #82b9f3, #8295f3);
+  background: linear-gradient(to right, #82b9f3 , #8295f3);
+}
+.btn-blueWb{
+  background-color: #fff;
+  color: #82b3f3;
+  box-shadow: 0 5px 5px #d5e1fa;
+  border: 1px solid #829af3;
+  font-size: 14px;
+}
+.btn-gradient i{
+  padding: 5px 5px 5px 20px;
+}
+.btn-gradient span{
+  padding-right: 25px;
+}
+.small-boxb{
+  width: 100%;
+  background: #fff;
+  margin-top: 8px;
+  border:1px solid #e0e2e4;
+}
+.small-boxb div{
+  float: left;
+  /* height: 100%; */
+  /* margin-left: 30px; */
+}
+.small-boxb div select,input{
+  height: 35px;
+}
+.small-boxb .boxb-a, p{
+  margin-bottom: 20px;
+}
+.boxb-b,.boxb-c p{
+  margin-top: 20px;
+}
+
+/*  开机屏第三部分   */
+.ibox-content table tr{
+  padding-top: 15px;
+}
+.ibox-content table tr td{
+  border-bottom:1px solid #e7eaec;
+  line-height:60px;
+}
+.ibox-content table td .checkAll{
+  width: 14px;
+  height: 13px;
+  border:1px solid #cbccd5;
+  display: inline-block;
+  text-align: center;
+  line-height: 14px;
+}
+.ibox-content table .actived .checkAll{
+  border:1px solid #8695f0;
+}
+.bottom-page{
+  padding-bottom: 30px;
+}
+.bottom-page div{
+  float: left;
+}
+.bottom-page .bottom-pagec{
+  float: right;
+  margin-right: 30px;
+}
+.bottom-pagea{
+  margin-right: 28px;
+}
+.bottom-pageb{
+  margin-top: 5px;
+}
+.bottom-page p{
+  display: inline-block;
+}
+.bottom-page i{
+  color: #82b9f3;
+  margin-right: 8px;
+}
+.bottom-page p .pageN{
+  padding: 4px 16px;
+  border:1px solid #cbccd5;
+  border-radius: 1px;
+  margin: 0 10px;
+}
+/* 添加开机屏 */
+.add-start-bg{
+  position: fixed;
+  background: rgba(0, 0, 0, 0.5);
+  top:0;
+  bottom: 0;
+  left: 195px;
+  right: 0;
+  display: none;
+}
+.add-start{
+  position: fixed;
+  width: 600px;
+  background: #fff;
+  margin-top: 75px;
+  left: 50%;
+  margin-left: -290px;
+  height: 720px;
+  overflow-y: scroll;
+}
+.add-start h1{
+  font-size: 16px;
+  width: 471px;
+  margin-left:25px;
+  border-bottom: 1px solid #dcdcdc;
+  height: 30px;
+  color: #000;
+  margin-bottom: -5px;
+}
+.add-start div select{
+  display: inline-block;
+  height: 25px;
+  border:1px solid #e6e6e6;
+  border-radius: 3px;
+}
+.add-start div p{
+  width: 85px;
+  margin-left: 25px;
+  color: #000;
+  font-size: 14px;
+  display: inline-block;
+  margin-bottom: 5px;
+  margin-top: 20px;
+}
+.add-start div .checkAll{
+  width: 14px;
+  height: 14px;
+  border:1px solid #e6e6e6;
+  border-radius: 1px;
+  display: inline-block;
+  margin: 0 5px;
+  margin-right: 8px;
+}
+.add-start div input{
+  padding-left: 5px;
+  height: 25px;
+  outline: none;
+  border:1px solid #e6e6e6;
+  border-radius: 3px;
+}
+.add-start div span{
+  font-size: 14px;
+}
+.start-a h2{
+  display: inline-block;
+  font-size: 14px;
+  color: #000;
+  font-weight: 500;
+}
+.start-a h2 span{
+  margin-left: 10px;
+}
+.start-a h2 .edition-checkbox{
+  border: 1px solid #4d64eb;
+}
+.start-d{
+  margin-top:20px;
+}
+.start-d a{
+  margin-left: 35px;
+  padding:5px 15px;
+}
+.start-d a{
+  margin-left: 5px;
+}
+.start-f span{
+  margin-left: 14px;
+  margin-right: 14px;
+}
+.start-e .mouCi{
+  width:30px;
+  margin-left: 5px;
+  margin-right: 5px;
+  text-align: center;
+}
+.start-g span{
+  margin-left: 14px;
+  margin-right: 14px;
+}
+.start-g select{
+  width: 170px;
+}
+.start-i select{
+  width: 286px;
+  margin-top: 20px;
+  margin-left: 10px;
+}
+.start-j select{
+  width: 286px;
+  margin-top: 20px;
+  margin-left: 10px;
+}
+/* 优先级排序 */
+.priority-ranking{
+  position: fixed;
+  background: rgba(0, 0, 0, 0.5);
+  top:0;
+  bottom: 0;
+  left: 195px;
+  right: 0;
+  display: none;
+}
+.priority-ranking .priority-ranking-small{
+  position: fixed;
+  background: #fff;
+  margin-top: 40px;
+  left: 50%;
+  margin-left: -260px;
+  border-radius: 10px;
+  margin-top: 75px;
+}
+.priority-ranking-small h1{
+  font-size: 16px;
+  width: 90%;
+  margin-left:25px;
+  border-bottom: 1px solid #dcdcdc;
+  height: 63px;
+  line-height: 63px;
+  color: #000;
+}
+.ranking-small{
+  min-width: 430px;
+  margin-left: 40px;
+  margin-right: 40px;
+}
+.ranking-smalla{
+  width: 100%;
+  height: 59px;
+  line-height: 59px;
+  font-size: 14px;
+}
+.ranking-smalla i{
+  font-size: 26px;
+  margin-left: 20px;
+}
+.ranking-smalla .smalla-red{
+  color: #fd6d71;
+}
+.ranking-smalla p{
+  float: right;
+}
+.ranking-smallb{
+  width: 100%;
+  height: 264px;
+  border:1px solid #e6e6e6;
+  border-radius: 5px;
+  overflow-y: scroll;
+}
+.ranking-smallb table{
+  width: 100%;
+}
+.ranking-smallb tr{
+  height: 25px;
+  line-height: 25px;
+}
+.ranking-smallb tr .tdNumber{
+  text-align: center;
+  padding-left: 15px;
+  padding-right: 20px;
+}
+.ranking-smallb tr .iptCheck{
+  text-align: center;
+  padding-top: 5px;
+  margin-left: 20px;
+}
+.bottom-btn{
+  text-align: center;
+  margin-top: 20px;
+}
+.bottom-btn a{
+  width: 140px;
+  text-align: center;
+  color: #fff;
+  padding: 10px 0;
+  background: -webkit-linear-gradient(left, #ff866b , #fd6873);
+  background: -o-linear-gradient(right, #ff866b, #fd6873);
+  background: -moz-linear-gradient(right, #ff866b, #fd6873);
+  background: linear-gradient(to right, #ff866b , #fd6873);
+  box-shadow: 0 5px 5px #feccce;
+  border: none;
+  border-radius: 100px;
+  outline: none;
+  margin-bottom: 20px;
+}
+.bottom-btn .bottom-btnb{
+  margin-left: 40px;
+  background: #fff;
+  color: #fd6d78;
+  border:1px solid #fd6d78;
+}
+/* 查看开机屏详情 */
+.look-start-box{
+  position: fixed;
+  background: rgba(0, 0, 0, 0.5);
+  top:0;
+  bottom: 0;
+  left: 195px;
+  right: 0;
+  display: none;
+}
+.add-look-start{
+  position: fixed;
+  width: 600px;
+  background: #fff;
+  margin-top: 40px;
+  left: 50%;
+  margin-left: -290px;
+  font-size: 14px;
+  color: #000;
+  margin-top: 75px;
+  height: 640px;
+  overflow-y: scroll;
+}
+.add-look-start h1{
+  font-size: 16px;
+  width: 471px;
+  margin-left:25px;
+  border-bottom: 1px solid #dcdcdc;
+  height: 63px;
+  line-height: 63px;
+  color: #000;
+}
+.add-look-start div{
+  width: 100%;
+  margin-top: 10px;
+  clear: both;
+}
+.add-look-start div p{
+  float: left;
+  margin-left: 25px;
+}
+.add-look-start div span{
+  float: left;
+}
+/* 修改开机屏 */
+.modify-start-box{
+  position: fixed;
+  background: rgba(0, 0, 0, 0.5);
+  top:0;
+  bottom: 0;
+  left: 195px;
+  right: 0;
+  display: none;
+}
+/* 生效开机屏 */
+.take-start-box{
+  position: fixed;
+  background: rgba(0, 0, 0, 0.5);
+  top:0;
+  bottom: 0;
+  left: 195px;
+  right: 0;
+  text-align: center;
+  display: none;
+}
+.take-start-small{
+  width: 410px;
+  margin-top: 210px;
+  position: relative;
+  background: #fff;
+  border-radius: 10px;
+  left: 50%;
+  margin-left: -205px;
+}
+.take-start-small p{
+  padding-top: 40px;
+  padding-bottom: 20px;
+  font-size: 15px;
+}
+/* 黑白名单 */
+.name-listb p{
+  float: left;
+  margin-top: 20px;
+  margin-right: 40px;
+}
+.name-listb p a{
+  margin-right: 10px;
+}
+
+/* banner */
+.boxb-d{
+  margin-top:70px;
+}
+
+/* 新样式补充 */
+.newTakeEffect{
+  text-align: left;
+  clear: both;
+}
+.newTakeEffect h2{
+  width: 90%;
+  font-size: 16px;
+  text-align: left;
+  padding-top: 24px;
+  padding-bottom: 23px;
+  margin-left: 25px;
+  border-bottom: 1px solid #dcdcdc;
+}
+.newTakeEffect ul li{
+  list-style: none;
+}
+.newTakeEffect select{
+  width: 170px;
+  height: 33px;
+  border: 1px solid #e6e6e6;
+  resize: none;
+  border-radius: 5px;
+  padding-left: 10px;
+}
+.newTakeEffect textarea{
+  width: 200px;
+  height: 105px;
+  border: 1px solid #e6e6e6;
+  resize: none;
+  border-radius: 5px;
+  padding-left: 10px;
+}
+.isEffect li{
+  margin-left: 60px;
+  margin-top: -25px;
+}
+.isEffect li p{
+  width: 75px;
+  display: inline-block;
+}
+.newTakeEffect .bottom-btn{
+  margin-top: 120px;
+}
+.PosiText{
+  position: relative;
+}
+.PosiText p{
+  position: absolute;
+  top: -35px;
+}
+.PosiText textarea{
+  position: absolute;
+  left: 78px;
+}
+.examine-box{
+  position: fixed;
+  background: rgba(0, 0, 0, 0.5);
+  top:0;
+  bottom: 0;
+  left: 195px;
+  right: 0;
+  text-align: center;
+  display: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

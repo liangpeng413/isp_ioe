@@ -1,0 +1,63 @@
+ .boxb-a > div {
+            margin: 20px 0;
+        }
+
+        #addPage .small-boxb div {
+            float: none
+        }
+
+        #addPage .small-boxb div label {
+            vertical-align: top;
+            margin-right: 10px;
+        }
+
+        #add-task-rule > div {
+            margin: 10px 0;
+        }
+
+        .addShowType div {
+            display: flex;
+            margin-left: 0;
+            align-items: center;
+        }
+
+        .addShowType div select {
+            margin-top: 10px;
+        }
+
+        .addShowType div span {
+            margin: 5px 0 0 15px;
+        }
+
+        .addShowType div input {
+            margin-top: 7px;
+        }
+
+        .addShowType div p {
+            margin: 0;
+        }
+        .small-content{
+        	width: 2000px; 
+
+        }
+        .content-box{
+		/*         	width:150% */
+		overflow-x:scroll;
+        }
+        tr span:not(:last-child){
+        	color:#000;
+        }
+        .bottom-pageb i{
+        	cursor:pointer;
+        }
+        .upload select,.upload input{
+	        width: 170px;
+		    height: 33px;
+		    border: 1px solid #e6e6e6;
+		    resize: none;
+		    border-radius: 5px;
+		    padding-left: 10px;
+        }
+        .newTakeEffect .bottom-btn{
+        margin-top:0px;
+        }

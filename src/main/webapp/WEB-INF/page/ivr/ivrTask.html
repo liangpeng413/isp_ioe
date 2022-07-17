@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>智能外呼</title>
+  <link href="${cssRoot}/bootstrap.min.css" rel="stylesheet">
+  <link href="${staticRoot}/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+  <!-- FooTable -->
+  <link href="${cssRoot}/plugins/footable/footable.core.css" rel="stylesheet">
+
+  <link href="${cssRoot}/animate.css" rel="stylesheet">
+  <link href="${cssRoot}/style.css?rand=${random}" rel="stylesheet">
+  <link href="${cssRoot}/styleT.css?rand=${random}" rel="stylesheet">
+  <link href="${cssRoot}/oms/ruleconfig/jquery.searchableSelect.css" rel="stylesheet" type="text/css">
+
+  <script>
+        var globalConfig = {
+            basePath: "${ctx}",
+            staticRoot: "${staticRoot}",
+            wavId: "${RequestParameters["wavId"]}",
+            productChannel: "${RequestParameters["productChannel"]}",
+            loginName:"${Session.sessionUser.loginName}"
+        };
+        function swalMsg(msg) {
+            swal({
+                title:"",
+                text:msg,
+                confirmButtonColor: "#1ab394",
+                confirmButtonText:"确定"
+            });
+        }
+
+  </script>
+</head>
+<body ng-app="floatApp" ng-controller="floatController">
+<div id="wrapper">
+    <div class="header-box">
+        <#include "/common/top.html" encoding="UTF-8" />
+    </div>
+    <nav class="navbar-default navbar-static-side" role="navigation" id="HeadTitle">
+        <div class="sidebar-collapse"  style="height: 675px;overflow-y: scroll;">
+            <#include "/common/left.html" encoding="UTF-8" />
+        <div>
+    </nav>
+</div>
+<div class="content-box">
+  <div class="small-content">
+    <!-- 第一部分 -->
+      <div class="small-boxa">
+          <a class="ivr-button btn btn-danger btn-rounded btn-gradient btn-gradienta"  id= "wakkk" ng-click="addIvrTask()"><i
+                  class="fa fa-plus-square-o"></i> <span>创建外呼任务</span></a>
+          <a class="btn btn-danger btn-rounded btn-gradient btn-gradientb"  ng-click="exportExportTask()"><span>导出数据</span></a>
+         <!-- <a class="btn btn-danger btn-rounded btn-gradient btn-gradientb"  ng-click="downloadTemplet()"><span>名单模板下载</span></a>-->
+          <a class="btn btn-danger btn-rounded btn-gradient btn-gradientb"  ng-click="sort()"><span>优先级排序</span></a>
+      </div>
+    <!-- 第二部分 -->
+      <div class="small-boxb col-md-12">
+          <div class="boxb-a">
+              <p style="margin-top:20px;">任务名称：
+                  <input style="width:120px;" type="text" maxlength="30"  ng-model="search.taskName">
+              </p>
+          </div>
+          <div class="boxb-b">
+              <p >产品渠道：
+                  <select id="productChannel" class="chosen-select" style="width:120px;" tabindex="2" ng-model="search.productChannel" >
+                      <option value="0">悟空理财</option>
+                      <option value="1">玖富钱包</option>
+                      <option value="">全部</option>
+                  </select>
+              </p>
+          </div>
+
+          <div class="boxb-b">
+              <p >任务状态：
+                  <select id="taskStatus" class="chosen-select"  ng-init="search.status=''" style="width:120px;" tabindex="2" ng-model="search.status" id="status"  >
+                      <option value="0">失效</option>
+                      <option value="1">队列中</option>
+                      <option value="2">进行中</option>
+                      <option value="3">已完成</option>
+                      <option value="4">已删除</option>
+                      <option value="">全部</option>
+                  </select>
+              </p>
+          </div>
+
+          <div class="boxb-c">
+              <p>
+                  <a class="btn btn-success btn-rounded btn-blueW btn-blueWa"  ng-click="pageQuerytask(1)"><i class="fa fa-search"></i> <span>查询</span></a>
+                  <a class="btn btn-success btn-rounded btn-blueW btn-blueWb"  ng-click="reset()"><i class="fa fa-refresh"></i> <span>重置</span></a>
+              </p>
+          </div>
+      </div>
+    <!-- 第二部分 -->
+    <!-- 第三部分 -->
+      <div class="row">
+          <div class="col-lg-12">
+              <div class="ibox float-e-margins" style="margin-top:10px;">
+                  <div class="ibox-content">
+                      <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+                          <thead>
+                          <tr>
+                              <th></th>
+                              <th>ID</th>
+                              <th>任务名称</th>
+                              <th>产品渠道</th>
+                              <th>使用录音名称</th>
+                              <th>音频时长/平均接通时长</th>
+                              <th>用户数</th>
+                              <th>接通用户数</th>
+                              <th>未接通用户数</th>
+                              <th>累计呼出数</th>
+                              <th>接通率</th>
+                              <th>优先级</th>
+                              <th>当前状态</th>
+                              <th>任务创建时间</th>
+                              <th>操作</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                          <tr ng-repeat="x in pageList">
+
+                              <td class="actived"><!-- <input type="checkbox" class="listChecked checkAll" value="{{x.id}}-{{x.desc}}"> --></td>
+                              <td>{{x.id}}</td>
+                              <td style="width:150px;word-wrap: break-word;">{{x.taskName}}</td>
+                              <td style="width:100px;word-wrap: break-word;">{{x.productChannel==0 && '悟空理财' || x.productChannel==1 && '玖富钱包'}}</td>
+                              <td style="width:150px;word-wrap: break-word;">{{x.wavName}}</td>
+                              <td>{{x.wavTime}}s/{{x.jtTime}}s</td>
+                              <td>{{x.userCount}}</td>
+                              <td>{{x.jtCount}}</td>
+                              <td>{{x.wjtCount}}</td>
+                              <td>{{x.callCount}}</td>
+                              <td>{{x.jtRate}}%</td>
+                              <td>{{x.priority}}</td>
+                              <td style="width:100px;word-wrap: break-word;">{{x.status |statusFilter}}</td>
+                              <td>{{x.createTime}}</td>
+                              <td>
+                                  <span class="modify-start" ng-click="preOperateUptade(x.productChannel,x.status,x)">详情</span>
+                                  <span class="look-start" ng-click="exportExport(x.id)">导出</span>
+                                  <span ng-show="x.status==0||x.status==1" class="take-start" ng-click="preOperate(3,x)">{{x.status==0?"生效":"取消"}}</span>
+                                  <span ng-show="x.status==0" class="look-start" ng-click="preOperate(4,x)">删除</span>
+                                  <span ng-show="x.status==3" class="look-start" ng-click="preOperate(5,x)">重新生成任务</span>
+                                  <span ng-show="x.status==0 || x.status==4" class="look-start" ng-click="preOperate(6,x)">清除缓存</span>
+                              </td>
+                          </tr>
+                          </tbody>
+                      </table>
+                      <div class="bottom-page">
+                          <div class="bottom-pagea">
+                              <select id="pageSize" style="width:58px;height:23px;">
+                                  <option value=5>5</option>
+                                  <option value=10>10</option>
+                                  <option value=15>15</option>
+                              </select>
+                          </div>
+                          <div class="bottom-pageb">
+                              <i class="fa fa-step-backward" ng-click="pageQuerytask(1)"></i>
+                              <i style="font-size:16px;" class="fa fa-caret-left" ng-click="pageQuerytask(search.pageNum-1)"></i>
+                              <p>第<span class="pageN">{{search.pageNum}}</span> <span class="commonN">共</span><span>{{pages}}</span>页</p>
+                              <!-- <i style="margin-left:8px;" class="fa fa-angle-right"></i> -->
+                              <i style="font-size:16px;" class="fa fa-caret-right" ng-click="pageQuerytask(search.pageNum+1)"></i>
+                              <i class="fa fa-step-forward" ng-click="pageQuerytask(pages)"></i>
+                              <i class="fa fa-refresh" ng-click="pageQuerytask(search.pageNum)"></i>
+                          </div>
+                          <div class="bottom-pagec">
+                              <p>显示<span>{{(search.pageNum-1)*search.pageSize+1}}</span>到{{search.pageNum*search.pageSize}}，共<span>{{total}}</span>记录</p>
+                          </div>
+                      </div>
+
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  <!-- 第三部分 -->
+  <!-- 创建外呼--黄帅杰（956709820@qq.com） -->
+    <div class="add-start-bg" id="addIvrTask">
+        <div class="add-start" style="height: 526px">
+            <h1>创建外呼任务</h1>
+            <div class="start-b">
+                <p>任务名称：<b style="color: red;">*</b></p>
+                <input style="width:368px;" type="text" maxlength="30" placeholder="15字符以内" ng-model="add.taskName">
+            </div>
+            <div class="start-a">
+                <p>产品渠道：<b style="color: red;">*</b></p>
+                <select id="productChannelAdd"  ng-model="add.productChannel" ng-init="add.productChannel='0'"
+                        style="width: 126px;" ng-change="changeProChanael(add.productChannel);">
+                    <option value="0">悟空理财</option>
+                    <option value="1">玖富钱包</option>
+                </select>
+            </div>
+            <div class="start-a">
+                <!--<p>选择音频：</p>-->
+                <!--<select  ng-model="add.wavId"  id="choseTask" ng-options="item.id as item.wavName for item in taskList">-->
+                    <!--<option id="choseWav" value="item.id"></option>-->
+                <!--</select>-->
+                <p>选择音频：<b style="color: red;">*</b></p>
+                <select  ng-model="video"  id="choseVideo" ng-change="selectChange()" ng-init="video='1'" style="width: 126px;">
+                    <option ng-repeat="video in taskList" value="{{video.id}}">{{video.wavName}}</option>
+                </select>
+            </div>
+            <!--
+            <div class="start-d" style="margin-top: -8px;height: 38px">
+                <p>名单列表：<b style="color: red;">*</b></p>
+                <input id="updateMemberFileInput" readonly ng-model="memberFile2" name="memberFile" style="width:220px;" type="text">
+                <a href="javascript:void(0)" onclick="$('#memberFile').click()" class="btn btn-success btn-rounded btn-blueWa"><span>点击上传</span></a>
+                <input style="height:13px;visibility:hidden;" type="file" class="file" name="memberFile" id="memberFile" ng-model="memberFile" onchange="importOpenMemberData();"/>
+            </div>
+            -->
+
+            <div class="start-d" style="margin-top: -8px;height: 38px">
+                <p>名单类型：</p> <select id="userStrategy"  name="userTagType" style="width:150px;"> </select>
+
+                <span class="deploy-item-filter" id="userNameLikeSearch">
+                    <p>模糊搜索：</p>
+                    <select name="userTag" id="userNames" class="filter-select"></select>
+                    <label id="不能删用于模糊搜索占位"></label>
+                </span>
+            </div>
+            <div class="start-f">
+                <p>开始时间：<b style="color: red;">*</b></p>
+                <select ng-init="add.startHour = '10'" id="addStartHour" ng-model="add.startHour" style="width:150px;">
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                </select>
+                <p>结束时间</p>
+                <select ng-init="add.endHour = '18'" id="addEndHour" ng-model="add.endHour" style="width:150px;">
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                </select>
+            </div>
+            <div class="start-b">
+                <p>去重策略：</p>
+                重复用户3天内最多拨打1次
+            </div>
+            <div class="start-b">
+                <p>防卡策略：<b style="color: red;">*</b></p>
+                低于<input style="width:126px;" type="text" maxlength="30" placeholder="1-2000" ng-model="add.tiao">条次日直接完成任务
+            </div>
+            <div class="start-b">
+                <p>执行时长：</p>
+                <input type="radio"  checked value="dogs" name="call"><span>全部拨打完毕</span>
+                <input type="radio"  value="tuts" name="call">最多执行<input style="width:126px;" type="text" maxlength="30"  ng-model="add.taday"><span>天</span>
+            </div>
+            <div class="bottom-btn">
+                <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="saveTask()">确定</a>
+                <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" ng-click="closeAddWav()">取消</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 优先级排序 -->
+ <div class="priority-ranking" id="addSort">
+    <div class="priority-ranking-small">
+      <h1>任务优先级排序</h1>
+      <div class="ranking-small">
+      	<div class="ranking-smalla">优先级排序
+          <i class="fa fa-caret-down smalla-red" ng-click="moveDown()"></i>
+          <i class="fa fa-caret-up" ng-click="moveUp()"></i>
+         <!--  <i class="fa fa-times" ng-click="del()"></i> -->
+          <p><span style="color:#ff2327;">*</span>编号越大，优先级越低</p>
+        </div>
+        <div class="ranking-smallb">
+      		<table>
+            <thead>
+            <tr>
+              <td></td>
+              <td class="tdNumber">优先级编号</td>
+              <td >任务名称</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="x in strotList">
+              <td class="iptCheck"><input type="checkbox" class="moveCheckbox sort" value="{{$index}}"></td>
+              <td class="tdNumber"><input type="hidden" ng-model="hehe.a">{{$index+1}}</td>
+              <td><input type="hidden" ng-model="hehe.b">{{x.taskName}}</td>
+            </tr>
+            </tbody>
+        	</table>
+        </div>
+        </div>    
+      <div class="bottom-btn">
+        <a class="btn btn-danger btn-rounded bottom-btna" href="#" ng-click="moveSave()">确定</a>
+        <a class="btn btn-danger btn-rounded bottom-btnb" href="#" ng-click="moveCancel()">取消</a>
+      </div>
+    </div>
+  </div>
+  <!-- 优先级排序 -->
+  <!-- 查看任务详情 -->
+  <div class="look-start-box" id="detailTask" >
+    <div class="add-look-start">
+        <h1>查看任务</h1>
+        <div class="look-start-a">
+          <p>任务名称：</p>
+          <span>{{detail.taskName}}</span>
+        </div>
+        <div class="look-start-b">
+          <p>产品渠道：</p>
+          <span>{{detail.productChannel==0 && '悟空理财' || detail.productChannel==1 && '玖富钱包' || detail.productChannel==2 && '悟空理财微信端'||detail.productChannel}}</span>
+        </div>
+        <div class="look-start-c">
+          <p>选择录音：</p>
+          <span>{{detail.wavName }}</span>
+        </div>
+        <div class="look-start-c">
+            <p>用户名单ID：</p>
+            <!--<a href="javascrit:void(0)" ng-click="downloadUserListFile(detail.id,detail.excelName)">{{detail.excelName}}</a>-->
+            <span>{{detail.excelName}}</span>
+        </div>
+        <div class="look-start-d">
+           <p>开始时间：</p>
+          <span>{{detail.starthour}}</span>
+          <p style="margin-left:50px;">结束时间：</p>
+          <span>{{detail.endhour}}</span>
+        </div>
+        <div class="look-start-e">
+          <p>执行时长：</p>
+          <span ng-show="detail.runDays==0">全部拨打完毕</span>
+          <span ng-show="detail.runDays>0">最多执行{{detail.runDays}}天</span>
+        </div>
+        <div class="look-start-f">
+          <p>去重策略：</p>
+          <span>重复用户3天内最多拨打1次</span>
+        </div>
+        <div class="look-start-f">
+          <p>防卡策略：</p>
+          <span>  低于 {{detail.fkCount}} 条次日停止任务</span>
+        </div>
+        <div class="look-start-d">
+           <p>任务开始执行时间：</p>
+          <span>{{detail.startTime}}</span>
+        </div>
+        <div class="look-start-d">
+          <p>任务完成执行时间 ：</p>
+          <span>{{detail.endTime}}</span>
+        </div>
+        <div class="look-start-i">
+          <p>最后修改时间：</p>
+          <span>{{detail.updateTime}}</span>
+          <p>修改人：</p>
+          <span>{{detail.operationPerson}}</span>
+        </div>
+        <div class="look-start-j">
+          <p>创建时间：</p>
+          <span>{{detail.createTime}}</span>
+          <p>创建人：</p>
+          <span>{{detail.createPerson}}</span>
+        </div>
+        <div class="bottom-btn">
+          <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" onclick="$('#detailTask').hide()">关闭</a>
+        </div>
+      </div>
+    </div>
+
+<div class="modify-start-box" id="editTask">
+    <div class="add-start" style="height: 526px">
+
+        <h1>修改外呼任务</h1>
+        <div class="start-b">
+            <input style="width:368px;" hidden type="text" maxlength="30" readonly placeholder="15字符以内" ng-model="canUpdate.id">
+        </div>
+        <div class="start-b">
+            <p>任务名称：<b style="color: red;">*</b></p>
+            <span>{{canUpdate.taskName}}</span>
+        </div>
+        <div class="start-a">
+            <p>产品渠道：<b style="color: red;">*</b></p>
+            <span>{{canUpdate.productChannel==0 && '悟空理财' || canUpdate.productChannel==1 && '玖富钱包' || canUpdate.productChannel==2 && '悟空理财微信端'||canUpdate.productChannel}}</span>
+        </div>
+        <div class="start-a">
+            <p>选择音频：<b style="color: red;">*</b></p>
+                <select  ng-model="editVideo"  id="editVideo" ng-change="selectChange()" ng-init="video='1'" style="width: 126px;">
+                    <option ng-repeat="video in taskList" value="{{video.id}}">{{video.wavName}}</option>
+                </select>
+        </div>
+<!--        <div class="start-a">
+            <p>选择音频：</p>
+            <select  ng-model="add.wavId"  id="choseTask" ng-options="item.id as item.wavName for item in taskList">
+            <option id="choseWav" value="item.id"></option>
+            </select>
+
+        </div>-->
+        <!--<div class="start-d" style="margin-top: -8px;height: 38px">-->
+            <!--<p>名单列表：</p> &lt;!&ndash; style="height:13px;visibility:hidden;" &ndash;&gt;-->
+            <!--<span>{{canUpdate.excelName }}</span>-->
+        <!--</div>-->
+        <div class="look-start-c">
+            <!--<p>名单列表：</p>
+            <a href="javascrit:void(0)" ng-click="downloadUserListFile(canUpdate.id,canUpdate.excelName)">{{canUpdate.excelName}}</a>-->
+            <p>用户名单ID：</p>
+            <!--<a href="javascrit:void(0)" ng-click="downloadUserListFile(detail.id,detail.excelName)">{{detail.excelName}}</a>-->
+            <span>{{canUpdate.excelName}}</span>
+        </div>
+        <div class="start-f">
+            <p>开始时间：<b style="color: red;">*</b></p>
+            <select ng-init="canUpdate.startHour = '10'" id="updateStartHour" ng-model="canUpdate.startHour" style="width:150px;">
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+            </select>
+            <p>结束时间：<b style="color: red;">*</b></p>
+            <select ng-init="canUpdate.endHour = '18'" id="updateEndHour" ng-model="canUpdate.endHour" style="width:150px;">
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+            </select>
+        </div>
+        <div class="start-b">
+            <p>去重策略：</p>
+            <span>重复用户3天内最多拨打1次</span>
+        </div>
+        <div class="start-b">
+            <p>防卡策略：<b style="color: red;">*</b></p>
+            低于<input style="width:126px;" type="text" maxlength="30" placeholder="1-2000" ng-model="canUpdate.tiao">条次日直接完成任务
+        </div>
+        <div class="start-b">
+            <p>执行时长：</p>
+            <input type="radio" ng-model="runDays" ng-click="radioChange(0)" ng-value="0" name="call"><span>全部拨打完毕</span>
+            <input type="radio" ng-model="runDays" ng-click="radioChange(1)" ng-value="1" name="call">最多执行<input style="width:126px;" type="text" maxlength="30"  ng-model="canUpdate.runDays"><span>天</span>
+        </div>
+        <div class="bottom-btn">
+            <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="updataNewTask()">确定</a>
+            <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" ng-click="closeUppWav()">取消</a>
+        </div>
+    </div>
+</div>
+  </div>
+  <!-- 查看任务详情 -->
+  <!-- 修改任务详情 -->
+
+  <!-- 修改任务详情 -->
+  <!-- 生失效任务提示 -->
+   <div class="take-start-box" id="effectTask">
+    <div class="take-start-small">
+      <p>您确定要{{effectRecord.status==0?"生效":"取消"}}外呼任务吗？</p>
+      <div class="bottom-btn">
+        <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="validateRecord()">确定</a>
+        <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" onclick="$('#effectTask').hide()">取消</a>
+      </div>
+    </div>
+  </div>
+  <!-- 生失效任务提示 -->
+  <!-- 清楚缓存提示 -->
+   <div class="take-start-box" id="delCache">
+    <div class="take-start-small">
+      <p>你确定清除此任务缓存吗？</p>
+      <div class="bottom-btn">
+        <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="delCache()">确定</a>
+        <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" onclick="$('#delCache').hide()">取消</a>
+      </div>
+    </div>
+  </div>
+  <!-- 清除缓存提示 -->
+<!-- 删除提示 -->
+   <div class="take-start-box" id="delTask">
+    <div class="take-start-small">
+      <p>你确定删除此任务吗？</p>
+      <div class="bottom-btn">
+        <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="delTask()">确定</a>
+        <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" onclick="$('#delTask').hide()">取消</a>
+      </div>
+    </div>
+  </div>
+  <!-- 删除提示 -->
+  
+  <!-- 重复生成提示 -->
+   <div class="take-start-box" id="createTask">
+    <div class="take-start-small">
+      <p>一键重新生成任务</p>
+      <div class="start-b">
+                <input type="radio" ng-model="createT" value=1><span >生成全部名单任务</span>
+                <input type="radio" ng-model="createT" value=2><span>生成未接通名单任务</span>
+      </div>
+      <div class="bottom-btn">
+        <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="createTask()">确定</a>
+        <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" onclick="$('#createTask').hide()">取消</a>
+      </div>
+    </div>
+  </div>
+  <!-- 重复生成提示 -->
+
+  <!-- 审核 -->
+</div>
+
+<div class="add-start-bg" id="editBid" style="">
+    <div style="margin-top: 455px;width: 201px;height: 5px; ">
+        <img src="${imgRoot}/R7-51.gif" style="width: 201px;height: 5px;margin-left:520px">
+    </div>
+</div>
+<!-- Mainly scripts -->
+<script src="${jsRoot}/jquery-2.1.1.js"></script>
+<script src="${jsRoot}/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="${jsRoot}/angular/angular.min.js"></script>
+<script type="text/javascript" src="${staticRoot}/js/plugins/sweetalert/sweetalert.min.js"></script>
+<script src="${jsRoot}/plugins/laydate/laydate.js"></script>
+<script src="${jsRoot}/bootstrap.min.js"></script>
+<script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="${jsRoot}/plugins/jeditable/jquery.jeditable.js"></script>
+
+<!-- Data Tables -->
+<script src="${jsRoot}/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.responsive.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.tableTools.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="${jsRoot}/inspinia.js"></script>
+<script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload.js"></script> 
+<script src="${jsRoot}/plugins/fileUpload/jquery.iframe-transport.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.ui.widget.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-process.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-validate.js"></script>
+<script src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+<script src="${jsRoot}/oms/ivrTask.js?rand=${random}"></script>
+<script type="text/javascript" src="${staticRoot}/js/plugins/ajaxfileupload/ajaxfileupload.js"></script>
+
+<!-- 日期控件  -->
+<script type="text/javascript" src="${jsRoot}/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+<!-- 日期控件中文包  -->
+<script type="text/javascript" src="${jsRoot}/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="${jsRoot}/plugins/datapicker/bootstrap-datepicker.js"></script>
+<script src="${jsRoot}/plugins/datapicker/bootstrap-datepicker.zh-CN.min.js"></script>
+<script src="${jsRoot}/oms/ruleconfig/jquery.searchableSelect.js"></script>
+<script>
+  var navHight = $('.navbar-static-side').height()
+  $('.navbar-static-side').css('height', navHight - 60)
+  $('.content-box').css('height', navHight - 60)
+
+  //用户策略类型初始化
+  $.ajax({
+      type: "post",
+      url: globalConfig.basePath + "/operation/init/byKey",
+      data: "type=2",
+      async: false,
+      dataType: "json",
+      success: function (data) {
+          if (data.code != '000') {
+              alert(data.message);
+              return;
+          }
+          var res = data.resp;
+          if (res != "" && res != null) {
+              var str = "";
+              for (var i = 0; i < res.length; i++) {
+                  str += "<option value='" + res[i].key + "'>" + res[i].value + "</option>"
+              }
+              //附加改变事件
+              $("#userStrategy").html(str);
+              //用户画像分组名单生成
+              findChannelGroups();
+          }
+      }
+  });
+
+  //用户画像类型-用户名单联动联动
+  $(document).on("change", "#userStrategy", function () {
+      findChannelGroups();
+  })
+
+  //查询渠道现有分组
+  function findChannelGroups(userTag) {
+      if ($("#userStrategy").val() == "NO_RULE") {
+          //$("#userNames").html("");
+          $("#userNames").html("<option value=''></option>");
+          $("#userNames").next().remove();
+          $('#userNames').searchableSelect();
+          $('#userNameLikeSearch').hide();
+      }
+      else {
+          var productChannel=$("#productChannelAdd").val();
+          $.post(globalConfig.basePath + "/ruleConfig/queryMemberGroup", "channelCode=" + productChannel + "&rosterType=" + $("#userStrategy").val(), function (data) {
+              var strChannelGroups = "";
+              if (data.code != '000') {
+                  alert(data.message);
+                  return;
+              }
+
+              if (data.resp.length > 0) {
+                  $('#userNameLikeSearch').show();
+              }
+
+              for (var i = 0; i < data.resp.length; i++) {
+                  strChannelGroups += "<option value='" + data.resp[i].rosterId + "'>" + data.resp[i].rosterName + "</option>";
+              }
+              $("#userNames").html(strChannelGroups);
+              $("#userNames").next().remove();
+              $('#userNames').searchableSelect();
+          }, "json");
+      }
+  }
+</script>
+</body>
+</html>

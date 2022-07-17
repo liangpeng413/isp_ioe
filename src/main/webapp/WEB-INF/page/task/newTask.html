@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>任务中心</title>
+    <link href="${cssRoot}/bootstrap.min.css" rel="stylesheet">
+    <link href="${staticRoot}/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <!-- FooTable -->
+    <link href="${cssRoot}/plugins/footable/footable.core.css" rel="stylesheet">
+
+    <link href="${cssRoot}/animate.css" rel="stylesheet">
+    <link href="${cssRoot}/style.css?rand=${random}" rel="stylesheet">
+    <link href="${cssRoot}/styleT.css?rand=${random}" rel="stylesheet">
+    <link href="${staticRoot}/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+
+    <link href="${cssRoot}/oms/abtest/infor-statistics.css" rel="stylesheet">
+    <link href="${cssRoot}/oms/ruleconfig/jquery.searchableSelect.css" rel="stylesheet" type="text/css">
+
+    <!--下拉选择-->
+    <link href="${cssRoot}/../font-awesome/css/select2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="${cssRoot}/plugins/select2/select2.min.css">
+    <style type="text/css">
+        .boxb-a > div {
+            margin: 20px 0;
+        }
+
+        #addPage .small-boxb div {
+            float: none
+        }
+
+        #addPage .small-boxb div label {
+            vertical-align: top;
+            margin-right: 10px;
+        }
+
+        #add-task-rule > div {
+            margin: 10px 0;
+        }
+        .addShowType div{
+            display:flex;
+            margin-left: 0;
+            align-items: center;
+        }
+        .addShowType div select{
+            margin-top:10px;
+        }
+        .addShowType div span{
+            margin: 5px 0 0 15px;
+        }
+        .addShowType div input{
+            margin-top:7px;
+        }
+        .addShowType div p{
+            margin: 0;
+        }
+    </style>
+    <script>
+        var globalConfig = {
+            basePath: "${ctx}",
+            staticRoot: "${staticRoot}",
+            loginName: "${Session.sessionUser.loginName}",
+            userName: "${Session.sessionUser.name}"
+        };
+
+        function swalMsg(msg) {
+            swal({
+                title: "",
+                text: msg,
+                confirmButtonColor: "#1ab394",
+                confirmButtonText: "确定"
+            });
+        }
+
+    </script>
+</head>
+<body ng-app="myApp" ng-controller="rootController">
+<div id="wrapper">
+    <div class="header-box">
+        <#include "/common/top.html" encoding="UTF-8" />
+    </div>
+    <nav class="navbar-default navbar-static-side" role="navigation" id="HeadTitle">
+        <div class="sidebar-collapse"  style="height: 675px;overflow-y: scroll;">
+            <#include "/common/left.html" encoding="UTF-8" />
+            </div>
+    </nav>
+</div>
+<div class="content-box">
+    <div class="small-content" ng-show="viewPage == 1">
+        <!-- 搜索部分开始 -->
+        <div class="small-boxb col-md-12">
+            <div class="boxb-a">
+                <p style="margin-top:20px;">渠道：
+                    <select class="chosen-select" ng-model="queryTask.channel" style="width:160px;" ng-change="queryTypesPage(queryTask.channel)" id="searchProductChannel">
+<!--                        <option value="">全部</option>-->
+                        <option value="WK">悟空理财</option>
+                        <option value="QB">玖富钱包</option>
+                        <option value="JF_LIFE">聚生活小程序</option>
+                    </select>
+                </p>
+                <p>活动类型：
+                    <!--<select style="width: 160px;" ng-model="queryTask.type" ng-change="loadModuleTypes(queryTask.type.id)">-->
+                        <!--<option value="">全部</option>-->
+                        <!--<option value="{{x}}" ng-repeat="x in types">{{x.name}}</option>-->
+                    <!--</select>-->
+                    <select style="width: 160px;" ng-model="queryTask.type" ng-options="x.name for x in searchTyps" ng-change="loadModuleTypes(queryTask.type.id)">
+                        <option value="">全部</option>
+                    </select>
+                </p>
+
+                <p>是否置顶：
+                    <select class="chosen-select" ng-model="queryTask.isStick" name="isStick" style="width:160px;margin-right:40px">
+                        <option value="">全部</option>
+                        <option value = "true">是</option>
+                        <option value = "false">否</option>
+                    </select>
+                </p>
+            </div>
+            <div class="boxb-b">
+                <p>活动名称：
+                    <input type="text" ng-model="queryTask.activityName" maxlength="25" style="width: 160px">
+                </p>
+                <p>
+                    任务模块：
+                    <select class="chosen-select" ng-model="queryTask.moduleCode" style="width:160px;margin-right:40px">
+                        <option value="">全部</option>
+                        <option value="{{x.moduleCode}}" ng-repeat="x in moduleList" >{{x.moduleName}}</option>
+                    </select>
+                </p>
+
+                <p>
+                    是否生效：
+                    <select class="chosen-select" ng-model="queryTask.isEnable" style="width:160px;">
+                        <option value="">全部</option>
+                        <option value="true">已生效</option>
+                        <option value="false">未生效</option>
+                    </select>
+                </p>
+            </div>
+            <div class="boxb-c">
+                <p>活动时间：
+                    <input type="text" id="startTime" style="width: 160px;"/> - <input type="text" id="endTime" style="width: 160px;"/>
+                </p>
+                <p>
+                    是否上线：
+                    <select class="chosen-select" ng-model="queryTask.status" name="isEnable" style="width:160px;margin-right:40px">
+                        <option value="">全部</option>
+                        <option value="0">待上线</option>
+                        <option value="1">已上线</option>
+                        <option value="2">已下线</option>
+                    </select>
+                </p>
+
+                <p>审核状态：
+                    <select class="chosen-select" ng-model="queryTask.auditStatus" style="width:160px;margin-right:40px">
+                        <option value="">全部</option>
+                        <option value="0">待审核</option>
+                        <option value="1">审核通过</option>
+                        <option value="2">审核不通过</option>
+                    </select>
+                </p>
+            </div>
+            <div style="width: 100%;margin-top: -30px;">
+                <p>
+                    <a class="btn btn-success btn-rounded btn-blueW btn-blueWa" ng-click="queryTaskPage(1)" href="javascript:void(0)">
+                        <i class="fa fa-search"></i> <span>搜索</span>
+                    </a>
+                    <a class="btn btn-success btn-rounded btn-blueW btn-blueWb" ng-click="queryReset()" href="javascript:void(0)">
+                        <i class="fa fa-refresh"></i> <span>重置</span>
+                    </a>
+                    <a href="javascript:void(0)" ng-click="addShow()" class="btn btn-danger btn-rounded btn-gradient btn-gradienta">
+                        <i class="fa fa-plus-square-o"></i><span>添加</span>
+                    </a>
+                    <a class="btn btn-danger btn-rounded btn-gradient btn-gradientb" href="#" ng-click="sort()">
+                        <i class="fa fa-outdent"></i> <span>优先级排序</span>
+                    </a>
+                </p>
+            </div>
+        </div>
+        <!-- 搜索部分结束 -->
+
+        <!-- 数据展示部分开始 -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins" style="margin-top:10px;">
+                    <div class="ibox-content">
+                        <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+                            <thead>
+                            <tr>
+                                <th>渠道</th>
+                                <th>活动ID</th>
+                                <th>任务模块</th>
+                                <th>活动类型</th>
+                                <th>活动名称</th>
+                                <th>按钮类型</th>
+                                <th>跳转地址</th>
+                                <th>是否置顶</th>
+                                <th>活动描述</th>
+                                <th>开始时间</th>
+                                <th>结束时间</th>
+                                <th>上线状态</th>
+                                <th>审核状态</th>
+                                <th>是否生效</th>
+                                <th>创建人</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="v in queryList">
+                                <td>{{v.channel=='QB' && "玖富钱包" || v.channel=='WK'&&"悟空理财" || v.channel=='JF_LIFE'&&"聚生活小程序"}}</td>
+                                <td>{{v.activityCode}}</td>
+                                <td>{{v.moduleName}}</td>
+                                <td>{{getType(v.activityType).name}}</td>
+                                <td>{{v.activityName}}</td>
+                                <td>{{v.buttonType == 1 ? "链接跳转" : v.buttonType == 2 ? "原生跳转" : v.buttonType == 3 ?"浏览器打开链接" :""}}</td>
+                                <td><p style="width:200px;line-height: 20px;margin-top: 20px;word-wrap: break-word;">
+                                    {{v.buttonType == 1 ? v.go : ""}}
+                                </p>
+                                </td>
+                                <td>{{v.stickStatus == 2 ? "是" : "否"}}</td>
+                                <td>{{v.title}}</td>
+<!--                                <td>{{longToStr(v.startTime)}}</td>-->
+                                <td>{{v.startTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+<!--                                <td>{{longToStr(v.endTime)}}</td>-->
+                                <td>{{v.endTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                                <td>{{v.status == 0 ? "待上线": v.status == 1? "已上线": "已下线"}}</td>
+                                <td>{{v.auditStatus == 0 ? "待审核": v.auditStatus==1 ? "审核通过":"审核不通过"}}</td>
+                                <td>{{v.isEnable?"生效": "失效"}}</td>
+                                <td>{{v.createUser}}</td>
+                                <td>
+                                    <a href="javascript:void(0)" data-ng-click="queryTaskDetail(v)" class="look-start">查看</a>
+                                    <a href="javascript:void(0)" ng-click="modifyDetail(v)" class="modify-start">修改</a>
+                                    <a href="javascript:void(0)" ng-if="v.auditStatus=='0' && v.auditor == auditor" ng-click="preOperate(v,3)"
+                                       class="examine">审核</a>
+                                    <a href="javascript:void(0)" ng-click="updateEnabled(v)" class="take-start">{{v.isEnable=='1'?"失效":"生效"}}</a>
+                                    <a href="javascript:void(0)" ng-click="stick(v)" class="take-start">
+                                        {{v.stickStatus == 2 ? "取消置顶" : (v.isEnable && v.stickStatus != 2) ? "置顶" : ""}}
+                                    </a>
+                                    <a href="javascript:void(0)" ng-click="getStickDetail(v)" class="take-start">{{(v.stickStatus == 2 || v.stickStatus == 3) ? "置顶详情" : ""}}</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="bottom-page">
+                            <div class="bottom-pagea">
+                                <select style="width:58px;height:23px;" name="pageSize" ng-model="queryTask.pageSize"
+                                        ng-change="queryTaskPage()">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                </select>
+                            </div>
+                            <div class="bottom-pageb">
+                                <i class="fa fa-step-backward" ng-click="queryTaskPage()"></i>
+                                <i style="font-size:16px;" class="fa fa-caret-left"
+                                   ng-click="queryTaskPage(queryTask.pageNo-1)"></i>
+                                <p>第<span class="pageN" name="currentPage"
+                                          ng-model="queryTask.pageNo">{{queryTask.pageNo}}</span>共<span>{{queryTask.lastPage}}</span>页
+                                </p>
+                                <i style="font-size:16px;" class="fa fa-caret-right"
+                                   ng-click="queryTaskPage(queryTask.pageNo+1)"></i>
+                                <i style="margin-left:8px;" class="fa fa-step-forward"
+                                   ng-click="queryTaskPage(queryTask.lastPage)"></i>
+                                <i class="fa fa-refresh" ng-click="queryTaskPage(queryTask.pageNo)"></i>
+                            </div>
+
+                            <div class="bottom-pagec">
+                                <p>显示<span>{{(queryTask.pageNo-1)*queryTask.pageSize+1}}</span>到{{queryTask.pageNo*queryTask.pageSize
+                                    >= queryTask.totalRowSize && queryTask.totalRowSize ||
+                                    queryTask.pageNo*queryTask.pageSize < queryTask.totalRowSize &&
+                                    queryTask.pageNo*queryTask.pageSize || queryTask.totalRowSize < 1&& 0 }}条，共<span>{{queryTask.totalRowSize}}</span>记录
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 数据展示部分结束 -->
+    </div>
+
+    <!--任务中心查看-->
+    <div class="small-content" ng-show="viewPage == 2 ">
+        <div style="height: 60px; line-height: 60px;">
+            <a class="btn btn-blueW " ng-click="returnPage()" href="javascript:void(0)">返回</a>
+            {{taskDeatil.channel=='QB'&&"玖富钱包"||taskDeatil.channel=='WK'&&"悟空理财"||"聚生活小程序"}}
+        </div>
+
+        <div class="small-boxb col-md-12">
+            <h3>任务信息</h3>
+            <hr>
+            <h4>基础信息</h4>
+            <div class="boxb-a" style="width: 100%">
+                <div style="margin-top:20px;">
+                    <div>
+                        <label><b style="color:red;">*</b>任务名称：</label>
+                        <input ng-model="taskDeatil.activityName" maxlength="30"  disabled="true" placeholder="最多30字符" style="width: 200px;"/>
+                    </div>
+
+                    <div>
+                        <label style="margin-left: 30px;">任务标签:</label>
+                        <input ng-model="taskDeatil.taskTag"  disabled="true" maxlength="5" placeholder="5个字以内" style="width: 200px;"/>
+                    </div>
+
+                    <div>
+                        <label style="margin-left: 30px;">活动描述: </label>
+                        <input ng-model="taskDeatil.title" maxlength="30"  disabled="true" placeholder="最多30字符" style="width: 240px;margin-left: 10px;"/>
+                    </div>
+                </div>
+                <div style="margin-top:20px;" ng-show="taskDeatil.channel=='JF_LIFE'">
+                    <div>
+                        <label><b style="color:red;">*</b>首页气泡任务简称：</label>
+                        <input ng-model="taskDeatil.subTitle" disabled="true" maxlength="4" placeholder="最多30字符" style="width: 200px;"/>
+                    </div>
+                </div>
+            </div>
+
+            <h4>跳转配置</h4>
+            <div class="boxb-a" style="width: 100%">
+                <div style="margin-top:20px;">
+                    <div>
+                        <label><b style="color:red;">*</b>按钮文字:</label>
+                        <input ng-model="taskDeatil.buttonDesc" disabled="true" maxlength="5" placeholder="5个字以内" style="width: 200px;"/>
+                    </div>
+
+                    <div>
+                        <label style="margin-left: 30px;"><b style="color:red;">*</b>按钮类型:</label>
+                        <select class="chosen-select" ng-model="taskDeatil.buttonType" style="width:126px;" disabled="disabled">
+                            <option value="1">链接跳转</option>
+                            <option value="2">原生跳转</option>
+                            <option value="3">浏览器打开链接</option>
+                        </select>
+                    </div>
+
+                    <div ng-if="taskDeatil.buttonType==1 || taskDeatil.buttonType==3 " >
+                        <label style="margin-left: 30px;"><b style="color:red;">*</b>链接地址:</label>
+                        <input ng-model="taskDeatil.go"  disabled="disabled" style="width: 200px;"/>
+                    </div>
+                    <div ng-if="taskDeatil.buttonType==2">
+                        <label style="margin-left: 30px;"><b style="color:red;">*</b>页面类型</label>
+                        <select ng-model="taskDeatil.pageOne" disabled="disabled" style="width: 125px;" id="pageType">
+                            <option ng-repeat="x in rDictList" value="{{x.value}}">{{x.label}}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <div ng-if="taskDeatil.buttonType==2">
+                        <label style="margin-left: 30px;"><b style="color:red;">*</b>跳转页面</label>
+                        <select style="width: 188px;" class="interests" id="jumpType" disabled="disabled"  ng-model="taskDeatil.pageTwo" ng-options="y.value as y.label for y in rPositionDictList">
+                            <option value="">--请选择--</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <h4>受众定向</h4>
+            <div class="boxb-a" style="width: 100%">
+                <div style="margin-left: 30px;">
+                    <span><input  type="checkbox" readonly="readonly"  disabled="disabled" id="all2" class="checkbox checkAll" value="0" >全部</span>
+                </div>
+                <div style="width: 100%" id="whiteRoter">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <input  type="checkbox" readonly="readonly" id="white" disabled="disabled" class="checkbox checkAll" value="1" ><span>白名单</span>
+                    </div>
+                    <div>
+                        <div>
+                            <label style="margin-left: 30px;"><b style="color:red;">*</b>名单类型:</label>
+                            <select  id="whiteTypevalue"  ng-model="WhiteRoster.rosterType">
+                                <option value="">全部</option>
+                                <option  ng-repeat="x in rosterTypeList" value="{{x.key}}">{{x.value}}</option>
+                            </select>
+                        </div>
+                        <div id="whiteRList">
+                            <label style="margin-left: 30px;"><b style="color:red;">*</b>选择名单:</label>
+                            <select  style="width: 260px;height: 40px;border-radius: 8px;" ng-model="WhiteRoster.rosterId" id="selectWRoster">
+                                <option  ng-repeat="x in taskDeatil.whiteMemberRoster" value="{{x.rosterId}}">{{x.rosterName}}</option>
+                            </select>
+                            <label ></label>
+                            <a href='javascript:void(0)' ng-click="queryDetailCount(1)" type="margin-left: 30px;">查询</a>&nbsp&nbsp&nbsp用户数量 &nbsp {{WhiteRoster.rosterCount}}<label></label>
+                        </div>
+                    </div>
+                </div>
+                <div id="blackRoter">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <input  type="checkbox" readonly="readonly" disabled="disabled" class="checkbox checkAll" id="black" value="2"><span>黑名单</span>
+                    </div>
+                    <div>
+                        <div>
+                            <label style="margin-left: 30px;"><b style="color:red;">*</b>名单类型:</label>
+                            <select  id="blackTypevalue" ng-model="BlackRoster.rosterType" >
+                                <option value="">全部</option>
+                                <option  ng-repeat="x in rosterTypeList" value="{{x.key}}">{{x.value}}</option>
+                            </select>
+                        </div>
+                        <div id="BlackRList">
+                            <label style="margin-left: 30px;"><b style="color:red;">*</b>选择名单:</label>
+                            <select  style="width: 260px;height: 40px;border-radius: 8px;" ng-model="BlackRoster.rosterId" id="selectBRoster">
+                                <option  ng-repeat="x in taskDeatil.blackMemberRoster" value="{{x.rosterId}}">{{x.rosterName}}</option>
+                            </select>
+                            <label ></label>
+                            <a href='javascript:void(0)' ng-click="queryDetailCount(2)" type="margin-left: 30px;">查询</a>&nbsp&nbsp&nbsp用户数量 &nbsp {{BlackRoster.rosterCount}}<label></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h4>审核信息</h4>
+            <div class="boxb-a" style="width: 100%">
+                <div style="margin-top:20px;">
+                    <label><b style="color:red;">*</b>任务时间:</label>
+                    <input type="text" id="taskTimeTo" disabled="disabled"/> -
+                    <input type="text" id="taskTimeEnd" style=" margin-right: 10px;" disabled="disabled"/>
+
+                    <label style="margin-left: 30px;margin-top: 0px;"><b style="color:red;">*</b>任务是否前端展示:</label>
+                    <input type="radio" name="isViewShow" id="showYes" value="1" checked="checked" disabled="disabled"/>是
+                    <input type="radio" name="isViewShow" id="showNo" value="2" disabled="disabled"/>否
+
+                    <label style="margin-left: 30px;margin-top: 0px;"><b style="color:red;">*</b>完成任务是否推送通知:</label>
+                    <input type="radio" name="isPushShow"  id="pushYes" value="1"  checked="checked" disabled="disabled"/>是
+                    <input type="radio" name="isPushShow"  id="pushNo"  value="2" disabled="disabled"/>否
+                </div>
+            </div>
+            <div class="boxb-a" style="width: 100%">
+                <div style="margin-top:20px;">
+                    <label><b style="color:red;">*</b>审核人:</label>
+                    <input style="width: 240px;margin-left: 10px;" ng-model="taskDeatil.auditor" disabled="disabled"/>
+                    <label><b style="color:red;">*</b>修改人:</label>
+                    <input style="width: 240px;margin-left: 10px;" ng-model="taskDeatil.updateUser" disabled="disabled"/>
+                    <label><b style="color:red;">*</b>修改时间:</label>
+                    <input style="width: 240px;margin-left: 10px;" disabled="disabled" id="updateTime"/>
+                    <label><b style="color:red;">*</b>创建人:</label>
+                    <input style="width: 240px;margin-left: 10px;" ng-model="taskDeatil.createUser" disabled="disabled"/>
+                </div>
+            </div>
+        </div>
+
+        <div class="small-boxb col-md-12">
+            <h3>任务规则设置</h3>
+            <hr>
+            <h4>任务属性</h4>
+            <div class="boxb-a" style="width: 100%">
+                <div style="margin-top:20px;">
+                    <div>
+                        <label><b style="color:red;">*</b>任务类型: </label>
+                        <select style="width: 160px;" ng-model="taskDeatil.activityType" ng-change="changeActivityType2(taskDeatil.activityType)" disabled="disabled">
+                           <option ng-repeat="x in types" value="{{x.activityType}}">{{x.name}}</option>
+                        </select>
+                        <span ng-bind="taskDeatil.activityType.desc"/>
+                    </div>
+
+                    <div>
+                        <label><b style="color:red;">*</b>任务模块:</label>
+                        <select  class="chosen-select" ng-model="taskDeatil.moduleCode" disabled="disabled" style="width:126px;margin-right: 200px;">
+                            <option value="">请选择</option>
+                            <option ng-repeat="m in moduleList" value="{{m.moduleCode}}">{{m.moduleName}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+
+            <h4>任务规则</h4>
+            <div class="boxb-a" style="width: 100%">
+                <div style="margin-top:20px;">
+
+            <div class="boxb-a" style="width: 65%;border: 1px solid #000;min-height: 200px;margin-left: 60px;">
+                <ul>
+                    <li>完成条件：</li>
+                    <li ng-repeat="rule in currentRuleList">
+                       <span ng-show="rule.isEssential == true">{{getRuleByKey(rule.ruleKey).ruleText}} ---- <label style="vertical-align: middle;">{{rule.ruleValue}}</label></span>
+                    </li>
+                </ul>
+                <ul>
+                    <li>组合规则：</li>
+                    <li ng-repeat="rule in currentRuleList">
+                       <span ng-show="rule.isEssential == false">{{getRuleByKey(rule.ruleKey).ruleText}} ---- <label style="vertical-align: middle;">{{getRuleValue(rule)}}</label></span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="boxb-a" style="width: 100%">
+                <div style="margin-top:20px;">
+                    <div>
+                        <label>活动细则:</label>
+                    </div>
+                    <div style="position: relative;">
+                        <div  style="margin-left: 10px; ">
+                            <div ng-repeat="detail in taskDeatil.configKeyList" class="detail" style="width: 100%;margin: 0">
+                                <input style="width: 1000px;" ng-model="detail.value" disabled="disabled"/>
+                                <a class="btn" style="padding: 6px 3px;" href="javascript:void(0)" ><i
+                                        class="fa fa-minus-square-o"></i></a>
+                            </div>
+                        </div>
+                        <p></p><br/>
+                        <p></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div  class="small-boxb col-md-12" style="margin-left: -32px;">
+            <h1>任务规则设置</h1>
+            <hr>
+            <h2>奖励规则</h2>
+            <div class="boxb-a" style="width: 100%">
+                <div style="margin-top:20px;">
+                    <div>
+                        <label><b style="color:red;">*</b>发放形式: </label>
+                        <select style="width: 160px;" ng-model="taskDeatil.channel" disabled="disabled">
+                            <option value="JF_LIFE">手动发放</option>
+                            <option  value="QB">自动发放</option>
+                            <option  value="WK">自动发放</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label><b style="color:red;">*</b>发放规则: </label>
+                        <select style="width: 160px;" ng-model="taskDeatil.prizeSendRule" disabled="disabled">
+                            <option value="1">普通</option>
+                            <option value="2">按会员等级</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <h2>奖励配置</h2>
+            <div  class="boxb-a" style="width: 100%">
+                <div style="margin-top:20px;">
+                    <div>
+                        <label><b style="color:red;">*</b>奖励类型: </label>
+                        <select style="width: 160px;" disabled="disabled" ng-model="taskDeatil.grantStatus" ng-options="x.id as x.name for x in prizeTypeList">
+
+                        </select>
+                    </div>
+
+                    <div>
+                        <label><b style="color:red;">*</b>卡券id: </label>
+                        <input type="text" disabled="disabled" ng-model="taskDeatil.couponId">
+                    </div>
+
+                    <!--                    <div>-->
+                    <!--                        <label><b style="color:red;">*</b>积分面值: </label>-->
+                    <!--                        <input type="text" ng-model="addTask.prizeValue">-->
+                    <!--                    </div>-->
+
+                    <!--                    <div>-->
+                    <!--                        <label><b style="color:red;">*</b>步数数值: </label>-->
+                    <!--                        <input type="text" ng-model="addTask.prizeValue">-->
+                    <!--                    </div>-->
+
+                    <div>
+                        <label><b style="color:red;">*</b>会员等级: </label>
+                        <select style="width: 160px;" ng-model="taskDeatil.level" disabled="disabled">
+                            <option value="0">lv0普通会员</option>
+                            <option value="1">lv1白银会员</option>
+                            <option value="2">lv2黄金会员</option>
+                            <option value="3">lv3白金会员</option>
+                            <option value="4">lv4钻石会员</option>
+                            <option value="5">lv5荣耀会员</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="boxb-a" style="width: 100%">
+                <span class="single_color tian" ng-click="Action()" style="color: #0a6aa1;margin-left: 30px;">添加奖励</span>
+            </div>
+
+            <div class="news_over" style="min-width: 500px;min-height:180px;border: 1px solid #DED;margin-left: 60px;height: auto;width: auto;">
+                <div class="news_single">
+                    <div class="news_right" style="margin-left: -25px;">
+                        <span class="news_txt" ng-repeat="x in taskDeatil.prizeList">{{x.remark}}
+                            <span class="news_del" ng-click="deleteReward(x)" style="color: #0a6aa1;">删除</span>
+                            <br/>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="boxb-a" style="width: 100%">
+                <div style="text-align: center;width: 100%;">
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+        </div>
+    </div>
+    <!--查看详情结束-->
+
+    <!--优先级排序 KOUWEI-->
+    <div class="priority-ranking" id="showPriority">
+        <div class="priority-ranking-small">
+            <h1 align="center">任务优先级排序</h1>
+            <div class="ranking-small">
+                <div class="ranking-smalla">优先级排序
+                    <i id="downMove" class="fa fa-caret-down " ng-click="move('X')"></i>
+                    <i id="upMove" class="fa fa-caret-up" ng-click="move('S')"></i>
+                    <!--   <i class="fa fa-times" ng-click="remove()"></i> -->
+                    <p><span style="color:#ff2327;">*</span>编号越大，优先级越低</p>
+                </div>
+                <div class="ranking-smallb">
+                    <!--  <table class="footable table table-stripped"  style="border-collapse: collapse;" data-page-size="8" data-filter=#filter> -->
+                    <table class="footable" >
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <td class="tdNumber">优先级编号</td>
+                            <td>任务名称</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="x in sortList" style="border-collapse: collapse;">
+                            <td><input type="checkbox" class="moveCheckbox iptCheck"  value="{{$index+1}}"></td>
+                            <td class="tdNumber"><input type="hidden" ng-model="hehe.a">{{$index+1}}</td>
+                            <td><input type="hidden" ng-model="hehe.b">{{x.activityName}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="bottom-btn">
+                <a class="btn btn-danger btn-rounded bottom-btna" href="#" ng-click="moveCommit()">确定</a>
+                <a class="btn btn-danger btn-rounded bottom-btnb" href="#" ng-click="moveCancel()">取消</a>
+            </div>
+        </div>
+    </div>
+    <!--优先级排序结束-->
+
+    <!--置顶开始 KOUWEI-->
+    <!-- 置顶弹出窗 -->
+    <div class="take-start-box" id="moveTop">
+        <div class="take-start-small">
+            <p>置顶配置</p>
+            置顶文案 <input type="text" maxlength="15" placeholder="" ng-model="topRecord.stickDesc">
+            <br><br>
+            上线时间 <input type="text" autocomplete="off" id="stickStartTime"/>
+            <br><br>
+            下线时间 <input type="text" autocomplete="off" id="stickEndTime"/>
+            <br><br>
+            <div class="bottom-btn">
+                <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="moveTop()">确定</a>
+                <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" ng-click="moveTopCancel()">取消</a>
+            </div>
+        </div>
+    </div>
+    <!--置顶结束-->
+    <!--审核-->
+    <div class="take-start-box" id="auditShow">
+        <div class="take-start-small newTakeEffect">
+            <h2 align="center">审核</h2>
+            <ul class="isEffect">
+                <li><p>审核结果：</p>
+                    <select id="auditStatus" ng-model="auditStatus">
+                        <option value="1">审核通过</option>
+                        <option value="2">审核不通过</option>
+                    </select>
+                </li>
+                <!--<li class="PosiText">-->
+                <!--<p>审核描述：</p>-->
+                <!--<textarea id="auditDescription" ng-model="auditDescription" maxlength="32" cols="25" rows="4"-->
+                <!--placeholder="选填，32字符以内"></textarea>-->
+                <!--</li>-->
+            </ul>
+            <div class="bottom-btn">
+                <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="Review(auditStatus)">确定</a>
+                <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#"
+                   onclick="$('.take-start-box').hide();">取消</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 置顶详情弹出窗 -->
+    <div class="take-start-box" id="stickDetail">
+        <div class="take-start-small">
+            <p>置顶详情</p>
+            <table style="margin-left: 80px; height: 200px; text-align: left;">
+                <tbody>
+                <tr>
+                    <td>置顶文案：</td>
+                    <td>{{stickDetail.stickDesc}}</td>
+                </tr>
+                <tr>
+                    <td>上线时间：</td>
+                    <td>{{stickDetail.startTime}}</td>
+                </tr>
+                <tr>
+                    <td>下线时间：</td>
+                    <td>{{stickDetail.endTime}}</td>
+                </tr>
+                <tr>
+                    <td>当前状态：</td>
+                    <td>{{stickDetail.status == 2 ? "生效中" : "已失效"}}</td>
+                </tr>
+                <tr>
+                    <td>操作日志：</td>
+                    <td>{{stickDetail.operationLog}}</td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="bottom-btn">
+                <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" ng-click="closeStickDetail()">关闭</a>
+            </div>
+        </div>
+    </div>
+
+
+    <!--选择渠道弹窗开始-->
+    <div class="take-start-box" id="channelShow">
+        <div class="take-start-small">
+            <p>请选择渠道</p>
+            理财渠道：
+            <select class="chosen-select" ng-model="addTask.channel">
+                <option value="">全部</option>
+                <option value="WK">悟空理财</option>
+                <option value="QB">玖富钱包</option>
+                <option value="JF_LIFE">聚生活小程序</option>
+            </select>
+            <br><br>
+            <div class="bottom-btn">
+                <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="addTaskTop()">确定</a>
+                <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" ng-click="moveTopCancel2()">取消</a>
+            </div>
+        </div>
+    </div>
+    <!--选择渠道弹窗结束-->
+
+    <!--添加任务开始-->
+    <div class="small-content" ng-show="viewPage == 3 ">
+        <div style="height: 60px; line-height: 60px;">
+            <a class="btn btn-blueW " ng-click="returnPage()" href="javascript:void(0)">返回</a>
+            {{addTask.channel=='QB'&&"玖富钱包"||addTask.channel=='WK'&&"悟空理财"||"聚生活小程序"}}
+        </div>
+
+        <div class="small-boxb col-md-12">
+            <h3>任务信息</h3>
+            <hr>
+            <h4>基础信息</h4>
+            <div class="boxb-a" style="width: 100%">
+                <div style="margin-top:20px;">
+                    <div>
+                        <label><b style="color:red;">*</b>任务名称：</label>
+                        <input ng-model="addTask.activityName" maxlength="30" placeholder="最多30字符" style="width: 200px;"/>
+                    </div>
+
+                    <div>
+                        <label style="margin-left: 30px;">任务标签:</label>
+                        <input ng-model="addTask.taskTag" maxlength="5" placeholder="5个字以内" style="width: 200px;"/>
+                    </div>
+
+                    <div>
+                        <label style="margin-left: 30px;">活动描述: </label>
+                        <input ng-model="addTask.title" maxlength="30" placeholder="最多30字符" style="width: 240px;margin-left: 10px;"/>
+                    </div>
+                </div>
+                <div style="margin-top:20px;"  ng-show="addTask.channel=='JF_LIFE'">
+                    <div>
+                        <label><b style="color:red;">*</b>首页气泡任务简称：</label>
+                        <input ng-model="addTask.subTitle" maxlength="4" placeholder="首页气泡任务简称(最多四个字)" style="width: 200px;"/>
+                    </div>
+                </div>
+            </div>
+
+            <h4>跳转配置</h4>
+            <div class="boxb-a" style="width: 100%">
+                <div style="margin-top:20px;">
+                    <div>
+                        <label><b style="color:red;">*</b>按钮文字:</label>
+                        <input ng-model="addTask.buttonDesc" maxlength="5" placeholder="5个字以内" style="width: 200px;"/>
+                    </div>
+
+                    <div>
+                        <label style="margin-left: 30px;"><b style="color:red;">*</b>按钮类型:</label>
+                        <select class="chosen-select" ng-model="addTask.buttonType" style="width:126px;" ng-change="selectPageOne(addTask.channel)">
+                            <option value="1">链接跳转</option>
+                            <option value="2" ng-if="addTask.channel != 'JF_LIFE'">原生跳转</option>
+                            <option value="3">浏览器打开链接</option>
+                        </select>
+                    </div>
+
+                    <div ng-if="addTask.buttonType==1 || addTask.buttonType==3" >
+                        <label style="margin-left: 30px;"><b style="color:red;" ng-if="addTask.channel!='JF_LIFE'">*</b>链接地址:</label>
+                        <input ng-model="addTask.go" style="width: 200px;"/>
+                    </div>
+
+                    <div ng-if="addTask.buttonType==2">
+                        <label style="margin-left: 30px;"><b style="color:red;">*</b>页面类型</label>
+                        <select ng-model="addTask.pageOne" ng-options="x.value as x.label for x in rDictList" ng-change="selectPageOneByRDict(addTask.channel, addTask.pageOne)" style="width: 125px;">
+                            <option value="">--请选择--</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <div ng-if="addTask.buttonType==2">
+                        <label><b style="color:red;">*</b>跳转页面</label>
+                        <select style="width: 188px;" class="interests" ng-model="addTask.pageTwo" ng-options="y.value as y.label for y in rPositionDictList">
+                            <option value="">--请选择--</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <h4>受众定向</h4>
+            <div class="boxb-a" style="width: 100%">
+                <div style="margin-left: 30px;display: flex;stify-content: space-between;align-items: center;">
+                    <input id="memberListAll" type="checkbox" class="checkbox checkAll" value="0" checked="checked" ng-click="complete(0)"><span>全部</span>
+                </div>
+                <div style="width: 100%">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <input id="memberListWhite" type="checkbox" class="checkbox checkAll" value="1" ng-disabled="!nameIds" ng-click="complete(1)"><span>白名单</span>
+                    </div>
+                    <div>
+                        <div>
+                            <label style="margin-left: 30px;"><b style="color:red;">*</b>名单类型:</label>
+                            <select class="selected-nav" ng-model="addTask.memberListName" ng-change="changeFindChannelGroups()" ng-disabled="!whiteSelection">
+                                <option value="{{x.key}}" ng-repeat="x in addTask.strategyList">{{x.value}}</option>
+                            </select>
+                        </div>
+                        <div id="userNameLikeSearch">
+                            <label style="margin-left: 30px;"><b style="color:red;">*</b>选择名单:</label>
+                            <select class="mySelect filter-select" style="width: 260px;height: 40px;border-radius: 8px;" ng-model="addTask.memberListId" ng-disabled="!whiteSelection">
+                                <option value="{{x.rosterId}}" ng-repeat="x in addTask.strChannelGroups">{{x.rosterName}}</option>
+                            </select>
+                            <label id="不能删用于模糊搜索占位"></label>
+                            <a href='javascript:void(0)' ng-click="queryMemberCount(1)" type="margin-left: 30px;">查询</a>&nbsp&nbsp&nbsp用户数量 &nbsp {{addTask.memberCount}}<label></label>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <input id="memberListBlack" type="checkbox" class="checkbox checkAll" value="2" ng-disabled="!nameIds" ng-click="complete(2)"><span>黑名单</span>
+                    </div>
+                    <div>
+                        <div>
+                            <label style="margin-left: 30px;"><b style="color:red;">*</b>名单类型:</label>
+                            <select class="selected-nav" ng-model="addTask.memberBlackListName" ng-change="changeBlackFindChannelGroups()" ng-disabled="!blackSelection">
+                                <option value="{{x.key}}" ng-repeat="x in addTask.strategyBlackList">{{x.value}}</option>
+                            </select>
+                        </div>
+                        <div id="userBlackNameLikeSearch">
+                            <label style="margin-left: 30px;"><b style="color:red;">*</b>选择名单:</label>
+                            <select class="mySelect2 filter-select" style="width: 260px;height: 40px;border-radius: 8px;" ng-model="addTask.memberBlackListId" ng-disabled="!blackSelection">
+                                <option value="{{x.rosterId}}" ng-repeat="x in addTask.strBlackChannelGroups">{{x.rosterName}}</option>
+                            </select>
+                            <label id="不能删用于模糊搜索占位Black"></label>
+                            <a href='javascript:void(0)' ng-click="queryMemberCount(2)" type="margin-left: 30px;">查询</a>&nbsp&nbsp&nbsp用户数量 &nbsp {{addTask.memberBlackCount}}<label></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h4>审核信息</h4>
+            <div class="boxb-a" style="width: 100%">
+                <div style="margin-top:20px;">
+                    <label><b style="color:red;">*</b>任务时间:</label>
+                    <input type="text" id="addTaskStartTime"/> -
+                    <input type="text" id="addTaskEndTime"style=" margin-right: 10px;"/>
+
+                    <label style="margin-left: 30px;margin-top: 0px;"><b style="color:red;">*</b>任务是否前端展示:</label>
+                    <input type="radio" name="isAddViewShow" value="1" checked="checked" id="yesIsView" ng-disabled="addTask.channel=='JF_LIFE'"/>是
+                    <input type="radio" name="isAddViewShow" value="2" id="noIsView" ng-disabled="addTask.channel=='JF_LIFE'"/>否
+
+                    <label style="margin-left: 30px;margin-top: 0px;"><b style="color:red;">*</b>完成任务是否推送通知:</label>
+                    <input type="radio" name="isAddPushMessage" value="1" checked="checked" id="yesIsPush" />是
+                    <input type="radio" name="isAddPushMessage" value="2" id="noIsPush" />否
+                </div>
+            </div>
+            <div class="boxb-a" style="width: 100%">
+                <div style="margin-top:20px;">
+                    <label><b style="color:red;">*</b>审核人:</label>
+                    <select style="width: 200px;" ng-model="addTask.auditor">
+                        <option value="">请选择</option>
+                        <option value='{{x.key}}' ng-repeat="x in addTask.auditors">{{x.value}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="small-boxb col-md-12">
+            <h3>任务规则设置</h3>
+            <hr>
+            <h4>任务属性</h4>
+            <div class="boxb-a" style="width: 100%">
+                <div style="margin-top:20px;">
+                    <div>
+                        <label><b style="color:red;">*</b>任务类型: </label>
+                        <select class="mySelect2 filter-select" style="width: 260px;height: 40px;border-radius: 8px;" ng-model="addTask.activityTypes" ng-change="changeActivityType2(addTask.activityTypes)" ng-options="x.name for x in types">
+                        </select>
+                        <span ng-bind="addTask.activityTypes.desc"/>
+                    </div>
+
+                    <div>
+                        <label><b style="color:red;">*</b>任务模块:</label>
+                        <select  class="chosen-select" ng-model="addTask.moduleCode" style="width:126px;margin-right: 200px;" ng-change="changModuleType2(addTask.activityTypes, addTask.moduleCode)">
+                            <option value="">请选择</option>
+                            <option ng-repeat="m in moduleList" value="{{m.moduleCode}}">{{m.moduleName}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <h4>任务规则</h4>
+            <div class="boxb-a" style="width: 100%">
+                <div style="margin-top:20px;">
+                    <div>
+                        <label><b style="color:red;">*</b>任务完成条件:</label>
+                        <select ng-model="addTask.selectRequirement.ruleKey" id="completionConditions" ng-change="getChangeByRuleKey(addTask.selectRequirement.ruleKey)">
+                            <option value="">请选择</option>
+                            <option ng-repeat="requirement in requirements" value="{{requirement.ruleKey}}">{{requirement.ruleText}}</option>
+                        </select>
+                        <span>{{addTask.target.remark}}</span>
+                    </div>
+
+                    <div>
+                        <label ng-if="getWidgetTypeRequirement(addTask.selectRequirement.ruleKey).value != 'tj_default'">
+                            完成条件输入项:
+                        </label>
+
+                        <input ng-if="getWidgetTypeRequirement(addTask.selectRequirement.ruleKey).value == 'text'" ng-model="addTask.selectRequirement.ruleValue"/>
+
+                        <input type="hidden" ng-if="getWidgetTypeRequirement(addTask.selectRequirement.ruleKey).value == 'tj_default'" ng-init="addTask.selectRequirement.ruleValue = 'T'" ng-model="addTask.selectRequirement.ruleValue"/>
+
+                        <select ng-if="getWidgetTypeRequirement(addTask.selectRequirement.ruleKey).value == 'select'" ng-model="addTask.selectRequirement.ruleValue">
+                            <option ng-repeat="r in getWidgetType(selectRequirement.ruleKey).description.split(';')" value={{parseRuleKey(r)}}>{{r}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="boxb-a" style="width: 100%">
+                <a style="margin-left: 30px" ng-click="addCompletionConditions()">添加</a>
+            </div>
+
+            <div class="boxb-a" style="width: 100%">
+                <div style="margin-top:20px;">
+                    <div>
+                        <label>组合规则:</label>
+                        <select style="width:200px;" ng-model="selectRule" ng-options="rule.ruleText for rule in taskRules" ng-change="ruleChange(selectRule)"></select>
+                    </div>
+                </div>
+            </div>
+
+<!--            <div class="boxb-a" style="width: 100%">-->
+<!--                <div style="margin-top:20px;">-->
+<!--                    <div>-->
+<!--                        <label><b style="color:red;">*</b>适用业务类型:</label>-->
+<!--                        <select style="width:200px;">-->
+<!--                            <option value="1">网贷</option>-->
+<!--                            <option value="2">银行精选</option>-->
+<!--                            <option value="3">基金</option>-->
+<!--                        </select>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+            <div class="boxb-a" style="width: 100%">
+                <div style="margin-top:20px;">
+                    <div>
+                        <label>描述:</label><span ng-bind="selectRule.remark"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!--商品品类-->
+            <div class="boxb-a" style="width: 100%" ng-if="selectRule.ruleKey=='limit_life_service_type'">
+                <div style="margin-top:20px;">
+                    <div style="float:left;width:100%;">
+                        <label style="float:left;width:20%;">适用商品类型:</label>
+                        <div style="float:left;width:100%;" class="appliProd">
+                            <p>
+                                <input id="all" type="checkbox" class="noAllId"   text="全部 " value="100"  ng-click="muTexAll()">全选</input>
+                                <input id="recharge" style="margin-left: 10px;" type="checkbox" class="noAllId"   text="充值业务 " value="101"  ng-click="muTex()">充值业务 </input>
+                                <input id="video" style="margin-left: 10px;" type="checkbox" class="noAllId"  text="视听会员" value="102" ng-click="muTex()">视听会员</input>
+                                <input id="shopping" style="margin-left: 10px;" type="checkbox" class="noAllId"  text="购物消费" value="103"  ng-click="muTex()">购物消费</input>
+                                <input id="life" style="margin-left: 10px;" type="checkbox" class="noAllId" text="生活缴费" value="104" ng-click="muTex()">生活缴费</input>
+                                <input id="food" style="margin-left: 10px;" type="checkbox"  class="noAllId" text="生活美食"  value="105" ng-click="muTex()">生活美食</input>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div style="float:left;width:100%;">
+                        <label style="float:left;width:20%;">适用品类:</label>
+                        <div style="float:left;width: 80%;margin-left: 59px;" class="appliProd">
+                            <p>
+                                <span style="margin-left:10px;" ng-repeat="x in categoryList" >
+                                    <input type="checkbox"  class="versionCheckbox checkAll" value="{{x.categoryId}}|{{x.categoryUrl}}">{{x.categoryName}}
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                    <a style="margin-left: 30px;" href="javascript:void(0)" data-ng-click="addRule(selectRule,2)" >添加</a>
+                </div>
+            </div>
+            <!--银行精选-->
+            <div class="boxb-a" style="width: 100%" ng-if="selectRule.ruleKey=='limit_bank_product'">
+                <div style="margin-top:20px;">
+                    <div style="float:left;width:100%;">
+                        <label style="float:left;width:20%;">银行名称:</label>
+                        <div style="float:left;width:100%;" class="appliProd">
+                            <p>
+                                <span style="margin-left:10px;" ng-repeat="x in bankDetailList" >
+                                    <input type="checkbox"  ng-click="bankDetail()" class="checkAll bankId" value="{{x.bankCode}}">{{x.bankName}}
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div style="float:left;width:100%;">
+                        <label style="float:left;width:20%;">限制银行产品:</label>
+                        <div style="float:left;width: 80%;margin-left: 59px;" class="appliProd">
+                            <p>
+                                <span style="margin-left:10px;" ng-repeat="x in bankProductList"><!--银行产品描述({{x.description}})-->
+                                    <span ng-if="x.bankCode!='BINH' ">
+                                    <input type="checkbox"  class="checkAll bankProductId" value="{{x}}">{{x.productName}}({{x.description}})
+                                    </span>
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                    <a style="margin-left: 30px;" href="javascript:void(0)" data-ng-click="addRule(selectRule,3)" >添加</a>
+                </div>
+            </div>
+            <!--普通-->
+            <div id="writeId" class="boxb-a" style="width: 100%" ng-if="selectRule.ruleKey!='limit_life_service_type' && selectRule.ruleKey!='limit_bank_product'">
+                <div style="margin-top:20px;">
+                    <div>
+                        <label>输入项: </label>
+
+                        <input ng-if="getWidgetType(selectRule.ruleKey).value == 'text'" ng-model="selectRule.ruleValue"/>
+
+                        <span ng-if="getWidgetType(selectRule.ruleKey).value == 'true'">
+                            <label style="width: 140px">是</label>
+                        </span>
+
+                        <select ng-if="getWidgetType(selectRule.ruleKey).value == 'select'" ng-model="selectRule.ruleValue"  >
+                            <option   ng-repeat="r in getWidgetType(selectRule.ruleKey).description.split(';')" value={{parseRuleKey(r)}}>{{r}}</option>
+                        </select>
+
+                        <span ng-if="getWidgetType(selectRule.ruleKey).value == 'checkbox' && (addTask.channel == 'QB' || addTask.channel == 'JF_LIFE')"  ng-repeat="desc in getWidgetType(selectRule.ruleKey).description.split(';')" ng-model="selectRule.ruleValue">
+                           <label>
+                               <input type="checkbox" ng-click="getContinuationTypeInfo()" style="height:12px;margin:auto" class="continuationTypeInfoBox checkAll"  id="{{parseRuleKey(desc)}}" value="{{parseRuleKey(desc)}}">{{desc}}
+                               <input type="text" id="qbActtDeadline{{parseRuleKey(desc)}}" placeholder="期限用英文分号;分割，最多5个" ng-show="parseRuleKey(desc)=='ACTT'">
+
+                           </label>
+                       </span>
+                        <span ng-if="getWidgetType(selectRule.ruleKey).value == 'checkbox' && addTask.channel == 'WK'"  ng-repeat="wkp in getWidgetType(selectRule.ruleKey).parentId.split(';')" ng-model="selectRule.ruleValue">
+                           <label>
+                               <input type="checkbox" ng-click="getContinuationTypeInfo()" style="height:12px;margin:auto" class="continuationTypeInfoBox checkAll"  id="{{parseRuleKey(wkp)}}" value="{{parseRuleKey(wkp)}}">{{wkp}}
+                               <input type="text" id="wkActtDeadline{{parseRuleKey(wkp)}}" placeholder="期限用英文分号;分割，最多5个"  ng-show="parseRuleKey(wkp)=='ACTT'">
+                           </label>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="boxb-a" style="width: 100%" ng-if="selectRule.ruleKey!='limit_life_service_type' && selectRule.ruleKey!='limit_bank_product'">
+                <a style="margin-left: 30px" data-ng-click="addRule(selectRule,1)">添加</a>
+            </div>
+
+            <div class="boxb-a" style="width: 40%;border: 1px solid #000;min-height: 200px;margin-left: 60px;">
+                <ul>
+                    <li>完成条件：</li>
+                    <li ng-if="rule.isEssential" ng-repeat="rule in addTask.ruleList">{{getRuleByKey(rule.ruleKey).ruleText}}-{{rule.ruleValue}} <a href="javascript:void(0)" class="btn" ng-click="removeRule(rule)">删除</a></li>
+                    <li>组合规则：</li>
+                    <li ng-if="!rule.isEssential" ng-repeat="rule in addTask.ruleList">
+<!--                        {{getRuleByKey(rule.ruleKey).ruleText}} &#45;&#45;&#45;&#45; <label style="vertical-align: middle;">{{rule.ruleValue}}</label>-->
+                        {{getRuleByKey(rule.ruleKey).ruleText}} ---- <label style="vertical-align: middle;">{{getRuleValue(rule)}}</label>
+                        <a href="javascript:void(0)" class="btn" data-ng-click="removeRule(rule)">删除</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="boxb-a" style="width: 100%">
+                <div style="margin-top:20px;">
+                    <div>
+                        <label>活动细则:</label>
+                    </div>
+                    <div style="position: relative;">
+                        <div id="taskDetail" style="margin-left: 10px; ">
+                            <div ng-repeat="detail in taskDetailList" class="detail" style="width: 100%;margin: 0">
+                                <input style="width: 1000px;" ng-model="detail.value" class="taskDetailAdd"/>
+                                <a class="btn" style="padding: 6px 3px;" href="javascript:void(0)" ng-click="minusTaskDetail($index)"><i
+                                        class="fa fa-minus-square-o"></i></a>
+                            </div>
+                            <a class="btn btn-info" href="javascript:void(0)" ng-click="addTaskDetail()">添加</a>
+                        </div>
+                        <div>
+                            <span style="position: absolute; left: 150px; bottom: 0;width: 350px;">谨慎填写，须完整填写任务细则， 在前端展示给用户</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div  class="small-boxb col-md-12">
+            <h3>任务规则设置</h3>
+            <hr>
+            <h4>奖励规则</h4>
+            <div class="boxb-a" style="width: 100%">
+                <div style="margin-top:20px;">
+                    <div>
+                        <label><b style="color:red;">*</b>发放形式: </label>
+                        <select style="width: 160px;" ng-model="addTask.grantStatus" ng-if="addTask.channel != 'JF_LIFE'" ng-change="changePrizeList()">
+                            <option value="">请选择</option>
+                            <option value="2">自动发放</option>
+                        </select>
+                        <select style="width: 160px;" ng-model="addTask.grantStatus" ng-if="addTask.channel == 'JF_LIFE'" ng-change="changePrizeList()">
+                            <option value="">请选择</option>
+                            <option value="1">手动领取</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label><b style="color:red;">*</b>发放规则: </label>
+                        <select style="width: 160px;" ng-model="addTask.prizeSendRule" ng-if="addTask.channel != 'JF_LIFE'" ng-change="changePrizeList()">
+                            <option value="">请选择</option>
+                            <option value="1">普通</option>
+                            <option value="2">按会员等级</option>
+                        </select>
+                        <select style="width: 160px;" ng-model="addTask.prizeSendRule" ng-if="addTask.channel == 'JF_LIFE'" ng-change="changePrizeList()">
+                            <option value="">请选择</option>
+                            <option value="1">普通</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <h4>奖励配置</h4>
+            <div  class="boxb-a" style="width: 100%">
+                <div style="margin-top:20px;">
+                    <div>
+                        <label><b style="color:red;">*</b>奖励类型: </label>
+                        <select style="width: 160px;" ng-model="addTask.prizeType">
+                            <option value="">请选择</option>
+                            <option value="1" ng-if="addTask.channel != 'JF_LIFE'">卡券</option>
+                            <option value="2" ng-if="addTask.channel != 'JF_LIFE'">积分</option>
+                            <option value="3" ng-if="addTask.channel == 'JF_LIFE'">步数</option>
+                            <option value="4" ng-if="addTask.channel=='WK'">会员回馈金</option>
+                            <option value="newCoupon">新卡券</option>
+                            <option value="mallCoupon">商城卡券</option>
+                            <option value="51" ng-if="addTask.channel == 'WK'">黄金豆</option>
+                            <option value="51" ng-if="addTask.channel == 'QB'">黄金豆</option>
+                        </select>
+                    </div>
+
+                    <div ng-show="addTask.prizeType==1 || addTask.prizeType=='newCoupon' || addTask.prizeType=='mallCoupon'">
+                        <label><b style="color:red;">*</b>卡券ID: </label>
+                        <input type="text" ng-model="addTask.couponId">
+                    </div>
+                    <div ng-show="addTask.prizeType==2">
+                        <label><b style="color:red;">*</b>积分规则ID: </label>
+                        <!--                        <input type="text" ng-model="addTask.ruleId" ng-blur="ruleIdCheck(addTask.ruleId)">-->
+                        <input type="text" ng-model="addTask.ruleId">
+                    </div>
+                    <div ng-show="addTask.prizeType==2">
+                        <label><b style="color:red;">*</b>积分面值: </label>
+                        <input type="text" ng-model="addTask.prizeValue">
+                    </div>
+
+                    <div ng-show="addTask.prizeType==3">
+                        <label><b style="color:red;">*</b>步数数值: </label>
+                        <input type="text" ng-model="addTask.prizeValue">
+                    </div>
+
+                    <div ng-show="addTask.prizeType==4">
+                        <label><b style="color:red;">*</b>红包数值: </label>
+                        <input type="text" ng-model="addTask.prizeValue">
+                    </div>
+
+                    <div ng-show="addTask.prizeType==2">
+                        <label><b style="color:red;">*</b>积分描述: </label>
+                        <input type="text" maxlength="20" placeholder="积分记录中用户可见,20字符以内" ng-model="addTask.prizeDesc">
+                    </div>
+
+                    <div ng-show="addTask.prizeType==3">
+                        <label><b style="color:red;">*</b>奖励描述: </label>
+                        <input type="text" maxlength="10" placeholder="10字符以内,用于前段展示" ng-model="addTask.prizeDesc">
+                    </div>
+
+                    <div ng-show="addTask.prizeType==51">
+                        <label><b style="color:red;">*</b>黄金豆数量: </label>
+                        <input type="text" maxlength="7" placeholder="最高9999999" ng-model="addTask.prizeValue">
+                    </div>
+
+                    <div ng-show="addTask.prizeType==51">
+                        <label><b style="color:red;">*</b>描述: </label>
+                        <input type="text" maxlength="20" placeholder="" ng-model="addTask.prizeDesc">
+                    </div>
+
+                    <div ng-show="addTask.channel != 'JF_LIFE'&&addTask.prizeSendRule==2">
+                        <label><b style="color:red;">*</b>会员等级: </label>
+                        <select style="width: 160px;" ng-model="addTask.level" ng-if="addTask.channel=='QB'">
+                            <option value="">请选择</option>
+                            <option value="0">lv0普通会员</option>
+                            <option value="1">lv1白银会员</option>
+                            <option value="2">lv2黄金会员</option>
+                            <option value="3">lv3白金会员</option>
+                            <option value="4">lv4钻石会员</option>
+                            <option value="5">lv5荣耀会员</option>
+                        </select>
+                        <select style="width: 160px;" ng-model="addTask.level" ng-if="addTask.channel=='WK'">
+                            <option value="">请选择</option>
+                            <option value="100">lv0普通会员</option>
+                            <option value="101">lv1白银会员</option>
+                            <option value="102">lv2黄金会员</option>
+                            <option value="103">lv3白金会员</option>
+                            <option value="104">lv4钻石会员</option>
+                            <option value="105">lv5荣耀会员</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="boxb-a" style="width: 100%">
+                <span class="single_color tian" ng-click="addReward()" style="color: #0a6aa1;margin-left: 30px;">添加奖励</span>
+            </div>
+
+            <div class="news_over" style="min-width: 500px;min-height:180px;border: 1px solid #DED;margin-left: 60px;height: auto;width: auto;">
+                <div class="news_single">
+                    <div class="news_right" style="margin-left: -25px;">
+                        <li class="news_txt" ng-repeat="x in addTask.prizeList" ng-if="x.prizeType != 'point'">{{x.remark}}
+                            <span class="news_del" ng-click="deleteReward(x)" style="color: #0a6aa1;">删除</span>
+                            <br/>
+                        </li>
+                        <li class="news_txt" ng-repeat="x in addTask.prizeList" ng-if="x.prizeType == 'point'">{{x.remark}}--剩余额度：{{x.jfCount}}
+                            <span class="news_del" ng-click="deleteReward(x)" style="color: #0a6aa1;">删除</span>
+                            <br/>
+                        </li>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="boxb-a" style="width: 100%">
+<!--                <label style="margin-left: 30px;"><b style="color:red;">*只支持本金券,加息券,回馈金,积分,步数！！</b> </label>-->
+                <div style="text-align: center;width: 100%;">
+                    <a href="javascript:void(0)" ng-click="saveTask(0)" ng-show="isUpdate==0 && addStruts==0" class="btn btn-info btn-rounded btn-gradient btn-gradienta">
+                        <i class="fa fa-plus-square-o"></i><span>保存</span>
+                    </a>
+                    <a href="javascript:void(0)" ng-click="saveTask(1)" ng-show="isUpdate==1 && addStruts==0" class="btn btn-info btn-rounded btn-gradient btn-gradienta">
+                        <i class="fa fa-plus-square-o"></i><span>修改</span>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!--添加任务结束-->
+
+</div>
+
+
+
+
+<script src="${jsRoot}/jquery-2.1.1.js"></script>
+<script src="${jsRoot}/bootstrap.min.js"></script>
+<script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="${jsRoot}/plugins/jeditable/jquery.jeditable.js"></script>
+
+<script src="${jsRoot}/jquery-2.1.1.js"></script>
+<script src="${jsRoot}/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="${jsRoot}/angular/angular.min.js"></script>
+<script type="text/javascript" src="${staticRoot}/js/plugins/sweetalert/sweetalert.min.js"></script>
+<script src="${jsRoot}/plugins/laydate/laydate.js"></script>
+<script src="${jsRoot}/bootstrap.min.js"></script>
+
+<script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="${jsRoot}/plugins/jeditable/jquery.jeditable.js"></script>
+
+
+<!-- Custom and plugin javascript -->
+<script src="${jsRoot}/inspinia.js"></script>
+<script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.iframe-transport.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.ui.widget.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-process.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-validate.js"></script>
+
+
+
+<!-- Data Tables -->
+<script src="${jsRoot}/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.responsive.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.tableTools.min.js"></script>
+<script src="${jsRoot}/plugins/laydate/laydate.js"></script>
+<script src="${jsRoot}/DateUtil.js"></script>
+<!-- Custom and plugin javascript -->
+<script src="${jsRoot}/inspinia.js"></script>
+<script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+<script type="text/javascript" src="${jsRoot}/angular/angular.min.js"></script>
+<!--  日期控件  -->
+<script src="${jsRoot}/plugins/datapicker/bootstrap-datepicker.js"></script>
+<script src="${jsRoot}/plugins/datapicker/bootstrap-datepicker.zh-CN.min.js"></script>
+<!-- 提示弹窗 -->
+<script type="text/javascript" src="${staticRoot}/js/plugins/sweetalert/sweetalert.min.js"></script>
+<script type="text/javascript" src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+
+<!--下拉搜索-->
+<script src="${jsRoot}/plugins/jeditable/select2.full.min.js"></script>
+<!--大数据名单查询js-->
+<script src="${jsRoot}/oms/ruleconfig/jquery.searchableSelect.js"></script>
+
+
+<!--自定义js-->
+<script src="${jsRoot}/oms/taskQuery.js"></script>
+<script type="text/javascript" src="${jsRoot}/oms/newTask.js?rand=${random}"></script>
+
+
+<script>
+    $(function(){
+        $('.mySelect').select2();
+    })
+
+    $(function(){
+        $('.mySelect2').select2();
+    })
+
+    function clickAll(){
+        $(".checkOne").prop("checked",$(".checkAll").prop("checked"));
+    }
+
+    function clickOne(){
+        var allChecked = true;
+        $(".checkOne").each(function(){
+            if($(this).prop("checked") == false){
+                allChecked = false;
+            };
+        });
+        if(allChecked){
+            $(".checkAll").prop("checked",true);
+        } else {
+            $(".checkAll").prop("checked",false);
+        }
+    }
+
+    var startTime = laydate({
+        elem:'#startTime',
+        istime: true,
+        format: 'YYYY-mm-DD hh:mm:ss',
+        event:'click'
+    })
+
+    var endTime = laydate({
+        elem:'#endTime',
+        istime: true,
+        format: 'YYYY-mm-DD hh:mm:ss',
+        event:'click'
+    })
+
+    var addTaskStartTime = laydate({
+        elem: '#addTaskStartTime',
+        istime: true,
+        format: 'YYYY-mm-DD hh:mm:ss',
+        event: 'click'
+    })
+
+    var addTaskEndTime = laydate({
+        elem: '#addTaskEndTime',
+        istime: true,
+        format: 'YYYY-mm-DD hh:mm:ss',
+        event:'click',
+        type:'datetime',
+        ready:function (date) {
+            if(!$.trim($("#addTaskEndTime").val())){
+                this.datetime.hour=23;
+                this.datetime.hour=59;
+                this.datetime.hour=59;
+
+            }
+
+        },
+        choose: function(dates){ //选择好日期的回调
+            var offlineTimes = dates.split(" ");
+            var time = offlineTimes[1].split(":");
+            if(time[0]==00&&time[1]==00&&time[2]==00){
+                var miniTime="23:59:59";
+                $("#addTaskEndTime").val(offlineTimes[0]+" "+miniTime);
+            }
+        }
+    })
+
+    var stickStartTime = laydate({
+        elem: '#stickStartTime',
+        istime: true,
+        format: 'YYYY-mm-DD hh:mm:ss',
+        event: 'click'
+    })
+
+    var stickEndTime = laydate({
+        elem: '#stickEndTime',
+        istime: true,
+        format: 'YYYY-mm-DD hh:mm:ss',
+        event:'click',
+        type:'datetime',
+        ready:function (date) {
+            if(!$.trim($("#stickEndTime").val())){
+                this.datetime.hour=23;
+                this.datetime.hour=59;
+                this.datetime.hour=59;
+
+            }
+
+        },
+        choose: function(dates){ //选择好日期的回调
+            var offlineTimes = dates.split(" ");
+            var time = offlineTimes[1].split(":");
+            if(time[0]==00&&time[1]==00&&time[2]==00){
+                var miniTime="23:59:59";
+                $("#stickEndTime").val(offlineTimes[0]+" "+miniTime);
+            }
+        }
+    })
+</script>
+
+
+
+</body>
+</html>

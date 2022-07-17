@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>安全保障</title>
+  <link href="${cssRoot}/bootstrap.min.css" rel="stylesheet">
+  <link href="${cssRoot}/../font-awesome/css/font-awesome.css" rel="stylesheet">
+  <!-- FooTable -->
+  <link href="${cssRoot}/plugins/footable/footable.core.css" rel="stylesheet">
+  <link href="${cssRoot}/animate.css" rel="stylesheet">
+  <link href="${cssRoot}/style.css?rand=${random}" rel="stylesheet">
+  <link href="${cssRoot}/styleT.css?rand=${random}" rel="stylesheet">
+  <script>
+      var globalConfig = {
+          basePath: "${ctx}",
+          staticRoot: "${staticRoot}",
+          loginName:"${Session.sessionUser.loginName}"
+      };
+  </script>
+</head>
+
+
+<body ng-app="myApp" ng-controller="rootController">
+<div id="wrapper">
+  <div class="header-box">
+    <#include "/common/top.html" encoding="UTF-8" />
+  </div>
+  <nav class="navbar-default navbar-static-side nav-boxa" role="navigation" id="HeadTitle">
+    <div class="sidebar-collapse"  style="height: 675px;overflow-y: scroll;">
+      <#include "/common/left.html" encoding="UTF-8" />
+    </div>
+  </nav>
+</div>
+<div  class="content-box">
+  <div class="small-content">
+
+    <!-- 第一部分开始 -->
+    <div class="small-boxa">
+      <a class="btn btn-danger btn-rounded btn-gradient btn-gradienta" href="#" ng-click="addSecurity()"> <i class="fa fa-plus-square-o"></i> <span>新建</span></a>
+    </div>
+    <!-- 第一部分结束 -->
+
+    <!-- 第二部分开始 -->
+    <div class="small-boxb col-md-12">
+      <div class="boxb-a">
+        <p style="margin-top:20px;">理财渠道：
+          <select class="chosen-select" ng-model="searchCondition.productChannel" ng-init="searchCondition.productChannel=''"  style="width:160px;margin-left:13px"  >
+            <option value="">全部</option>
+            <option value="0">悟空理财</option>
+            <option value="1">玖富钱包</option>
+          </select>
+        </p>
+        <p>审核状态：
+          <select class="chosen-select" ng-model="searchCondition.auditStatus" ng-init="searchCondition.auditStatus=''"  style="width:160px;margin-left:13px" >
+            <option value="">全部</option>
+            <option value="0">待审核</option>
+            <option value="1">审核通过</option>
+            <option value="2">审核不通过</option>
+          </select>
+        </p>
+      </div>
+      <div class="boxb-b">
+        <p>文件名称：
+          <input type="text" ng-model="searchCondition.fileName" name="fileName" maxlength="20" style="width:160px;margin-left:13px" >
+        </p>
+        <p>
+          文件类型：
+          <select class="chosen-select" ng-model="searchCondition.fileType" ng-init="searchCondition.fileType='1'" style="width:160px;margin-left:13px"  >
+            <option value="1">安全保障</option>
+            <option value="2">安全保障使用规则</option>
+          </select>
+        </p>
+      </div>
+      <div class="boxb-c">
+        <p>创建时间：
+          <input id="createTimeStart"  name="createTimeStart" type="text"   ng-model="searchCondition.createTimeStart">
+          <input id="createTimeEnd"    name="createTimeEnd"   type="text"   ng-model="searchCondition.createTimeEnd">
+        </p>
+        <p>
+          <a class="btn btn-success btn-rounded btn-blueW btn-blueWa" ng-click="querySecurityAssurance(1)" href="javascript:void(0)"><i class="fa fa-search"></i> <span>搜索</span></a>
+          <a class="btn btn-success btn-rounded btn-blueW btn-blueWb" ng-click="resetSecurityAssurance()" href="javascript:void(0)"><i class="fa fa-refresh"></i> <span>重置</span></a>
+        </p>
+      </div>
+    </div>
+    <!-- 第二部分结束 -->
+
+    <!-- 第三部分开始 -->
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="ibox float-e-margins" style="margin-top:10px;">
+          <div class="ibox-content">
+            <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+              <thead>
+                <tr>
+                  <th>id</th>
+                  <th>理财渠道</th>
+                  <th>文件名称</th>
+                  <th>文件类型</th>
+                  <th>创建时间</th>
+                  <th>创建人</th>
+                  <th>审核状态</th>
+                  <th>生效状态</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="x in securityAssuranceList">
+                  <td>{{$index+1}}</td>
+                  <td>{{x.productChannel=='0' && '悟空' || x.productChannel=='1' && '钱包'}}</td>
+                  <td>{{x.fileName}}</td>
+                  <td>{{x.fileType=='1' && '安全保障'|| x.fileType=='2' && '安全保障使用规则'|| '其他'}}</td>
+                  <td>{{x.createTime}}</td>
+                  <td>{{x.createPerson}}</td>
+                  <td>{{x.auditStatus==0 && '待审核' || x.auditStatus==1 && '审核通过' || x.auditStatus==2 && '审核失败' }}</td>
+                  <td>{{x.valid=='1'?'生效':'失效'}}</td>
+                  <td>
+                    <a href="javascript:void(0)" ng-click="showCheck(x)" class="look-start">查看</a>
+                    <a href="javascript:void(0)" ng-click="updateCheck(x)" class="modify-start">修改</a>
+                    <a href="javascript:void(0)" ng-click="validCheck(x)" class="take-start">{{x.valid=='1'?"失效":"生效"}}</a>
+                    <a href="javascript:void(0)" ng-if="x.auditStatus=='0' && loginName == x.auditNo" ng-click="auditCheck(x)" class="examine">审核</a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <#include "/common/page.html" encoding="UTF-8" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 第三部分结束 -->
+
+    <!-- 查看详情开始 -->
+    <div  id="showCheckID" class="look-start-box">
+      <div class="add-look-start">
+        <h1 align="center">查看安全保障</h1>
+        <div class="look-start-a">
+          <p>理财渠道：</p>
+          <span>{{detail.productChannel==0 && '悟空理财' || detail.productChannel==1 && '玖富钱包'}}</span>
+        </div>
+        <div class="look-start-a">
+          <p>文件类型：</p>
+          <span>{{detail.fileType==1 && '安全保障' || detail.fileType==2 && '安全保障使用规则'}}</span>
+        </div>
+        <div class="look-start-a">
+          <p>文件名称：</p>
+          <span>{{detail.fileName}}</span>
+        </div>
+        <div class="look-start-a"  ng-if="detail.fileType==1">
+          <p>截止时间：</p>
+          <span>{{detail.endTime}}</span>
+        </div>
+        <div class="look-start-a" ng-if="detail.fileType==1">
+          <p>账户余额：</p>
+          <span>{{detail.balance}}</span>
+        </div>
+        <div class="look-start-a" ng-if="detail.fileType==1">
+          <p>期数：</p>
+          <span>{{detail.periods}}</span>
+        </div>
+        <div class="look-start-a">
+          <p>文件地址：</p>
+          <span>{{detail.fileURL}}</span>
+        </div>
+        <div class="bottom-btn">
+          <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#"  ng-click="hideCheck()" >关闭</a>
+        </div>
+      </div>
+    </div>
+    <!-- 查看详情结束 -->
+
+    <!-- 添加安全保障 -->
+    <div class="add-start-bg" id="addShow">
+      <div class="add-start">
+        <h1 align="center">添加安全保障 </h1>
+        <div class="start-a">
+          <p>渠道<b style="color:red;">*</b>:</p>
+          <select   ng-model="add.productChannel"  id='addProductChannel'  >
+            <option value="0">悟空理财</option>
+            <option value="1">玖富钱包</option>
+          </select>
+        </div>
+        <div class="start-a">
+          <p>文件类型<b style="color:red;">*</b>:</p>
+            <select  ng-model="add.fileType"  id="addFileType" >
+              <option value="1">安全保障</option>
+              <option value="2">安全保障使用规则</option>
+            </select>
+        </div>
+        <div class="start-b">
+          <p>文件名称<b style="color:red;">*</b>:</p>
+          <input style="width:368px;" type="text" maxlength="20" placeholder="20字符以内" ng-model="add.fileName" id="addFileName">
+        </div>
+        <div class="start-b" ng-if="add.fileType==1">
+          <p>截止时间<b style="color:red;">*</b>:</p>
+          <input  type="text"  style="width:160px"  ng-model="add.endTime" id="addEndTime">
+        </div>
+        <div class="start-b" ng-if="add.fileType==1">
+          <p>账户余额<b style="color:red;">*</b>:</p>
+          <input style="width:368px;" type="text"  placeholder="请输入数字,支持小数点" ng-model="add.balance" id="addBalance">
+        </div>
+        <div class="start-b" ng-if="add.fileType==1">
+          <p>期数<b style="color:red;">*</b>:</p>
+          <input style="width:368px;" type="text" onblur="verifyPeriods(this)" placeholder="请输入整数" ng-model="add.periods" id="addPeriods">
+        </div>
+        <div id="showPicer" >
+          <div class="start-d" >
+            <p>文件上传<b style="color:red;">*</b>:</p>
+            <input type="file" id="addPicture" name="file" size="1"  style="position:absolute;display: none;">
+            <input style="width:220px;" id="fileName" type="text" ng-model="add.imageUrl" >
+            <a class="btn btn-success btn-rounded btn-blueWa" href="#" onclick="$('#addPicture').click();" id="image_prew"><span>点击上传</span></a>
+          </div>
+        </div>
+        <div class="start-f">
+          <p>审核人<b style="color:red;">*</b>:</p>
+          <span style="margin-left: 0px;">
+            <select   ng-model="add.auditPerson" ng-options="x.name for x in auditPersionList"  >
+              <option value="">请选择</option>
+            </select>
+      	  </span>
+        </div>
+        <div class="bottom-btn">
+          <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="commitSecurity()">确定</a>
+          <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" ng-click="hideAdd()">取消</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 添加安全保障结束 -->
+
+  <!-- 修改安全保障 -->
+  <div class="add-start-bg" id="editShow">
+    <div class="add-start">
+      <h1 align="center">添加安全保障 </h1>
+      <div class="start-a">
+        <p>渠道<b style="color:red;">*</b>:</p>
+        <select   ng-model="edit.productChannel"  id='editProductChannel'  >
+          <option value="0">悟空理财</option>
+          <option value="1">玖富钱包</option>
+        </select>
+      </div>
+      <div class="start-a">
+        <p>文件类型<b style="color:red;">*</b>:</p>
+        <select  ng-model="edit.fileType"  id="editFileType" >
+          <option value="1">安全保障</option>
+          <option value="2">安全保障使用规则</option>
+        </select>
+      </div>
+      <div class="start-b">
+        <p>文件名称<b style="color:red;">*</b>:</p>
+        <input style="width:368px;" type="text" maxlength="20" placeholder="20字符以内" ng-model="edit.fileName" id="editFileName">
+      </div>
+      <div class="start-b" ng-if="edit.fileType==1">
+        <p>截止时间<b style="color:red;">*</b>:</p>
+        <input  type="text"  style="width:160px"  ng-model="edit.endTime" id="editEndTime">
+      </div>
+      <div class="start-b" ng-if="edit.fileType==1">
+        <p>账户余额<b style="color:red;">*</b>:</p>
+        <input style="width:368px;" type="text"  placeholder="请输入数字,支持小数点" ng-model="edit.balance" id="editBalance">
+      </div>
+      <div class="start-b" ng-if="edit.fileType==1">
+        <p>期数<b style="color:red;">*</b>:</p>
+        <input style="width:368px;" type="text"  placeholder="请输入整数" ng-model="edit.periods" id="editPeriods">
+      </div>
+      <div id="editPicer" >
+        <div class="start-d" >
+          <p>文件上传<b style="color:red;">*</b>:</p>
+          <input type="file" id="editPicture" name="file" size="1"  style="position:absolute;display: none;">
+          <input style="width:220px;" id="editFileURL" type="text" ng-model="edit.imageUrl" >
+          <a class="btn btn-success btn-rounded btn-blueWa" href="#" onclick="$('#editPicture').click();" id="eidt_image_prew"><span>点击上传</span></a>
+        </div>
+      </div>
+      <div class="start-f">
+        <p>审核人<b style="color:red;">*</b>:</p>
+        <span style="margin-left: 0px;">
+            <select   ng-model="edit.auditPerson" ng-options="x.name for x in auditPersionList"  >
+              <option value="">请选择</option>
+            </select>
+      	  </span>
+      </div>
+      <div class="bottom-btn">
+        <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="editSecurity()">确定</a>
+        <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" ng-click="hideEdit()">取消</a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 修改安全保障结束 -->
+
+
+<div class="take-start-box" id="takeEffect" >
+  <div class="take-start-small newTakeEffect">
+    <h2 align="center">{{effectRecord.valid=='1' && '失效' || effectRecord.valid=='0' && '生效'}}提示</h2>
+    <ul class="isEffect">
+      <li><p>审核人</p>
+        <select class="interests" ng-model="effectRecord.auditPerson" ng-options="x.name for x in auditPersionList">
+          <option value="">请选择</option>
+        </select>
+      </li>
+    </ul>
+    <div class="bottom-btn">
+      <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="validateRecord()">确定</a>
+      <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" onclick="$('.take-start-box').hide();">取消</a>
+    </div>
+  </div>
+</div>
+
+
+<!-- 审核安全保障开始 -->
+<div class="take-start-box" id="auditShow">
+  <div class="take-start-small newTakeEffect">
+    <h2 align="center">审核</h2>
+    <ul class="isEffect">
+      <li><p>审核结果：</p>
+        <select id="auditStatus" ng-model="audit.auditStatus">
+          <option value="0">请选择</option>
+          <option value="1">审核通过</option>
+          <option value="2">审核不通过</option>
+        </select>
+      </li>
+    </ul>
+    <div class="bottom-btn">
+      <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="confirm()" >确定</a>
+      <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" onclick="$('.take-start-box').hide();">取消</a>
+    </div>
+  </div>
+</div>
+<!-- 审核安全保障结束 -->
+
+
+  </div>
+</div>
+
+<script src="${jsRoot}/angular/angular.min.js"></script>
+<script src="${jsRoot}/plugins/laydate/laydate.js"></script>
+<!-- Mainly scripts -->
+<script src="${jsRoot}/jquery-2.1.1.js"></script>
+<script src="${jsRoot}/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="${jsRoot}/bootstrap.min.js"></script>
+<script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="${jsRoot}/plugins/jeditable/jquery.jeditable.js"></script>
+<!-- Data Tables -->
+<script src="${jsRoot}/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.responsive.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.tableTools.min.js"></script>
+<!-- Custom and plugin javascript -->
+<script src="${jsRoot}/inspinia.js"></script>
+<script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.iframe-transport.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.ui.widget.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-process.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-validate.js"></script>
+<script src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+<script type="text/javascript" src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+
+<script type="text/javascript" src="${jsRoot}/biz/tools/securityAssurance.js?rand=${random}"></script>
+<script>
+    var createTimeStart = laydate({
+        elem:'#createTimeStart',
+        istime: true,
+        format: 'YYYY-mm-DD hh:mm:ss',
+        event:'click'
+    })
+
+    var createTimeEnd = laydate({
+        elem:'#createTimeEnd',
+        istime: true,
+        format: 'YYYY-mm-DD hh:mm:ss',
+        event:'click'
+    })
+
+    var addEndTime = laydate({
+        elem:'#addEndTime',
+        istime: true,
+        format: 'YYYY-mm-DD',
+        event:'click'
+    })
+
+    var editEndTime = laydate({
+        elem:'#editEndTime',
+        istime: true,
+        format: 'YYYY-mm-DD',
+        event:'click'
+    })
+
+    /**
+     * 校验期数是否唯一
+     * @param obj
+     */
+    function verifyPeriods(x) {
+        var url =globalConfig.basePath+"/res/securityAssurance/verifyPeriods";
+        $.ajax({
+            type: "post",
+            url: url,
+            data: "periods="+x.value,
+            async: false,
+            dataType: "json",
+            success: function (data) {
+                if (data.resp >0) {
+                    alert('期数已存在');
+                }
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

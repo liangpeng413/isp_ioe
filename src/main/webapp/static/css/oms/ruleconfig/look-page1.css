@@ -1,0 +1,267 @@
+.look-pagea{
+  width: 80%;
+  background: #fff;
+  height: 84px;
+  margin-left: 215px;
+  margin-top: 20px;
+  border: 1px solid #e0e2e4;
+}
+.look-pagea button{
+  width: 118px;
+  height: 36px;
+  border: 1px solid #ff5663;
+  background: #fff;
+  border-radius: 50px;
+  color: #fb5251;
+  font-size: 14px;
+  margin-top: 22px;
+  margin-left: 40px;
+}
+.look-pagea .JianBian{
+  background: -webkit-linear-gradient(left, #ff866b , #fd6873); 
+  background: -o-linear-gradient(right, #ff866b, #fd6873); 
+  background: -moz-linear-gradient(right, #ff866b, #fd6873);
+  background: linear-gradient(to right, #ff866b , #fd6873);
+  color: #fff;
+}
+.look-pagea button span{
+  margin-left: 11px;
+}
+.look-pagea button a{
+  margin-left: 11px;
+  color: #fb5251;
+}
+
+/* 第三部分 */
+.vipBigBox{
+  height: 270px;
+  position: absolute;
+  top: 129px;
+}
+
+.interest{
+  width: 100px;
+  height: 25px;
+  font-size: 12px;
+  padding-left: 5px;
+  border: 1px solid #ccc;
+}
+.marTop{
+  margin-top:230px;
+}
+.rightList{
+  position: absolute;
+  top: 0;
+  left: 350px;
+}
+.rightList li{
+  margin-top: 15px;
+}
+.leftList li{
+  margin-top: 15px;
+}
+
+/* 第二部分 */
+.look-pageb {
+  width: 80%;
+  background: #fff;
+  margin-left: 215px;
+  margin-top: 8px;
+  border: 1px solid #e0e2e4;
+  position: relative;
+}
+
+p{
+  margin-top: 10px;
+}
+.groupingNmae{
+  width: 400px;
+  height: 30px;
+}
+
+
+.conduct-select{
+  width: 300px;
+  height: 30px;
+}
+
+.name-select{
+  width: 300px;
+  height: 30px;
+}
+
+.btn{
+  width: 120px;
+  height: 40px;
+  color: #fff;
+}
+
+.reset-preservation{
+  width: 100%;
+  text-align: center;
+}
+.reset{
+  width: 120px;
+  height: 40px;
+  background: #fff;
+  color: #000;
+  border-radius: 40px;
+  margin-right: 20px;
+}
+
+.preservation{
+  width: 120px;
+  height: 40px;
+  color: #fff;
+  border: none;
+}
+
+
+/*搜索内容*/
+.search_content{
+  width: 160px;
+  border: 2px solid #ccc;
+  height: 100px;
+  overflow-y: scroll;
+}
+
+.search_content ul{
+  list-style: none;
+}
+.search_content ul li{
+  height: 30px;
+  line-height: 30px;
+}
+
+
+.children-Title{
+  border: 1px solid #ccc;
+  width: 1000px;
+  height: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.children-Title p {
+  height: 30px;
+  line-height: 30px;
+  border-right: 1px solid #ccc;
+  width: 33.3%;
+  text-align: center;
+}
+.divBox .top-gorop {
+  display: flex;
+  width: 1000px;
+  align-items: center;
+  justify-content: center;
+} 
+.divBox .top-gorop div{
+  height: 30px;
+  width: 33.3%;
+  text-align: center;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+.divBox .top-gorop .togShow1,.divBox .top-gorop .togShow2 {
+  height: 30px;
+  line-height: 30px;
+  width: 33.3%;
+  text-align: center;
+}
+.divBox .top-gorop .togHide {
+  display: none;
+}
+.divBox .top-gorop .togShow1 span{
+  margin: 0 5px;
+  color: blue;
+}
+.divBox .top-gorop .togShow2 span{
+  margin: 0 5px;
+  color: blue;
+}
+.divBox .top-gorop .inpHide {
+  border: 0px;
+  outline:none;
+  cursor: pointer;
+  text-align: center;
+}
+.addGroup {
+  width: 100px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+  color: white;
+  font-weight: bold;
+  border-radius: 5px;
+}
+.add-big-grounp {
+  margin-top: 20px;
+  display: inline-block;
+}
+/* new-name-list */
+.add-button {
+  display: flex;
+  align-items: center;
+}
+.add-button {
+  display: inline-block;
+}
+.query-info {
+  border: 1px solid #cccccc;
+  box-sizing: border-box;
+  padding: 5px 10px;
+}
+.query-info .inp{
+  margin-right: 10px;
+  padding-left: 5px;
+}
+.query-info {
+  margin: 5px 0;
+  width: auto;
+  display: inline-block;
+}
+.add-query-info-button {
+  margin: 15px 5px; 
+  display: inline-block;
+}
+.query-list {
+  display: flex;
+  align-items: center;
+}
+.query-list .inp-text {
+  width: 200px;
+  padding: 6px;
+  border: 1px solid #D6D6D6;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  cursor: pointer;
+}
+.remove-query-info {
+  width: 25px;
+  height: 25px;
+  background: #b7434c;
+  text-align: center;
+  line-height: 25rpx;
+  font-weight: bold;
+}
+.remove-query-info span{
+  display: inline-block;
+  height: 2px;
+  width: 10px;
+  background: white;
+}
+.fa-plus-square {
+  /* background: #459ad0;
+  color: white; */
+}
+/*  ******************* */
+.divBox .bot-gorop .togHide {
+  display: none;
+}
+.divBox .bot-gorop .inpHide {
+  border: 0px;
+  outline:none;
+  cursor: pointer;
+  text-align: center;
+}

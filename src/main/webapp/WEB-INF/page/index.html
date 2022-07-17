@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>筋斗云-工具平台</title>
+        <link href="${cssRoot}/bootstrap.min.css" rel="stylesheet">
+        <link href="${staticRoot}/font-awesome/css/font-awesome.css" rel="stylesheet">
+        <!-- Toastr style -->
+        <link href="${cssRoot}/plugins/toastr/toastr.min.css" rel="stylesheet">
+        <!-- Gritter -->
+        <link href="${jsRoot}/plugins/gritter/jquery.gritter.css" rel="stylesheet">
+        <link href="${cssRoot}/animate.css" rel="stylesheet">
+        <link href="${cssRoot}/style.css" rel="stylesheet">
+        <link href="${cssRoot}/styleT.css" rel="stylesheet">
+        <link href="${staticRoot}/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+        <script>
+            var globalConfig = {
+                basePath : "${ctx}",
+                staticRoot:"${staticRoot}"
+            };
+            function swalMsg(msg) {
+                swal({
+                    title:"",
+                    text:msg,
+                    confirmButtonColor: "#1ab394",
+                    confirmButtonText:"确定"
+                });
+            }
+        </script>
+    </head>
+
+    <body>
+        <div id="wrapper">
+            <div class="header-box">
+                <#include "/common/top.html" encoding="UTF-8" />
+            </div>
+            <div class="left-box">
+                <div class="sidebar-collapse" style="height: 100%;overflow-y: scroll;">
+                    <#include "/common/left.html" encoding="UTF-8" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Mainly scripts -->
+        <script src="${jsRoot}/jquery-2.1.1.js"></script>
+        <script src="${jsRoot}/bootstrap.min.js"></script>
+        <script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+        <script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+        <!-- Flot -->
+        <script src="${jsRoot}/plugins/flot/jquery.flot.js"></script>
+        <script src="${jsRoot}/plugins/flot/jquery.flot.tooltip.min.js"></script>
+        <script src="${jsRoot}/plugins/flot/jquery.flot.spline.js"></script>
+        <script src="${jsRoot}/plugins/flot/jquery.flot.resize.js"></script>
+        <script src="${jsRoot}/plugins/flot/jquery.flot.pie.js"></script>
+
+        <!-- Peity -->
+        <script src="${jsRoot}/plugins/peity/jquery.peity.min.js"></script>
+        <script src="${jsRoot}/demo/peity-demo.js"></script>
+
+        <!-- Custom and plugin javascript -->
+        <script src="${jsRoot}/inspinia.js"></script>
+        <script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+
+        <!-- jQuery UI -->
+        <script src="${jsRoot}/plugins/jquery-ui/jquery-ui.min.js"></script>
+
+
+        <!-- GITTER -->
+        <script src="${jsRoot}/plugins/gritter/jquery.gritter.min.js"></script>
+
+        <!-- Sparkline -->
+        <script src="${jsRoot}/plugins/sparkline/jquery.sparkline.min.js"></script>
+
+        <!-- Sparkline demo data  -->
+        <script src="${jsRoot}/demo/sparkline-demo.js"></script>
+
+        <!-- ChartJS-->
+        <script src="${jsRoot}/plugins/chartJs/Chart.min.js"></script>
+
+        <!-- Toastr -->
+        <script src="${jsRoot}/plugins/toastr/toastr.min.js"></script>
+        <script>
+            var NavHeight = $('.navbar-default').height()
+            var lis = $('.nav-second-level > li')
+            $('.content-box').height(NavHeight - 60)
+            $('.navbar-default').css('height', NavHeight - 60)
+            lis.click(function(){
+                $(this).addClass('active').siblings().removeClass('active')
+            })
+        </script>
+        <style>
+            .left-box{
+                height: 100%;
+                z-index: 2001;
+                position: absolute;
+                width: 195px;
+                transition: all 0.5s;
+                background: #304156;
+                float: left;
+                border-color: #e8eaec;
+            }
+            .sidebar-logo {
+                width: 32px;
+                height: 32px;
+                vertical-align: middle;
+                margin-right: 12px;
+            }
+            .sidebar-logo-link {
+                height: 100%;
+                width: 100%;
+            }
+            .sidebar-title {
+                display: inline-block;
+                margin: 0;
+                color: #fff;
+                font-weight: 600;
+                line-height: 50px;
+                font-size: 14px;
+                font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
+                vertical-align: middle;
+            }
+        </style>
+    </body>
+</html>

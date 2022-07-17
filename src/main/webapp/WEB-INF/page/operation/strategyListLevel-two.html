@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>任务中心</title>
+    <link href="${staticRoot}/css/bootstrap.min.css" rel="stylesheet">
+    <link href="${staticRoot}/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <!-- FooTable -->
+    <link href="${staticRoot}/css/plugins/footable/footable.core.css" rel="stylesheet">
+
+    <link href="${staticRoot}/css/animate.css" rel="stylesheet">
+    <link href="${staticRoot}/css/style.css?rand=${random}" rel="stylesheet">
+    <link href="${staticRoot}/css/styleT.css?rand=${random}" rel="stylesheet">
+    <link href="${staticRoot}/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <style type="text/css">
+        .boxb-a > div {
+            margin: 20px 0;
+        }
+
+        #addPage .small-boxb div {
+            float: none
+        }
+
+        #addPage .small-boxb div label {
+            vertical-align: top;
+            margin-right: 10px;
+        }
+
+        #add-task-rule > div {
+            margin: 10px 0;
+        }
+
+        .addShowType div {
+            display: flex;
+            margin-left: 0;
+            align-items: center;
+        }
+
+        .addShowType div select {
+            margin-top: 10px;
+        }
+
+        .addShowType div span {
+            margin: 5px 0 0 15px;
+        }
+
+        .addShowType div input {
+            margin-top: 7px;
+        }
+
+        .addShowType div p {
+            margin: 0;
+        }
+        .small-content{
+            width: 2000px;
+
+        }
+        .content-box{
+            /*         	width:150% */
+            overflow-x:scroll;
+        }
+        tr span:not(:last-child){
+            color:#000;
+        }
+        .bottom-pageb i{
+            cursor:pointer;
+        }
+    </style>
+    <script>
+        var globalConfig = {
+            basePath: "${ctx}",
+            staticRoot: "${staticRoot}",
+            loginName: "${Session.sessionUser.loginName}",
+            userName: "${Session.sessionUser.name}",
+            fId: "${(Session.fId)!''}",
+            channel: "${(Session.channel)!''}",
+            channelCode: "${(Session.channelCode)!''}",
+            fType: "${(Session.fType)!''}",
+            serviceCode: "${(Session.serviceCode)!''}",
+            userWay: "${(Session.userWay)!''}",
+            userActionCode: "${(Session.userActionCode)!''}",
+            nodeCode:"${(Session.nodeCode)!''}",
+            touchStrategy:"${(Session.touchStrategy)!''}",
+            userTag:"${(Session.userTag)!''}"
+        };
+        if(!(globalConfig.fId||globalConfig.channel||globalConfig.channelCode||globalConfig.fType||globalConfig.serviceCode||globalConfig.userWay||globalConfig.userActionCode)){
+            alert("请重新选择服务！！！")
+            window.location.href=globalConfig.basePath+"/strategyIndex";
+        }
+        function swalMsg(msg) {
+            swal({
+                title: "",
+                text: msg,
+                confirmButtonColor: "#1ab394",
+                confirmButtonText: "确定"
+            });
+        }
+
+    </script>
+</head>
+<body>
+<div id="wrapper">
+    <div class="header-box">
+        <#include "/common/top.html" encoding="UTF-8" />
+    </div>
+    <nav class="navbar-default navbar-static-side nav-boxa" role="navigation" id="HeadTitle">
+        <div class="sidebar-collapse"  style="height: 675px;overflow-y: scroll;">
+            <#include "/common/left.html" encoding="UTF-8" />
+        </div>
+    </nav>
+</div>
+
+<div class="content-box" >
+    <div class="small-content" id="list">
+        <div class="small-boxb col-md-12" style="height: 80px; line-height: 80px;">
+            <a class="btn btn-success btn-blueW btn-blueWb" href="javascript:void(0)" style="margin-right: 15px" id="returnBack">返回</a>
+            <a class="btn btn-success btn-blueW btn-blueWa" href="javascript:void(0)" style="margin-right: 15px" id="excel">导出列表</a>
+            <a class="btn btn-success btn-blueW btn-blueWa" href="javascript:void(0)" style="margin-right: 15px" id="addstrategy">新增策略</a>
+            <span style="font-size: 20px;">${(Session.channel)!''} - ${(Session.fType)!''} - ${(Session.userWay)!''}</span>
+        </div>
+        <!--  <div style="height: 60px; line-height: 60px;">
+             <a class="btn btn-blueW " href="javascript:void(0)" style="margin-right: 100px" id="returnBack">返回</a>
+             <span style="font-size: 40px">${Session.channel} - ${Session.fType} - ${Session.userWay}</span>
+         </div>
+         <div style="height: 60px; line-height: 60px;">
+             <a class="btn btn-blueW " href="javascript:void(0)" style="margin-right: 30px" id="excel">导出列表</a>
+             <a class="btn btn-blueW " href="javascript:void(0)" id="addstrategy">新增策略</a>
+         </div> -->
+        <!-- 第二部分 -->
+        <div class="small-boxb col-md-12">
+            <div class="boxb-a">
+                <p style="margin-top:20px;">策略id：<input type="text" name="" id="strategyId"></p>
+                <p style="margin-top:20px;">策略状态：
+                    <select class="chosen-select"  style="width:160px;" tabindex="2" id="strategyStatus">
+                        <option value="">全部</option>
+                        <option value="1">生效</option>
+                        <option value="2">失效</option>
+                        <option value="0">待审批</option>
+                        <option value="3">审核不通过</option>
+                    </select>
+                </p>
+            </div>
+            <div class="boxb-b">
+                <p>执行时间：<input id="startTime" type="date" style="width: 200px;">
+                    &nbsp;-&nbsp;
+                    <input id="endTime" type="date" style="width: 200px;">
+                </p>
+                <p>预期结果状态：
+                    <select class="chosen-select"  style="width:160px;" tabindex="2" id="strategyResult">
+                        <option value="2">全部</option>
+                        <option value="WK">支付成功</option>
+                        <option value="QB">绑卡成功</option>
+                        <option value="QB">。。。</option>
+                    </select>
+                </p>
+            </div>
+            <div class="boxb-c">
+                <p style="margin-top:20px;">触发节点：
+                    <select class="chosen-select"  style="width:160px;" tabindex="2" id="nodeCode">
+                        <option value="3">全部</option>
+                        <option value="WK">支付成功</option>
+                        <option value="QB">支付失败</option>
+                    </select>
+                </p>
+                <p style="margin-top:20px;">
+                    <span class="btn btn-success btn-rounded btn-blueW btn-blueWa" id="seek"><i
+                            class="fa fa-search"></i> <span>搜索</span></span>
+                    <span class="btn btn-success btn-rounded btn-blueW btn-blueWb" id="reset"><i
+                            class="fa fa-refresh"></i> <span>重置</span></span>
+                </p>
+            </div>
+            <div class="boxb-a">
+                <p style="margin-top:20px;">触达类型：
+                    <select class="chosen-select" style="width:160px;" tabindex="2" id="resultType">
+                        <option value="0">在线客服</option>
+                        <option value="1">q&a唤醒</option>
+                        <option value="QB"></option>
+                    </select>
+                </p>
+            </div>
+        </div>
+        <!-- 第二部分 -->
+        <!-- 第三部分 -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins" style="margin-top:10px;">
+                    <div class="ibox-content">
+                        <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+                            <thead>
+                            <tr>
+                                <th>策略ID</th>
+                                <th>触发节点</th>
+                                <th>触发策略</th>
+                                <th>用户策略</th>
+                                <th>触达类型</th>
+                                <th>触达方式</th>
+                                <th>触达时间</th>
+                                <th>触发页面</th>
+                                <th>预期结果状态</th>
+                                <th>上线时间</th>
+                                <th>下线时间</th>
+                                <th>策略成功数</th>
+                                <th>总策略触发数</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tbody">
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    <a href="javascript:void(0)" class="look-start">审批</a>&nbsp;
+                                    <a href="javascript:void(0)" class="look-start">生效</a>&nbsp;
+                                    <a href="javascript:void(0)" class="look-start">修改</a>&nbsp;
+                                    <a href="javascript:void(0)" class="look-start">查看</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="bottom-page">
+                            <div class="bottom-pageb">
+                                <i class="fa fa-step-backward"></i>
+                                <i class="fa fa-caret-left"></i>
+                                <p>第<span class="pageN"></span>共<span class="lastPage"></span>页</p>
+                                <i class="fa fa-caret-right" style="margin-left:8px;"></i>
+                                <i class="fa fa-step-forward"></i>
+                                <i class="fa fa-refresh"></i>
+                                <p>共<span class="totalRowSize"></span>条记录
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--  审核 -->
+        <div class="take-start-box" id="auditShow">
+            <div class="take-start-small newTakeEffect">
+                <h2>审核</h2>
+                <ul class="isEffect">
+                    <li><p>审核结果：</p>
+                        <select id="auditStatus">
+                            <option value="1">审核通过</option>
+                            <option value="3">审核不通过</option>
+                        </select>
+                    </li>
+                </ul>
+                <div class="bottom-btn">
+                    <input type="hidden" id='strId'>
+                    <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" onclick="auditConfirm()">确定</a>
+                    <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" onclick="$('.take-start-box').hide();">取消</a>
+                </div>
+            </div>
+        </div>
+    </div>    <div class="small-content anx" id="tz" style="display:none;">
+    <div class="look-pagea">
+        <div class='beautifyBtnBack'><a class="btn btn-danger btn-rounded btn-gradient btn-gradienta" href="javascript:history.go(-1)" ><i
+                class="fa fa-plus-square-o"></i> <span>返回</span></a></div>
+    </div>
+    <!-- 第二部分 -->
+    <div class="small-boxb col-md-12 look-pagea" style="height: 210px">
+        <h2 style="color: #0e0e0e">服务策略信息</h2>
+        <hr/>
+        <div >
+            <p style="margin-top:20px;" id="qd">理财渠道:${channel}</p>
+            <p style="margin-top:20px;" id="servicetype">服务类型:${fType}</p>
+        </div>
+        <div >
+            <p style="margin-top:20px;" id="xw">用户行为:${userWay}</p>
+            <p style="margin-top:20px;" id="cfjd">触发节点:${nodeCode}</p>
+        </div>
+        <div >
+            <p style="margin-top:20px;" id="strategy">触发策略:${touchStrategy}</p>
+            <p style="margin-top:20px;" id="serviceId">服务id:${fId}</p>
+        </div>
+    </div>
+
+    <div class="small-boxb col-md-12 look-pagea" style="height: 200px">
+        <h2 style="color: #0e0e0e">名单信息</h2>
+        <hr/>
+        <div class="boxb-a">
+            <p style="margin-top:20px;" id="rosterName"></p>
+            <p style="margin-top:20px;" id="createTime"></p>
+        </div>
+        <div class="boxb-a">
+            <p style="margin-top:20px;" id="channelCode"></p>
+            <p style="margin-top:20px;" id="updateTime"></p>
+        </div>
+        <div class="boxb-a">
+            <p style="margin-top:20px;" id="type"></p>
+            <p style="margin-top:20px;" id="createPeople"></p>
+        </div>
+        <div class="boxb-a">
+            <p style="margin-top:20px;" id="rosterNumber"></p>
+        </div>
+    </div>
+
+
+    <div class="small-boxb col-md-12 look-pagea" style="height: auto;">
+        <h2>策略信息报告</h2>
+        <hr/>
+        <h4 style="margin-left: 30px;">用户特征成功率</h4>
+
+        <div class="boxb-a">
+            <div>
+                <p style="margin-top:20px;">用户标签：
+                    <select class="chosen-select" style="width:160px;" id="testSelect" onchange="changeCharts(strategyId,rosterId)">
+                        <option value="1">性别</option>
+                        <option value="2">年龄</option>
+                        <option value="3">手机号地区</option>
+                        <option value="4">出借次数</option>
+                        <option value="5">出借偏好期限</option>
+                        <option value="6">会员等级</option>
+                        <option value="7">推广渠道</option>
+                        <option value="8">来源渠道</option>
+                        <option value="9">可用卡券数</option>
+                    </select>
+                    </n>
+                    </n>
+                </p>
+            </div>
+            <div id="container" ></div>
+
+        </div>
+    </div>
+    <div class="ibox float-e-margins" style="margin-top:10px;">
+        <h4 style="margin-left: 30px;">每日触发数据</h4>
+        <div class="ibox-content">
+            <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+                <thead>
+                <tr>
+                    <!-- <th></th> -->
+                    <th>日期</th>
+                    <th>累计总触发数</th>
+                    <th>当日触发数</th>
+                    <th>累计成功数</th>
+                    <th>当日成功数</th>
+                </tr>
+                </thead>
+                <tbody id="daily">
+                </tbody>
+            </table>
+            <div class="bottom-page">
+                <div class="bottom-pagea">
+                    <select style="width:58px;height:23px;" id="pageSize"
+                            onchange='querySmartList1()'>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                    </select>
+                </div>
+                <div class="bottom-pageb">
+                    <i class="fa fa-step-backward" onclick="querySmartList1()"></i>
+                    <i style="font-size:16px;" class="fa fa-caret-left"
+                       onclick="querySmartList1(parseInt($('#pageNo').text())-1)"></i>
+                    <p>第<span class="pageN" id="pageNo"></span>共<span id="pageCount"></span>页
+                    </p>
+                    <i style="font-size:16px;" class="fa fa-caret-right"
+                       onclick="querySmartList1(parseInt($('#pageNo').text())+1)"></i>
+                    <i style="margin-left:8px;" class="fa fa-step-forward"
+                       onclick="querySmartList1($('#pageCount').text())"></i>
+                    <i class="fa fa-refresh" onclick="querySmartList1($('#pageNo').text())"></i>
+                    <p>显示<span id="startPage"></span>到<span id="endPage"></span>条，共<span id="totalCount"></span>记录
+                    </p>
+                </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script src="${jsRoot}/angular/angular.min.js"></script>
+<script src="${jsRoot}/jquery-2.1.1.js"></script>
+<script src="${jsRoot}/bootstrap.min.js"></script>
+<script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="${jsRoot}/plugins/jeditable/jquery.jeditable.js"></script>
+<script src="${jsRoot}/plugins/jquery-ui/jquery-ui.min.js"></script>
+
+<script src="${jsRoot}/plugins/laydate/laydate.js"></script>
+
+<script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="${jsRoot}/plugins/jeditable/jquery.jeditable.js"></script>
+<script src="${jsRoot}/oms/effectAnalysis.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.iframe-transport.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.ui.widget.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-process.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-validate.js"></script>
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<!-- Data Tables -->
+<script src="${jsRoot}/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.responsive.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.tableTools.min.js"></script>
+<script src="${jsRoot}/DateUtil.js"></script>
+<!-- Custom and plugin javascript -->
+<script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+<!--  日期控件  -->
+<script src="${jsRoot}/plugins/datapicker/bootstrap-datepicker.js"></script>
+<script src="${jsRoot}/plugins/datapicker/bootstrap-datepicker.zh-CN.min.js"></script>
+<!-- 提示弹窗 -->
+<script type="text/javascript" src="${staticRoot}/js/plugins/sweetalert/sweetalert.min.js"></script>
+
+<script src="${jsRoot}/oms/ruleconfig/jquery.searchableSelect.js"></script>
+
+<!-- <script type="text/javascript" src="${staticRoot}/js/biz/baseFoot.js?rand=${random}"></script> -->
+<!-- <script type="text/javascript" src="${staticRoot}/js/oms/taskQuery.js?rand=${random}"></script> -->
+<!-- <script type="text/javascript" src="${staticRoot}/js/oms/taskDetail.js?rand=${random}"></script> -->
+<script type="text/javascript">
+
+
+
+    var rosterId;
+    var  strategyId;
+    var rosterId2;
+    var strategyId2;
+    var pageSize=10;
+
+    function querySmartList1(pageNum) {
+        var process = {};
+        if (!pageNum) {
+            process.pageNo = 1;
+        } else {
+            if (pageNum > $('#pageCount').text() && $('#pageCount').text() > 0) {
+                process.pageNo = $('#pageCount').text();
+            } else {
+                process.pageNo = pageNum;
+            }
+        }
+        process.channel = globalConfig.channelCode;
+        process.pageSize = $('#pageSize option:selected').val();
+        process.strategyId = strategyId;
+        if (rosterId&&rosterId!="null") {
+            process.rosterId = rosterId;
+        }else {
+            process.rosterId = 0;
+        }
+        $.ajax({
+            type:'POST',
+            url:globalConfig.basePath+"/abTest/dailytouch",
+            data:JSON.stringify(process),
+            contentType:"application/json",
+            dataType:"json",
+            success:function (data) {
+                var str1 = "";
+                list = data.resp.list;
+                console.log(data,"返回的数据");
+                if (list) {
+                    for (var i = 0; i < list.length; i++) {
+                        str1 += "<tr class=\"tr\">" +
+                            "<td>" + list[i].createTime + "</td>" +
+                            "<td>" + list[i].sumReachNumDaily + "</td>" +
+                            "<td>" + list[i].reachNumDaily + "</td>" +
+                            "<td>" + list[i].sumSuccessNumDaily + "</td>" +
+                            "<td>" + list[i].successNumDaily + "</td>" +
+                            "</tr>"
+                    }
+                }
+                $('#pageCount').text(data.resp.pages);
+                $("#daily").html(str1);
+                $('#totalCount').text(data.resp.total);
+                $('#startPage').text(((parseInt(process.pageNo)-1)*parseInt($('#pageSize option:selected').val())+1).toString());
+                if (parseInt(process.pageNo)*parseInt($('#pageSize option:selected').val())>parseInt(data.resp.total)){
+                    $('#endPage').text(data.resp.total.toString());
+                }
+                else {
+                    $('#endPage').text(parseInt(process.pageNo) * parseInt($('#pageSize option:selected').val()));
+                }
+                $('#pageNo').text(process.pageNo.toString());
+            },
+            error:function (data) {
+                alert(data.message);
+            }
+
+        })
+    }
+
+    $("#returnBack").on("click", function () {
+        window.location.href=globalConfig.basePath +"/strategyIndex?returnChannel=" + globalConfig.channelCode;
+    });
+    //导出
+    $("#excel").on("click",function(){
+        //当前页
+        var  currentPage=$(".pageN").html();
+        //总条数
+        var  totalRowSize = $(".totalRowSize").html();
+        window.location.href="${ctx}/operation/leveltwo/export"+"?currentPage="+currentPage+"&pageSize="+totalRowSize;
+    })
+    //时间插件使用
+    /*   var startTime = laydate({
+          elem: '#startTime',
+          istime: true,
+          format: 'YYYY-mm-DD hh:mm:ss',
+          event: 'click'
+      });
+      var endTime = laydate({
+          elem: '#endTime',
+          istime: true,
+          format: 'YYYY-mm-DD hh:mm:ss',
+          event: 'click'
+      });  */
+    //分页操作
+    function paging(){
+
+        //上一页
+        $(".fa-caret-left").on("click",function(){
+            //当前页
+            var  currentPage=parseInt($(".pageN").html());
+            //最大 页码
+            var  pageCount=parseInt($(".lastPage").html());
+
+            if(currentPage==1){
+                return;
+            }
+            currentPage=currentPage-1
+            //生成列表
+            $.post("${ctx}/operation/query/leveltwo", "currentPage="+currentPage+"&pageSize="+pageSize, function (data) {
+                pageContextLevel2(data);
+            }, "json");
+        });
+        //下一页
+        $(".fa-caret-right").on("click",function(){
+            //当前页
+            var  currentPage=parseInt($(".pageN").html());
+            //最大 页码
+            var  pageCount=parseInt($(".lastPage").html());
+            if(currentPage==pageCount){
+                return;
+            }
+            currentPage=currentPage+1;
+            //生成列表
+            $.post("${ctx}/operation/query/leveltwo", "currentPage="+currentPage+"&pageSize="+pageSize, function (data) {
+                pageContextLevel2(data);
+            }, "json");
+        });
+        //第一页
+        $(".fa-step-backward").on("click",function(){
+            //当前页
+            var  currentPage=parseInt($(".pageN").html());
+            //最大 页码
+            var  pageCount=parseInt($(".lastPage").html());
+            if(currentPage==1){
+                return;
+            }
+            currentPage=1;
+            //生成列表
+            $.post("${ctx}/operation/query/leveltwo", "currentPage="+currentPage+"&pageSize="+pageSize, function (data) {
+                pageContextLevel2(data);
+            }, "json");
+        });
+        //最后一页
+        $(".fa-step-forward").on("click",function(){
+            //当前页
+            var  currentPage=parseInt($(".pageN").html());
+            //最大 页码
+            var  pageCount=parseInt($(".lastPage").html());
+            if(currentPage==pageCount){
+                return;
+            }
+            currentPage=pageCount;
+            //生成列表
+            $.post("${ctx}/operation/query/leveltwo", "currentPage="+currentPage+"&pageSize="+pageSize, function (data) {
+                pageContextLevel2(data);
+            }, "json");
+        });
+        //刷新
+        $(".fa-refresh").on("click",function(){
+            //当前页
+            var  currentPage=parseInt($(".pageN").html());
+            //最大 页码
+            var  pageCount=parseInt($(".lastPage").html());
+            //生成列表
+            $.post("${ctx}/operation/query/leveltwo", "currentPage="+currentPage+"&pageSize="+pageSize, function (data) {
+                pageContextLevel2(data);
+            }, "json");
+        });
+    }
+
+    function changeCharts() {
+
+            showBarCharts2();
+        }
+
+
+
+    function showBarCharts2() {
+        var process = {};
+        process.featureType = $('#testSelect option:selected').val();
+        process.channel = globalConfig.channelCode;
+
+        if (rosterId&&rosterId!="null") {
+            process.rosterId = rosterId;
+        }else {
+            process.rosterId = 0;
+
+        }
+        process.strategyId = strategyId;
+        $.ajax({
+            type: 'POST',
+            url: globalConfig.basePath + "/abTest/rateofsuccess",
+            data: JSON.stringify(process),
+            contentType: "application/json",
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                if (data.code == '000') {
+                    var chart = {
+                        type: 'column'
+                    };
+                    var typeName = "";
+                    if ($('#testSelect option:selected').val() == 2) {
+                        typeName = "年龄";
+                    }else if ($('#testSelect option:selected').val() == 1) {
+                        typeName = "性别";
+                    } else if ($('#testSelect option:selected').val() == 3) {
+                        typeName = "手机号地区";
+                    } else if ($('#testSelect option:selected').val() == 4) {
+                        typeName = "出借次数";
+                    } else if ($('#testSelect option:selected').val() == 5) {
+                        typeName = "出借偏好期限";
+                    } else if ($('#testSelect option:selected').val() == 6) {
+                        typeName = "会员等级";
+                    } else if ($('#testSelect option:selected').val() == 7) {
+                        typeName = "推广渠道";
+                    } else if ($('#testSelect option:selected').val() == 8) {
+                        typeName = "来源渠道";
+                    } else if ($('#testSelect option:selected').val() == 9) {
+                        typeName = "可用卡券数";
+                    }
+                    var title = {
+                        text: "用户在不同" + typeName + "的策略成功率"
+                    };
+                    var subtitle = {
+                        text: ''
+                    };
+                    /**拼装图饼数据-开始*/
+                    var names = [];
+                    var values = [];
+                    var values2 = [];
+
+                        for (var i = 0; i < data.resp.data.length; i++) {
+                            names.push(data.resp.data[i].feature);
+                            var param = {};
+                            var featureParam = {};
+                            param.y = parseInt(data.resp.data[i].successNum);
+                            param.total = parseInt(data.resp.data[i].successRate * 100) + "%";
+                            values.push(param);
+                            featureParam.y = parseInt(data.resp.data[i].featureNum);
+                            featureParam.total = parseInt(data.resp.data[i].featureRate * 100) + "%";
+                            values2.push(featureParam);
+
+                        }
+
+                    var xAxis = {
+                        categories: names,
+                        crosshair: true
+                    };
+                    var yAxis = {
+                        min: 0,
+                        title: {
+                            text: '人（数）'
+                        }
+                    };
+                    var tooltip = {
+                        headerFormat: '<table><span style="font-size:10px">{point.key}</span>',
+                        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                            '<td style="padding:0"><b>({point.y:.1f})&nbsp;&nbsp;{point.total}&nbsp;&nbsp;&nbsp;' +
+                            '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></td></tr>',
+                        footerFormat: '</table>',
+                        shared: true,
+                        useHTML: true
+                    };
+                    var plotOptions = {
+                        column: {
+                            pointPadding: 0.2,
+                            borderWidth: 0
+                        }
+                    };
+                    var credits = {
+                        enabled: false
+                    };
+                    var series = [{
+                        name: "成功数",
+                        data: values
+                    },
+                        {name: "用户数", data: values2}];
+                    var json = {};
+                    json.chart = chart;
+                    json.title = title;
+                    json.subtitle = subtitle;
+                    json.tooltip = tooltip;
+                    json.xAxis = xAxis;
+                    json.yAxis = yAxis;
+                    json.series = series;
+                    json.plotOptions = plotOptions;
+                    json.credits = credits;
+                    $('#container').highcharts(json);
+                }
+            },
+            error:function (data) {
+                alert(data.message);
+            }
+        })
+    }
+    //生成页面
+    function pageContextLevel2(data) {
+        if (data.code != "000") {
+            alert(data.message);
+            return;
+        }
+        var resp = data.resp;
+        console.log(resp);
+        $(".lastPage").html(resp.pageCount);
+        $(".pageN").html(resp.currentPage);
+        $(".totalRowSize").html(resp.totalRowSize);
+        var res = resp.result;
+        var str = "";
+
+        $("#tbody").html(str);
+        for (var i = 0; i < res.length; i++) {
+            str += "<tr >";
+            str += "<td style='display: none;'>" + res[i].userTag + "</td>";//名单id
+            str += "<td>" + res[i].strategyId + "</td>";//策略id
+            str += "<td>" + res[i].nodeCode + "</td>";//触发节点
+            //style='word-wrap:break-word;word-break:break-all;' width='20%'
+            str += "<td>" + res[i].touchStrategy + "</td>";//触发策略
+            //用户策略
+            if (res[i].userTagType == 0) {
+                str += "<td>无规则</td>";
+            } else if (res[i].userTagType == 1) {
+                str += "<td>规则组合</td>";
+            } else if (res[i].userTagType == 2) {
+                str += "<td>名单组合</td>";
+            } else {
+                str += "<td>"+res[i].userTagType+"</td>";
+            }
+            //结果类型
+            if (res[i].resultType == 0) {
+                str += "<td>resultType</td>";
+            } else if (res[i].resultType == 1) {
+                str += "<td>q&a唤醒</td>";
+            } else if (res[i].resultType == 2) {
+                str += "<td>电话客服</td>";
+            } else if (res[i].resultType == 3) {
+                str += "<td>奖励</td>";
+            } else if (res[i].resultType == 4) {
+                str += "<td>自定义</td>";
+            } else {
+                str += "<td>"+res[i].resultType+"</td>";
+            }
+            //触达方式
+            if (res[i].touchType == 0) {
+                str += "<td>软弹窗</td>";
+            } else if (res[i].touchType == 1) {
+                str += "<td>推送</td>";
+            } else if (res[i].touchType == 2) {
+                str += "<td>短信 </td>";
+            } else if (res[i].touchType == 3) {
+                str += "<td>弹窗</td>";
+            } else if (res[i].touchType == 4) {
+                str += "<td>站内信</td>";
+            } else {
+                str += "<td>"+res[i].touchType+"</td>";
+            }
+            str += "<td>" + res[i].touchTime + "</td>";//触达时间
+            if(res[i].touchPage=="null"||res[i].touchPage==""||res[i].touchPage==null){
+                str += "<td> 无 </td>";//触发页面
+            }else{
+                str += "<td>" + res[i].touchPage + "</td>";//触发页面
+            }
+            str += "<td>" + res[i].strategyResult + "</td>";//预期结果状态
+            str += "<td>" + res[i].validTime + "</td>";//上线时间
+            str += "<td>" + res[i].invalidTime + "</td>";//下线时间
+            if (res[i].strategySuccessNum) {
+                str += "<td>" + res[i].strategySuccessNum + "</td>";//策略成功数
+            } else {
+                str += "<td>0</td>";
+            }
+            if (res[i].strategySumNum) {
+                str += "<td>" + res[i].strategySumNum + "</td>";//总策略触发数
+            } else {
+                str += "<td>0</td>";
+            }
+            //状态
+            if (res[i].strategyStatus == 0) {
+                str += "<td>待审批</td>";
+            } else if (res[i].strategyStatus == 1) {
+                str += "<td>生效</td>";
+            } else if (res[i].strategyStatus == 2) {
+                str += "<td>失效</td>";
+            } else if (res[i].strategyStatus == 3) {
+                str += "<td>审核不通过</td>";
+            } else {
+                str += "<td>"+res[i].strategyStatus+"</td>";
+            }
+            str += "<td>";
+            //操作
+            if (res[i].strategyStatus == 0) {//待审批
+                if(globalConfig.loginName==res[i].loginName){
+                    str += "<a href='javascript:void(0)' class='look-start exApprove' >审批</a>&nbsp;";
+                }
+                str += "<a href='javascript:void(0)' class='look-start loseEff' style='display:none'>失效</a>&nbsp;";
+                str += "<a href='javascript:void(0)' class='look-start takeEff' style='display:none'>生效</a>&nbsp;";
+            }else if (res[i].strategyStatus == 1) {//生效，显示失效
+                str += "<a href='javascript:void(0)' class='look-start loseEff' >失效</a>&nbsp;";
+                str += "<a href='javascript:void(0)' class='look-start takeEff' style='display:none'>生效</a>&nbsp;";
+            } else if (res[i].strategyStatus == 2) {//失效，显示生效
+                str += "<a href='javascript:void(0)' class='look-start loseEff' style='display:none'>失效</a>&nbsp;";
+                str += "<a href='javascript:void(0)' class='look-start takeEff' >生效</a>&nbsp;";
+            }
+            str += "<a href='javascript:void(0)' class='look-start update'>修改</a>&nbsp;" +
+                "<a href='javascript:void(0)' class='look-start lookThis'>查看</a>&nbsp;" +
+                "<a href='javascript:void(0)' class='look-start effect'>效果分析</a>&nbsp;" +
+                "</td>" +
+                "</tr>";
+        }
+        $("#tbody").html(str);
+        $(document).on("click",".exApprove", function (){
+            var $this = $(this);
+            var parents = $this.parent().siblings();
+            var strategyId = parents.eq(1).text();
+            $("#strId").val(strategyId)
+            $(".take-start-box").show();
+        })
+        $(document).on("click",".loseEff", function (){
+            var $this = $(this);
+            var parents = $this.parent().siblings();
+            var strategyId = parents.eq(1).text();
+            if(confirm("是否要失效？")){
+                $.post("${ctx}/operation/strategy/status","id="+strategyId+"&status=2",function(data){
+                    alert(data.message)
+                    window.location.reload();
+                },"json")
+            }else{
+                alert("取消本次操作")
+            }
+        });
+
+        $(document).on("click",".effect",function(){
+            document.getElementById("tz").style.display="block";
+            document.getElementById("list").style.display="none";
+
+            var $this = $(this);
+            var parents = $this.parent().siblings();
+            strategyId = parents.eq(1).text();
+            rosterId = parents.eq(0).text();
+            var nodeCode = parents.eq(2).text();
+            var touchStragety = parents.eq(3).text();
+            var userTagType = parents.eq(4).text();
+            $('#cfjd').text("触发节点:"+nodeCode);
+            if (touchStragety){
+                touchStragety =  touchStragety.replace("/",";").replace("/",";").replace("/",";").replace("/",";")
+                    .replace("/",";").replace("/",";").replace("/",";").replace("/",";");
+            }
+            $('#stragety').text("触发策略:"+touchStragety);
+            if (!rosterId||rosterId=="null"){
+                rosterId = 0;
+            }
+            var param = "id=" + rosterId;
+            if (userTagType == "全部用户"){
+
+                $.ajax({
+                    type:'GET',
+                    url:globalConfig.basePath+"/ruleConfigAddDetail/queryUserCount?channel="+globalConfig.channelCode,
+                    data:globalConfig.channelCode,
+                    contentType:"application/json",
+                    dataType:"json",
+                    success:function (data) {
+                        console.log(data);
+                        $('#rosterName').text("名单名称:全部用户");
+                        $('#channelCode').text("渠道:" + globalConfig.channel);
+                        $('#type').text("类型:" + "-");
+                        $('#rosterNumber').text("名单人数:" + data.resp);
+                    },
+                    error:function (data) {
+                        alert(data.message);
+                    }
+
+                })
+            }else{
+                $.post(globalConfig.basePath+"/abTest/listname", param, function (data) {
+                    if(data.code != '000'){
+                        alert(data.message)
+                        self.location=document.referrer;
+                    }else {
+                        console.log(data);
+
+
+                        if (data.resp.data) {
+                            var  rosterInfo = data.resp.data;
+                            $('#rosterName').text("名单名称:" + rosterInfo.rosterName);
+                            if (rosterInfo.channelCode == "WK"){
+                                $('#channelCode').text("渠道:悟空理财");
+                            }else{
+                                $('#channelCode').text("渠道:玖富钱包");
+                            }
+
+                            if (rosterInfo.rosterType=="1"){
+                                rosterInfo.rosterType="用户智能画像";
+                            }else {
+                                rosterInfo.rosterType="用户名单";
+                            }
+
+                            $('#type').text("类型:" + rosterInfo.rosterType);
+                            $('#rosterNumber').text("名单人数:" + rosterInfo.rosterCount);
+                            var oldTime = (new Date(rosterInfo.createTime)).getTime();
+                            var curTime = new Date(oldTime).format1("yyyy-MM-dd");
+                            var oldTime2 = (new Date(rosterInfo.updateTime)).getTime();
+                            var curTime2 = new Date(oldTime2).format1("yyyy-MM-dd");
+                            $('#createTime').text("创建时间:" + curTime);
+                            $('#updateTime').text("更新时间:" + curTime2);
+                            $('#createPeople').text("创建人:" + rosterInfo.createUser);
+
+                        }
+
+
+                    }
+
+                }, "json");
+
+            }
+
+
+            $('#testSelect option:selected').val(1);
+            changeCharts();
+            querySmartList1();
+
+        });
+        Date.prototype.format1 = function (fmt) {
+            var o = {
+                "M+": this.getMonth() + 1,                 //月份
+                "d+": this.getDate(),                    //日
+                "h+": this.getHours(),                   //小时
+                "m+": this.getMinutes(),                 //分
+                "s+": this.getSeconds(),                 //秒
+                "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                "S": this.getMilliseconds()             //毫秒
+            };
+            if (/(y+)/.test(fmt)) {
+                fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            }
+            for (var k in o) {
+                if (new RegExp("(" + k + ")").test(fmt)) {
+                    fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                }
+            }
+            return fmt;
+        }
+        $(document).on("click",".takeEff", function (){
+            var $this = $(this);
+            var parents = $this.parent().siblings();
+            var strategyId = parents.eq(1).text();
+            if(confirm("是否要生效？")){
+                $.post("${ctx}/operation/strategy/status","id="+strategyId+"&status=1",function(data){
+                    alert(data.message)
+                    window.location.reload();
+                },"json")
+            }else{
+                alert("取消本次操作")
+            }
+        })
+
+        $("#addstrategy").on("click", function () {
+            window.location.href = "${ctx}/strategyIndex/addStrategy?type=add";
+        });
+        $(document).on("click",".update",function(){
+            var $this = $(this);
+            var parents = $this.parent().siblings();
+            var strategyId = parents.eq(1).text();
+            window.location.href = "${ctx}/strategyIndex/addStrategy?type=update&strategyId="+strategyId;
+        })
+        $(document).on("click",".lookThis",function(){
+            var $this = $(this);
+            var parents = $this.parent().siblings();
+            var strategyId = parents.eq(1).text();
+            window.location.href = "${ctx}/strategyIndex/addStrategy?type=find&strategyId="+strategyId;
+        })
+    }
+
+    function auditConfirm(){
+        var strId=$("#strId").val();
+        var status=$("#auditStatus").val()
+        $.post("${ctx}/operation/strategy/status","id="+strId+"&status="+status,function(data){
+            alert(data.message)
+            window.location.reload();
+        },"json")
+    }
+
+</script>
+<script type="text/javascript">
+    //生成列表
+    $.post("${ctx}/operation/query/leveltwo", "currentPage=1&pageSize="+pageSize+"&userActionCode="+globalConfig.userActionCode, function (data) {
+        pageContextLevel2(data);
+    }, "json");
+    //生成搜索条件下拉条
+    //触发节点
+    $.post("${ctx}/operation/init/byKey", "type=1&code="+globalConfig.userActionCode, function (data) {
+        if(data.code!='000'){
+            alert(data.message);
+            return;
+        }
+        var res=data.resp;
+        var str="<option value=''>全部</option>";
+        for(var i=0;i<res.length;i++){
+            str+="<option value='"+res[i].key+"'>"+res[i].value+"</option>"
+        }
+        $("#nodeCode").html(str);
+    }, "json");
+    //结果类型
+    $.post("${ctx}/operation/init/byKey", "type=4", function (data) {
+        if(data.code!='000'){
+            alert(data.message);
+            return;
+        }
+        var res=data.resp;
+        var str="<option value=''>全部</option>";
+        for(var i=0;i<res.length;i++){
+            str+="<option value='"+res[i].key+"'>"+res[i].value+"</option>"
+        }
+        $("#resultType").html(str);
+    }, "json");
+    //预期结果状态
+    $.post("${ctx}/operation/init/byKey", "type=9", function (data) {
+        if(data.code!='000'){
+            alert(data.message);
+            return;
+        }
+        var res=data.resp;
+        var str="<option value=''>全部</option>";
+        for(var i=0;i<res.length;i++){
+            str+="<option value='"+res[i].key+"'>"+res[i].value+"</option>"
+        }
+        $("#strategyResult").html(str);
+    }, "json");
+    //搜索功能
+    $("#seek").on("click", function () {
+        var strategyId = $("#strategyId").val();
+        var startTime = $("#startTime").val();
+        var endTime = $("#endTime").val();
+        var nodeCode = $("#nodeCode").val();
+        var resultType = $("#resultType").val();
+        var strategyStatus = $("#strategyStatus").val();
+        var strategyResult = $("#strategyResult").val();
+        if(startTime!=""){
+            if(endTime==""){
+                alert("执行结束时间为空")
+                return;
+            }
+        }
+        if(endTime!=""){
+            if(startTime==""){
+                alert("执行开始时间为空")
+                return;
+            }
+        }
+        var dataFormat=/^((((1[6-9]|[2-9]\d)\d{2})-(0?[13578]|1[02])-(0?[1-9]|[12]\d|3[01]))|(((1[6-9]|[2-9]\d)\d{2})-(0?[13456789]|1[012])-(0?[1-9]|[12]\d|30))|(((1[6-9]|[2-9]\d)\d{2})-0?2-(0?[1-9]|1\d|2[0-8]))|(((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))-0?2-29-))(\s(([01]\d{1})|(2[0123])):([0-5]\d):([0-5]\d))?$/;
+        if(startTime!=""&&startTime!="null"&&startTime!=null){
+            if (!dataFormat.test(startTime)) {
+                alert("执行开始时间格式不正确")
+                return;
+            }
+        }
+        if(endTime!=""&&endTime!="null"&&endTime!=null){
+            if (!dataFormat.test(endTime)) {
+                alert("执行结束时间格式不正确")
+                return;
+            }
+        }
+        if(endTime!=""&&startTime!=""){
+            if(strategyId==""){
+                alert("执行时间不为空时，策略ID不允许为空");
+                return;
+            }
+        }
+        if(startTime!=""&&startTime!="null"&&startTime!=null&&endTime!=""&&endTime!="null"&&endTime!=null){
+            var start=new Date(startTime.replace("-", "/").replace("-", "/"));
+            var end=new Date(endTime.replace("-", "/").replace("-", "/"));
+            if(end<start){
+                alert("执行结束时间不得小于执行开始时间")
+                return;
+            }
+        }
+        var param = "currentPage=1&pageSize="+pageSize+"&nodeCode="+nodeCode+"&resultType="+resultType+
+            "&strategyStatus="+strategyStatus+"&strategyResult="+strategyResult+"&userActionCode="+globalConfig.userActionCode
+            +"&tacticIdParam="+strategyId+"&startTimeDate="+startTime+"&endTimeDate="+endTime;
+        $.post("${ctx}/operation/query/leveltwo", param, function (data) {
+            pageContextLevel2(data);
+        }, "json");
+    });
+    $("#reset").on("click", function () {
+        $("#strategyId").val("");
+        $("#nodeCode").val("");
+        $("#resultType").val("");
+        $("#strategyStatus").val("");
+        $("#strategyResult").val("");
+        $("#startTime").val("");
+        $("#endTime").val("");
+    });
+    paging();
+
+</script>
+</body>
+</html>

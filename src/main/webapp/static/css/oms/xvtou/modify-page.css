@@ -1,0 +1,164 @@
+.look-pagea{
+  width: 80%;
+  background: #fff;
+  height: 84px;
+  margin-left: 215px;
+  margin-top: 20px;
+  border: 1px solid #e0e2e4;
+}
+.look-pagea button{
+  width: 118px;
+  height: 36px;
+  border: 1px solid #ff5663;
+  background: #fff;
+  border-radius: 50px;
+  color: #fb5251;
+  font-size: 14px;
+  margin-top: 22px;
+  margin-left: 40px;
+}
+.look-pagea .JianBian{
+  background: -webkit-linear-gradient(left, #ff866b , #fd6873); 
+  background: -o-linear-gradient(right, #ff866b, #fd6873); 
+  background: -moz-linear-gradient(right, #ff866b, #fd6873);
+  background: linear-gradient(to right, #ff866b , #fd6873);
+  color: #fff;
+}
+.look-pagea button span{
+  margin-left: 11px;
+}
+.look-pagea button a{
+  margin-left: 11px;
+  color: #fb5251;
+}
+/* 第二部分 */
+.look-pageb{
+  width: 80%;
+  background: #fff;
+  margin-left: 215px;
+  margin-top: 8px;
+  border: 1px solid #e0e2e4;
+  position: relative;
+}
+.look-pageb ul{
+  list-style: none;
+  display: inline-block;
+  font-size: 14px;
+  margin-top: 30px;
+  margin-left: 37px;
+}
+.look-pageb ul li p{
+  display: inline-block;
+  width: 100px;
+}
+.look-pageb .vip-box{
+  position: relative;
+  z-index: 9;
+}
+.look-pageb .vip-box span{
+  margin-right: 30px;
+}
+.look-pageb .vip-box .kongs{
+  margin-bottom: 20px;
+}
+.look-pageb .vip-box li .chacks{
+  height: 12px;
+  margin-right: 10px;
+  margin-right: 5px;
+}
+
+
+.vipBigBox{
+  height: 270px;
+  position: absolute;
+  top: 129px;
+}
+.interests{
+  width: 150px;
+  height: 25px;
+  font-size: 12px;
+  padding-left: 5px;
+  border: 1px solid #ccc;
+}
+.interest{
+  width: 90px;
+  height: 25px;
+  font-size: 12px;
+  padding-left: 5px;
+  border: 1px solid #ccc;
+}
+.marTop{
+  margin-top:230px;
+}
+.rightList{
+  position: absolute;
+  top: 0;
+  left: 350px;
+  z-index: 0;
+}
+.rightList li{
+  margin-top: 15px;
+}
+.leftList li{
+  margin-top: 10px;
+}
+.leftList .upDownArrow i{
+  font-size: 30px;
+  margin: 0 0 0 10px;
+}
+.checkAlls{
+  height: 12px;
+  margin-right: 10px;
+}
+.twoList{
+  width:250px;
+  overflow-y: scroll;
+  height:200px;
+  border: 1px solid Gray;
+  float:left;
+  margin-top: -10px;
+}
+.twoLista{
+  margin-left: 100px;
+}
+.twoListb{
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.twoListc{
+  float:left;
+  margin-left: 10px;
+  font-size: 20px;
+  margin-top: 30px;
+  text-align: center;
+}
+.twoListc i{
+  width: 20px;
+  height: 20px;
+}
+.twoList ul{
+  width: 100%;
+  margin: 0;
+}
+.twoList ul li{
+  width: 100%;
+  margin: 0;
+  padding: 5px 0 5px 5px;
+}
+.twoListb ul li:first-child{
+  color: #4967ca;
+}
+.add-interest{
+  width: 40px;
+  height: 20px;
+}
+.keepOnType{
+  width: 200px !important;
+  margin-left: 102px;
+}
+
+.thisSelect{
+  background: #4967ca !important;
+  color: #fff !important;
+}
+

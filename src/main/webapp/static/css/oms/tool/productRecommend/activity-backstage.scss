@@ -1,0 +1,102 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+img, button{
+  float: left;
+}
+.ibox-content {
+  display: flex;
+  padding: 0;
+  h1 {
+    margin: 0;
+    font-weight: 700;
+    border-bottom: 1px solid #ccc;
+    padding: 10px 0 10px 20px;
+  }
+}
+
+.componentLibrary {
+  width: 300px;
+  border-right: 1px solid #ccc;
+  .assemblyContent {
+    height: 300px;
+    button {
+      width: 70px;
+      height: 30px;
+      margin: 5px 0 0 10px;
+      border: none;
+    }
+    .active{
+      background: red;
+      color: #fff;
+    }
+  }
+  .historicalRecords {
+    height: 40px;
+    h1 {
+      background: #ccc;
+    }
+    ul {
+      height: 345px;
+      overflow-y: auto;
+      li {
+        height: 30px;
+        margin-left: 10px;
+        line-height: 30px;
+        list-style: none;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+  }
+}
+
+.h5preview {
+  width: 750px;
+  border-right: 1px solid #ccc;
+  h1 {
+    background: #fff;
+  }
+  .lookH5 {
+    height: 700px;
+    overflow: auto;
+    img {
+      max-width: 100%;
+    }
+  }
+}
+
+.setFunction {
+  width: 300px;
+  border-right: 1px solid #ccc;
+  div {
+    margin-left: 10px;
+    font-size: 14px;
+    p {
+      display: flex;
+      span {
+        display: inline-block;
+        margin-bottom: 5px;
+        width: 80px;
+        line-height: 30px;
+      }
+      input {
+        font-size: 18px;
+        width: 150px;
+        height: 20px;
+        font-size: 14px;
+        margin-top: 5px;
+        padding-left: 5px;
+      }
+    }
+    .buttonMessageBtn{
+      margin-top: 10px;
+    }
+  }
+}
+
+.structureTree {
+  width: 300px;
+}

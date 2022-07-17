@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>广场舞报名活动审核（运营大后台）</title>
+    <link href="${cssRoot}/bootstrap.min.css" rel="stylesheet">
+    <link href="${cssRoot}/../font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <!-- FooTable -->
+    <link href="${cssRoot}/plugins/footable/footable.core.css" rel="stylesheet">
+
+    <link href="${cssRoot}/animate.css" rel="stylesheet">
+    <link href="${cssRoot}/style.css?rand=${random}" rel="stylesheet">
+    <link href="${cssRoot}/styleT.css?rand=${random}" rel="stylesheet">
+    <script>
+        var globalConfig = {
+            basePath: "${ctx}",
+            staticRoot: "${staticRoot}",
+            loginName: "${Session.sessionUser.loginName}"
+        };
+    </script>
+</head>
+<body ng-app="plazaDance" ng-controller="plazaDanceController">
+<div id="wrapper">
+    <div class="header-box">
+        <#include "/common/top.html" encoding="UTF-8" />
+    </div>
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse"  style="height: 675px;overflow-y: scroll;">
+            <#include "/common/left.html" encoding="UTF-8" />
+        </div>
+    </nav>
+</div>
+<div class="content-box">
+    <div class="small-content">
+        <!-- 第一部分 -->
+        <div class="small-boxb col-md-12">
+            <div class="boxb-a">
+                <p style="margin-top:20px;">活动名称:
+                    <input type="text" maxlength="25" style="width: 160px" placeholder="请输入活动名称" ng-model="search.activityName">
+                </p>
+            </div>
+            <div class="boxb-a">
+                <p style="margin-top:20px;">活动编码:
+                    <input type="text" maxlength="25" style="width: 160px" placeholder="请输入活动编码" ng-model="search.activityCode">
+                </p>
+            </div>
+            <div class="boxb-a">
+                <p style="margin-top:20px;">状态查询：
+                    <select class="chosen-select" style="width:150px;" tabindex="2" ng-model="search.status">
+                        <option value="">全部</option>
+                        <option value="0">待审核</option>
+                        <option value="1">审核通过</option>
+                        <option value="2">审核失败</option>
+                    </select>
+                </p>
+            </div>
+            <div class="boxb-a">
+                <p style="margin-top:20px;">
+                    <a class="btn btn-success btn-rounded btn-blueW btn-blueWa" href="#" ng-click="pageQueryDanceList(1)"><i class="fa fa-search"></i>
+                        <span>搜索</span></a>
+                    <a class="btn btn-success btn-rounded btn-blueW btn-blueWb" href="#" ng-click="reset()"><i
+                            class="fa fa-refresh"></i> <span>重置</span></a>
+                </p>
+            </div>
+        </div>
+        <!-- 第二部分 -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins" style="margin-top:10px;">
+                    <div class="ibox-content">
+                        <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+                            <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>姓名</th>
+                                <th>手机号</th>
+                                <th>参赛队名名称</th>
+                                <th>队伍人数</th>
+                                <th>照片</th>
+                                <th>报名时间</th>
+                                <th>状态</th>
+                                <th>原因</th>
+                                <th ng-click="searchCallRecordsSort('pollNumber')">票数
+                                    <img class="img-sort pollNumber" src="${imgRoot}/sort.png" style="width: 13px;height: 13px;float: none;">
+                                </th>
+                                <!--<th>排名</th>-->
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="x in auditPlazaDanceList">
+                                <td>{{$index+1}}</td>
+                                <td>{{x.captainName}}</td>
+                                <td>{{x.mobile}}</td>
+                                <td>{{x.teamName}}</td>
+                                <td>{{x.teamNumber}}</td>
+                                <td ng-click="showImg(x.teamImgurl)"><img src="{{x.teamImgurl}}" style="width: 40px;height: 40px;"></td>
+                                <td>{{x.createTime}}</td>
+                                <td>{{x.status==0 && '待审核' || x.status==1 && '审核通过' || x.status==2 && '审核失败'}}</td>
+                                <td>{{x.remark}}</td>
+                                <td>{{x.pollNumber}}</td>
+                                <!--<th>{{x.ranking}}</th>-->
+                                <td>
+                                    <span ng-click="showAudit(x)">审核</span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="bottom-page">
+                            <div class="bottom-pageb">
+                                <i class="fa fa-step-backward" ng-click="pageQueryDanceList(1)"></i>
+                                <i style="font-size:16px;" class="fa fa-caret-left" ng-click="pageQueryDanceList(search.pageNo-1)"></i>
+                                <p>第<span class="pageN">{{search.pageNo}}</span class="commonN">共<span>{{search.pageCount}}</span>页</p>
+                                <i style="font-size:16px;" class="fa fa-caret-right" ng-click="pageQueryDanceList(search.pageNo+1)"></i>
+                                <i style="margin-left:8px;" class="fa fa-step-forward" ng-click="pageQueryDanceList(search.pageCount)"></i>
+                                <i class="fa fa-refresh" ng-click="pageQueryDanceList(search.pageNo)"></i>
+                            </div>
+
+                            <div class="bottom-pagec">
+                                <p>显示<span>{{(search.pageNo-1)*search.perPageRowSize+1}}</span>到{{search.pageNo*search.perPageRowSize}}条，共<span>{{search.totalRowSize}}</span>记录
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--审核弹窗-->
+<div class="take-start-box" id="auditShow">
+    <div class="take-start-small newTakeEffect">
+        <h2 align="center">审核</h2>
+        <ul class="isEffect">
+            <li><p>审核结果：</p>
+                <select ng-model="audit.status">
+                    <option value="1">审核通过</option>
+                    <option value="2">审核不通过</option>
+                </select>
+            </li>
+            <li class="PosiText" ng-show="audit.status==2">
+                <p>审核描述：</p>
+                <textarea ng-model="audit.cause" maxlength="10" cols="25" rows="4"
+                          placeholder="10(含)个汉字以内"></textarea>
+            </li>
+        </ul>
+        <div class="bottom-btn">
+            <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="confirm()">确定</a>
+            <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" ng-click="cancel()">取消</a>
+        </div>
+    </div>
+</div>
+
+<!--图片显示弹窗-->
+<div class="take-start-box" id="imgShow">
+        <div class="bottom-btn" style="width: 1000px;height: 1000px;text-align: center;margin-top: 20px;position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin: auto;">
+            <img id="urlImg" src="" style="width: 60%;height: 60%;margin-top: 20%;margin-left: 18%;">
+        </div>
+</div>
+<script src="${jsRoot}/angular/angular.min.js"></script>
+<script src="${jsRoot}/plugins/laydate/laydate.js"></script>
+<!-- Mainly scripts -->
+<script src="${jsRoot}/jquery-2.1.1.js"></script>
+<script src="${jsRoot}/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="${jsRoot}/bootstrap.min.js"></script>
+<script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="${jsRoot}/plugins/jeditable/jquery.jeditable.js"></script>
+
+<!-- Data Tables -->
+<script src="${jsRoot}/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.responsive.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.tableTools.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="${jsRoot}/inspinia.js"></script>
+<script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.iframe-transport.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.ui.widget.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-process.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-validate.js"></script>
+<script src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+<script type="text/javascript" src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+
+<script src="${jsRoot}/biz/offlineactivitymanage/plazaDance.js?rand=${random}"></script>
+
+<script>
+    $(function() {
+        $('.take-start-box').on('click', function () {
+            $('#imgShow').hide();
+        })
+    })
+</script>
+</body>
+</html>

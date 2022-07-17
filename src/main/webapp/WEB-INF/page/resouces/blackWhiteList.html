@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>黑白名单</title>
+    <link href="${staticRoot}/css/bootstrap.min.css" rel="stylesheet">
+    <link href="${staticRoot}/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <!-- FooTable -->
+    <link href="${staticRoot}/css/plugins/footable/footable.core.css" rel="stylesheet">
+    <link href="${staticRoot}/css/animate.css" rel="stylesheet">
+    <link href="${staticRoot}/css/style.css?rand=${random}" rel="stylesheet">
+    <link href="${staticRoot}/css/styleT.css?rand=${random}" rel="stylesheet">
+    <link href="${staticRoot}/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <style>
+        .file{
+            position: fixed;left: -500px;
+        }
+        #meun-status .blue{
+            color: #8295f3;
+        }
+        #meun-status .red{
+            color: #fd6873;
+        }
+
+        .spinner {
+            display: inline-block;
+            margin-left:-10px;
+        }
+
+        .spinner > div {
+            width: 10px;
+            height: 10px;
+            background-color: #fd6873;
+
+            border-radius: 100%;
+            display: inline-block;
+            -webkit-animation: bouncedelay 1.4s infinite ease-in-out;
+            animation: bouncedelay 1.4s infinite ease-in-out;
+            /* Prevent first frame from flickering when animation starts */
+            -webkit-animation-fill-mode: both;
+            animation-fill-mode: both;
+        }
+
+        .spinner .bounce1 {
+            -webkit-animation-delay: -0.32s;
+            animation-delay: -0.32s;
+        }
+
+        .spinner .bounce2 {
+            -webkit-animation-delay: -0.16s;
+            animation-delay: -0.16s;
+        }
+
+        @-webkit-keyframes bouncedelay {
+            0%, 80%, 100% { -webkit-transform: scale(0.0) }
+            40% { -webkit-transform: scale(1.0) }
+        }
+
+        @keyframes bouncedelay {
+            0%, 80%, 100% {
+                transform: scale(0.0);
+                -webkit-transform: scale(0.0);
+            } 40% {
+                  transform: scale(1.0);
+                  -webkit-transform: scale(1.0);
+              }
+        }
+        .trStyle{
+	        color: red;
+	        background-color: red;
+    }
+    </style>
+    <script>
+        var globalConfig = {
+            basePath: "${ctx}",
+            staticRoot: "${staticRoot}"
+        };
+        function swalMsg(msg) {
+            swal({
+                title:"",
+                text:msg,
+                confirmButtonColor: "#1ab394",
+                confirmButtonText:"确定"
+            });
+        }
+    </script>
+</head>
+<body ng-app="myApp" ng-controller="rootController">
+<div id="wrapper" id="wrapper">
+    <div class="header-box">
+        <#include "/common/top.html" encoding="UTF-8" />
+    </div>
+    <nav class="sidebar-collapse navbar-default navbar-static-side" role="navigation">
+        <div  style="height: 675px;overflow-y: scroll;">
+            <#include "/common/left.html" encoding="UTF-8" />
+        <div>
+    </nav>
+</div>
+
+<div class="content-box">
+    <div class="small-content">
+        <!-- 第一部分 -->
+        <div class="small-boxa">
+            <a href="javascipt:void(0)" ng-click="preAdd()" class="btn btn-danger btn-rounded btn-gradient btn-gradienta">
+                <i class="fa fa-plus-square-o"></i><span>添加名单</span>
+            </a>
+            <a class="btn btn-danger btn-rounded btn-gradient btn-gradienta" href="${fileRoot}/blackWhiteMemberTemplate.xlsx"
+               download="blackWhiteMemberTemplate.xlsx"><i class="fa fa-plus-square-o"></i> <span>名单模板下载</span></a>
+
+        </div>
+        <!-- 第二部分 -->
+        <div class="small-boxb name-listb col-md-12">
+            <div class="boxb-a">
+                <p style="margin-top:20px;">产品：
+                    <select ng-init="searchCondition.listChannel='1'" name="listChannel" ng-model="searchCondition.listChannel" class="chosen-select" style="width:120px;">
+                        <option value="1">玖富钱包APP</option>
+                        <option value="2">悟空理财APP</option>
+                    </select>
+                </p>
+                <p style="margin-top:20px;">名单类型：
+                    <select name="listType" ng-model="searchCondition.listType" class="chosen-select" style="width:120px;" tabindex="2">
+                        <option value="">全部</option>
+                        <option value="1">黑名单</option>
+                        <option value="2">白名单</option>
+                    </select>
+                </p>
+                <p>名单名称：
+                    <input name="listName" ng-model="searchCondition.listName" type="text">
+                </p>
+                <p style="margin-top:20px;">是否生效：
+                    <select name="isValid" ng-model="searchCondition.isValid" class="chosen-select" style="width:120px;">
+                        <option value="">全部</option>
+                        <option value="1">已生效</option>
+                        <option value="0">已失效</option>
+                    </select>
+                </p>
+                <p>
+                    <a class="btn btn-success btn-rounded btn-blueW btn-blueWa" href="javasript:void(0)" ng-click="pageQueryBlackWhite(1)"><i class="fa fa-search"></i>
+                        <span>搜索</span></a>
+                    <a class="btn btn-success btn-rounded btn-blueW btn-blueWb" href="javasript:void(0)" ng-click="resetBlackWhite()"><i class="fa fa-refresh"></i>
+                        <span>重置</span></a>
+                </p>
+            </div>
+        </div>
+        <!-- 第二部分 -->
+        <!-- 第三部分 -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins" style="margin-top:10px;">
+                    <div class="ibox-content">
+                        <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+                            <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>名单ID</th>
+                                <th>产品</th>
+                                <th>名单类型</th>
+                                <th>名单名称</th>
+                                <th>名单描述</th>
+                                <th>是否生效</th>
+                                <th>状态</th>
+                                <th>最后修改时间</th>
+                                <th>操作人</th>
+                                <th>名单入库数量</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="x in blackWhiteList">
+                                    <td>{{$index+1}}</td>
+                                    <td>{{x.id}}</td>
+                                    <td>{{getListChanelName(x.listChannel)}}</td>
+                                    <td>{{getListTypeName(x.listType)}}</td>
+                                    <td>{{x.listName}}</td>
+                                    <td>{{x.listDesc}}</td>
+                                    <!-- <td>{{x.taskId}}</td> -->
+                                    <td>{{x.isValid=='0'?"已失效":"已生效"}}</td>
+                                    <td id="fontColor">{{getDataStatushtml(x.datastatus,x.ismp)}}</td>
+                                    <td>{{x.updateTime | date:'yyyy-mm-dd hh:mm:ss'}}</td>
+                                    <td>{{x.operationPerson}}</td>
+                                    <td>{{x.remark==null?"待初始化":x.remark}}</td>
+                                    <td>
+                                        <span class="look-start" ng-click="preOperate(1,x)">查看</span>
+                                        <span class="modify-start" ng-click="preOperate(2,x)">修改</span>
+                                        <span class="modify-start" ng-click="preOperate(3,x)">{{x.isValid=='0'?"生效":"失效"}}</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <#include "/common/page.html" encoding="UTF-8" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 第三部分 -->
+    <!-- 添加黑白名单 -->
+    <div class="add-start-bg" id="add-start-bg1">
+        <div class="add-start">
+            <h1>{{operationRecord.id?"修改":"添加"}}名单</h1>
+            <div class="start-a">
+                <p>产品</p>
+                <select name="listChannel" ng-model="operationRecord.listChannel" ng-disabled="operationRecord.id" style="width:150px;">
+                    <option value="1">玖富钱包APP</option>
+                    <option value="2">悟空理财APP</option>
+                </select>
+            </div>
+            <div class="start-c">
+                <p>名单类型</p>
+                <select name="listType" ng-model="operationRecord.listType" ng-disabled="operationRecord.id" style="width:150px;">
+                    <option value="">请选择</option>
+                    <option value="1">黑名单</option>
+                    <option value="2">白名单</option>
+                </select>
+            </div>
+            <div class="start-b" >
+                <p>名单名称</p>
+                <input name="listName" ng-model="operationRecord.listName" maxlength="30" placeholder="30字符以内" style="width:368px;" type="text">
+            </div>
+            <div class="start-e">
+                <p>名单描述</p>
+                <input name="listDesc" ng-model="operationRecord.listDesc" style="width:368px;" type="text" maxlength="30" placeholder="选填，30字符以内">
+            </div>
+            <div ng-show="operationRecord.listChannel==4" class="start-b" >
+                <p>活动ID</p>
+                <input name="taskId" ng-model="operationRecord.taskId"  style="width:368px;" type="text">
+            </div>
+            <div class="start-d" ng-show="operationRecord.id && operationRecord.ismp=='0'">
+                <p>用户名单</p>
+                <input ng-click="downloadBlackWhiteFile(operationRecord.id,operationRecord.excelName)" id="updateMemberFileInput" readonly name="excelName" value="{{operationRecord.excelName}}" style="width:220px;" type="text">
+                <label ng-show="operationRecord.excelName" ><input type="checkbox" ng-model="operationRecord.append"
+                               style="margin: 0 5px;vertical-align: middle"/> <span
+                        style="margin-top: 4px;vertical-align: middle">新增名单
+                </span></label>
+                <a href="javascript:void(0)" onclick="$('#memberFile').click()" ng-hide="operationRecord.datastatus==2" class="btn btn-success btn-rounded btn-blueWa"><span>点击上传</span></a>
+                <input type="file" class="file" id="memberFile" name="memberFile" onchange="importMemberData()"/>
+            </div>
+            <div class="start-f">
+                <p>是否生效</p>
+                <select ng-init="operationRecord.isValid = '1'" name="isValid" ng-model="operationRecord.isValid" style="width:150px;">
+                    <option value="1">生效</option>
+                    <option value="0">失效</option>
+                </select>
+                 <p>名单来源</p>
+                <select ng-init="operationRecord.ismp = '0'"  id="ismp" name="ismp" ng-model="operationRecord.ismp" style="width:150px;" ng-change="changeisMap()">
+                    <option value="0">文件上传</option>
+                    <option value="1">MP同步</option>
+                </select>
+            </div>
+             <div class="start-f" id="meun-status">
+                <p>名单状态</p>
+                 <span style="font-size: 28px;font-weight: 800;" ng-class="{'blue':operationRecord.datastatus=='1','red':operationRecord.datastatus!='1'}">{{operationRecord.datastatusStr}}</span>
+                 <div class="spinner" ng-if="operationRecord.id && operationRecord.ismp=='0' && operationRecord.datastatus==2">
+                     <div class="bounce1"></div>
+                     <div class="bounce2"></div>
+                     <div class="bounce3"></div>
+                 </div>
+            </div>
+            <div class="bottom-btn">
+                <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="javascript:void(0)" ng-click="updateRecord()">确定</a>
+                <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="javascript:void(0)" onclick="$('#add-start-bg1').hide()">取消</a>
+            </div>
+        </div>
+    </div>
+</div>
+<form id="conditionForm" class="file" method="POST" target="_blank" >
+    <input type="text" id="conditionForm_blackWhiteListId" name="blackWhiteListId"/>
+    <input type="text" id="conditionForm_blackWhiteListName" name="blackWhiteListName"/>
+</form>
+<!-- 查看黑白名单 -->
+<div class="look-start-box" id="look-start-box1">
+    <div class="add-look-start">
+        <h1>查看名单</h1>
+        <div class="look-start-a">
+            <p>产品：</p>
+            <span>{{getListChanelName(showRecord.listChannel)}}</span>
+        </div>
+        <div class="look-start-a">
+            <p>名单类型：</p>
+            <span>{{getListTypeName(showRecord.listType)}}</span>
+        </div>
+        <div class="look-start-b">
+            <p>名单名称：</p>
+            <span>{{showRecord.listName}}</span>
+        </div>
+        <div class="look-start-c">
+            <p>名单描述：</p>
+            <span>{{showRecord.listDesc}}</span>
+        </div>
+         <div class="look-start-i">
+            <p>名单来源：</p>
+            <span>{{showRecord.ismp==0?'文件上传':'MP同步'}}</span>
+            <p>名单状态：</p>
+            <span>{{showRecord.datastatusStr}}</span>
+        </div>
+        <div class="look-start-a" ng-show="showRecord.listChannel==4">
+            <p>活动id：</p>
+            <span>{{showRecord.taskId}}</span>
+        </div>
+        <div class="look-start-c" ng-show="showRecord.ismp=='0'">
+            <p>用户名单：</p>
+            <a href="javascrit:void(0)" ng-click="downloadBlackWhiteFile(showRecord.id,showRecord.excelName)">{{showRecord.excelName}}</a>
+            <!--<span ng-click="downloadBlackWhiteFile(showRecord.id,showRecord.excelName)">{{showRecord.excelName}}</span>-->
+        </div>
+        <div class="look-start-d">
+            <p>是否生效：</p>
+            <span>{{showRecord.isValid=='0'?"已失效":"已生效"}}</span>
+        </div>
+        <div class="look-start-i">
+            <p>最后修改时间：</p>
+            <span>{{showRecord.updateTime | date:'yyyy-mm-dd hh:mm:ss'}}</span>
+            <p>操作人：</p>
+            <span>{{showRecord.operationPerson}}</span>
+        </div>
+        <div class="look-start-i">
+            <p>创建时间：</p>
+            <span>{{showRecord.createTime | date:'yyyy-mm-dd hh:mm:ss'}}</span>
+            <p>创建人：</p>
+            <span>{{showRecord.createPerson}}</span>
+        </div>
+        <div class="bottom-btn">
+            <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="javaScript:void(0)" onclick="$('#look-start-box1').hide()">关闭</a>
+        </div>
+    </div>
+</div>
+</div>
+<!--生效、失效弹窗-->
+<div class="take-start-box" id="take-start-box1">
+    <div class="take-start-small">
+        <p>您确定要{{operationRecord.isValid=='0'?"生效":"失效"}}该名单吗？</p>
+        <div class="bottom-btn">
+            <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="javascipt:void(0)" ng-click="validateRecord()">确定</a>
+            <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="javascipt:void(0)" onclick="$('#take-start-box1').hide()">取消</a>
+        </div>
+    </div>
+</div>
+<!-- 失效开机屏详情 -->
+</div>
+</div>
+<!-- Mainly scripts -->
+<script type="text/javascript" src="${staticRoot}/js/jquery-2.1.1.js"></script>
+<script type="text/javascript" src="${staticRoot}/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="${jsRoot}/angular/angular.min.js"></script>
+<script type="text/javascript" src="${staticRoot}/js/plugins/sweetalert/sweetalert.min.js"></script>
+<script type="text/javascript" src="${jsRoot}/biz/resource/blackWhiteList.js?rand=${random}"></script>
+<script type="text/javascript" src="${staticRoot}/js/plugins/ajaxfileupload/ajaxfileupload.js"></script>
+<script type="text/javascript" src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+
+<!-- Mainly scripts -->
+<script src="${jsRoot}/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="${jsRoot}/inspinia.js"></script>
+<script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+<script>
+    /*var navHight = $('.navbar-static-side').height()
+    $('.navbar-static-side').css('height', navHight - 60)
+    $('.content-box').css('height', navHight - 60)*/
+    // 查看名单
+    $('.look-start').click(function () {
+        $('.look-start-box').show()
+        $('.bottom-btna').click(function () {
+            $('.look-start-box').hide()
+        })
+        $('.bottom-btnb').click(function () {
+            $('.look-start-box').hide()
+        })
+    })
+    // 修改名单
+    $('.modify-start').click(function () {
+        $('.modify-start-box').show()
+        $('.bottom-btna').click(function () {
+            $('.modify-start-box').hide()
+        })
+        $('.bottom-btnb').click(function () {
+            $('.modify-start-box').hide()
+        })
+    });
+</script>
+</body>
+</html>

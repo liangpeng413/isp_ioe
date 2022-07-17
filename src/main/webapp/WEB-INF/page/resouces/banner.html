@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Banner图</title>
+    <link href="${cssRoot}/bootstrap.min.css" rel="stylesheet">
+    <link href="${cssRoot}/../font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <!--下拉搜索-->
+    <link href="${cssRoot}/../font-awesome/css/select2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="${cssRoot}/plugins/select2/select2.min.css">
+
+    <!-- FooTable -->
+    <link href="${cssRoot}/plugins/footable/footable.core.css" rel="stylesheet">
+
+    <link href="${cssRoot}/animate.css" rel="stylesheet">
+    <link href="${cssRoot}/style.css?rand=${random}" rel="stylesheet">
+    <link href="${cssRoot}/styleT.css?rand=${random}" rel="stylesheet">
+    <script>
+        var globalConfig = {
+            basePath: "${ctx}",
+            staticRoot: "${staticRoot}",
+            loginName:"${Session.sessionUser.loginName}"
+        };
+    </script>
+</head>
+<body ng-app="splashApp" ng-controller="splashController">
+<div id="wrapper">
+    <div class="header-box">
+        <#include "/common/top.html" encoding="UTF-8" />
+    </div>
+    <nav class="sidebar-collapse navbar-default navbar-static-side" role="navigation">
+        <div  style="height: 675px;overflow-y: scroll;">
+            <#include "/common/left.html" encoding="UTF-8" />
+            <div>
+    </nav>
+</div>
+<div class="content-box">
+    <div class="small-content">
+        <!-- 第一部分 -->
+        <div class="small-boxa">
+            <a class="btn btn-danger btn-rounded btn-gradient btn-gradienta" href="#" ng-click="addScreen()"><i class="fa fa-plus-square-o"></i> <span>添加Banner</span></a>
+            <a class="btn btn-danger btn-rounded btn-gradient btn-gradientb" href="#" ng-click="stort()"><i class="fa fa-outdent"></i> <span>优先级排序</span></a>
+        </div>
+        <!-- 第二部分 -->
+        <div class="small-boxb col-md-12">
+            <div class="boxb-a">
+                <p style="margin-top:20px;">渠道:
+                    <select class="chosen-select" style="width:120px;" tabindex="2" ng-model="search.productChannel" id='searchproductChannel' ng-change="getTypeVersionList(search.productChannel,'','')">
+                        <!-- <option ng-repeat="x in typeProductChannelList" value="{{x.value}}">{{x.label}}</option> -->
+                        <option value="0">悟空理财APP</option>
+                        <option value="1">玖富钱包APP</option>
+                        <option value="2">悟空理财微信端</option>
+                        <option value="3">会员PLUS</option>
+                        <option value="4">聚生活小程序</option>
+                        <option value="5">玖富钱包M站</option>
+                        <option value="6">玖富商城APP</option>
+                    </select>
+                </p>
+                <p>上线状态:
+                    <select class="chosen-select" style="width:120px;" tabindex="2" ng-model="search.status">
+                        <option value="">全部</option>
+                        <option value="0">已上线</option>
+                        <option value="1">待上线</option>
+                        <option value="2">已下线</option>
+                    </select>
+                </p>
+
+            </div>
+            <div class="boxb-b">
+                <p>版本号:
+                    <select id="searchproductVersion" class="chosen-select" style="width:150px;" tabindex="2" ng-model="search.productVersion" ng-change="searchPostionCheck()">
+                        <option value="">全部</option>
+                        <option ng-repeat="x in typeVersionList" value="{{x.label}}">{{x.label}}</option>
+                    </select>
+                </p>
+                <p>是否生效：
+                    <select class="chosen-select" style="width:150px;" tabindex="2" ng-model="search.valid">
+                        <option value="">全部</option>
+                        <option value="0">无效</option>
+                        <option value="1">生效</option>
+                    </select>
+                </p>
+
+            </div>
+            <div class="boxb-c">
+                <p>是否登录：
+                    <select class="chosen-select" style="width:150px;" tabindex="2"  ng-model="search.loginStatus" id="searchLoginStatus" ng-change="searchPostionCheck()">
+                        <option value="">全部</option>
+                        <!-- <option value="2">全部</option> -->
+                        <option value="1">已登录</option>
+                        <option value="0">未登录</option>
+
+                    </select>
+                </p>
+
+                <p>在线时间：
+                    <!--   <input type="number" style="width:150px;" ng-model="search.onlineTime"> -->
+                    <input id="searchonTime" type="text" style="width:150px;" class="input-date" ng-model="search.onTime">
+                </p>
+
+            </div>
+            <div class="boxb-c">
+                <p>是否审核：
+                    <select class="chosen-select" style="width:120px;"  tabindex="2" ng-model="search.auditStatus">
+                        <option value="">全部</option>
+                        <option value="0">待审核</option>
+                        <option value="1">审核通过</option>
+                        <option value="2">审核失败</option>
+                    </select>
+                </p>
+                <p>Banner描述：
+                    <input type="text" style="width:120px;" ng-model="search.desc" id="searchDesc">
+                </p>
+            </div>
+
+
+            <div class="boxb-c" >
+                <p>Banner位置：
+                    <select class="chosen-select" style="width:120px;" tabindex="2" ng-model="search.positions" id="searchpositions">
+                        <option value="">全部</option>
+                        <option ng-repeat="x in positionsList" value="{{x.value}}">{{x.label}}</option>
+                    </select>
+                </p>
+                <p>展示人群:
+                    <select class="chosen-select" style="width:120px;" tabindex="2" ng-model="search.showType">
+                        <option value="">请选择</option>
+                        <option value="0">全部用户</option>
+                        <option value="1">白名单</option>
+                        <option value="2">黑名单</option>
+                        <option value="3">黑白名单</option>
+                    </select>
+                </p>
+
+            </div>
+            <div  class="boxb-c">
+                <p>
+                    <a class="btn btn-success btn-rounded btn-blueW btn-blueWa" href="#" ng-click="querySplashConfigList(1)"><i class="fa fa-search"></i> <span>搜索</span></a>
+                    <a class="btn btn-success btn-rounded btn-blueW btn-blueWb" href="#" ng-click ="reset()"><i class="fa fa-refresh"></i> <span>重置</span></a>
+                </p>
+            </div>
+        </div>
+        <!-- 第二部分 -->
+        <!-- 第三部分 -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins" style="margin-top:10px;">
+                    <div class="ibox-content">
+                        <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+                            <thead>
+                            <tr>
+                                <!-- <th></th> -->
+                                <th>序号</th>
+                                <th>产品</th>
+                                <th>版本号</th>
+                                <th>Banner位置</th>
+                                <th>Banner描述</th>
+                                <th>优先级</th>
+                                <th>图片</th>
+                                <th>跳转链接</th>
+                                <th>上线时间</th>
+                                <th>下线时间</th>
+                                <th>上线状态</th>
+                                <th>是否生效</th>
+                                <th>审核状态</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="x in splashConfigList">
+                                <!-- <td class="actived"><input type="checkbox" class="listChecked checkAll" value="{{x.id}}"></td> -->
+                                <td>{{$index+1}}</td>
+                                <td>{{x.productChannel==3 && '会员PLUS' || x.productChannel==0 && '悟空理财APP' || x.productChannel==1 && '玖富钱包APP' || x.productChannel==2 && '悟空理财微信端' ||x.productChannel==4 && '聚生活小程序' || x.productChannel==5 && '玖富钱包M站' || x.productChannel==6 && '玖富商城APP'}}</td>
+                                <!-- <td>{{x.productChannel}}</td> -->
+                                <td>{{x.productVersion}}</td>
+                                <td>{{x.positionName}}</td>
+                                <td>{{x.desc}}</td>
+                                <td>{{x.priority}}</td>
+                                <td ng-if="x.positions==45"><img src="{{x.usualStatusUrl}}" style="max-width:;height:60px;"></img></td>
+                                <td ng-if="x.positions!=45&&!(x.productChannel==1&&x.positions==226)"><img src="{{x.imageUrl}}" style="max-width:;height:60px;"></img></td>
+                                <td ng-if="x.productChannel==1&&x.positions==226"><img src="{{x.imageUrlTwo}}" style="max-width:;height:60px;"></img></td>
+                                <td><p style="width:250px;line-height: 20px;margin-top: 20px;word-wrap: break-word;">{{x.productChannel==6 && decodeURIStr(x.redirectUrl) || x.redirectUrl}}<p></td>
+                                <td>{{x.onlineTime| date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                                <td>{{x.offlineTime| date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                                <td>{{x.status==0 && '已上线' || x.status==1 && '待上线' || x.status==2 && '已下线'}}</td>
+                                <td>{{x.valid=='0' && '未生效' || x.valid=='1' && '已生效'}}</td>
+                                <!--  <td>{{x.updateTime| date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                                 <td>{{x.operationPerson}}</td> -->
+                                <td>{{x.auditStatus==0 && '待审核' || x.auditStatus==1 && '审核通过' || x.auditStatus==2 && '审核失败'}}</td>
+                                <td>
+                                    <span class="look-start" ng-click="check(x.id)">查看</span>
+                                    <span class="modify-start" ng-click="update(x)">修改</span>
+                                    <!-- <span class="take-start" ng-show="x.valid==0" ng-click="start(x.id,x.valid)">生效</span>
+                                    <span class="take-start" ng-show="x.valid==1" ng-click="start(x.id,x.valid)">失效</span> -->
+                                    <span class="take-start" ng-click="preOperate(3,x)">{{x.valid=='0'?"生效":"失效"}}</span>
+                                    <a ng-if="x.auditStatus=='0' && loginName == x.auditNo"  src="javaScript:void(0);" class="take-start" ng-click="audit(x)" >审核</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="bottom-page">
+                            <div class="bottom-pagea">
+                                <select style="width:58px;height:23px;" ng-model="search.pageSize" ng-change="querySplashConfigList(1)">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                </select>
+                            </div>
+                            <div class="bottom-pageb">
+                                <i class="fa fa-step-backward" ng-click="querySplashConfigList(1)"></i>
+                                <i style="font-size:16px;" class="fa fa-caret-left" ng-click="querySplashConfigList(search.pageNo-1)"></i>
+                                <p>第<span class="pageN">{{search.pageNo}}</span>共<span>{{search.pageCount}}</span>页</p>
+                                <i style="font-size:16px;" class="fa fa-caret-right" ng-click="querySplashConfigList(search.pageNo+1)"></i>
+                                <i style="margin-left:8px;" class="fa fa-step-forward" ng-click="querySplashConfigList(search.pageCount)"></i>
+                                <i class="fa fa-refresh" ng-click="querySplashConfigList(search.pageNo)"></i>
+                            </div>
+
+                            <div class="bottom-pagec">
+                                <p>显示<span>{{(search.pageNo-1)*search.pageSize+1}}</span>到{{search.pageNo*search.pageSize}}条，共<span>{{search.totalRowSize}}</span>记录</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <!-- 第三部分 -->
+    <!-- 添加Banner开始 -->
+    <div class="add-start-bg" id="addShow">
+        <div class="add-start">
+            <h1 align="center">添加banner</h1>
+            <div class="start-a">
+                <p>渠道:</p>
+                <select ng-model="add.productChannel" id='addproductChannel' ng-change="getAddTypeVersionList(add.productChannel,2)">
+                    <!--	<option value="">--请选择--</option>
+                         <option ng-repeat="x in typeProductChannelList" value="{{x.value}}">{{x.label}}</option> -->
+                    <option value="0">悟空理财APP</option>
+                    <option value="1">玖富钱包APP</option>
+                    <option value="2">悟空理财微信端</option>
+                    <option value="3">会员PLUS</option>
+                    <option value="4">聚生活小程序</option>
+                    <option value="5">玖富钱包M站</option>
+                    <option value="6">玖富商城APP</option>
+                </select>
+                <!--  <h2>版本号：
+                   <span style="margin-left:10px;" ng-repeat="x in addTypeVersionList" ng-model="add.productVersion"><input type="checkbox"  ng-click="addversionCheckbox()" class="versionCheckbox checkAll" value="{{x.label}}">{{x.label}}</span>
+                 </h2> -->
+            </div>
+
+            <div class="start-a">
+                <p>版本号：</p>
+                <span style="margin-left:10px;" ng-repeat="x in addTypeVersionList" ng-model="add.productVersion"><input type="radio" name="productVersion" ng-click="addversionCheckbox()" class="versionCheckbox checkAll" value="{{x.label}}">{{x.label}}</span>
+            </div>
+            <div class="start-a" ng-show="add.productChannel==6 && isH5 == 1">
+                <p>投放客户端：</p>
+                <div style="width: 459px; height: 75px;margin-left: 117px;">
+                    <input type="checkbox" class=" checkAll addBannerCheck"  ng-click="preAllCheck(0)">全部
+                    <input type="checkbox" class="preCheckboxH5 checkAll addBannerCheck" value="JFWK_IOS">玖富万卡ios
+                    <input type="checkbox" class="preCheckboxH5 checkAll addBannerCheck" value="JFWK_ANDROID">玖富万卡安卓
+                    <input type="checkbox" class="preCheckboxH5 checkAll addBannerCheck" value="JFWK_H5">玖富万卡H5
+                    <input type="checkbox" class="preCheckboxH5 checkAll addBannerCheck" value="PHJR_IOS">普惠金融ios
+                    <input type="checkbox" class="preCheckboxH5 checkAll addBannerCheck" value="PHJR_ANDROID">普惠金融安卓
+                    <input type="checkbox" class="preCheckboxH5 checkAll addBannerCheck" value="JFQB_IOS">玖富钱包ios
+                    <input type="checkbox" class="preCheckboxH5 checkAll addBannerCheck" value="JFQB_ANDROID">玖富钱包安卓
+                    <input type="checkbox" class="preCheckboxH5 checkAll addBannerCheck" value="JFSC_IOS">玖富商城ios
+                    <input type="checkbox" class="preCheckboxH5 checkAll addBannerCheck" value="JFSC_ANDROID">玖富商城安卓
+                    <input type="checkbox" class="preCheckboxH5 checkAll addBannerCheck" value="JFSC_H5">玖富商城H5
+
+                </div>
+            </div>
+            <div class="start-a" ng-show="add.productChannel==6 && isH5 == 0">
+                <p>投放客户端：</p>
+                <div style="width: 459px; height: 80px;margin-left: 117px;">
+                    <input type="checkbox" class="checkAll addBannerCheck"  ng-click="preAllCheck(1)">全部
+                    <input type="checkbox" class="preCheckbox checkAll addBannerCheck" value="JFSC_IOS">玖富商城ios
+                    <input type="checkbox" class="preCheckbox checkAll addBannerCheck" value="JFSC_ANDROID">玖富商城安卓
+                </div>
+            </div>
+<!--            331-->
+            <div class="start-c" ng-if="add.productChannel==6">
+                <p>金融属性开关:</p>
+                <select ng-model="add.financialStyle" >
+                    <option value="Y">开</option>
+                    <option value="N">关</option>
+                </select>
+            </div>
+
+            <div class="start-a">
+                <p>登录状态:</p>
+                <!-- <input type="radio" id="name="addLoginStatus0"  checked name="addLoginStatus" value='1'  class="checkAll" ng-click="addLoginStatus(1)"/> 已登录
+                <input type="radio" id="name="addLoginStatus1"  name="addLoginStatus" value='0' class="checkAll" style="margin-left:10px;" ng-click="addLoginStatus(0)"/>未登录
+                 -->
+                <select ng-model="add.loginStatus" id='addLoginStatus' ng-change="addLoginStatus(add.loginStatus)">
+                    <option value="">--请选择--</option>
+                    <!-- <option ng-repeat="x in typeProductChannelList" value="{{x.value}}">{{x.label}}</option> -->
+                    <option value="2">全部</option>
+                    <option value="0">未登录</option>
+                    <option value="1"> 已登录</option>
+                </select>
+                <p>Banner位置:</p>
+                <select ng-model="add.positions" id="addpositions" ng-change="onShowValueType(add.positions)">
+                    <option value="">--请选择--</option>
+                    <option ng-repeat="x in addPositionsList" value="{{x.value}}">{{x.label}}</option>
+                </select>
+                <!-- <h2>优先级排序：
+                 <input style="width:100px;" type="text" placeholder="选填" ng-model="add.priority"/>
+                </h2> -->
+            </div>
+
+            <div class="start-b">
+                <p>Banner描述:</p>
+                <input style="width:368px;" type="text" maxlength="30" placeholder="选填，30字符以内" ng-model="add.desc">
+            </div>
+
+            <div  id="valueType" class="start-a" ng-show="typeShow">
+                <p>类型:</p>
+                <select ng-model="add.type" id='type' ng-change="changeValueType(add.type)">
+                    <option value="1" id="isPicture">图片</option>
+                    <option value="2" id="isVideo">视频</option>
+                </select>
+                &nbsp;<span style="color:red;font-size: 10px;">*视频仅对4.8以上版本生效</span>
+            </div>
+
+            <div class="start-d"  ng-show="add.productChannel==1 && (add.positions==42 || add.positions==45)">
+                <div class="start-d">
+                    <p>普通状态:</p>
+                  <input type="file" id="addUsualStatusPic" name="file" size="1"  style="position:absolute;display: none;">
+                    <input style="width:220px;" id="fileUrl3" type="text" ng-model="add.usualStatusUrl">
+                    <a class="btn btn-success btn-rounded btn-blueWa" href="#" onclick="$('#addUsualStatusPic').click();" id="image_prew3"><span>点击上传</span></a>
+                </div>
+            </div>
+
+
+             <div ng-show="add.productChannel==1  && add.positions==45" class="start-d">
+                    <p>提醒状态:</p>
+                    <input type="file" id="addRemindStatusPic" name="file" size="1"  style="position:absolute;display: none;">
+                    <input style="width:220px;" id="fileUrl4" type="text" ng-model="add.remindStatusUrl">
+                    <a class="btn btn-success btn-rounded btn-blueWa" href="#" onclick="$('#addRemindStatusPic').click();" id="image_prew4"><span>点击上传</span></a>
+               </div>
+
+
+             <div class="start-d"  ng-show="add.productChannel==1 && add.positions==47 && add.loginStatus==1">
+                <div class="start-d">
+                    <p>图片/视频封面（矮）:</p>
+                    <input type="file" id="addShortPic" name="file" size="1"  style="position:absolute;display: none;">
+                    <input style="width:220px;" id="fileUrl5" type="text" ng-model="add.shortVideoUrl">
+                    <a class="btn btn-success btn-rounded btn-blueWa" href="#" onclick="$('#addShortPic').click();" id="image_prew5"><span>点击上传</span></a>
+                </div>
+
+            </div>
+
+
+            <div class="start-d" id="videoShow" ng-show="videoShow">
+                <div class="start-d">
+                    <p ng-show="add.productChannel==1 && add.positions==229">图片:</p>
+                    <p ng-show="add.positions!=229">视频封面:</p>
+                    <input type="file" id="addPicture" name="file" size="1"  style="position:absolute;display: none;">
+                    <input style="width:220px;" id="fileUrl1" type="text" ng-model="add.imageUrl">
+                    <a class="btn btn-success btn-rounded btn-blueWa" href="#" onclick="$('#addPicture').click();" id="image_prew1"><span>点击上传</span></a>
+                </div>
+
+                <p ng-show="add.productChannel==1 && add.positions==229">视频:</p>
+                <p ng-show="add.positions!=229">视频连接:</p>
+                <input type="file" id="addVideo" name="file" size="1"  style="position:absolute;display: none;">
+                <input style="width:220px;" id="videoUrl" type="text" ng-model="add.videourl">
+                <a class="btn btn-success btn-rounded btn-blueWa" href="#" onclick="$('#addVideo').click();" id="video_prew"><span>点击上传</span></a>
+                <br> <span style="color:red;font-size: 10px;margin-left:30px;">(支持MP4、MOV、MKV、AVI、WMV、M4V、MPEG、OGV、3GP、FLV、F4V、SWF格式) </span>
+            </div>
+            <!--  <div class="progress">
+                  <div class="bar" style="width: 0%;"></div>
+                  <div class="upstatus" ></div>
+              </div> -->
+            <div id="showPicer" ng-show="showPicer">
+                <div class="start-d" ng-if="add.positions!=45 && add.positions!=226">
+                    <p>图片:</p>
+                    <input type="file" id="addPicture" name="file" size="1"  style="position:absolute;display: none;">
+                    <input style="width:220px;" id="fileUrl" type="text" ng-model="add.imageUrl">
+                    <a class="btn btn-success btn-rounded btn-blueWa" href="#" onclick="$('#addPicture').click();" id="image_prew"><span>点击上传</span></a>
+                </div>
+            </div>
+            <div class="start-d"  ng-show="add.productChannel==1 && add.positions==226">
+                <div class="start-d">
+                    <p>图片2x:</p>
+                    <input type="file" id="addPictureTwo" name="file" size="1"  style="position:absolute;display: none;">
+                    <input style="width:220px;" id="fileUrlTwo" type="text" ng-model="add.imageUrlTwo">
+                    <a class="btn btn-success btn-rounded btn-blueWa" href="#" onclick="$('#addPictureTwo').click();" id="image_prewTwo"><span>点击上传</span></a>
+                </div>
+            </div>
+            <div class="start-d"  ng-show="add.productChannel==1&&add.positions==226">
+                <div class="start-d" >
+                    <p>图片3x:</p>
+                    <input type="file" id="addPictureThree" name="file" size="1"  style="position:absolute;display: none;">
+                    <input style="width:220px;" id="fileUrlThree" type="text" ng-model="add.imageUrlThree">
+                    <a class="btn btn-success btn-rounded btn-blueWa" href="#" onclick="$('#addPictureThree').click();" id="image_prewThree"><span>点击上传</span></a>
+                </div>
+            </div>
+            <div class="start-d" style="margin-top: 0px" ng-show="borrowing_investment_type">
+                <div>
+                    <p ng-show="add.productChannel=='0' && add.positions =='40'">1级场景选项</p>
+                    <p ng-show="add.productChannel=='0' && add.positions =='41'">从</p>
+                    <select style="width: 188px;" class="interests"  ng-options="x.value as x.label for x in sceneOneDictList" ng-model="add.sceneOne" ng-change="selectSceneOneByRDict(add.sceneOne)" >
+                        <option value="">请选择</option>
+                        <option value={{sceneOne.id}}>{{sceneOne.label}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="start-d" style="margin-top: 0px" ng-show="borrowing_investment_type">
+                <div>
+                    <p ng-show="add.productChannel=='0' && add.positions =='40'">2级场景选项</p>
+                    <p ng-show="add.productChannel=='0' && add.positions =='41'">续期至</p>
+                    <select style="width: 188px;" class="interests" ng-model="add.sceneTwo">
+                        <option ng-repeat="sceneTwo in sceneTwoDictList" value="{{sceneTwo.value}}">{{sceneTwo.label}}</option>
+                    </select>
+
+                </div>
+            </div>
+            <div ng-show="(add.productChannel=='0' && add.positions!=206  && add.positions!=207 && add.positions != 215 && add.positions != 216 && add.positions != 217 && add.positions != 218 && add.positions != 219 && add.positions != 212 && add.positions != 3020)
+                        || (add.productChannel=='2' && add.positions != 2005 && add.positions && add.positions!= 2001 && add.positions != 2002 && add.positions != 2003 && add.positions != 214)" class="start-e" id="addPTGGRedirectUrl">
+                <p>跳转类型</p>
+                <select style="width: 188px;" ng-init="add.redirectType==''" class="interests" ng-model="add.redirectType" ng-change="selctPageOne()">
+                    <option value="">--请选择--</option>
+                    <option value="2">链接跳转</option>
+                    <option value="3">原生跳转</option>
+                </select>
+            </div>
+            <div ng-show="add.productChannel=='0' && add.positions==212 && add.type == 1">
+                <p>跳转类型</p>
+                <select style="width: 188px;" ng-init="add.redirectType==''" class="interests" ng-model="add.redirectType" ng-change="selctPageOne()">
+                    <option value="">--请选择--</option>
+                    <option value="2">链接跳转</option>
+                    <option value="3">原生跳转</option>
+                </select>
+            </div>
+            <div ng-show="(add.productChannel=='0' && (add.positions==215  || add.positions==216 || add.positions == 217 || add.positions == 218 || add.positions == 219 || add.positions == 3020) && add.type =='1') || (add.productChannel=='2' && add.type == '1')" class="start-e" id="addPTGGRedirectUrl">
+                <p>跳转类型</p>
+                <select style="width: 188px;" ng-init="add.redirectType==''" class="interests" ng-model="add.redirectType" ng-change="selctPageOne()">
+                    <option value="">--请选择--</option>
+                    <option value="2">链接跳转</option>
+                    <option value="3">原生跳转</option>
+                </select>
+            </div>
+            <div class="start-d" style="margin-top: 0px" ng-show="(add.productChannel == '0' || add.productChannel == '2') && add.redirectType=='2'">
+                <p>跳转链接：<b style="color: red;">*</b></p>
+                <input style="width:368px;" id="jumpTypeAddress" type="text"   ng-model="jumpTypeAddress">
+            </div>
+
+            <div class="start-d" style="margin-top: 0px" ng-show="add.productChannel != '0' && add.productChannel != '2'
+                     && add.positions!=38 && add.positions!=41 && add.positions!=39 && add.positions!=40 && add.positions!=46
+                     && add.positions!=36 && add.positions!=37 && add.positions!=45  && add.positions!=214  && add.positions!=215
+                     &&add.positions!=226 && add.positions!=229 && add.positions!=1004 && add.positions!=1005 && add.positions != 231 && add.positions != 235 && add.positions != 236 && add.positions != 238
+                     && add.positions!=10001 ">
+                <p>跳转链接：<b style="color: red;">*</b></p>
+                <input style="width:368px;" id="jumpTypeAddress" type="text"   ng-model="jumpTypeAddress">
+                <div ng-if="add.productChannel==6">
+                    <p>前置鉴权:</p>
+                    <select ng-model="add.preAuth" >
+                        <option value="0">否</option>
+                        <option value="1">授信</option>
+                        <option value="2">登录</option>
+                        <option value="3">实名</option>
+                    </select>
+                </div>
+            </div>
+            <div class="start-d" style="margin-top: 0px" ng-show="(add.positions == 231 || add.positions == 235 || add.positions == 236) && add.type == 1">
+                <p>跳转链接：<b style="color: red;">*</b></p>
+                <input style="width:368px;" id="jumpTypeAddress" type="text"   ng-model="jumpTypeAddress">
+            </div>
+            <!--图片跳转链接-->
+            <div class="start-d" style="margin-top: 0px" ng-show="add.productChannel == '1' && add.positions==229 && add.type==1 ||add.productChannel == '5' && add.positions==1005 && add.type==1">
+                <p>跳转链接：<b style="color: red;">*</b></p>
+                <input style="width:368px;" id="jumpTypeAddress" type="text"   ng-model="jumpTypeAddress">
+            </div>
+            <div class="start-d" style="margin-top: 0px" ng-show="(add.productChannel == '1' && checkVersion == 'h5' && add.positions==39) || (add.productChannel == '1' && add.positions == '10001') ">
+                <p>跳转链接：<b style="color: red;">*</b></p>
+                <input style="width:368px;" id="jumpTypeAddress" type="text"   ng-model="jumpTypeAddress">
+            </div>
+
+
+
+
+            <div class="start-d" style="margin-top: 0px" ng-show="(add.productChannel=='0' || add.productChannel=='2') && add.redirectType=='3'">
+                <div>
+                    <p>页面类型</p>
+                    <select ng-model="add.pageOne" ng-options="x.value as x.label for x in rDictList" ng-change="selectPageOneByRDict(add.pageOne)">
+                        <option value="">--请选择--</option>
+                        <option  value="{{x.id}}">{{x.label}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="start-d" style="margin-top: 0px" ng-show="(add.productChannel=='0' || add.productChannel=='2') && add.redirectType=='3'">
+                <div>
+                    <p>跳转页面</p>
+                    <select style="width: 188px;" class="interests" ng-model="add.pageTwo">
+                        <option ng-repeat="pageTwo in rPositionDictList" value="{{pageTwo.value}}">{{pageTwo.label}}</option>
+                    </select>
+
+                </div>
+            </div>
+            <div ng-show="(add.productChannel == '0' && add.positions=='14')||(add.productChannel == '2' && add.positions=='14')" class="start-d" style="margin-top: 0px" >
+                <p>色号：<b style="color: red;">*</b></p>
+                <input ng-model="add.colorNum" maxlength="20" placeholder="不超过20个字符" style="width:368px;" type="text" >
+            </div>
+            <div class="start-f">
+                <p ng-show="add.positions!=205" >上线时间:</p>
+                <p ng-show="add.positions==205" >活动上线时间</p>
+                <input type="text" id="queryOnlineTime" ng-model="add.onlineTime">
+                <p ng-show="add.positions!=205" >下线时间:</p>
+                <p ng-show="add.positions==205" >活动下线时间</p>
+                <input type="text" id="queryOfflineTime" ng-model="add.offlineTime">
+            </div>
+            <div class="start-f" ng-show="add.positions==205" >
+                <span style="margin-left: 29px">tip:前端会在距上线时间24小时时展示，不足24小时立即显示</span>
+            </div>
+            <div class="start-g">
+                <p>是否生效:</p>
+                <select ng-model="add.valid">
+                    <option value="1">生效</option>
+                    <option value="0">失效</option>
+                </select>
+            </div>
+            <div class="start-h">
+                <p>展示人群：</p>
+                <input id="all" name="wb"  type="checkbox" class="checkAll" value="0" checked="checked"  ng-click="completeAll()">全部
+            </div>
+            <div class="start-i">
+                <p></p>
+                <input type="checkbox" id="white" name="wb" class="checkAll" value="1" ng-click="whiteClick(0)">白名单
+
+                <div style="margin-left: 115px;">
+                    <p>名单类型：<b style="color: red;">*</b></p>
+                    <select id="userStrategy" name="userTagType" style="width: 167px;" ng-model="add.whiteMemberListName" ng-change="changeFindChannelGroups()">
+                        <option value="{{x.key}}" ng-repeat="x in add.strategyList">{{x.value}}</option>
+                    </select>
+
+                    <div class="start-b deploy-item-filter select1" id="userNameLikeSearch">
+                        <p>模糊搜索：<b style="color: red;">*</b></p>
+                        <select class="mySelect" id="memberId" class="filter-select" style="width: 260px;" ng-model="add.whiteId">
+                            <option value="{{x.rosterId}}" ng-repeat="x in strChannelGroups">{{x.rosterName}}</option>
+                        </select>
+                        &nbsp;<span id="memberCount" style="color: #1E0FBE"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="start-j">
+                <p></p>
+                <input type="checkbox"  id="black" name="wb" class="checkAll" value="2" ng-click="blackClick(0)">黑名单
+            <div style="margin-left: 115px;">
+                    <p>名单类型：<b style="color: red;">*</b></p>
+                    <select id="blackUserStrategy" name="userTagType" style="width: 167px;" ng-model="add.blackMemberListName" ng-change="changeBlackFindChannelGroups()">
+                        <option value="{{x.key}}" ng-repeat="x in add.blackStrategyList">{{x.value}}</option>
+                    </select>
+
+                    <div class="start-b deploy-item-filter select1" id="userNameLikeBlackSearch">
+                        <p>模糊搜索：<b style="color: red;">*</b></p>
+                        <select class="blackMySelect" id="memberBlackId" class="filter-select" style="width: 260px;" ng-model="add.blackId">
+                            <option value="{{x.rosterId}}" ng-repeat="x in strBlackChannelGroups">{{x.rosterName}}</option>
+                        </select>
+                        &nbsp;<span id="memberBlackCount" style="color: #1E0FBE"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="start-f">
+                <p >审核人：</p>
+                <span style="margin-left: -5px;">
+          <select class="interests" ng-model="add.auditPerson" ng-options="x.name for x in auditPersionList">
+            <option value="">请选择</option>
+          </select>
+      	</span>
+                <p>提审说明：</p><span><input ng-model="add.requestAuditDescription" style="width:180px;" class="interests" type="text"  maxlength="18" placeholder="选填，18个汉字以内"></span>
+            </div>
+            <div class="bottom-btn">
+                <a class="btn btn-danger btn-rounded bottom-btna start-btna"  id="screenTJ"  href="#" ng-click="commitScreen()">确定</a>
+                <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#">取消</a>
+            </div>
+        </div>
+    </div>
+
+<!-- 添加Banner -->
+<!-- 优先级排序 -->
+<div class="priority-ranking" id="showPriority">
+    <div class="priority-ranking-small">
+
+        <h1 align="center">Banner优先级排序</h1>
+        <div class="ranking-small">
+            <div class="ranking-smalla">优先级排序
+                <i id="downMove" class="fa fa-caret-down " ng-click="move('X')"></i>
+                <i id="upMove" class="fa fa-caret-up" ng-click="move('S')"></i>
+                <!--   <i class="fa fa-times" ng-click="remove()"></i> -->
+                <p><span style="color:#ff2327;">*</span>编号越大，优先级越低</p>
+            </div>
+             <p ng-if="(search.productChannel==0 &&(search.positions==12 || search.positions==13
+     				|| search.positions==38 || search.positions==40
+     				|| search.positions==41 || search.positions==36
+     				|| search.positions==37 || search.positions==42)) ||(search.productChannel==2 &&(search.positions==36
+     				|| search.positions==37 || search.positions==43 || search.positions==44)) ">(默认优先级<b style="color: red;">{{rDict.value}}</b>及以内前端可显示)</p>
+        	<p ng-if="(search.productChannel==0 || search.productChannel==2) && search.positions==0 ">(优先级<b style="color: red;">10</b>及以内可展示，其中非黑白名单banner最多展示<b style="color: red;">6</b>个)</p>
+        	 <p ng-if="(search.productChannel==0 || search.productChannel==2) && search.positions==14 ">(优先级<b style="color: red;">6</b>及以内前端可显示，有视频时不展示图片banner)</p>
+            <div class="ranking-smallb">
+                <!--  <table class="footable table table-stripped"  style="border-collapse: collapse;" data-page-size="8" data-filter=#filter> -->
+                <table class="footable" >
+                    <thead>
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <td class="tdNumber">优先级编号</td>
+                        <td>Banner描述</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="x in strotList" style="border-collapse: collapse;">
+                        <td><input type="checkbox" class="moveCheckbox iptCheck"  value="{{$index+1}}"></td>
+                        <td class="tdNumber"><input type="hidden" ng-model="hehe.a">{{$index+1}}</td>
+                        <td><input type="hidden" ng-model="hehe.b">{{x.desc}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="bottom-btn">
+            <a class="btn btn-danger btn-rounded bottom-btna" href="#" ng-click="moveCommit()">确定</a>
+            <a class="btn btn-danger btn-rounded bottom-btnb" href="#" ng-click="moveCancel()">取消</a>
+        </div>
+    </div>
+</div>
+<!-- 优先级排序 -->
+<!-- 查看Banner详情 -->
+<div class="look-start-box" id="showCheck">
+    <div class="add-look-start">
+        <h1 align="center">查看Banner</h1>
+        <div class="look-start-a">
+            <p>渠道：</p>
+            <span>{{openScreen.productChannel==3 && "会员PLUS" || openScreen.productChannel==0 && "悟空理财app" || openScreen.productChannel==1 && "玖富钱包app" || openScreen.productChannel==2 && "悟空理财微信端" ||openScreen.productChannel==4 && '聚生活小程序' || openScreen.productChannel==5 && "玖富钱包M站" || openScreen.productChannel==6 && "玖富商城APP" }}</span>
+            <p style="margin-left:90px;">版本号：</p>
+            <span>{{openScreen.productVersion}}</span>
+        </div>
+        <div class="look-start-a" ng-show="openScreen.productChannel==6">
+            <p >投放客户端：</p>
+            <div style="margin-left: 100px;">
+                <span>{{showAddress(openScreen.putAddress)}}</span>
+            </div>
+        </div>
+        <div class="look-start-a" ng-show="openScreen.productChannel==6">
+            <p >金融属性开关：</p>
+            <span>{{openScreen.financialStyle=='Y' && "开" || "关"}}</span>
+        </div>
+        <div class="look-start-c">
+            <p>登录状态：</p>
+            <span>{{openScreen.loginStatus==1 && "已登录" || openScreen.loginStatus==0 && "未登录" || openScreen.loginStatus==2 && "全部"}}</span>
+            <p style="margin-left:60px;">Banner位置：</p>
+            <span>{{openScreen.positionName}}</span>
+        </div>
+
+        <div class="start-a" >
+            <p >优先级排序：</p>
+            <span>{{openScreen.priority}}</span>
+        </div>
+
+        <div  id="valueType" class="start-a" >
+            <p>类型：</p>
+            <span>{{openScreen.type==1?"图片":"视频"}}</span>
+        </div>
+
+        <div id="videoDetails"  ng-if="openScreen.type==2" >
+            <div class="look-start-d">
+                <p>视频封面：</p>
+                <img src="{{openScreen.imageUrl}}" alt="" width=224 style="border:1px #987cb9 inset">
+            </div>
+            <div class="start-d" id="videoShow" >
+                <p>视频连接:</p>
+                <span><a href="{{openScreen.videourl}}">{{openScreen.videourl}}</a></span>
+            </div>
+        </div>
+
+        <div class="look-start-b">
+            <p>Banner描述：</p>
+            <span>{{openScreen.desc}}</span>
+        </div>
+        <!--   <div class="look-start-c">
+            <p>优先级排序：</p>
+            <span>{{openScreen.priority}}</span>
+          </div> -->
+        <!--类型为视频时不展示-->
+        <div id="pricDetails" ng-show="openScreen.positions!=45 && openScreen.positions!=226 && openScreen.positions != 1005 && openScreen.type != '2' ||  openScreen.positions == 1005 && openScreen.type != 2">
+            <div class="start-d">
+                <p>图片：</p>
+                <img ng-if="openScreen.positions!=45" src="{{openScreen.imageUrl}}" alt="" width=224 style="border:1px #987cb9 inset"/>
+                <img ng-if="openScreen.positions==45" src="{{openScreenusualStatusUrl}}" style="max-width:20px;height:60px;"/>
+            </div>
+        </div>
+        <div id="pricDetailsTwo" ng-if="openScreen.productChannel==1 && openScreen.positions ==226 "  >
+            <div class="look-start-d">
+                <p>图片2x：</p>
+                <img  src="{{openScreen.imageUrlTwo}}" alt="" width=224 style="border:1px #987cb9 inset"/>
+            </div>
+        </div>
+        <div id="pricDetailsThree" ng-if="openScreen.productChannel==1 && openScreen.positions ==226 "  >
+            <div class="look-start-d">
+                <p>图片3x：</p>
+                <img  src="{{openScreen.imageUrlThree}}" alt="" width=224 style="border:1px #987cb9 inset"/>
+            </div>
+        </div>
+        <div ng-show="openScreen.positions==40 || openScreen.positions==41" class="look-start-e">
+            <p ng-show="openScreen.productChannel=='0' && openScreen.positions =='40'">1级场景选项：</p>
+            <p ng-show="openScreen.productChannel=='0' && openScreen.positions =='41'">从：</p>
+            <span style="width:385px;line-height: 20px;word-wrap: break-word;">{{openScreen.sceneOne}}</span>
+        </div>
+        <div ng-show="openScreen.positions==40 || openScreen.positions==41" class="look-start-e">
+            <p ng-show="openScreen.productChannel=='0' && openScreen.positions =='40'">2级场景选项：</p>
+            <p ng-show="openScreen.productChannel=='0' && openScreen.positions =='41'">续期至：</p>
+            <span style="width:385px;line-height: 20px;word-wrap: break-word;">{{openScreen.sceneTwo}}</span>
+        </div>
+        <div ng-show="(openScreen.productChannel=='0' || openScreen.productChannel=='2' ) && openScreen.positions!=206  && openScreen.positions!=207  " class="look-start-e">
+            <p>跳转类型：</p>
+            <span style="width:385px;line-height: 20px;word-wrap: break-word;">{{openScreen.redirectType==1&&"生成H5" || openScreen.redirectType==2&&"链接跳转" || openScreen.redirectType==3&&"原生跳转" || "其它"}}</span>
+        </div>
+        <div ng-show="openScreen.redirectType==3" class="look-start-e">
+            <p>页面类型：</p>
+            <span style="width:385px;line-height: 20px;word-wrap: break-word;">{{openScreen.pageOne}}</span>
+        </div>
+        <div ng-show="openScreen.redirectType==3" class="look-start-e">
+            <p>跳转页面：</p>
+            <span style="width:385px;line-height: 20px;word-wrap: break-word;">{{openScreen.pageTwo}}</span>
+        </div>
+        <div class="look-start-e" ng-show="openScreen.redirectType!='3'
+                     && openScreen.productChannel!='2' && openScreen.productChannel!='0'
+                     && openScreen.positions!=38 && openScreen.positions!=41 && openScreen.positions!=39 && openScreen.positions!=40  && openScreen.positions!=46
+                     && openScreen.positions!=36 && openScreen.positions!=37 && openScreen.positions!=45 && openScreen.positions!=214 && openScreen.positions!=215
+                     && openScreen.positions!=226 && openScreen.positions!=1005 && openScreen.positions!=1004 && openScreen.positions != 236 && openScreen.positions!=10001">
+            <p>跳转链接：</p>
+            <span style="width:385px;line-height: 20px;word-wrap: break-word;">{{openScreen.redirectUrl}}</span>
+            <div ng-show="openScreen.productChannel==6">
+                <p>前置鉴权：</p>
+                <span>{{openScreen.preAuth=='0' && "否" || openScreen.preAuth=='1' && "授信" || openScreen.preAuth=='2' && "登录" || openScreen.preAuth=='3' && "实名"}}</span>
+            </div>
+        </div>
+        <div class="look-start-e" ng-show="openScreen.productChannel == 1 && openScreen.positions == 236 && openScreen.type == '1'">
+            <p>跳转链接：</p>
+            <span style="width:385px;line-height: 20px;word-wrap: break-word;">{{openScreen.redirectUrl}}</span>
+        </div>
+        <div class="look-start-e" ng-show="openScreen.redirectType=='2' && (openScreen.productChannel=='0'||openScreen.productChannel=='2')">
+            <p>跳转链接：</p>
+            <span style="width:385px;line-height: 20px;word-wrap: break-word;">{{openScreen.redirectUrl}}</span>
+        </div>
+        <!--图片跳转链接-->
+        <div class="look-start-e" ng-show="openScreen.type =='1' && openScreen.productChannel=='5' && openScreen.positions =='1005' ">
+            <p>跳转链接：</p>
+            <span style="width:385px;line-height: 20px;word-wrap: break-word;">{{openScreen.redirectUrl}}</span>
+        </div>
+        <div class="start-d" style="margin-top: 0px" ng-show="(openScreen.productChannel == '1' && openScreen.redirectType!='3' && openScreen.productVersion == 'h5' && openScreen.positions==39)
+                         || (openScreen.productChannel == '1' && openScreen.positions == 10001)">
+            <p>跳转链接：</p>
+            <span style="width:385px;line-height: 20px;word-wrap: break-word;">{{openScreen.redirectUrl}}</span>
+        </div>
+
+        <div class="look-start-e" ng-show="openScreen.positions=='45' || openScreen.positions=='42'">c
+            <p>普通状态：</p>
+            <span style="width:385px;line-height: 20px;word-wrap: break-word;">{{openScreen.usualStatusUrl}}</span>
+        </div>
+        <div class="look-start-e" ng-show="openScreen.positions=='45'">
+            <p>提醒状态：</p>
+            <span style="width:385px;line-height: 20px;word-wrap: break-word;">{{openScreen.remindStatusUrl}}</span>
+        </div>
+        <div class="look-start-e" ng-show="openScreen.positions=='47'">
+            <p>图片/视频（矮）：</p>
+            <span style="width:385px;line-height: 20px;word-wrap: break-word;">{{openScreen.shortVideoUrl}}</span>
+        </div>
+        <div ng-show="(openScreen.productChannel=='0' && openScreen.positions=='14')||(openScreen.productChannel=='2' && openScreen.positions=='14')" class="look-start-f">
+            <p>色号：</p>
+            <span>{{openScreen.colorNum}}</span>
+        </div>
+        <div class="look-start-f">
+            <p>{{openScreen.positions==205 && "活动上线时间" || "上线时间"}}：</p>
+            <span>{{openScreen.onlineTime}}</span>
+            <p style="margin-left:50px;"></p>
+            <p>{{openScreen.positions==205 && "活动下线时间" || "下线时间"}}：</p>
+            <span>{{openScreen.offlineTime}}</span>
+        </div>
+        <div class="look-start-g">
+            <p>是否生效：</p>
+            <!-- <span>{{openScreen.displayPeriod}}s</span>
+            <p style="margin-left:190px;">是否生效：</p> -->
+            <span>{{openScreen.valid==0 && "失效"||"生效"}}</span>
+        </div>
+        <div class="look-start-h">
+            <p>展示人群：</p>
+            <span>{{openScreen.showType==0 && "全部" || openScreen.showType==1 && "白名单" || openScreen.showType==2 && "黑名单"|| openScreen.showType==3 && "黑白名单" ||"其他"}}</span>
+        </div>
+        <div class="look-start-i">
+            <p>最后修改时间：</p>
+            <span>{{openScreen.updateTime}}</span>
+            <p>修改人：</p>
+            <span>{{openScreen.operationPerson}}</span>
+        </div>
+        <div class="look-start-i">
+            <p>审核结果：</p>
+            <span>{{openScreen.auditStatus==0 && '待审核' || openScreen.auditStatus==1 && '审核通过' || openScreen.auditStatus==2 && '审核失败'}}</span>
+        </div>
+        <div class="look-start-i">
+            <!--  <p>提审人：</p>
+             <span>{{openScreen.requestAuditPersion}}</span> -->
+            <p>提审说明：</p>
+            <span>{{openScreen.requestAuditDescription}}</span>
+        </div>
+        <div class="look-start-i">
+            <!--  <p>提审时间：</p>
+             <span>{{openScreen.requestAuditTime}}</span> -->
+            <p>审核人：</p>
+            <span>{{openScreen.auditPerson}}</span>
+        </div>
+        <div class="look-start-i">
+            <p>审核时间：</p>
+            <span>{{openScreen.auditTime}}</span>
+            <p>审核描述：</p>
+            <span>{{openScreen.auditDescription}}</span>
+        </div>
+        <div class="look-start-j">
+            <p>创建时间：</p>
+            <span>{{openScreen.createTime}}</span>
+            <p>创建人：</p>
+            <span>{{openScreen.createPerson}}</span>
+        </div>
+        <div class="bottom-btn">
+            <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#"  ng-click="checkOKAndNO()">关闭</a>
+        </div>
+    </div>
+</div>
+</div>
+<!-- 查看Banner详情 -->
+<!-- 修改Banner详情 -->
+<div class="modify-start-box" id="showUpdate">
+    <div class="add-start">
+        <input type="hidden" id="productChannelUpdate" value="{{updateScene.productChannel}}"/>
+        <h1 align="center">修改Banner</h1>
+        <div class="start-a">
+            <p>渠道:</p>
+            <!--  <span>{{updateScene.productChannel==3 && "会员PLUS" || updateScene.productChannel==0 && "悟空理财app" || updateScene.productChannel==1 && "玖富钱包app" || updateScene.productChannel==2 && "悟空理财微信端" || "其他"}}</span> -->
+            <select ng-model="updateScene.productChannel" id="editproductChannel" ng-change="getEditTypeVersionList(updateScene.productChannel)" disabled="disabled">
+                <option value="0">悟空理财APP</option>
+                <option value="1">玖富钱包APP</option>
+                <option value="2">悟空理财微信端</option>
+                <option value="3">会员PLUS</option>
+                <option value="4">聚生活小程序</option>
+                <option value="5">玖富钱包M站</option>
+                <option value="6">玖富商城APP</option>
+            </select>
+        </div>
+        <div class="start-a">
+            <p>版本号： </p>
+            <!-- <span>{{updateScene.productVersion}}</span> -->
+            <span style="margin-left:10px;" ng-repeat="x in typeVersionList" ng-model="updateScene.productVersion"><input  type="radio"  name="updateVersion" ng-checked="isSelected(x.label)" ng-click="editversionCheckbox()" class="updateVersionCheckbox checkAll"  value="{{x.label}}" >{{x.label}}</span>
+            <!-- <span style="margin-left:10px;" ng-repeat="x in addTypeVersionList" ng-model="add.productVersion"><input type="checkbox"  ng-click="addversionCheckbox()" class="versionCheckbox checkAll" value="{{x.label}}">{{x.label}}</span> -->
+
+
+        </div>
+        <div class="start-a" ng-show="updateScene.productChannel==6 && updateScene.productVersion == 'h5'">
+            <p>投放客户端：</p>
+            <div style="width: 459px; height: 80px;margin-left: 117px;">
+                <input type="checkbox" class=" checkAll updateCheckALL" ng-click="preAllCheck(2)">全部
+                <input type="checkbox" class="upPreCheckboxH5 checkAll updateCheckALL" value="JFWK_IOS">玖富万卡ios
+                <input type="checkbox" class="upPreCheckboxH5 checkAll updateCheckALL" value="JFWK_ANDROID">玖富万卡安卓
+                <input type="checkbox" class="upPreCheckboxH5 checkAll updateCheckALL" value="JFWK_H5">玖富万卡H5
+                <input type="checkbox" class="upPreCheckboxH5 checkAll updateCheckALL" value="PHJR_IOS">普惠金融ios
+                <input type="checkbox" class="upPreCheckboxH5 checkAll updateCheckALL" value="PHJR_ANDROID">普惠金融安卓
+                <input type="checkbox" class="upPreCheckboxH5 checkAll updateCheckALL" value="JFQB_IOS">玖富钱包ios
+                <input type="checkbox" class="upPreCheckboxH5 checkAll updateCheckALL" value="JFQB_ANDROID">玖富钱包安卓
+                <input type="checkbox" class="upPreCheckboxH5 checkAll updateCheckALL" value="JFSC_IOS">玖富商城ios
+                <input type="checkbox" class="upPreCheckboxH5 checkAll updateCheckALL" value="JFSC_ANDROID">玖富商城安卓
+                <input type="checkbox" class="upPreCheckboxH5 checkAll updateCheckALL" value="JFSC_H5">玖富商城H5
+
+            </div>
+        </div>
+        <div class="start-a" ng-show="updateScene.productChannel==6 && updateScene.productVersion != 'h5'">
+            <p>投放客户端：</p>
+            <div style="width: 459px; height: 80px;margin-left: 117px;">
+                <input type="checkbox" class="checkAll updateCheckALL"  ng-click="preAllCheck(3)">全部
+                <input type="checkbox" class="upPreCheckbox checkAll updateCheckALL" value="JFSC_IOS">玖富商城ios
+                <input type="checkbox" class="upPreCheckbox checkAll updateCheckALL" value="JFSC_ANDROID">玖富商城安卓
+            </div>
+        </div>
+        <!--            331-->
+        <div class="start-c" ng-if="updateScene.productChannel==6">
+            <p>金融属性开关:</p>
+            <select ng-model="updateScene.financialStyle" >
+                <option value="Y">开</option>
+                <option value="N">关</option>
+            </select>
+        </div>
+        <div class="start-a">
+            <p>登录状态:</p>
+            <select ng-model="updateScene.loginStatus" id='editLoginStatus' ng-change="editLoginStatus(updateScene.loginStatus)">
+                <option value="">--请选择--</option>
+<!--                <option value="2">全部</option>-->
+                <option value="0">未登录</option>
+                <option value="1"> 已登录</option>
+            </select>
+            <p>Banner位置:</p>
+            {{updateScene.positionName}}
+           <!-- <select ng-model="updateScene.positions"   id="editpositions" ng-change="onShowValueType2(updateScene.positions)">
+                <option ng-repeat="x in editPositionsList" value="{{x.value}}">{{x.label}}</option>
+            </select>-->
+
+        </div>
+        <div class="start-b">
+            <p>Banner描述:</p>
+            <input style="width:368px;" type="text" maxlength="30" placeholder="选填，30字符以内" ng-model="updateScene.desc">
+        </div>
+
+
+
+            <div class="start-d"  ng-show="updateScene.productChannel==1 && (updateScene.positions==42 || updateScene.positions==45)">
+                <div class="start-d">
+                    <p>普通状态:</p>
+                  <input type="file" id="editUsualStatusPic" name="file" size="1"  style="position:absolute;display: none;">
+                    <input style="width:220px;" id="fileUrl6" type="text" ng-model="updateScene.usualStatusUrl">
+                    <a class="btn btn-success btn-rounded btn-blueWa" href="#" onclick="$('#editUsualStatusPic').click();" id="image_prew6"><span>点击上传</span></a>
+                </div>
+            </div>
+
+
+             <div ng-show="updateScene.productChannel==1  && updateScene.positions==45" class="start-d">
+                    <p>提醒状态:</p>
+                    <input type="file" id="editRemindStatusPic" name="file" size="1"  style="position:absolute;display: none;">
+                    <input style="width:220px;" id="fileUrl7" type="text" ng-model="updateScene.remindStatusUrl">
+                    <a class="btn btn-success btn-rounded btn-blueWa" href="#" onclick="$('#editRemindStatusPic').click();" id="image_prew7"><span>点击上传</span></a>
+               </div>
+
+
+             <div class="start-d"  ng-show="updateScene.productChannel==1 && updateScene.positions==47 && updateScene.loginStatus==1">
+                <div class="start-d">
+                    <p>图片/视频封面（矮）:</p>
+                    <input type="file" id="editShortPic" name="file" size="1"  style="position:absolute;display: none;">
+                    <input style="width:220px;" id="fileUrl8" type="text" ng-model="updateScene.shortVideoUrl">
+                    <a class="btn btn-success btn-rounded btn-blueWa" href="#" onclick="$('#editShortPic').click();" id="image_prew8"><span>点击上传</span></a>
+                </div>
+
+            </div>
+
+        <div  id="valueType"  class="start-a" ng-show="typeShow">
+            <p>类型:</p>
+            <select ng-model="updateScene.type" id='type' ng-change="changeValueType(updateScene.type)">
+                <option value="1" id="upPicture">图片</option>
+                <option value="2" id="upVideo">视频</option>
+            </select>
+            &nbsp;<span style="color:red;">*视频仅对4.8以上版本生效</span>
+        </div>
+
+        <div class="start-d" id="videoShow" ng-show="videoShow">
+            <div class="start-d">
+                <p ng-show="updateScene.productChannel==1 && updateScene.positions==229 ">图片:</p>
+                <p ng-show="updateScene.positions!=229 ">视频封面:</p>
+                <input type="file" id="editPicture" name="file" size="1" style="position:absolute;display: none;">
+                <input style="width:220px;" id="fileUrl2" type="text" ng-model="updateScene.imageUrl">
+                <a class="btn btn-success btn-rounded btn-blueWa" href="#" onclick="$('#editPicture').click();" id="image_prew2"><span>点击上传</span></a>
+            </div>
+            <form action="" name="" enctype="multipart/form-data">
+                <p ng-show="updateScene.productChannel==1 && updateScene.positions==229 ">视频:</p>
+                <p ng-show="updateScene.positions!=229 || updateScene.positions == 1005 && updateScene.productChannel==5 && updateScene.type==2">视频链接:</p>
+                <input type="file" id="editVideo" name="file" size="1"  style="position:absolute;display: none;">
+                <input style="width:220px;" id="videoUrl1" type="text" ng-model="updateScene.videourl">
+                <a class="btn btn-success btn-rounded btn-blueWa" href="#" onclick="$('#editVideo').click();" id="video_prew1"><span>点击上传</span></a>
+            </form>
+        </div>
+        <!-- <div class="progress">
+             <div class="bar" style="width: 0%;"></div>
+             <div class="upstatus" ></div>
+         </div> -->
+        <div id="showPicer" ng-show="showPicer">
+            <div class="start-d" ng-show="updateScene.positions!=45 && updateScene.positions!=226 ">
+                <p>图片:</p>
+                <input type="file" id="editPicture2" name="file" size="1" style="position:absolute;display: none;">
+                <input style="width:220px;" id="fileUrl10" type="text" ng-model="updateScene.imageUrl">
+                <a class="btn btn-success btn-rounded btn-blueWa" href="#" onclick="$('#editPicture2').click();" id="image_prew10"><span>点击上传</span></a>
+            </div>
+        </div>
+        <div class="start-d"  ng-show="updateScene.productChannel==1&&updateScene.positions==226" >
+            <div class="start-d" >
+                <p>图片2x:</p>
+                <input type="file" id="editPictureTwo" name="file" size="1" style="position:absolute;display: none;">
+                <input style="width:220px;" id="editFileUrlTwo" type="text" ng-model="updateScene.imageUrlTwo">
+                <a class="btn btn-success btn-rounded btn-blueWa" href="#" onclick="$('#editPictureTwo').click();" id="edit_image_prewTwo"><span>点击上传</span></a>
+            </div>
+        </div>
+        <div class="start-d"  ng-show="updateScene.productChannel==1&&updateScene.positions==226" >
+            <div class="start-d" >
+                <p>图片3x:</p>
+                <input type="file" id="editPictureThree" name="file" size="1" style="position:absolute;display: none;">
+                <input style="width:220px;" id="editFileUrlThree" type="text" ng-model="updateScene.imageUrlThree">
+                <a class="btn btn-success btn-rounded btn-blueWa" href="#" onclick="$('#editPictureThree').click();" id="edit_image_prewThree"><span>点击上传</span></a>
+            </div>
+        </div>
+        <div class="start-d" style="margin-top: 0px" ng-show="borrowing_investment_type2">
+            <div>
+                <p ng-show="updateScene.productChannel=='0' && updateScene.positions =='40'">1级场景选项</p>
+                <p ng-show="updateScene.productChannel=='0' && updateScene.positions =='41'">从</p>
+                <select id="sceneDisableId1" style="width: 188px;" ng-model="uSceneOne" class="interests" ng-init="uSceneOne='0'"  ng-options="x.value as x.label for x in sceneOneDictList2"  ng-change="selectSceneOneByRDict2(uSceneOne)" >
+                    <option value="">请选择</option>
+                    <option value={{sceneOne.id}} >{{sceneOne.label}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="start-d" style="margin-top: 0px" ng-show="borrowing_investment_type2">
+            <div>
+                <p ng-show="updateScene.productChannel=='0' && updateScene.positions =='40'">2级场景选项</p>
+                <p ng-show="updateScene.productChannel=='0' && updateScene.positions =='41'">续期至</p>
+                <select id="sceneDisableId2" style="width: 188px;" class="interests" ng-model="updateScene.sceneTwo">
+                    <option ng-repeat="sceneTwo in sceneTwoDictList2" value="{{sceneTwo.value}}">{{sceneTwo.label}}</option>
+                </select>
+
+            </div>
+        </div>
+        <div class="start-e"  ng-show="(updateScene.productChannel=='0' && updateScene.positions!=206  && updateScene.positions!=207 && updateScene.positions != 215 && updateScene.positions != 216 && updateScene.positions != 217 && updateScene.positions != 218 && updateScene.positions!=219 && updateScene.positions != 3020 && updateScene.positions != 2005 && updateScene.positions != 212) || (updateScene.productChannel=='2' && updateScene.type == '1') ">
+            <p>跳转类型</p>
+            <select style="width: 188px;" class="interests" ng-model="u_redirectType" ng-change="selctPageOne2()">
+                <option value="0">--请选择--</option>
+                <option value="2">链接跳转</option>
+                <option value="3">原生跳转</option>
+            </select>
+        </div>
+        <div class="start-e"  ng-show="(updateScene.productChannel=='0' && (updateScene.positions == 215 || updateScene.positions == 216 || updateScene.positions == 217 || updateScene.positions == 218 || updateScene.positions==219 || updateScene.positions == 3020 || updateScene.positions == 2005 || updateScene.positions == 212) && updateScene.type == '1')">
+            <p>跳转类型</p>
+            <select style="width: 188px;" class="interests" ng-model="u_redirectType" ng-change="selctPageOne2()">
+                <option value="0">--请选择--</option>
+                <option value="2">链接跳转</option>
+                <option value="3">原生跳转</option>
+            </select>
+        </div>
+        <div class="start-e" ng-show="updateScene.productChannel!='2' && updateScene.productChannel!='0'&& updateScene.positions!=38
+            && updateScene.positions!=41 && updateScene.positions!=39 && updateScene.positions!=40 && updateScene.positions!=46
+            && updateScene.positions!=36 && updateScene.positions!=37 && updateScene.positions!=45
+            && updateScene.positions!=214  && updateScene.positions!=215 && updateScene.positions!=226 &&  updateScene.positions!=229
+            && updateScene.positions!=1004 && updateScene.positions!=1005 && updateScene.positions != 231 && updateScene.positions != 235
+            && updateScene.positions != 236 && updateScene.positions != 238 && updateScene.positions!=10001">
+            <p>跳转链接:</p>
+            <input style="width:368px;" type="text" ng-model="updateScene.redirectUrl">
+            <div ng-if="updateScene.productChannel==6">
+                <p>前置鉴权:</p>
+                <select ng-model="updateScene.preAuth" >
+                    <option value="0">否</option>
+                    <option value="1">授信</option>
+                    <option value="2">登录</option>
+                    <option value="3">实名</option>
+                </select>
+            </div>
+        </div>
+        <div class="start-e" ng-show="(updateScene.positions == 231 || updateScene.positions == 235 || updateScene.positions == 236) && updateScene.type =='1'">
+            <p>跳转链接:</p>
+            <input style="width:368px;" type="text" ng-model="updateScene.redirectUrl">
+        </div>
+        <!--图片跳转链接-->
+        <div class="start-e" ng-show="updateScene.productChannel=='1' && updateScene.positions==229 && updateScene.type==1 ||updateScene.productChannel=='5' && updateScene.positions==1005 && updateScene.type==1">
+            <p>跳转链接:</p>
+            <input style="width:368px;" type="text" ng-model="updateScene.redirectUrl">
+        </div>
+        <div class="start-d" style="margin-top: 0px" ng-show="updateScene.productChannel == '1' && updateCheckVersion == 'h5' && updateScene.positions==39
+                                    || (updateScene.productChannel == '1' && updateScene.positions == '10001') ">
+            <p>跳转链接：<b style="color: red;">*</b></p>
+            <input style="width:368px;" id="jumpTypeAddress" type="text"   ng-model="updateScene.redirectUrl">
+        </div>
+
+        <div class="start-d" style="margin-top: 0px" ng-show="u_redirectType==3 && (updateScene.productChannel=='0' || updateScene.productChannel=='2' )">
+            <div>
+                <p>页面类型</p>
+                <select ng-model="updateScene.pageOne" ng-options="x.value as x.label for x in rDictList2" ng-change="selectPageOneByRDict2(updateScene.pageOne)">
+                    <option value="">--请选择--</option>
+                    <option  value="{{x.id}}">{{x.label}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="start-d" style="margin-top: 0px" ng-show="u_redirectType==3 && (updateScene.productChannel=='0' ||updateScene.productChannel=='2' )">
+            <div>
+                <p>跳转页面</p>
+                <select style="width: 188px;" class="interests" ng-model="updateScene.pageTwo">
+                    <option ng-repeat="pageTwo in rPositionDictList2" value="{{pageTwo.value}}">{{pageTwo.label}}</option>
+                </select>
+
+            </div>
+        </div>
+        <div class="start-e" ng-if="((updateScene.productChannel == '0' || updateScene.productChannel == '2') && updateScene.type != '2') && u_redirectType=='2'">
+            <p>跳转链接:</p>
+            <input style="width:368px;" type="text" ng-model="updateScene.redirectUrl">
+        </div>
+        <div ng-show="(updateScene.productChannel == '0' && updateScene.positions=='14')||(updateScene.productChannel == '2' && updateScene.positions=='14')" class="start-d" style="margin-top: 0px" >
+            <p>色号：<b style="color: red;">*</b></p>
+            <input ng-model="updateScene.colorNum" maxlength="20" placeholder="不超过20个字符" style="width:368px;" type="text" >
+        </div>
+        <div class="start-f">
+            <p ng-show="updateScene.positions!=205">上线时间:</p>
+            <p ng-show="updateScene.positions==205" >活动上线时间</p>
+            <input type="text" id="updateOnlineTime" ng-model="updateScene.onlineTime">
+            <p ng-show="updateScene.positions!=205">下线时间:</p>
+            <p ng-show="updateScene.positions==205" >活动下线时间</p>
+            <input type="text" id="updateOfflineTime" ng-model="updateScene.offlineTime">
+        </div>
+        <div class="start-f" ng-show="updateScene.positions==205" >
+            <span style="margin-left: 29px">tip:前端会在距上线时间24小时时展示，不足24小时立即显示</span>
+        </div>
+        <div class="start-g">
+            <p>是否生效:</p>
+            <!-- <input type="text" ng-model="updateScene.displayPeriod">
+            <span>是否生效</span> -->
+            <select id="" ng-model="updateScene.valid">
+                <option value="1">生效</option>
+                <option value="0">失效</option>
+            </select>
+        </div>
+        <div class="start-h">
+            <p>展示人群：</p>
+            <input type="checkbox" id="editall" class="updateCheckbox checkAll" value="0" checked="checked" ng-click="editAll()">全部
+            <a style="margin-left: 60px" class="btn btn-success btn-rounded btn-blueWa" href="#" ng-click="toUpdateRoster()"><span>修改名单</span></a>
+
+        </div>
+
+    <!--修改名单回显-->
+        <div ng-show="isUpdateRoster == 'N'">
+            <div class="start-i">
+                <p></p>
+                <input type="checkbox" id="editwhite" class="updateCheckbox checkAll" value="1" ng-click="whiteClick(1)">白名单
+
+                <div style="margin-left: 115px;">
+                    <p>名单类型：<b style="color: red;">*</b></p>
+                    {{updateScene.whiteMemberListName == 'NO_RULE' && '无用户策略配置' || updateScene.whiteMemberListName == 'RULE_GROUP' && '智能画像' || updateScene.whiteMemberListName == 'RULE_LIST' && '用户名单'}}
+                    <div class="start-b deploy-item-filter select1" ng-if="updateScene.whiteName && updateScene.whiteMemberListName != 'NO_RULE'" id="userNameLikeSearchUpdate">
+                        <p>模糊搜索：<b style="color: red;">*</b></p>
+                        {{updateScene.whiteName}}
+                        &nbsp;&nbsp;数量：<span  style="color: #1E0FBE">{{memberUpdateCount}}</span>
+
+                    </div>
+                    <div class="start-b deploy-item-filter select1"  ng-if="!updateScene.whiteName && updateScene.whiteMemberListName != 'NO_RULE'" id="userNameLikeSearchUpdate2">
+                        <p>模糊搜索：<b style="color: red;">*</b></p>
+                        {{updateScene.whiteId}}
+                        &nbsp;&nbsp;数量：<span  style="color: #1E0FBE">{{memberUpdateCount}}</span>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="start-j">
+                <p></p>
+                <input type="checkbox" id="editblack" class="updateCheckbox checkAll" value="2" ng-click="blackClick(1)">黑名单
+                <div style="margin-left: 115px;">
+                    <p>名单类型：<b style="color: red;">*</b></p>
+                    {{updateScene.blackMemberListName == 'NO_RULE' && '无用户策略配置' || updateScene.blackMemberListName == 'RULE_GROUP' && '智能画像' || updateScene.blackMemberListName == 'RULE_LIST' && '用户名单'}}
+                    <div class="start-b deploy-item-filter select1" ng-if="updateScene.blackName && updateScene.blackMemberListName != 'NO_RULE'" id="userNameLikeBlackSearchUpdate">
+                        <p>模糊搜索：<b style="color: red;">*</b></p>
+                        {{updateScene.blackName}}
+                        &nbsp;&nbsp;数量：<span  style="color: #1E0FBE">{{memberBlackUpdateCount}}</span>
+                    </div>
+                    <div class="start-b deploy-item-filter select1"  ng-if="!updateScene.blackName && updateScene.blackMemberListName != 'NO_RULE'" id="userNameLikeBlackSearchUpdate2">
+                        <p>模糊搜索：<b style="color: red;">*</b></p>
+                        {{updateScene.blackId}}
+                        &nbsp;&nbsp;数量：<span  style="color: #1E0FBE">{{memberBlackUpdateCount}}</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+     <!--修改名单-->
+        <div ng-show="isUpdateRoster == 'Y'">
+            <div class="start-i">
+                <p></p>
+                <input type="checkbox" id="upWhite" name="wb" class="checkAll" value="1"  ng-click="upWhiteClick()">白名单
+                <div style="margin-left: 115px;">
+                    <p>名单类型：<b style="color: red;">*</b></p>
+                    <select  name="userTagType" style="width: 167px;" id="whitListType" ng-model="updateScene.whiteMemberListName" ng-change="upFindChannelGroups()">
+                        <option value="{{x.key}}" ng-repeat="x in updateScene.strategyList">{{x.value}}</option>
+                    </select>
+
+                    <div class="start-b deploy-item-filter select1" id="upUserRosterLikeSearch">
+                        <p>模糊搜索：<b style="color: red;">*</b></p>
+                        <select class="mySelect"  id="memberIdUpdate" class="filter-select" style="width: 315px;" ng-model="updateScene.whiteId">
+                            <option  value="{{x.rosterId}}" ng-repeat="x in strChannelGroups">{{x.rosterName}}</option>
+                        </select>
+                        &nbsp;<span id="memberUpdateCount" style="color: #1E0FBE">{{memberUpdateCount}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="start-j">
+                <p></p>
+                <input type="checkbox"  id="upBlack" name="wb" class="checkAll" value="2" ng-click="blackClick(0)">黑名单
+                <div style="margin-left: 115px;">
+                    <p>名单类型：<b style="color: red;">*</b></p>
+                    <select  name="userTagType" style="width: 167px;" id="blackListType"  ng-model="updateScene.blackMemberListName" ng-change="upBlackFindChannelGroups()">
+                        <option value="{{x.key}}" ng-repeat="x in updateScene.blackStrategyList">{{x.value}}</option>
+                    </select>
+
+                    <div class="start-b deploy-item-filter select1" id="upUserRosterBlackLikeSearch">
+                        <p>模糊搜索：<b style="color: red;">*</b></p>
+                        <select class="blackMySelect"  id="memberBlackIdUpdate" class="filter-select" style="width: 315px;" ng-model="updateScene.blackId">
+                            <option value="{{x.rosterId}}" ng-repeat="x in strBlackChannelGroups">{{x.rosterName}}</option>
+                        </select>
+                        &nbsp;<span id="memberBlackUpdateCount" style="color: #1E0FBE">{{memberBlackUpdateCount}}</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="start-f">
+            <p >审核人：</p>
+            <span style="margin-left: -5px;">
+          <select class="interests" ng-model="updateScene.auditPerson" ng-options="x.name for x in auditPersionList">
+            <option value="">请选择</option>
+          </select>
+      	</span>
+            <p>提审说明：</p><span><input ng-model="updateScene.requestAuditDescription" style="width:180px;" class="interests" type="text"  maxlength="18" placeholder="选填，18个汉字以内"></span>
+        </div>
+        <div class="bottom-btn">
+            <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="confirmUpdate()">确定</a>
+            <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" ng-click="updateCancel()">取消</a>
+        </div>
+    </div>
+</div>
+</div>
+<!-- 修改Banner详情 -->
+<!-- 失效Banner详情 -->
+<div class="take-start-box" id="showStart">
+    <div class="take-start-small">
+        <p align="center">您确定要{{start.startValid==0 && "生效" || start.startValid==1 && "失效"}}Banner吗？</p>
+        <div class="bottom-btn">
+            <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="confirmStart(start.id,start.startValid)">确12定</a>
+            <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" ng-click="cancelStart()">取消</a>
+        </div>
+    </div>
+</div>
+<!-- 失效Banner详情 -->
+
+<!-- 审核金融产品配置 -->
+<div class="take-start-box" id="auditShow">
+    <div class="take-start-small newTakeEffect">
+        <h2 align="center">审核</h2>
+        <ul class="isEffect">
+            <li><p>审核结果：</p>
+                <select id="auditStatus" ng-model="auditStatus">
+                    <option value="1">审核通过</option>
+                    <option value="2">审核不通过</option>
+                </select>
+            </li>
+            <li class="PosiText"><p>审核描述：</p><textarea id="auditDescription" ng-model="auditDescription" maxlength="32" cols="25" rows="4" placeholder="选填，32字符以内"></textarea></li>
+        </ul>
+        <div class="bottom-btn">
+            <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="confirm()" >确定</a>
+            <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" onclick="$('.take-start-box').hide();">取消</a>
+        </div>
+    </div>
+</div>
+
+<div class="take-start-box" id="takeEffect" >
+    <div class="take-start-small newTakeEffect">
+        <h2 align="center">{{effectRecord.valid=='1' && '失效' || effectRecord.valid=='0' && '生效'}}提示</h2>
+        <ul class="isEffect">
+            <li><p>审核人</p>
+                <!--  <select id="validConfirmUser" ng-model="validConfirmUser">
+                     <option value="">请选择</option>
+                   <option value="{{x.no}}-{{x.email}}" ng-repeat="x in auditPersionList">{{x.name}}</option> -->
+                <select class="interests" ng-model="effectRecord.auditPerson" ng-options="x.name for x in auditPersionList">
+                    <option value="">请选择</option>
+                </select>
+            </li>
+            <li class="PosiText"><p>审核说明</p><textarea id="requestAuditDescription" ng-model="effectRecord.requestAuditDescription" cols="25" rows="4" placeholder="选填，30字符以内"></textarea></li>
+        </ul>
+        <div class="bottom-btn">
+            <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="validateRecord()">确定</a>
+            <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" onclick="$('.take-start-box').hide();">取消</a>
+        </div>
+    </div>
+</div>
+</div>
+<script src="${jsRoot}/angular/angular.min.js"></script>
+<script src="${jsRoot}/plugins/laydate/laydate.js"></script>
+<!-- Mainly scripts -->
+<script src="${jsRoot}/jquery-2.1.1.js"></script>
+<script src="${jsRoot}/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="${jsRoot}/bootstrap.min.js"></script>
+<script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="${jsRoot}/plugins/jeditable/jquery.jeditable.js"></script>
+
+<!-- Data Tables -->
+<script src="${jsRoot}/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.responsive.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.tableTools.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="${jsRoot}/inspinia.js"></script>
+<script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.iframe-transport.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.ui.widget.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-process.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-validate.js"></script>
+<script src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+<script src="${jsRoot}/oms/banner.js?rand=${random}"></script>
+<script type="text/javascript" src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+
+<!--下拉搜索-->
+<script src="${jsRoot}/plugins/jeditable/select2.full.min.js"></script>
+<script src="${jsRoot}/oms/ruleconfig/jquery.searchableSelect.js"></script>
+<script>
+
+    $(function(){
+        $('.mySelect').select2();
+        $(".mySelect").on("select2:select",function(){
+            var productChannel = '';
+            var countFlag = '';
+            var dataValue = $(this).val();
+            var dataId = $(this).attr("id");
+            if(dataId == "memberId"){
+                productChannel = $('#addproductChannel').val();
+                countFlag = 'memberCount';
+            }else if(dataId == "memberIdUpdate"){
+                productChannel = $('#productChannelUpdate').val();
+                countFlag = 'memberUpdateCount';
+            }
+
+            $.ajax({
+                url: globalConfig.basePath + "/ruleConfig/queryMemberCount",
+                data: {
+                    channelCode: productChannel,
+                    rosterId: dataValue
+                },
+                type: "POST",
+                dataType: "json",
+                success: function(data) {
+                    if (data.code == '000') {
+                        $('#'+countFlag).html(data.resp.rosterCount);
+                    } else {
+                        $('#'+countFlag).html("");
+                        alert(data.message);
+                    }
+                }
+            });
+        });
+    })
+
+    $(function(){
+        $('.blackMySelect').select2();
+        $(".blackMySelect").on("select2:select",function(){
+            var productChannel = '';
+            var countFlag = '';
+            var dataValue = $(this).val();
+            var dataId = $(this).attr("id");
+            if(dataId == "memberBlackId"){
+                productChannel = $('#addproductChannel').val();
+                countFlag = 'memberBlackCount';
+            }else if(dataId == "memberBlackIdUpdate"){
+                productChannel = $('#productChannelUpdate').val();
+                countFlag = 'memberBlackUpdateCount';
+            }
+
+            $.ajax({
+                url: globalConfig.basePath + "/ruleConfig/queryMemberCount",
+                data: {
+                    channelCode: productChannel,
+                    rosterId: dataValue
+                },
+                type: "POST",
+                dataType: "json",
+                success: function(data) {
+                    if (data.code == '000') {
+                        $('#'+countFlag).html(data.resp.rosterCount);
+                    } else {
+                        $('#'+countFlag).html("");
+                        alert(data.message);
+                    }
+                }
+            });
+        });
+    })
+
+    /*var navHight = $('.navbar-static-side').height()
+    $('.navbar-static-side').css('height', navHight - 60)
+    $('.content-box').css('height', navHight - 60)*/
+    // 添加Banner
+    $('.btn-gradienta').click(function(){
+        /*$('.add-start-bg').show()
+          $('.start-btna').click(function(){
+          $('.add-start-bg').hide();
+        }) */
+        $('.start-btnb').click(function(){
+            $('.add-start-bg').hide()
+        })
+    })
+    // 优先级排序
+    $('.btn-gradientb').click(function(){
+        /* $('.priority-ranking').show()
+        $('.bottom-btna').click(function(){
+          $('.priority-ranking').hide()
+        }) */
+        $('.bottom-btnb').click(function(){
+            $('.priority-ranking').hide()
+        })
+    })
+    // 查看Banner
+    $('.look-start').click(function(){
+        // $('.look-start-box').show()
+        $('.bottom-btna').click(function(){
+            $('.look-start-box').hide()
+        })
+        /* $('.bottom-btnb').click(function(){
+          $('.look-start-box').hide()
+        }) */
+    })
+    // 修改Banner
+    $('.modify-start').click(function(){
+        $('.modify-start-box').show()
+        $('.bottom-btna').click(function(){
+            $('.modify-start-box').hide()
+        })
+        $('.bottom-btnb').click(function(){
+            $('.modify-start-box').hide()
+        })
+    })
+    // 失效Banner
+    $('.take-start').click(function(){
+        $('.take-start-box').show()
+        $('.bottom-btna').click(function(){
+            $('.take-start-box').hide()
+        })
+        $('.bottom-btnb').click(function(){
+            $('.take-start-box').hide()
+        })
+    })
+
+    var searchonlineTime = laydate({
+        elem:'#searchonTime',
+        istime: true,
+        format: 'YYYY-mm-DD',
+        event:'click'
+    })
+
+    var queryOnlineTime = laydate({
+        elem:'#queryOnlineTime',
+        istime: true,
+        format: 'YYYY-mm-DD hh:mm:ss',
+        event:'click'
+    })
+
+    var queryOfflineTime = laydate({
+        elem:'#queryOfflineTime',
+        //istime: true,
+        istime: true,
+        format: 'YYYY-mm-DD hh:mm:ss',
+        event:'click',
+        type:'datetime',
+        ready:function (date) {
+            if(!$.trim($("#queryOfflineTime").val())){
+                this.datetime.hour=23;
+                this.datetime.hour=59;
+                this.datetime.hour=59;
+
+            }
+
+        },
+        choose: function(dates){ //选择好日期的回调
+            var offlineTimes = dates.split(" ");
+            var time = offlineTimes[1].split(":");
+            if(time[0]==00&&time[1]==00&&time[2]==00){
+                var miniTime="23:59:59";
+                $("#queryOfflineTime").val(offlineTimes[0]+" "+miniTime);
+            }
+        }
+    })
+
+
+    var updateOnlineTime = laydate({
+        elem:'#updateOnlineTime',
+        istime: true,
+        format: 'YYYY-mm-DD hh:mm:ss',
+        event:'click'
+    })
+
+    var updateOfflineTime = laydate({
+        elem:'#updateOfflineTime',
+        istime: true,
+        format: 'YYYY-mm-DD hh:mm:ss',
+        event:'click'
+    })
+
+
+</script>
+</body>
+</html>

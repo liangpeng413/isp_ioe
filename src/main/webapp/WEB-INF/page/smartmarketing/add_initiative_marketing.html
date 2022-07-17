@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>创建营销项目</title>
+
+    <!-- 原 oms -->
+    <link href="${cssRoot}/style.css?rand=${random}" rel="stylesheet"> <!-- 1 -->
+    <link href="${cssRoot}/styleT.css?rand=${random}" rel="stylesheet"> <!-- 1 -->
+    <link href="${cssRoot}/bootstrap.min.css" rel="stylesheet"> <!-- 1 bootstrap.min.css -->
+    <!-- 原 oms end -->
+
+    <!-- 其他  -->
+    <link href="${staticRoot}/font-awesome/css/font-awesome.css" rel="stylesheet"> <!-- 1 -->
+    <!-- FooTable -->
+    <link href="${staticRoot}/css/plugins/footable/footable.core.css" rel="stylesheet"> <!-- 1 -->
+    <link href="${staticRoot}/css/animate.css" rel="stylesheet"> <!-- 1 -->
+    <link href="${staticRoot}/css/oms/ruleconfig/myStyle.css" rel="stylesheet"> <!-- 1 -->
+    <!--基本样式-->
+    <link href="${staticRoot}/css/oms/ruleconfig/select-mania.css" rel="stylesheet" type="text/css"> <!-- 1 -->
+    <!--自定义样式-->
+    <link href="${staticRoot}/css/oms/ruleconfig/select-mania-theme-darkblue.css" rel="stylesheet" type="text/css"> <!-- 1 -->
+    <link href=".${staticRoot}/css/oms/ruleconfig/select-mania-theme-green.css" rel="stylesheet" type="text/css"> <!-- 1 -->
+    <link href="${staticRoot}/css/oms/ruleconfig/select-mania-theme-orange.css" rel="stylesheet" type="text/css"> <!-- 1 -->
+    <link href="${staticRoot}/css/oms/ruleconfig/select-mania-theme-red.css" rel="stylesheet" type="text/css"> <!-- 1 -->
+    <link href="${staticRoot}/css/oms/ruleconfig/select-mania-theme-square.css" rel="stylesheet" type="text/css"> <!-- 1 -->
+    <!--<link href="${staticRoot}/css/oms/ruleconfig/look-page1.css" rel="stylesheet">-->
+    <link rel="stylesheet" href="${cssRoot}/oms/smartmarketing/index.css"> <!-- 1 -->
+    <!-- select2 下拉搜索 -->
+    <link rel="stylesheet" href="${cssRoot}/plugins/select2/select2.min.css">
+    <!-- 其他 end -->
+    <style>
+        h1,h2,h3{
+            text-align: center;
+        }
+        .select1{
+            margin: 60px auto 0;
+            width: 200px;
+        }
+        .select1>span{
+            width: 100% !important;
+        }
+    </style>
+    <script>
+        var globalConfig = {
+            basePath: "${ctx}",
+            staticRoot: "${staticRoot}",
+            loginName: "${Session.sessionUser.loginName}",
+            name: "${Session.sessionUser.name}",
+            email: "${Session.sessionUser.email}"
+        };
+    </script>
+</head>
+<body ng-app="add_initiative_marketing" ng-controller="add_initiative_marketing_controller">
+<div id="wrapper">
+    <div class="header-box">
+        <#include "/common/top.html" encoding="UTF-8" />
+    </div>
+    <nav class="sidebar-collapse navbar-default navbar-static-side" role="navigation">
+        <div  style="height: 675px;overflow-y: scroll;">
+            <#include "/common/left.html" encoding="UTF-8" />
+        </div>
+    </nav>
+</div>
+
+<div class="content-box">
+    <div class="small-content">
+        <div class="warp_zl" style="background: #FFFFFF">
+            <div class="nav_zl">
+                <div >
+                    <a class="nav_fan btn btn-blueW" href="${ctx}/smart_marketing/initiative/to_page?channelCode=${channelCode}">返回</a>
+                </div>
+                <span class="nav_text">{{channelCodeName}}</span>
+                <div id="channelCode" hidden="hidden">${channelCode}</div>
+            </div>
+            <div class="head_zl">
+                <div class="head_nav">
+                    <div class="head_txt">
+                        基础信息
+                    </div>
+                    <div class="head_ipt">
+                        <div class="ipt_up">
+                            <span class="head_ipt_name">*项目名称：</span>
+                            <input ng-model="project.projectName" class="head_chen" type="text" placeholder="最多30字符"
+                                   ng-required="true" maxlength="30">
+                            <span class="ipt_right head_ipt_name" ng-show="channelCodeName !='三方渠道' && channelCodeName !='玖富商城'">*营销目的：</span>
+                            <select name="" class="head_select" ng-model="project.purpose" ng-show="channelCodeName !='三方渠道' && channelCodeName !='玖富商城'">
+                                <option value="">请选择</option>
+                                <option value="01">邀请好友出借</option>
+                                <option value="02">首投（排除邀请）</option>
+                                <option value="03">续期</option>
+                                <option value="04">流失召回</option>
+                                <option value="99">其他</option>
+                            </select>
+                            <span ng-show="channelCodeName !='三方渠道' && channelCodeName !='玖富商城'">*统计产品类型:</span>
+                            <select name="" class="head_select" ng-model="project.productType" ng-show="channelCodeName !='三方渠道' && channelCodeName !='玖富商城'">
+                                <option value="">请选择</option>
+                                <option value="WANG_DAI">网贷</option>
+                                <option value="BANK">银行</option>
+                                <option value="FUND">基金</option>
+                                <option value="BAO_XIAN">保险</option>
+                            </select>
+                        </div>
+                        <div class="ipt_up">
+                            <span class="head_ipt_name">*审核人:</span>
+                            <select ng-model="project.auditUserId" class="shen_xuan" ng-options="x.no as x.name for x in auditPersonList">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <!-- head_nav -->
+
+                <!-- 营销部分 动作组 -->
+                <div class="list_box" ng-repeat="actionGroup in project.actionGroups">
+                    <div class="list_single">
+                        <div class="single_nav">
+                            <div class="single_nav_title">
+                                营销动作组
+                                <span ng-model="actionGroup.groupIndex">{{$index + 1}}</span>
+                            </div>
+                            <div class="switch">
+                                <span class="shan" ng-click="deleteActionGroup(actionGroup)">删除</span>
+                                <span class="headleSwitch" ng-click="foldActionGroup(actionGroup)">
+                  <!--<img class="xain" src="./image/hengxian.png" alt="">-->
+                  <img class="xain" src="${imgRoot}/hengxian.png" alt="" ng-show="!actionGroup.fold">
+                  <img class="xain" src="${imgRoot}/jia.png" alt="" ng-show="actionGroup.fold">
+                </span>
+                            </div>
+                        </div>
+                        <div class="dev-margin" ng-show="!actionGroup.fold">
+                            <div class="single_ce">
+                                <span>策略描述：</span>
+                                <textarea class="single_ipt" rows="4" placeholder="最多30字符" maxlength="30"
+                                          ng-model="actionGroup.desc"></textarea>
+                            </div>
+                            <!-- single_ce -->
+                            <div class="single_hu">
+                                <span>*名单类型：</span>
+                                <select class="head_select" data-width="200px" ng-model="actionGroup.userGroupType"
+                                        ng-change="listUserNameList(actionGroup.userGroupType)">
+                                    <option value="">请选择</option>
+                                    <option value="RULE_GROUP" ng-show="channelCodeName!='三方渠道'">智能画像</option>
+                                    <option value="RULE_LIST">用户名单</option>
+                                </select>
+                                <br>
+                                <br>
+                                <span>*用户分组:</span>
+                                <!--<select class="single_sel" data-width="200px" ng-model="actionGroup.userGroupId"-->
+                                <!--ng-options="u.rosterId as u.rosterName for u in userNameListList">-->
+                                <!--<option value="">请选择</option>-->
+                                <!--</select>-->
+                                <div ng-show="actionGroup.userGroupType == 'RULE_GROUP'" style="display: inline-block">
+                                    <select class="js-example-basic-single" style="height: 35px" data-width="200" ng-model="actionGroup.userGroupId"
+                                            ng-options="u.rosterId as u.rosterName for u in ruleGroup" ng-change="userRosterType(this,actionGroup.userGroupId)">
+                                        <option value="">请选择</option>
+                                    </select>
+                                </div>
+                                <div ng-show="actionGroup.userGroupType == 'RULE_LIST'" style="display: inline-block;">
+                                    <select class="js-example-basic-single" style="height: 35px" data-width="200" ng-model="actionGroup.userGroupId"
+                                            ng-options="u.rosterId as u.rosterName for u in ruleList">
+                                        <option value="">请选择</option>
+                                    </select>
+                                </div>
+
+                                <a href="javascript:void(0)" ng-click="countUserGroupUser(actionGroup,channelCode)">查询</a>
+                                用户数：<span ng-bind="actionGroup.userGroupUserCount">0</span>
+                            </div>
+                            <!-- single_hu-->
+                            <div class="single_action">
+                                <div>
+                                    <span>*动作：</span>
+                                    <span class="single_color tian" ng-click="addAction('award', actionGroup)" ng-show="channelCodeName!='三方渠道'">添加奖励</span>
+                                    <span class="single_color ban" ng-click="addAction('messageTemplate', actionGroup)">添加消息模板</span>
+                                </div>
+                                <!---->
+                                <div ng-show="(actionGroup.touchDateType =='now'||actionGroup.touchDateType =='time') && actionType == 'sms' ">
+                        <span>
+                            <input type="checkbox" ng-show="smsCountValue != 0" id="useInformid" name="ramsName"  ng-click="addAction('informSms', actionGroup)">
+                            <!-- 通知类短信次数为0时禁用 -->
+                            <input type="checkbox" ng-show="smsCountValue == 0"  disabled="disabled" id="rams0" ng-click="addAction('informSms', actionGroup)">通知类短信
+                            <input type = "text" ng-repeat="x in smsCountValue" value="{smsCountValue}">剩余{{smsCountValue}}次</input>
+                        </span>
+                                </div>
+                            </div>
+                            <!-- single_action 查看消息 -->
+                            <div class="news_over">
+                                <div class="news_single" ng-repeat="action in actionGroup.actions">
+                                    <span class="news_txt">{{action.actionDesc}}</span>
+                                    <div class="news_right">
+                    <span class="news_kan"
+                          ng-show="action.type == 'sms' || action.type == 'push' || action.type == 'banner' || action.type == 'note'"
+                          ng-click="checkTemplate(action.typeValue)">
+                      查看
+                        <!--<a href="${ctx}/smart_marketing/message/to_page?id={{action.typeValue}}">查看</a>-->
+                    </span>
+                                        <span class="news_del" ng-click="deleteAction(actionGroup, action)">删除</span>
+                                    </div>
+                                </div>
+                                <!-- news_single -->
+                            </div>
+                            <!-- news_over -->
+                            <div class="chu_time">
+                                *触达时间类型：
+                                <select name="" class="head_select" ng-model="actionGroup.touchDateType">
+                                    <option value="now">立即触达</option>
+                                    <option value="time">指定时间</option>
+                                    <option value="day">按天</option>
+                                    <option value="week">按周</option>
+                                    <option value="month">按月</option>
+                                    <option value="realtime" ng-show="actionGroup.userRosterTypeFlag && channelCodeName !='玖富商城'">智能画像增量发放</option>
+                                </select>
+                                <!--<div ng-show="actionGroup.touchDateType == 'time'">-->
+                                <!--日期：<input type="datetime-local" id="runTime" ng-model="actionGroup.runTime">-->
+                                <!--</div>-->
+
+                                <div ng-show="actionGroup.touchDateType == 'time'">
+                                    日期：
+                                </div>
+
+                                <div ng-show="actionGroup.touchDateType == 'day' || actionGroup.touchDateType == 'week' || actionGroup.touchDateType == 'month'
+                                || (actionGroup.touchDateType == 'realtime' && actionGroup.userGroupType!='RULE_LIST')">
+                                    时间范围：
+                                </div>
+                                <input type="text" id="runTime{{$index + 1}}" placeholder="生效日期" ng-model="actionGroup.runTime" autocomplete="off"
+                                       ng-show="actionGroup.touchDateType == 'day' || actionGroup.touchDateType == 'week' ||
+                       actionGroup.touchDateType == 'month' || actionGroup.touchDateType == 'time' ||
+                       (actionGroup.touchDateType == 'realtime' && actionGroup.userGroupType!='RULE_LIST')">
+                                <div style="display: inline-block" ng-show="actionGroup.touchDateType == 'day' || actionGroup.touchDateType == 'week' || actionGroup.touchDateType == 'month'
+                             || (actionGroup.touchDateType == 'realtime' && actionGroup.userGroupType!='RULE_LIST')">
+                                    - <input type="text" placeholder="失效日期" id="endTime{{$index + 1}}" ng-model="actionGroup.endTime" autocomplete="off">
+
+                                    <span ng-show="actionGroup.touchDateType == 'realtime' && actionGroup.userGroupType!='RULE_LIST'">
+                      限制配置：<input ng-model="actionGroup.limitDay" minlength="1" maxlength="2" placeholder="1-30" type="text" style="width: 80px;">个自然日内最多触发<input type="text" ng-model="actionGroup.limitCount" minlength="1" maxlength="2" placeholder="1-10" style="width: 150px;">次
+                    </span>
+                                </div>
+                            </div>
+                            <!-- chu_time -->
+                            <div class="astrict">
+                                *是否受触达次数限制：
+                                <div class="astrict_t">
+                                    <!--<input type="radio" class="shi removal_vals" checked="checked" value="1">-->
+                                    <!--<span class="shitxt">是</span>-->
+                                    <input type="radio" class="shi removal_vals" checked="checked"
+                                           value="1" ng-model="actionGroup.removal" ng-value="1">
+                                    <span class="shitxt">是</span>
+                                </div>
+                                <div class="astrict_f">
+                                    <!--<input type="radio" class="flas removal_vals" value="2">-->
+                                    <!--<span class="flatxt">否</span>-->
+                                    <input type="radio" class="flas removal_vals"
+                                           value="2" ng-model="actionGroup.removal" ng-value="2">
+                                    <span class="flatxt">否</span>
+                                </div>
+                            </div>
+                            <!--astrict  -->
+                            <div class="exceed">
+                                *超过发放时间次日是否继续发放：
+                                <div class="exceed_t">
+                                    <!--<input type="radio" class="shis continue_send_vals" checked="checked" value="1"> 是-->
+                                    <input type="radio" class="shis continue_send_vals" value="1" checked="checked"
+                                           ng-model="actionGroup.continueSend" ng-value="1"> 是
+                                </div>
+                                <div class="exceed_f">
+                                    <!--<input type="radio" class="fou continue_send_vals" value="2"> 否-->
+                                    <input type="radio" class="fou continue_send_vals" value="2"
+                                           ng-model="actionGroup.continueSend" ng-value="2"> 否
+                                </div>
+                            </div>
+                            <div class="exceed_t">
+                                *是否给黑名单用户发放：
+                                <input type="radio"  class="fou continue_send_vals" value="1" ng-model="actionGroup.blackListLimit"
+                                       ng-value="1" >是 &nbsp;&nbsp;&nbsp;
+
+                                <!--                    <input typee="radio" class="shis continue_send_vals" checked="checked" value="2" ng-model="actionGroup.blackListLimit"-->
+                                <!--                    ng-value="2" >否-->
+
+                                <input type="radio" class="shi continue_send_vals" value="2" checked="checked"
+                                       ng-model="actionGroup.blackListLimit" ng-value="2"> 否
+                            </div>
+
+
+                            <!-- exceed -->
+                        </div>
+                        <div>
+                            &nbsp;&nbsp;&nbsp;*达到多少<input ng-model="actionGroup.percent" type="text" style="width: 80px;">%用户触达失败，发放邮件提醒<input type="text" ng-model="UserEmail" style="width: 150px;">
+                        </div>
+
+
+                        <!-- exceed -->
+                    </div>
+                    <!-- dev-margin -->
+                </div>
+                <p></p>
+                <div ng-show="channelCodeName !='三方渠道'">
+                    &nbsp;&nbsp;&nbsp;*项目统计有效期:<input ng-model="project.validTime"  placeholder="1-30个自然日" type="text" style="width: 120px;">
+                </div>
+                <!-- list_single -->
+            </div>
+            <!-- list_box -->
+
+
+        </div>
+        <!--<div class="save_btn">-->
+        <!--<span class="zeng btn btn-success btn-rounded btn-blueW btn-blueWb" ng-click="addActionGroup()">新增营销动作组</span>-->
+        <!--<span class="cun btn btn-success btn-rounded btn-blueW btn-blueWb" ng-click="addCommit()">保存</span>-->
+        <!--</div>-->
+        <div class="bottom-btn">
+            <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="javascript:void(0)" ng-click="addActionGroup()">新增营销动作组</a>
+            <a class="btn btn-danger btn-rounded bottom-btna start-btna"  href="javascript:void(0)" ng-click="addCommit()">保存</a>
+        </div>
+        <!-- head_zl -->
+    </div>
+
+    <!-- 点击删除弹框 -->
+    <div class="confirmModel">
+        <div class="confirmModelInfo">
+            <div class="confirmModel-title">
+                确认删除
+            </div>
+            <div class="confirmModel-target">确定删除营销动作2吗</div>
+            <div class="confirmModel-btn">
+                <span class="confirmModel-sure btn btn-danger btn-rounded bottom-btna start-btna">确定</span>
+                <span class="confirmModel-cancel btn btn-danger btn-rounded bottom-btnb start-btnb">取消</span>
+            </div>
+        </div>
+    </div>
+    <!-- 添加奖励弹框 -->
+    <div class="add-award-Model">
+        <div class="confirmModelInfo" style="width: 500px;">
+            <div class="confirmModel-title">
+                添加奖励
+            </div>
+            <div class="addInp">
+                <div class="ipt_up_add">
+                    <span class="ipt_right">奖励类型:</span>
+                    <select name="" style="width: 242px;" class="head_select" ng-model="tempAction.type">
+                        <option value="" ng-show="channelCode!='SC'">请选择</option>
+                        <option value="jf" ng-show="channelCode!='SC'">积分</option>
+                        <option value="coupon" ng-show="channelCode!='SC'">卡券</option>
+                        <option value="newCoupon">新卡券</option>
+                        <option value="mallCoupon">商城卡券</option>
+                    </select>
+                </div>
+                <div class="ipt_up_add">
+                    <span class="ipt_right" ng-show="tempAction.type != 'jf' && tempAction.type != 'coupon' && tempAction.type != 'newCoupon' && tempAction.type != 'mallCoupon'">输入项:</span>
+                    <span class="ipt_right" ng-show="tempAction.type == 'coupon' || tempAction.type == 'newCoupon' || tempAction.type == 'mallCoupon'">*卡券ID:</span>
+                    <span class="ipt_right2" ng-show="tempAction.type == 'jf'">*积分规则ID:&nbsp;
+                     <input type="text" style="width: 242px;" ng-model="tempAction.jfRuleId"><br><br>
+                </span>
+                    <span class="ipt_right" style="width:78px;" ng-show="tempAction.type == 'jf'">*积分数:</span>
+                    <input type="text" style="width: 242px;" ng-model="tempAction.typeValue">
+                    <br/><br/>
+                    <span class="ipt_right" style="width:78px;" ng-show="tempAction.type == 'jf'">*积分描述:</span>
+                    <input type="text" style="width: 242px;" ng-show="tempAction.type == 'jf'"  ng-model="tempAction.actionPurposeDesc" placeholder="积分记录中用户可见,20字符以内">
+                </div>
+                <div class="confirmModel-btn">
+                    <span class="confirmModel-sure btn btn-danger btn-rounded bottom-btna start-btna" ng-click="commitAddAction()">添加</span>
+                    <span class="confirmModel-cancel btn btn-danger btn-rounded bottom-btnb start-btnb">关闭</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 添加消息模板弹框 -->
+    <div class="add-message-Model">
+        <div class="confirmModelInfo">
+            <div class="confirmModel-title">
+                添加消息模板
+            </div>
+            <div class="addInp">
+                <div class="ipt_up_add">
+                    <span class="ipt_right">触达方式:</span>
+                    <select name="" class="head_select" ng-model="tempAction.type" ng-change="listMessageTemplate(tempAction.type)">
+                        <option value="" ng-show="channelCodeName!='三方渠道' && channelCodeName!='玖富商城'">请选择</option>
+                        <option value="sms">短信</option>
+                        <option value="banner" ng-show="channelCodeName!='三方渠道' && channelCodeName!='玖富商城'">banner</option>
+                        <option value="push" ng-show="channelCodeName!='三方渠道'">推送</option>
+                        <option value="note" ng-show="channelCodeName!='三方渠道'">站内信</option>
+                    </select>
+                </div>
+                <br>
+                <div class="ipt_up_add">
+                    <span class="ipt_right">选择消息模板:</span>
+                    <select id="uniqueId" class="js-example-basic-single" ng-model="tempAction.typeValue"
+                            ng-options="m.id as m.templateName for m in messageTemplateList" data-width="150px">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+                <div class="confirmModel-btn">
+                    <span class="confirmModel-sure btn btn-danger btn-rounded bottom-btna start-btna" ng-click="commitAddAction()">添加</span>
+                    <span class="confirmModel-cancel btn btn-danger btn-rounded bottom-btnb start-btnb">关闭</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 添加通知类短信弹框 -->
+    <div class="take-start-box"  id = "informSmshide">
+        <div class="confirmModelInfo">
+            <div class="confirmModel-title">
+                添加通知类短信
+            </div>
+            <div class="addInp">
+                <div class="ipt_up_add">
+                    请注意，通知类短信切勿频繁使用，否则可能会导致公司短信通道被封，如需使用通知类短信，请与运营负责人杨新博沟通后选择创建，此选项，审核人只可为杨新博
+                </div>
+                <br>
+                <div class="confirmModel-btn">
+                    <span  class="confirmModel-cancel btn btn-danger btn-rounded bottom-btnb start-btnb " onclick="$('.take-start-box').hide();"
+                           href="javascript:void(0)">我已知晓</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 查看消息模板详情 -->
+    <div class="look-start-box" id="showCheck">
+        <div class="add-look-start">
+            <h1 align="center">查看消息模板</h1>
+            <div class="look-start-a">
+                <p>理财渠道：</p>
+                <span>{{openDetail.channelCode == 'WK' && "悟空理财" ||openDetail.channelCode == 'QB' && "玖富钱包" ||openDetail.channelCode == 'SC' && "玖富商城"}}</span>
+            </div>
+            <div class="start-a">
+                <p>模板名称：</p>
+                <span>{{openDetail.templateName}}</span>
+            </div>
+            <div class="start-a">
+                <p>模板描述:{{openDetail.desc}}</p>
+            </div>
+            <div class="start-a">
+                <p>触达方式：</p>
+                <span>{{openDetail.type == 'sms' && "短信" || openDetail.type == 'push' && "推送" || openDetail.type =='note' && "站内信" || openDetail.type =='banner' && "banner"}}</span>
+            </div>
+            <div class="start-a" ng-show="openDetail.type == 'note' || openDetail.type == 'push' ">
+                <p >标题:{{toupdate.title}}</p>
+                <p >内容:{{toupdate.content}}</p>
+                <p ng-show="openDetail.type == 'note' && openDetail.channelCode=='SC'">站内信类别：</p>
+                <span ng-show="openDetail.type == 'note' && openDetail.channelCode=='SC'">
+                    {{toupdate.noteType == '1' && "还款通知" || toupdate.noteType == '2' && "物流通知"  || toupdate.noteType == '3' && "订单通知" || toupdate.noteType == '4' && "活动通知" || toupdate.noteType == '5' && "服务通知"}}
+                </span>
+            </div>
+            <div class="start-a" ng-show="openDetail.type == 'sms' " >
+                <p >短信内容：{{toupdate.content}}</p>
+            </div>
+            <div class="start-a" ng-show="openDetail.type == 'banner' ">
+                <p >位置：{{toupdate.position == '0' && "首页中部宣传" || toupdate.position == '1' && "首页中部大滑块" || toupdate.position == '49' && "首页中部老用户banner"}}</p>
+
+                <div ng-repeat="x in version">
+                    <p id="version{{x}}">版本：{{x}}</p>
+                </div>
+                <div ng-repeat="y in banner">
+                    <p>图片地址：{{y}}</p>
+                </div>
+                <p>显示时间:按照时间</p>
+                <p>持续时间：{{toupdate.lasttime}}h</p>
+            </div>
+
+            <div class="start-a" ng-show="openDetail.type == 'push' || openDetail.type == 'banner' || openDetail.type == 'note'">
+                <p ng-show="toupdate.jumptype == '0'">跳转类型:无跳转</p>
+                <p ng-show="toupdate.jumptype == '3'">跳转类型:原生跳转</p>
+                <p ng-show="toupdate.jumptype == '3'">页面类型:{{toupdate.pagetype}}</p>
+                <p ng-show="toupdate.jumptype == '3'">跳转页面:{{toupdate.pageurl}}</p>
+                <p ng-show="toupdate.jumptype == '2'">跳转类型:链接跳转</p>
+                <p ng-show="toupdate.jumptype == '2'">链接地址:{{toupdate.pageurl}}</p>
+            </div>
+            <div class="start-a">
+                <p>创建时间:</p>
+                <span>{{openDetail.createTime}}</span>
+            </div>
+            <div class="start-a">
+                <p>创建人:</p>
+                <span>{{openDetail.createUserName}}</span>
+            </div>
+            <div class="start-a">
+                <p>最新修改时间:</p>
+                <span>{{openDetail.updateTime}}</span>
+            </div>
+            <div class="start-a">
+                <p>修改人:</p>
+                <span>{{openDetail.updateUserName}}</span>
+                <!--<input style="width:368px;" type="text" maxlength="100" maxlength="100" placeholder="100字符以内"  ng-model="openScreen.notice">-->
+            </div>
+            </n>
+            <div class="bottom-btn">
+                <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" onclick="$('.look-start-box').hide();"
+                   href="javascript:void(0)">关闭</a>
+            </div>
+        </div>
+    </div>
+    <!-- 查看消息模板详情 end -->
+</div>
+</div>
+
+<script src="${jsRoot}/jquery-2.1.1.js"></script> 1
+<script type="text/javascript" src="${staticRoot}/js/select-mania.js"></script> 1
+
+<script src="${jsRoot}/angular/angular.min.js"></script>
+<script src="${jsRoot}/plugins/laydate/laydate.js"></script>
+<!-- Mainly scripts -->
+<script src="${jsRoot}/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="${jsRoot}/bootstrap.min.js"></script> 1
+<script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script> 1
+<script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="${jsRoot}/plugins/jeditable/jquery.jeditable.js"></script>
+
+<!-- Data Tables -->
+<script src="${jsRoot}/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.responsive.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.tableTools.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="${jsRoot}/inspinia.js"></script>
+<script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.iframe-transport.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.ui.widget.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-process.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-validate.js"></script>
+<script src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+<script src="${jsRoot}/oms/banner.js?rand=${random}"></script>
+<script type="text/javascript" src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+<script src="${jsRoot}/biz/smartmarketing/smart_marketing_common.js?rand=${random}"></script>
+<script src="${jsRoot}/plugins/select2/select2.full.min.js?rand=${random}"></script>
+
+
+<script>
+
+    $('.list_single').on('click', '.single_action .ban', function () {
+        $('.add-message-Model').show()
+    })
+
+    $('.confirmModel-cancel').on('click', function () {
+        $('.confirmModel').hide()
+        $('.add-award-Model').hide()
+        $('.add-message-Model').hide()
+    })
+    var isshow = false
+    // 点击按钮 展开或者收起
+    $('.list_box').on('click', '.headleSwitch', function () {
+        isshow = !isshow
+        console.log($(this).children())
+        if (isshow) {
+            $(this).children().attr({
+                src: "${imgRoot}/jia.png",
+                alt: "Test Image"
+            })
+            $(this).parent().parent().siblings().css('display', "none")
+        } else {
+            $(this).children().attr({
+                src: "${imgRoot}/hengxian.png",
+                alt: "Test Image"
+            })
+            $(this).parent().parent().siblings().css('display', 'block')
+        }
+    })
+    // 是否去重限制
+    $('.list_box').on('click', '.shi', function () {
+        $(this).attr('checked', true)
+        console.log()
+        $(this).parent().siblings().find('.flas').attr('checked', false)
+    })
+
+    $('.list_box').on('click', '.shi', function () {
+        $(this).attr('checked', true)
+        console.log()
+        $(this).parent().siblings().find('.flas').attr('checked', false)
+    })
+
+    $('.list_box').on('click', '.flas', function () {
+        $(this).parent().siblings().find('.shi').attr('checked', false)
+        $(this).attr('checked', true)
+    })
+    // 继续发放
+    $('.list_box').on('click', '.shis', function () {
+
+        $(this).attr('checked', true)
+        $(this).parent().siblings().find('.fou').attr('checked', false)
+    })
+    $('.list_box').on('click', '.fou', function () {
+        $(this).parent().siblings().find('.shis').attr('checked', false)
+        $(this).attr('checked', true)
+    })
+    // 第一次 点击的 查看的时候
+    $('.list_box .list_single').on('click', '.news_kan', function () {
+        $('.messageModel').show()
+    })
+    // 第一次点击删除 的时候
+    $('.list_box .list_single').on('click', '.news_del', function () {
+        $(this).parents('.news_single').remove()
+    })
+    $('.closeMessageModel').on('click', function () {
+        $('.messageModel').hide()
+    })
+</script>
+<script>
+    var App = angular.module('add_initiative_marketing', [], angular.noop);
+    App.controller('add_initiative_marketing_controller', ['$scope', '$http', '$compile',function ($scope, $http, $compile) {
+        var self = $scope;
+        self.project = {};
+        self.project.actionGroups = new Array();
+        var actionGroupDefault = new Object();
+        actionGroupDefault.removal = '1';
+        actionGroupDefault.useInform = '0';
+        actionGroupDefault.continueSend = '1';
+        actionGroupDefault.blackListLimit = '2';
+        actionGroupDefault.touchDateType = 'now';
+        actionGroupDefault.fold = false;
+        self.project.actionGroups.push(actionGroupDefault);
+        self.auditPersonList = [];
+        self.userRosterTypeFlag=true;
+        // self.actionList = [];
+        //当前操作的动作（奖励、消息模板）
+        self.tempAction = {};
+        self.currentActionGroup = {};
+        self.userNameListList = {};
+        self.channelCodeName = '';
+        self.UserEmail = globalConfig.email;
+
+        inputDateTime('runTime1', 'endTime1');
+        inputTime('time1');
+        // 消息模板查看相关
+        $scope.openDetail = {};
+        $scope.tclist = '';
+        // 消息模板查看相关 end
+        self.tempCoupon = {};
+        self.messageTemplateList = [];
+
+
+        /**
+         * 展示渠道
+         */
+        self.showChannelCodeName = function() {
+            console.log(self.UserEmail,"用户的邮箱!");
+            if ($('#channelCode').text() == 'WK') {
+                self.channelCodeName = '悟空理财';
+            } else if ($('#channelCode').text() == 'QB') {
+                self.channelCodeName = '玖富钱包';
+            }else if($('#channelCode').text()=='SF'){
+                self.channelCodeName = '三方渠道';
+            }else if($('#channelCode').text()=='SC'){
+                self.channelCodeName = '玖富商城';
+            }
+            return '';
+        }
+        self.channelCode = $('#channelCode').text();
+        self.showChannelCodeName();
+
+        smartCommon($scope, $http);
+
+
+        //试验方法
+        self.outUserGroup = function () {
+            alert("an...");
+            console.log(self.an);
+            var userGroup = [];
+            $(".single_sel").each(function(index, el) {
+                userGroup[index] = el.value;
+            });
+            alert(userGroup);
+            console.log(userGroup);
+        }
+
+        /**
+         * 添加营销项目
+         */
+        self.addCommit = function () {
+
+            if (!self.project.projectName) {
+                alert("请填写项目名称");
+                return;
+            }
+            if(self.channelCodeName == '玖富钱包'||self.channelCodeName == '悟空理财' ){
+                if (!self.project.purpose) {
+                    alert("请填写营销目的");
+                    return;
+                }
+                if (!self.project.productType){
+                    alert("请选择产品类型");
+                    return;
+                }
+
+            }
+
+            if(self.channelCodeName == '玖富钱包'||self.channelCodeName == '悟空理财' ||self.channelCodeName == '玖富商城'){
+                if (!self.project.validTime){
+                    alert("请输入统计有效时间");
+                    return;
+                }
+            }
+            //审核人
+            if (!self.project.auditUserId) {
+                alert("请选择审核人！");
+                return;
+            }
+            var actionGroupLength = self.project.actionGroups.length;
+            // self.project.auditUserId = self.project.auditPerson.no;
+            self.project.auditPerson = null;
+            //渠道（钱包：QB,悟空：WK）
+            self.project.channelCode = $('#channelCode').text();
+            self.project.createUserId = globalConfig.loginName;
+            self.project.createUserName = globalConfig.name;
+            // self.project.actionGroups[0].userGroupId = '20001';
+            // self.project.actionGroups[0].userGroupName = '用户分组名称 ll';
+            var isReturn = false;
+            //var count = 0;
+            for (var i = 0; i < actionGroupLength; i++) {
+                var tempActionGroup = self.project.actionGroups[i];
+                self.project.actionGroups[i].mailAddress = self.UserEmail;
+                tempActionGroup.userGroupName = self.getUserNameList(tempActionGroup.userGroupId).rosterName;
+                var num = i + 1;
+                var actionGroupName = "营销动作组" + num;
+
+                if (!tempActionGroup.actions) {
+                    alert(actionGroupName + "，请添加动作");
+                    isReturn = true;
+                    return;
+                }
+                /* if(tempActionGroup.useInform =='1'){
+                     count++;
+                     if(count>1){
+                         alert("通知类短信每次只可发送1条短信");
+                         return;
+                     }
+                 }*/
+                if (!tempActionGroup.userGroupType || !tempActionGroup.userGroupId) {
+                    alert(actionGroupName + "，请添加名单");
+                    isReturn = true;
+                    return;
+                }
+                if (!tempActionGroup.touchDateType) {
+                    alert(actionGroupName + "，请添加时间触达类型");
+                    isReturn = true;
+                    return;
+                }
+                tempActionGroup.actionGroupName = actionGroupName;
+            }
+            // if (isReturn) {
+            //     return;
+            // }
+
+            var lastActionGroup = self.project.actionGroups[actionGroupLength - 1];
+            lastActionGroup.runTime = $("#runTime" + actionGroupLength).val();
+            lastActionGroup.endTime = $("#endTime" + actionGroupLength).val();
+            lastActionGroup.time = $("#time" + actionGroupLength).val();
+
+
+            console.log("创建的参数对象：");
+            console.log(self.project);
+            var actionGroupsArray=self.project.actionGroups;
+            for(var i=0;i<actionGroupsArray.length;i++){
+                if(!actionGroupsArray[i].percent){
+                    alert(actionGroupName + "，请添加达到多少百分比");
+                    isReturn = true;
+                    return;
+                }
+                if(actionGroupsArray[i].touchDateType!="now"){
+                    if(actionGroupsArray[i].touchDateType=="time"){
+                        if(!actionGroupsArray[i].runTime){
+                            alert(actionGroupName + "，请添加日期");
+                            isReturn = true;
+                            return;
+                        }
+                    }else {
+                        if(!actionGroupsArray[i].runTime  || !actionGroupsArray[i].endTime){
+                            alert(actionGroupName + "，请添加时间范围");
+                            isReturn = true;
+                            return;
+                        }
+                    }
+                    if(actionGroupsArray[i].touchDateType=="realtime"){
+                        if(!actionGroupsArray[i].limitDay) {
+                            alert(actionGroupName + "，请添加限制配置自然日");
+                            isReturn = true;
+                            return;
+                        }else if(!actionGroupsArray[i].limitCount){
+                            alert(actionGroupName + "，请添加限制配置次数");
+                            isReturn = true;
+                            return;
+                        }else if(actionGroupsArray[i].limitDay<=0){
+                            alert(actionGroupName + "，限制配置自然日不能小于等于0");
+                            isReturn = true;
+                            return;
+                        }else if(actionGroupsArray[i].limitCount<=0){
+                            alert(actionGroupName + "，限制配置次数不能小于等于0");
+                            isReturn = true;
+                            return;
+                        }
+                    }
+                }
+            }
+            var url = globalConfig.basePath + "/smart_marketing/initiative";
+            $http.post(url, self.project).then(function successCallback(data) {
+                if(data.data.code!="000"){
+                    alert(data.data.message);
+                    return;
+                }
+                alert(data.data.resp);
+                if (data.data.resp == "成功") {
+                    window.location = "${ctx}/smart_marketing/initiative/to_page?channelCode=" + self.project.channelCode;
+                }
+            }, function errorCallback(data) {
+                alert("请求失败！");
+            });
+        }
+
+
+        /**
+         * 拉取审核人列表 need
+         */
+        // self.pullAuditPersons = function () {
+        //     var url = globalConfig.basePath + "/otc/memberEnjoy/getAuditPersionList";
+        //     $http.get(url).then(function successCallback(callback) {
+        //         if (callback.data.code == '000') {
+        //             $scope.auditPersonList = callback.data.resp;
+        //         } else {
+        //             console.error(callback.data);
+        //             swalMsg("查询审核人列表信息失败");
+        //         }
+        //     }, function errorCallback(response) {
+        //         // 请求失败执行代码
+        //         console.error(response);
+        //         swalMsg("查询审核人列表信息异常");
+        //     });
+        // };
+        self.pullAuditPersons('aio_marketing_audit');
+
+
+
+        /**
+         * 新增营销动作组
+         */
+        self.addActionGroup = function () {
+            if (self.project.actionGroups.length >= 10) {
+                alert("最多只能添加10个");
+                return;
+            }
+            var actionGroupsLength = self.project.actionGroups.length;
+            var lastActionGroup = self.project.actionGroups[actionGroupsLength - 1];
+
+            lastActionGroup.runTime = $("#runTime" + actionGroupsLength).val();
+            lastActionGroup.endTime = $("#endTime" + actionGroupsLength).val();
+            lastActionGroup.time = $("#time" + actionGroupsLength).val();
+            lastActionGroup.time = $("#time" + actionGroupsLength).val();
+            var actionGroupDefault = new Object();
+            actionGroupDefault.removal = '1';
+            actionGroupDefault.continueSend = '1';
+            actionGroupDefault.blackListLimit = '2';
+            actionGroupDefault.touchDateType = 'now';
+            actionGroupDefault.fold = false;
+            actionGroupDefault.useInform = '0';
+            self.project.actionGroups.push(actionGroupDefault);
+            var nextSerial = actionGroupsLength + 1;
+            inputDateTime('runTime' + nextSerial, 'endTime' + nextSerial);
+            inputTime('time' + nextSerial);
+            console.log("动作组集合list，，，", self.project.actionGroups);
+        }
+
+        /**
+         * 删除动作组
+         *
+         * @param actionGroup
+         */
+        self.deleteActionGroup = function (actionGroup) {
+            if (self.project.actionGroups.length <= 1) {
+                alert('仅有一个，不可删除');
+                return;
+            }
+            var indexOf = self.project.actionGroups.indexOf(actionGroup);
+            if(confirm('确定要删除吗?')) {
+                if (indexOf > -1) {
+                    self.project.actionGroups.splice(indexOf, 1);
+                }
+            }
+        };
+
+
+        self.userRosterType=function(userRosterType,userGroupId){
+            var flag=false;
+            userRosterType.actionGroup.userRosterTypeFlag=true;
+            if (userRosterType.actionGroup.userGroupType == 'RULE_GROUP') {
+                var ruleGroupArray=self.ruleGroup;
+                for(var i=0;i<ruleGroupArray.length;i++){
+                    if(ruleGroupArray[i].dataType==2 && ruleGroupArray[i].rosterId==userGroupId){
+                        flag=true;
+                        break;
+                    }else if(ruleGroupArray[i].dataType==1 && ruleGroupArray[i].rosterId==userGroupId){
+                        flag=false;
+                        break;
+                    }
+                }
+            }
+            if(userRosterType.actionGroup.userGroupType == 'RULE_GROUP'){
+                var actionArray=self.project.actionGroups;
+                for(var i=0;i<actionArray.length;i++){
+                    if(actionArray[i].userGroupId==userGroupId){
+                        if(!flag){
+                            actionArray[i].touchDateType="now";
+                            userRosterType.actionGroup.userRosterTypeFlag=false;
+                            break;
+                        }
+                    }
+                }
+            }
+        };
+
+        /**
+         * 查用户分组名单数据
+         */
+        self.listUserNameList = function (userGroupType) {
+            if(userGroupType==""){
+                self.userRosterTypeFlag=true;
+            }
+            var channelCode = $('#channelCode').text();
+            // alert(channelCode);
+            var url = "${ctx}/ruleConfig/FindChannelGroups?channelCode=" + channelCode + "&rosterType=" + userGroupType;
+            $http.post(url).then(
+                function (data) {
+                    console.log("ll 查用户分组名单数据 ", data);
+                    if (data.data.code == '000') {
+                        self.userNameListList = data.data.resp;
+                        console.log("userNameListList 赋值后。。", self.userNameListList);
+                        if (userGroupType == 'RULE_GROUP') {
+                            self.ruleGroup = data.data.resp;
+                        } else {
+                            self.ruleList = data.data.resp;
+                        }
+                        $('.js-example-basic-single').select2();
+                        // if(userGroupType=="RULE_LIST"){
+                        //     var actionArray=self.project.actionGroups;
+                        //     for(var i=0;i<actionArray.length;i++){
+                        //         if(actionArray[i].userGroupType=="RULE_LIST" && actionArray[i].touchDateType=="realtime"){
+                        //             actionArray[i].touchDateType="now";
+                        //         }
+                        //     }
+                        // }
+                        // if(userGroupType=="RULE_GROUP"){
+                        //     var actionArray=self.project.actionGroups;
+                        //     for(var i=0;i<actionArray.length;i++){
+                        //         var ruleGroupArray=self.ruleGroup;
+                        //         for(var j=0;j<ruleGroupArray.length;j++){
+                        //             if(ruleGroupArray[j].dataType==2 && ruleGroupArray[j].rosterId==actionArray[i].userGroupId){
+                        //                 actionArray[i].touchDateType="realtime";
+                        //                 self.userRosterTypeFlag=true;
+                        //                 break;
+                        //             }else if(ruleGroupArray[j].dataType==1 && ruleGroupArray[j].rosterId==actionArray[i].userGroupId){
+                        //                 actionArray[i].touchDateType="now";
+                        //                 self.userRosterTypeFlag=false;
+                        //                 break;
+                        //             }
+                        //         }
+                        //     }
+                        // }
+                    } else {
+                        alert(data.data.message);
+                    }
+                }, function errorCallback(response) {
+                    alert("查询用户分组名单数据，请求失败了....");
+                }
+            );
+        }
+        // self.listUserNameList();
+
+        /**
+         * 查找nameList对象
+         */
+        self.getUserNameList = function (id) {
+            var target = {};
+            // $.each(self.userNameListList, function (n, nameList) {
+            //     if (nameList.rosterId === id) {
+            //         target = nameList;
+            //         return target;
+            //     }
+            // });
+            if (self.ruleGroup) {
+                var ruleGroupLen = self.ruleGroup.length;
+                for (var i = 0; i < ruleGroupLen; i++) {
+                    if (self.ruleGroup[i].rosterId == id) {
+                        target = self.ruleGroup[i];
+                        return target;
+                    }
+                }
+            }
+            if (self.ruleList) {
+                var ruleListLen = self.ruleList.length;
+                for (var i = 0; i < ruleListLen; i++) {
+                    if (self.ruleList[i].rosterId == id) {
+                        target = self.ruleList[i];
+                        return target;
+                    }
+                }
+            }
+            return target;
+        }
+
+        /**
+         * 在list中查找消息模板对象
+         */
+        self.getMessageTemplate = function(id) {
+            // alert('get message temp');
+            var target = {};
+            $.each(self.messageTemplateList, function (n, messageTemp) {
+                if (messageTemp.id === id) {
+                    target = messageTemp;
+                    console.log("ll getMessageTemp ", target);
+                    return target;
+                }
+            });
+            return target;
+        }
+
+    }]);
+
+</script>
+
+<script>
+    $(function(){
+        $('.js-example-basic-single').select2();
+    })
+</script>
+
+</body>
+</html>

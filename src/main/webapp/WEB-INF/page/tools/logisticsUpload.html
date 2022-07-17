@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>物流信息上传</title>
+    <link href="${staticRoot}/css/bootstrap.min.css" rel="stylesheet">
+    <link href="${staticRoot}/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <!-- FooTable -->
+    <link href="${staticRoot}/css/plugins/footable/footable.core.css" rel="stylesheet">
+
+    <link href="${staticRoot}/css/animate.css" rel="stylesheet">
+    <link href="${staticRoot}/css/style.css?rand=${random}" rel="stylesheet">
+    <link href="${staticRoot}/css/styleT.css?rand=${random}" rel="stylesheet">
+    <link href="${cssRoot}/styleT2.css?rand=${random}" rel="stylesheet">
+    <link href="${staticRoot}/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <link href="${cssRoot}/oms/abtest/modalBox.css" rel="stylesheet">
+    <link href="${cssRoot}/oms/abtest/infor-statistics.css" rel="stylesheet">
+    <link href="${cssRoot}/oms/ruleconfig/jquery.searchableSelect.css" rel="stylesheet" type="text/css">
+
+    <link href="${staticRoot}/css/oms/ruleconfig/ruleconfig.css" rel="stylesheet">
+    <link href="${staticRoot}/css/oms/ruleconfig/myStyle.css" rel="stylesheet">
+    <link href="${cssRoot}/oms/ruleconfig/jquery.searchableSelect2.css" rel="stylesheet" type="text/css">
+    <link href="${staticRoot}/css/oms/ruleconfig/look-page.css" rel="stylesheet">
+    <!--基本样式-->
+    <link href="${staticRoot}/css/oms/ruleconfig/select-mania.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="${cssRoot}/oms/smartmarketing/index.css">
+    <!--自定义样式-->
+    <link href="${staticRoot}/css/oms/ruleconfig/select-mania-theme-darkblue.css" rel="stylesheet" type="text/css">
+    <link href=".${staticRoot}/css/oms/ruleconfig/select-mania-theme-green.css" rel="stylesheet" type="text/css">
+    <link href="${staticRoot}/css/oms/ruleconfig/select-mania-theme-orange.css" rel="stylesheet" type="text/css">
+    <link href="${staticRoot}/css/oms/ruleconfig/select-mania-theme-red.css" rel="stylesheet" type="text/css">
+    <link href="${staticRoot}/css/oms/ruleconfig/select-mania-theme-square.css" rel="stylesheet" type="text/css">
+    <link href="${staticRoot}/css/oms/ruleconfig/look-page1.css" rel="stylesheet">
+    <link href="${cssRoot}/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <link href="${cssRoot}/oms/ruleconfig/jquery.searchableSelect2.css" rel="stylesheet" type="text/css">
+    <style>
+
+
+        #yesInputConfig, #noConfig {
+            height: 12px;
+        }
+
+        .boxb-a ul {
+            float: left;
+            width: 33.3%;
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .boxb-a ul li {
+            margin-top: 20px;
+        }
+
+        #auditing {
+            float: none;
+            margin-left: 0px;
+        }
+
+        #auditing div {
+            float: none;
+        }
+
+        #auditing input {
+            width: 200px;
+            margin-left: 30px;
+            margin-right: 50px
+        }
+
+        .boxb-a div, #saveButton {
+            float: none;
+        }
+
+        #saveButton {
+            margin-left: 0px;
+        }
+
+        .boxb-a select, .boxb-a[type='text'] {
+            width: 150px;
+            margin-left: 15px;
+        }
+
+        .noneConfig {
+            font-weight: 600;
+            font-style: normal;
+            color: #999999;
+            font-size: 18px;
+            text-align: left;
+            line-height: normal;
+        }
+
+        #triggerStrategyContext {
+            margin-left: 0px;
+        }
+    </style>
+    <style>
+        .circleLetter {
+            display: block;
+            width: 40px;
+            height: 40px;
+            background: #8aa0e7;
+            text-align: center;
+            line-height: 40px;
+            color: white;
+            font-size: 16px;
+            border-radius: 100%;
+        }
+        .beautifyInput {
+            width: 300px;
+            height: 30px;
+            border-width: 1px;
+            border-style: solid;
+            border-color: #b6b6b6;
+            border-image: initial;
+            border-radius: 5px;
+        }
+        .beautifyBtn {
+            width: 160px;
+            height: 46px;
+            color: white;
+            border-radius: 5px;
+            background: #8aa0e7;
+            text-align: center;
+            font-size: 16px;
+            margin-top: 10px;
+            line-height: 46px;
+            cursor:pointer;
+        }
+        .bg {
+            height: 30px;
+            line-height: 30px;
+            background: #f4f5f6;
+        }
+        .beautifyBtnBack {
+            width: 75px;
+            height: 40px;
+            line-height: 40px;
+            color: white;
+            border-radius: 5px;
+            color: #8aa0e7;
+            text-align: center;
+            font-size: 16px;
+            border: 1px solid #8aa0e7;
+            margin-top: 10px;
+            margin-left: 18px;
+        }
+        .checkSelect-wrap {
+            display: flex;
+        }
+        .checkSelect {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100px;
+            margin-right: 40px;
+        }
+        .checkSelect input {
+            margin: 0;
+            margin-right: 10px;
+        }
+        .biaoti {
+            color: black;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 20px
+        }
+        #abc {
+            float: none;
+            margin-left: 0px;
+        }
+
+        #abc div {
+            float: none;
+        }
+
+        #abc input {
+            width: 200px;
+            margin-left: 30px;
+            margin-right: 50px
+        }
+
+        .boxb-a ul {
+            float: left;
+            width: 33.3%;
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .boxb-a ul li {
+            margin-top: 20px;
+        }
+
+        #auditing {
+            float: none;
+            margin-left: 0px;
+        }
+
+        #auditing div {
+            float: none;
+        }
+
+        #auditing input {
+            width: 200px;
+            margin-left: 30px;
+            margin-right: 50px
+        }
+
+        .boxb-a div, #saveButton {
+            float: none;
+        }
+
+        #saveButton {
+            margin-left: 0px;
+        }
+
+        .boxb-a select, .boxb-a[type='text'] {
+            width: 150px;
+            margin-left: 15px;
+        }
+
+        .noneConfig {
+            font-weight: 600;
+            font-style: normal;
+            color: #999999;
+            font-size: 18px;
+            text-align: left;
+            line-height: normal;
+        }
+
+        #triggerStrategyContext {
+            margin-left: 0px;
+        }
+        #box {
+            width: 500px;
+            height: 300px;
+            overflow-x: hidden;
+            overflow-y: scroll;
+            line-height: 30px;
+            text-align: center;
+        }
+        #box::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+
+    <script>
+        var globalConfig = {
+            basePath: "${ctx}",
+            staticRoot: "${staticRoot}",
+            loginName: "${Session.sessionUser.loginName}",
+            userName: "${Session.sessionUser.name}"
+        };
+        function swalMsg(msg) {
+            swal({
+                title: "",
+                text: msg,
+                confirmButtonColor: "#1ab394",
+                confirmButtonText: "确定"
+            });
+        }
+
+    </script>
+</head>
+<body ng-app="logistics" ng-controller="logisticsController">
+<div id="wrapper">
+    <div class="header-box">
+        <#include "/common/top.html" encoding="UTF-8" />
+    </div>
+    <nav class="navbar-default navbar-static-side" role="navigation" id="HeadTitle">
+        <div class="sidebar-collapse"  style="height: 675px;overflow-y: scroll;">
+            <#include "/common/left.html" encoding="UTF-8" />
+        </div>
+    </nav>
+</div>
+
+<div class="context-box" style="margin-top: 70px;overflow-y: scroll;">
+    <div class="small-content" >
+        <!-- 第一部分 -->
+        <div class="small-boxb col-md-12" style="height: 80px; line-height: 80px;">
+            <a class="btn btn-success btn-blueW btn-blueWa" ng-click="addLogistics()" style="margin-right: 15px">上传物流信息</a>
+            <a class="btn btn-success btn-blueW btn-blueWa" ng-click="uploadTemplate()" style="margin-right: 15px">下载模板</a>
+        </div>
+        <!-- 第二部分 -->
+        <div class="small-boxb col-md-12">
+            <div class="small-boxb-wrap">
+
+                <div class="boxb-a">
+
+                    <p style="margin-top:20px;">理财渠道:
+                        <select class="chosen-select" style="width:120px;" tabindex="2" ng-model="search.productChannel" ng-change="blackGroup(black.channelCode)"
+                                id='searchproductChannel'>
+                            <!-- <option ng-repeat="x in typeProductChannelList" value="{{x.value}}">{{x.label}}</option> -->
+                            <option value=1>玖富钱包</option>
+                            <option value=0>悟空理财</option>
+                        </select>
+                    </p>
+
+
+                </div>
+                <div class="boxb-b">
+                    <p style="margin-top: -1px;">类型:
+                        <select id="selectTo" class="chosen-select" style="width:120px;"  tabindex="2" ng-model="search.type">
+                            <option value="GIFT_VOUCHER">生活券/礼品券</option>
+                        </select>
+                    </p>
+                </div>
+
+            </div>
+            <div class="boxb-d">
+                <p style="margin-top:20px;">
+                    <a class="btn btn-success btn-rounded btn-blueW btn-blueWa" href="#" ng-click="queryLogisticsList()"><i
+                            class="fa fa-search"></i> <span>搜索</span></a>
+                    <a class="btn btn-success btn-rounded btn-blueW btn-blueWa" href="#" ng-click="resetAttributes()"><i
+                            class="fa fa-refresh"></i> <span>重置</span></a>
+                </p>
+            </div>
+        </div>
+        <!-- 第二部分 -->
+        <!-- 第三部分 -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins" style="margin-top:10px;">
+                    <div class="ibox-content">
+                        <table class="footable table table-stripped" data-page-size="10" data-filter=#filter>
+                            <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>理财渠道</th>
+                                <th>类型</th>
+                                <th>描述</th>
+                                <th>上传数量</th>
+                                <th>成功数量</th>
+                                <th>上传日期</th>
+                                <th>修改时间</th>
+                                <th>上传人</th>
+                                <th>当前状态</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="x in initiativeList">
+                                <td>{{x.id}}</td>
+                                <td>{{x.productChannel == 1 && '玖富钱包' || x.productChannel == 0 && '悟空理财'}}</td>
+                                <td>{{x.type == 'GIFT_VOUCHER' && '生活/礼品券'}}</td>
+                                <td>{{x.desc}}</td>
+                                <td>{{x.upCount}}</td>
+                                <td>{{x.sucessCount}}</td>
+                                <td>{{x.uploadTime}}</td>
+                                <td>{{x.updateTime}}</td>
+                                <td>{{x.uploadUserName}}</td>
+                                <td>{{x.status == 1 && '上传成功' || x.status == 2 && '上传中' || x.status == 3 && '上传失败'}}</td>
+                                <td>
+                                    <a class="look-start" ng-show="{{x.status == 1}}" ng-click="exportData(x.fileUrl)">导出数据</a>
+                                    <a class="look-start"  ng-click="reUpload(x)">重新上传</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="bottom-page">
+                            <div class="bottom-pagea">
+                                <select style="width:58px;height:23px;margin-top: 20px;" ng-model="search.pageSize"
+                                        ng-change="queryLogisticsList()">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                </select>
+                            </div>
+                            <div class="bottom-pageb">
+                                <i class="fa fa-step-backward" ng-click="queryLogisticsList()"></i>
+                                <i style="font-size:16px;" class="fa fa-caret-left"
+                                   ng-click="queryLogisticsList(search.pageNo-1)"></i>
+                                <p>第<span class="pageN" ng-model="search.pageNo">{{search.pageNo}}</span>共<span>{{search.pageCount}}</span>页
+                                </p>
+                                <i style="font-size:16px;" class="fa fa-caret-right"
+                                   ng-click="queryLogisticsList(search.pageNo+1)"></i>
+                                <i style="margin-left:8px;" class="fa fa-step-forward"
+                                   ng-click="queryLogisticsList(search.pageCount)"></i>
+                                <i class="fa fa-refresh" ng-click="queryLogisticsList(search.pageNo)"></i>
+                            </div>
+
+                            <div class="bottom-pagec">
+                                <p>显示<span>{{(search.pageNo-1)*search.pageSize+1}}</span>到{{search.pageNo*search.pageSize >= search.totalRowSize && search.totalRowSize || search.pageNo*search.pageSize < search.totalRowSize && search.pageNo*search.pageSize || search.totalRowSize < 1&& 0 }}条，共<span>{{search.totalRowSize}}</span>记录
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="add-start-bg" id="addLogisticsShow">
+        <div class="add-start">
+            <h1 align="center">物流信息上传</h1>
+            <div class="start-a">
+                <p>理财渠道:</p>
+                <select ng-model="add.productChannel" ng-disabled="isUpdate == 0"style="width: 100px;" >
+                    <option value='0'>悟空理财</option>
+                    <option value='1'>玖富钱包</option>
+                </select>
+            </div>
+            <div class="start-a">
+                <p>信息类型:</p>
+                <select ng-model="add.type" style="width: 100px;" ng-disabled="isUpdate == 0">
+                    <option  value="GIFT_VOUCHER">生活券/礼品券</option>
+                </select>
+            </div>
+             <br><br>
+                <div class="start-a">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>*</b>
+                    <input id="updateMemberFileInput" name="excelName" ng-model="add.fileUrl" style="width:220px;" type="text">
+                    <a href="javascript:void(0)" onclick="$('#memberFile').click()" class="btn btn-success btn-rounded btn-blueWa"><span>上传</span></a><br/>
+                    <input style="height:13px;visibility:hidden;" type="file" class="file" id="memberFile" name="memberFile" />
+
+                </div>
+            <div>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;文件描述 <input name="excelName" style="width:220px;" type="text" ng-model="add.desc" ng-disabled="isUpdate == 0">
+
+            </div>
+            <div class="bottom-btn">
+                <a class="btn btn-danger btn-rounded bottom-btna start-btna" id="screenTJ" href="#"
+                   ng-click="commitAdd()">确定</a>
+                <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#"
+                   ng-click="close()">关闭</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script src="${staticRoot}/js/angular/angular.min.js"></script>
+
+<script src="${staticRoot}/js/jquery-2.1.1.js"></script>
+<script src="${staticRoot}/js/bootstrap.min.js"></script>
+<script src="${staticRoot}/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="${staticRoot}/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="${staticRoot}/js/plugins/jeditable/jquery.jeditable.js"></script>
+
+<script src="${staticRoot}/js/plugins/jquery-ui/jquery-ui.min.js"></script>
+
+<script type="text/javascript" src="${staticRoot}/js/plugins/sweetalert/sweetalert.min.js"></script>
+<script src="${staticRoot}/js/plugins/laydate/laydate.js"></script>
+
+
+
+
+
+
+<!-- &lt;!&ndash; Custom and plugin javascript &ndash;&gt; -->
+<script src="${staticRoot}/js/inspinia.js"></script>
+<script src="${staticRoot}/js/plugins/pace/pace.min.js"></script>
+<script src="${staticRoot}/js/plugins/fileUpload/jquery.fileupload.js"></script>
+<script src="${staticRoot}/js/plugins/fileUpload/jquery.iframe-transport.js"></script>
+<script src="${staticRoot}/js/plugins/fileUpload/jquery.ui.widget.js"></script>
+<script src="${staticRoot}/js/plugins/fileUpload/jquery.fileupload-process.js"></script>
+<script src="${staticRoot}/js/plugins/fileUpload/jquery.fileupload-validate.js"></script>
+
+<!-- &lt;!&ndash; Data Tables &ndash;&gt; -->
+<script src="${staticRoot}/js/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="${staticRoot}/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="${staticRoot}/js/plugins/dataTables/dataTables.responsive.js"></script>
+<script src="${staticRoot}/js/plugins/dataTables/dataTables.tableTools.min.js"></script>
+<script type="text/javascript" src="${staticRoot}/js/plugins/sweetalert/sweetalert.min.js"></script>
+<script src="${staticRoot}/js/DateUtil.js"></script>
+<!-- &lt;!&ndash; Custom and plugin javascript &ndash;&gt; -->
+<!-- &lt;!&ndash;  日期控件  &ndash;&gt; -->
+<script src="${staticRoot}/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+<script src="${staticRoot}/js/plugins/datapicker/bootstrap-datepicker.zh-CN.min.js"></script>
+<!-- Custom and plugin javascript -->
+<!-- &lt;!&ndash; 提示弹窗 &ndash;&gt; -->
+<script type="text/javascript" src="${staticRoot}/js/oms/ruleconfig/ruleconfig.js?rand=${random}"></script>
+<script src="${staticRoot}/js/biz/tools/logisticsUpload.js"></script>
+<!-- 插件select -->
+<script type="text/javascript" src="${staticRoot}/js/select-mania.js"></script>
+<script src="${jsRoot}/oms/ruleconfig/jquery.searchableSelect.js"></script>
+<script src="${jsRoot}/plugins/jeditable/select2.full.min.js"></script>
+<script src="${jsRoot}/plugins/select2/select2.full.min.js"></script>
+<script src="${jsRoot}/oms/ruleconfig/jquery.searchableSelect.js"></script>
+<script type="text/javascript" src="${staticRoot}/js/plugins/ajaxfileupload/ajaxfileupload.js"></script>
+<script type="text/javascript">
+</script>
+<script type="text/javascript">
+
+    // **************************************************************************
+    // ************************    分组明细   ************************************
+    // **************************************************************************
+    //  分组明细
+
+    // 刷新 默认进来渲染 对应的分组
+    var navHight = $('.navbar-static-side').height()
+    $('.navbar-static-side').css('height', navHight - 60)
+    $('.content-box').css('height', navHight - 60);
+    $("#menus li").removeClass("active");
+    $("#tools li").removeClass("active");
+    $("#tools_last_li").addClass("active");
+    $("#tools").addClass("collapse in");
+    $("#Logistics_menus").addClass("active");
+
+    // 删除的时候
+    /*  $(".divBox-wrap").on("click"," .bot-gorop .remove",function(){
+       $(this).parents('.divBox').remove()
+     }); */
+
+
+
+</script>
+</body>
+</html>

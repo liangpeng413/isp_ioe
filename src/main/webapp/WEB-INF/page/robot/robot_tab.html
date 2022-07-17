@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>机器人tab页面</title>
+    <link href="${cssRoot}/bootstrap.min.css" rel="stylesheet">
+    <link href="${cssRoot}/../font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <!-- FooTable -->
+    <link href="${cssRoot}/plugins/footable/footable.core.css" rel="stylesheet">
+
+    <link href="${cssRoot}/animate.css" rel="stylesheet">
+    <link href="${cssRoot}/style.css?rand=${random}" rel="stylesheet">
+    <link href="${cssRoot}/styleT.css?rand=${random}" rel="stylesheet">
+    <script>
+        var globalConfig = {
+            basePath: "${ctx}",
+            staticRoot: "${staticRoot}",
+            loginName: "${Session.sessionUser.name}",
+            loginId: "${Session.sessionUser.loginName}"
+        };
+    </script>
+</head>
+<body ng-app="robot_Controller" ng-controller="robot_controller">
+<div id="wrapper">
+    <div class="header-box">
+        <#include "/common/top.html" encoding="UTF-8" />
+    </div>
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse"  style="height: 675px;overflow-y: scroll;">
+            <#include "/common/left.html" encoding="UTF-8" />
+        </div>
+    </nav>
+</div>
+<div class="content-box">
+    <div class="small-content">
+        <!-- 第一部分 -->
+        <div class="small-boxb col-md-12" style="height: 80px; line-height: 80px;">
+            <a class="btn btn-success btn-blueW btn-blueWa" href="javascript:void(0)" style="margin-right: 15px" id="addTab" ng-click="addTab()">新增tab</a>
+            <a class="btn btn-success btn-blueW btn-blueWa" href="javascript:void(0)" style="margin-right: 15px" ng-click="getPriority()">优先级管理</a>
+
+        </div>
+        <!-- 第二部分 -->
+        <div class="small-boxb col-md-12">
+            <div class="small-boxb-wrap">
+                <div class="boxb-a">
+                    <p style="margin-top:20px;">位置:
+                        <select class="chosen-select" style="width:120px;" tabindex="0" ng-model="search.tabPosition"
+                                id='searchproductChannel' ng-change="changeTabPosition()">
+                            <!-- <option ng-repeat="x in typeProductChannelList" value="{{x.value}}">{{x.label}}</option> -->
+                            <option value="">全部</option>
+                            <option value="CONTENT_TOP">内容页顶部</option>
+                            <option value="CONTENT_RECOMMAND">内容页推荐</option>
+                            <option value="LIFE_RECOMMAND">生活页推荐</option>
+                            <option value="LI_CAI_RECOMMAND">理财页推荐</option>
+                        </select>
+                    </p>
+
+
+                </div>
+                <div class="boxb-b">
+                    <p>生效状态:
+                        <select class="chosen-select" style="width:120px;" tabindex="0" ng-model="search.valid">
+                            <option value="">全部</option>
+                            <option value="1">生效</option>
+                            <option value="0">失效</option>
+                        </select>
+                    </p>
+                </div>
+            </div>
+            <div class="boxb-d" style="margin-top: 20px;">
+                <p>
+                    <a class="btn btn-success btn-rounded btn-blueW btn-blueWa" href="#" ng-click="querySmartRobotList()"><i
+                            class="fa fa-search"></i> <span>搜索</span></a>
+                    <a class="btn btn-success btn-rounded btn-blueW btn-blueWb" href="#" ng-click="reset()"><i
+                            class="fa fa-refresh"></i> <span>重置</span></a>
+                </p>
+            </div>
+        </div>
+        <!-- 第二部分 -->
+        <!-- 第三部分 -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins" style="margin-top:10px;">
+                    <div class="ibox-content">
+                        <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+                            <thead>
+                            <tr>
+                                <!-- <th></th> -->
+                                <th>序号</th>
+                                <th>渠道</th>
+                                <th>tab位置</th>
+                                <th>tab名称</th>
+                                <th>生效状态</th>
+                                <!--  <th>图片</th> -->
+                                <th>操作</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="x in initiativeList">
+                                 <td>{{x.id}}</td>
+                                <td>悟空机器人</td>
+                                <td>{{x.tabPosition == 'CONTENT_TOP' && '内容页顶部' || x.tabPosition == 'CONTENT_RECOMMAND' && '内容页推荐' || x.tabPosition == 'LIFE_RECOMMAND' && '生活页推荐'|| x.tabPosition == 'LI_CAI_RECOMMAND' && '理财页推荐'}}</td>
+                                <td>{{x.tabName}}</td>
+                                <td>{{x.valid == 1 && '生效' || '失效'}}</td>
+                                <td>
+                                    <span class="look-start" ng-click="checkRobotTabInfo(x)">查看</span>
+                                    <span class="modify-start" ng-click="updateTabConfig(x.id,1)">修改</span>
+                                    <!-- <span class="take-start" ng-show="x.valid==0" ng-click="start(x.id,x.valid)">生效</span>
+                                    <span class="take-start" ng-show="x.valid==1" ng-click="start(x.id,x.valid)">失效</span> -->
+                                    <!--<span class="take-start" ng-click="preOperate(3,x)">{{x.delFlag=='T'?"生效":"失效"}}</span>-->
+                                    <a class="take-start" ng-show="true" ng-click="effectStatus(x.id,x.valid)">{{x.valid == 1 && '失效' ||x.valid == 0 && '生效'}}</a>
+                                    <!--<a src="javaScript:void(0);" class="take-start" ng-click="export(x)">导出</a>-->
+
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="bottom-page">
+                            <div class="bottom-pagea">
+                                <select style="width:58px;height:23px;" ng-model="search.pageSize"
+                                        ng-change="querySmartRobotList()">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                </select>
+                            </div>
+                            <div class="bottom-pageb">
+                                <i class="fa fa-step-backward" ng-click="querySmartRobotList(1)"></i>
+                                <i style="font-size:16px;" class="fa fa-caret-left"
+                                   ng-click="querySmartRobotList(search.pageNo-1)"></i>
+                                <p>第<span class="pageN" ng-model="search.pageNo">{{search.pageNo}}</span>共<span>{{search.pageCount}}</span>页
+                                </p>
+                                <i style="font-size:16px;" class="fa fa-caret-right"
+                                   ng-click="querySmartRobotList(search.pageNo+1)"></i>
+                                <i style="margin-left:8px;" class="fa fa-step-forward"
+                                   ng-click="querySmartRobotList(search.pageCount)"></i>
+                                <i class="fa fa-refresh" ng-click="querySmartRobotList(search.pageNo)"></i>
+                            </div>
+
+                            <div class="bottom-pagec">
+                                <p>显示<span>{{(search.pageNo-1)*search.pageSize+1}}</span>到{{search.pageNo*search.pageSize > search.totalRowSize && search.totalRowSize || search.pageNo*search.pageSize < search.totalRowSize && search.pageNo*search.pageSize || search.totalRowSize < 1&& 0 }}条，共<span>{{search.totalRowSize}}</span>记录
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!-- 第三部分 -->
+
+        <!--tab优先级排序-->
+        <div class="priority-ranking" id="showPriority">
+            <div class="priority-ranking-small">
+                <h1 align="center">tab优先级排序</h1>
+                <div class="ranking-small">
+                    <div class="ranking-smalla">优先级排序
+                        <i id="downMove" class="fa fa-caret-down " ng-click="move('X')"></i>
+                        <i id="upMove" class="fa fa-caret-up" ng-click="move('S')"></i>
+                        <!--   <i class="fa fa-times" ng-click="remove()"></i> -->
+                        <p><span style="color:#ff2327;">*</span>编号越大，优先级越低</p>
+                    </div>
+                    <div class="ranking-smallb">
+                        <!--  <table class="footable table table-stripped"  style="border-collapse: collapse;" data-page-size="8" data-filter=#filter> -->
+                        <table class="footable" >
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <td class="tdNumber">优先级编号</td>
+                                <td>tab名称</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="x in sortList" style="border-collapse: collapse;">
+                                <td><input type="checkbox" class="moveCheckbox iptCheck"  value="{{$index+1}}"></td>
+                                <td class="tdNumber"><input type="hidden" ng-model="hehe.a">{{$index+1}}</td>
+                                <td><input type="hidden" ng-model="hehe.b">{{x.tabName}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="bottom-btn">
+                    <a class="btn btn-danger btn-rounded bottom-btna" href="#" ng-click="moveCommit()">确定</a>
+                    <a class="btn btn-danger btn-rounded bottom-btnb" href="#" ng-click="moveCancel()">取消</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="take-start-box" id="showInvalid">
+            <div class="take-start-small">
+                <p align="center">您确定要{{effectOrInvalid.valid == 1 && '失效' || effectOrInvalid.valid == 0 && '生效'}}此tab配置吗？</p>
+                <div class="bottom-btn">
+                    <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#"
+                       ng-click="confirmInvalid()">确定</a>
+                    <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#"
+                       onclick="$('#showInvalid').hide();">取消</a>
+                </div>
+            </div>
+        </div>
+
+    <!-- 添加 -->
+    <div class="add-start-bg" id="addShow">
+        <div class="add-start">
+            <h1 align="center">新建tab</h1>
+            <div class="start-a">
+                <p>*tab位置:</p>
+                <select ng-model="add.tabPosition" id='productChannel'>
+                    <option value="">--请选择--</option>
+                    <option value="CONTENT_TOP">内容页顶部</option>
+                    <option value="CONTENT_RECOMMAND">内容页推荐</option>
+                    <option value="LIFE_RECOMMAND">生活页推荐</option>
+                    <option value="LI_CAI_RECOMMAND">理财页推荐</option>
+                </select>
+            </div>
+            <div class="start-a">
+                <p>*tab名称:</p>
+                <input style="width:368px;" type="text" maxlength="30" placeholder="30字符以内" ng-model="add.tabName">
+            </div>
+
+            <div class="start-a" ng-show="add.tabPosition =='CONTENT_TOP'">
+                <p>*关联页面类型</p>
+                <select ng-model="add.associationTab" id='tjCdMethod' ng-change="refresh()">
+                    <option value="1">热门</option>
+                    <option value="2">常规</option>
+                </select>
+            </div>
+
+            <div class="start-a" ng-show="add.tabPosition =='CONTENT_RECOMMAND'">
+                <p>*关联顶部tab</p>
+                <select ng-model="add.associationTopTab"  >
+                       <option ng-repeat="x in allTabTopConfig" value="{{x.id}}">{{x.tabName}}</option>
+                </select>
+            </div>
+
+
+
+
+                <div class="start-a">
+                    <p>图片:</p>
+                    <input type="file" id="image" name="file" size="1"
+                           style="position:absolute;display: none;" >
+                    <input style="width:180px;" id="file" type="text">
+                    <a class="btn btn-success btn-rounded btn-blueWa" id="up" href="#" ng-click="uploadIcon()">点击上传</a>
+
+                </div>
+
+            <div class="bottom-btn">
+                <a class="btn btn-danger btn-rounded bottom-btna start-btna" id="screenTJ" href="#"
+                   ng-click="commitAdd()">添加</a>
+                <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#"
+                   ng-click="close()">关闭</a>
+            </div>
+        </div>
+
+    </div>
+
+
+        <!--修改-->
+        <div class="add-start-bg" id="updateShow">
+            <div class="add-start">
+                <h1 align="center">修改tab</h1>
+                <div class="start-a">
+                    <p>*tab位置:</p>
+                    {{tabDetail.tabPosition == 'CONTENT_TOP' && '内容页顶部' || tabDetail.tabPosition == 'CONTENT_RECOMMAND' && '内容页推荐' || tabDetail.tabPosition == 'LIFE_RECOMMAND' && '生活页推荐'}}
+                </div>
+                <div class="start-a">
+                    <p>*tab名称:</p>
+                    <input style="width:368px;" type="text" maxlength="30" placeholder="30字符以内" ng-model="tabDetail.tabName">
+                </div>
+
+                <div class="start-a" ng-show="tabDetail.tabPosition =='CONTENT_TOP'">
+                    <p>*关联页面类型:</p>
+                    {{tabDetail.associationTabName}}
+                </div>
+
+                <div class="start-a" ng-show="tabDetail.tabPosition == 'CONTENT_RECOMMAND'">
+                    <p>*关联顶部tab:</p>
+                    {{tabDetail.associationTopTabName}}
+                </div>
+
+
+
+
+                <div class="start-a">
+                    <p>图片地址:</p>
+                    <input type="file" id="updateImage" name="file" size="1"
+                           style="position:absolute;display: none;" >
+                    <input style="width:180px;" id="updateFile" type="text" ng-model="tabDetail.tabIcon">
+                    <a class="btn btn-success btn-rounded btn-blueWa" id="upUpdate" href="#" ng-click="uploadUpdateIcon()">点击上传</a>
+
+                </div>
+
+                <div class="bottom-btn">
+                    <a class="btn btn-danger btn-rounded bottom-btna start-btna"  href="#"
+                       ng-click="commitUpdate(tabDetail)">修改</a>
+                    <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#"
+                       ng-click="closeUpdate()">关闭</a>
+                </div>
+            </div>
+
+        </div>
+
+        <!--查看-->
+        <div class="add-start-bg" id="lookUp">
+            <div class="add-start">
+                <h1 align="center">查看tab信息</h1>
+                <div class="start-a">
+                    <p>tab位置:</p>
+                    {{tabDetail.tabPosition == 'CONTENT_TOP' && '内容页顶部' || tabDetail.tabPosition == 'CONTENT_RECOMMAND' && '内容页推荐' || tabDetail.tabPosition == 'LIFE_RECOMMAND' && '生活页推荐' || tabDetail.tabPosition == 'LI_CAI_RECOMMAND' && '理财页推荐'}}
+                </div>
+                <div class="start-a">
+                    <p>tab名称:</p>
+                    {{tabDetail.tabName}}
+                </div>
+
+                <div class="start-a" ng-show="tabDetail.tabPosition =='CONTENT_TOP'">
+                    <p>关联页面类型:</p>{{tabDetail.associationTabName}}
+
+                </div>
+
+                <div class="start-a" ng-show="tabDetail.tabPosition == 'CONTENT_RECOMMAND'">
+                    <p>关联顶部tab:</p>
+                    {{tabDetail.associationTopTabName}}
+                </div>
+
+
+
+
+                <div class="start-a">
+                    <p>图片地址:</p>
+                    {{tabDetail.tabIcon}}
+
+                </div>
+
+                <div class="bottom-btn">
+                    <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#"
+                       ng-click="closeCheck()">关闭</a>
+                </div>
+            </div>
+
+        </div>
+</div>
+</div>
+
+
+<!-- 修改详情 -->
+<!-- 失效详情 -->
+<div class="take-start-box" id="showStart">
+    <div class="take-start-small">
+        <p align="center">您确定要失效此消息模板吗？</p>
+        <div class="bottom-btn">
+            <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#"
+               ng-click="confirmshixiao()">确定</a>
+            <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#"
+               onclick="$('#showStart').hide();">取消</a>
+        </div>
+    </div>
+</div>
+</div>
+<script src="${jsRoot}/angular/angular.min.js"></script>
+<script src="${jsRoot}/plugins/laydate/laydate.js"></script>
+<script src="${jsRoot}/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- Mainly scripts -->
+<script src="${jsRoot}/jquery-2.1.1.js"></script>
+<script src="${jsRoot}/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="${jsRoot}/bootstrap.min.js"></script>
+<script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="${jsRoot}/plugins/jeditable/jquery.jeditable.js"></script>
+<script src="${jsRoot}/oms/robot/robotPage.js"></script>
+<!-- Data Tables -->
+<script src="${jsRoot}/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.responsive.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.tableTools.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="${jsRoot}/inspinia.js"></script>
+<script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.iframe-transport.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.ui.widget.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-process.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-validate.js"></script>
+<script src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+<script src="${jsRoot}/biz/offlineactivitymanage/auditOfflineActivity.js?rand=${random}"></script>
+<script type="text/javascript" src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+<script src="${jsRoot}/plugins/sweetalert/sweetalert.min.js"></script>
+<script>
+
+
+    var navHight = $('.navbar-static-side').height();
+    $('.navbar-static-side').css('height', navHight - 60);
+    $('.content-box').css('height', navHight - 60);
+    // $("#activity_manager").addClass("collapse in");
+
+
+    function change(str) {
+        alert(str);
+
+    }
+    // var queryOnlineTime = laydate({
+    //     elem: '#queryOnlineTime',
+    //     istime: true,
+    //     format: 'YYYY-mm-DD hh:mm:ss',
+    //     event: 'click'
+    // })
+    //
+    // var queryOfflineTime = laydate({
+    //     elem: '#queryOfflineTime',
+    //     istime: true,
+    //     format: 'YYYY-mm-DD hh:mm:ss',
+    //     event: 'click'
+    // })
+    //
+
+
+</script>
+</body>
+</html>
