@@ -22,58 +22,6 @@
     <!--下拉选择-->
     <link href="${cssRoot}/../font-awesome/css/select2.min.css" rel="stylesheet">
     <link rel="stylesheet" href="${cssRoot}/plugins/select2/select2.min.css">
-    <style type="text/css">
-        .boxb-a > div {
-            margin: 20px 0;
-        }
-
-        #addPage .small-boxb div {
-            float: none
-        }
-
-        #addPage .small-boxb div label {
-            vertical-align: top;
-            margin-right: 10px;
-        }
-
-        #add-task-rule > div {
-            margin: 10px 0;
-        }
-        .addShowType div{
-            display:flex;
-            margin-left: 0;
-            align-items: center;
-        }
-        .addShowType div select{
-            margin-top:10px;
-        }
-        .addShowType div span{
-            margin: 5px 0 0 15px;
-        }
-        .addShowType div input{
-            margin-top:7px;
-        }
-        .addShowType div p{
-            margin: 0;
-        }
-    </style>
-    <script>
-        var globalConfig = {
-            basePath: "${ctx}",
-            staticRoot: "${staticRoot}",
-        };
-
-        function swalMsg(msg) {
-            swal({
-                title: "",
-                text: msg,
-                confirmButtonColor: "#1ab394",
-                confirmButtonText: "确定"
-            });
-        }
-
-    </script>
-
 
     <script src="${jsRoot}/jquery-2.1.1.js"></script>
     <script src="${jsRoot}/bootstrap.min.js"></script>
@@ -111,6 +59,23 @@
     <!--<script src="${jsRoot}/oms/taskQuery.js"></script>-->
     <script type="text/javascript" src="${jsRoot}/ioe/scripts/jiaobook.js"></script>
 
+    <script>
+        var globalConfig = {
+            basePath: "${ctx}",
+            staticRoot: "${staticRoot}",
+        };
+
+        function swalMsg(msg) {
+            swal({
+                title: "",
+                text: msg,
+                confirmButtonColor: "#1ab394",
+                confirmButtonText: "确定"
+            });
+        }
+
+    </script>
+
     <style>
         .left-box{
             height: 100%;
@@ -121,6 +86,41 @@
             background: #304156;
             float: left;
             border-color: #e8eaec;
+        }
+    </style>
+    <style type="text/css">
+        .boxb-a > div {
+            margin: 20px 0;
+        }
+
+        #addPage .small-boxb div {
+            float: none
+        }
+
+        #addPage .small-boxb div label {
+            vertical-align: top;
+            margin-right: 10px;
+        }
+
+        #add-task-rule > div {
+            margin: 10px 0;
+        }
+        .addShowType div{
+            display:flex;
+            margin-left: 0;
+            align-items: center;
+        }
+        .addShowType div select{
+            margin-top:10px;
+        }
+        .addShowType div span{
+            margin: 5px 0 0 15px;
+        }
+        .addShowType div input{
+            margin-top:7px;
+        }
+        .addShowType div p{
+            margin: 0;
         }
     </style>
 
