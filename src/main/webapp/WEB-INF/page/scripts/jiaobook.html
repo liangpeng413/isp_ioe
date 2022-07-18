@@ -196,7 +196,7 @@
                                 <td>{{v.scriptUrl}}</td>
                                 <td>{{v.scriptType == 1 ? "脚本" : v.scriptType == 2 ? "分享" : v.scriptType == 3 ?"流程" :""}}</td>
                                 <td>{{v.createUserName}}</td>
-                                <td>{{v.createTime}}</td>
+                                <td>{{v.createTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
                                 <td>{{v.usageCount}}</td>
                                 <td>
                                     <a href="{{v.scriptUrl}}" class="look-start" ng-click="checkHandel(v.id)">查看</a>
@@ -241,7 +241,7 @@
         </div>
         <!-- 数据展示部分结束 -->
     </div>
-    <div class="take-start-box" id="channelShow">
+        <div class="take-start-box" id="channelShow">
         <div class="take-start-small">
             <p>添加</p>
             理财渠道：
@@ -259,7 +259,7 @@
         </div>
     </div>
 
-    <div class="modify-start-box" id="showAdd">
+        <div class="modify-start-box" id="showAdd">
         <div class="add-start">
             <h1 align="center">创建脚本</h1>
             <div class="start-a">
@@ -297,8 +297,6 @@
         </div>
 
     </div>
-
-
-</div>
+    </div>
 </body>
 </html>
