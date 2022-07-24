@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>脚本</title>
+    <link href="${cssRoot}/bootstrap.min.css" rel="stylesheet">
+    <link href="${staticRoot}/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <!-- FooTable -->
+    <link href="${cssRoot}/plugins/footable/footable.core.css" rel="stylesheet">
+
+    <link href="${cssRoot}/animate.css" rel="stylesheet">
+    <link href="${cssRoot}/style.css?rand=${random}" rel="stylesheet">
+    <link href="${cssRoot}/styleT.css?rand=${random}" rel="stylesheet">
+    <link href="${staticRoot}/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+
+    <link href="${cssRoot}/oms/abtest/infor-statistics.css" rel="stylesheet">
+    <link href="${cssRoot}/oms/ruleconfig/jquery.searchableSelect.css" rel="stylesheet" type="text/css">
+
+    <!--下拉选择-->
+    <link href="${cssRoot}/../font-awesome/css/select2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="${cssRoot}/plugins/select2/select2.min.css">
+
+    <script src="${jsRoot}/jquery-2.1.1.js"></script>
+    <script src="${jsRoot}/bootstrap.min.js"></script>
+    <script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="${jsRoot}/plugins/jeditable/jquery.jeditable.js"></script>
+
+    <script src="${jsRoot}/plugins/jquery-ui/jquery-ui.min.js"></script>
+    <script src="${jsRoot}/angular/angular.min.js"></script>
+    <script type="text/javascript" src="${staticRoot}/js/plugins/sweetalert/sweetalert.min.js"></script>
+    <script src="${jsRoot}/plugins/laydate/laydate.js"></script>
+
+
+
+    <!-- Custom and plugin javascript -->
+    <script src="${jsRoot}/inspinia.js"></script>
+    <script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+    <script src="${jsRoot}/plugins/fileUpload/jquery.fileupload.js"></script>
+    <script src="${jsRoot}/plugins/fileUpload/jquery.iframe-transport.js"></script>
+    <script src="${jsRoot}/plugins/fileUpload/jquery.ui.widget.js"></script>
+    <script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-process.js"></script>
+    <script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-validate.js"></script>
+
+    <!-- Data Tables -->
+    <script src="${jsRoot}/plugins/dataTables/jquery.dataTables.js"></script>
+    <script src="${jsRoot}/plugins/dataTables/dataTables.bootstrap.js"></script>
+    <script src="${jsRoot}/plugins/dataTables/dataTables.responsive.js"></script>
+    <script src="${jsRoot}/plugins/dataTables/dataTables.tableTools.min.js"></script>
+    <script src="${jsRoot}/DateUtil.js"></script>
+    <!-- Custom and plugin javascript -->
+    <script type="text/javascript" src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+
+
+    <!--自定义js-->
+    <!--<script src="${jsRoot}/oms/taskQuery.js"></script>-->
+    <script type="text/javascript" src="${jsRoot}/ioe/cookbook/create.js"></script>
+
+    <script>
+        var globalConfig = {
+            basePath: "${ctx}",
+            staticRoot: "${staticRoot}",
+        };
+
+        function swalMsg(msg) {
+            swal({
+                title: "",
+                text: msg,
+                confirmButtonColor: "#1ab394",
+                confirmButtonText: "确定"
+            });
+        }
+
+    </script>
+
+    <style>
+        .left-box{
+            height: 100%;
+            z-index: 2001;
+            position: absolute;
+            width: 195px;
+            transition: all 0.5s;
+            background: #304156;
+            float: left;
+            border-color: #e8eaec;
+        }
+    </style>
+    <style type="text/css">
+        .boxb-a > div {
+            margin: 20px 0;
+        }
+
+        #addPage .small-boxb div {
+            float: none
+        }
+
+        #addPage .small-boxb div label {
+            vertical-align: top;
+            margin-right: 10px;
+        }
+
+        #add-task-rule > div {
+            margin: 10px 0;
+        }
+        .addShowType div{
+            display:flex;
+            margin-left: 0;
+            align-items: center;
+        }
+        .addShowType div select{
+            margin-top:10px;
+        }
+        .addShowType div span{
+            margin: 5px 0 0 15px;
+        }
+        .addShowType div input{
+            margin-top:7px;
+        }
+        .addShowType div p{
+            margin: 0;
+        }
+    </style>
+
+</head>
+<body ng-app="myApp" ng-controller="rootController">
+    <div id="wrapper">
+        <div class="header-box">
+            <#include "/common/top.html" encoding="UTF-8" />
+        </div>
+        <div class="left-box">
+            <div class="sidebar-collapse" style="height: 100%;overflow-y: scroll;">
+                <#include "/common/left.html" encoding="UTF-8" />
+            </div>
+        </div>
+    </div>
+    <div class="content-box">
+        <div class="small-content">
+            <!-- 搜索部分开始 -->
+            <div class="small-boxb col-md-12">
+                <div class="boxb-b">
+                    <p>商品id：
+                        <input type="text" ng-model="search.skuCode" maxlength="25" style="width: 160px;">
+                    </p>
+                </div>
+                <div class="boxb-b">
+                    <p>用户id：
+                        <input type="text" ng-model="search.memberId" maxlength="25" style="width: 160px">
+                    </p>
+                </div>
+                <div class="boxb-b">
+                    <p>菜谱id：
+                        <input type="text" ng-model="search.cookbookId" maxlength="25" style="width: 160px">
+                    </p>
+                </div>
+                <div class="boxb-b">
+                    <p>类型：
+                        <select class="chosen-select" ng-model="search.associationType" style="width:160px;" ng-options="x.key as x.value for x in cookbookTypeList">
+                            <option value="">全部</option>
+                        </select>
+                    </p>
+                </div>
+                <div class="boxb-b">
+                    <p>
+                        <a class="btn btn-success btn-rounded btn-blueW btn-blueWa" ng-click="searchPage(1)" href="javascript:void(0)">
+                            <i class="fa fa-search"></i> <span>搜索</span>
+                        </a>
+                        <a href="javascript:void(0)" ng-click="addShow()" class="btn btn-danger btn-rounded btn-gradient btn-gradienta">
+                            <i class="fa fa-plus-square-o"></i><span>添加</span>
+                        </a>
+                    </p>
+                </div>
+            </div>
+            <!-- 搜索部分结束 -->
+
+            <!-- 数据展示部分开始 -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox float-e-margins" style="margin-top:10px;">
+                        <div class="ibox-content">
+                            <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+                                <thead>
+                                <tr>
+                                    <th>序号</th>
+                                    <th>关联类型</th>
+                                    <th>商品id</th>
+                                    <th>用户id</th>
+                                    <th>菜谱id</th>
+                                    <th>创建人</th>
+                                    <th>创建时间</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="v in cookbookList">
+                                    <td>{{$index+1}}</td>
+                                    <td>{{v.associationType== 1 ? "脚本" : v.scriptType == 2 ? "分享" : v.scriptType == 3 ?"流程" :""}}</td>
+                                    <td>{{v.skuCode}}</td>
+                                    <td>{{v.memberId}}</td>
+                                    <td>{{v.cookbookId}}</td>
+                                    <td>{{v.createUserName}}</td>
+                                    <td>{{v.createTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="bottom-page">
+                                <div class="bottom-pagea">
+                                    <select style="width:58px;height:23px;" name="pageSize" ng-model="search.pageSize"
+                                            ng-change="searchPage()">
+                                        <option value="5">5</option>
+                                        <option value="10">10</option>
+                                        <option value="15">15</option>
+                                    </select>
+                                </div>
+                                <div class="bottom-pageb">
+                                    <i class="fa fa-step-backward" ng-click="searchPage()"></i>
+                                    <i style="font-size:16px;" class="fa fa-caret-left"
+                                       ng-click="searchPage(search.pageNo-1)"></i>
+                                    <p>第<span class="pageN" name="currentPage"
+                                              ng-model="search.pageNo">{{search.pageNo}}</span>共<span>{{search.lastPage}}</span>页
+                                    </p>
+                                    <i style="font-size:16px;" class="fa fa-caret-right"
+                                       ng-click="searchPage(search.pageNo+1)"></i>
+                                    <i style="margin-left:8px;" class="fa fa-step-forward"
+                                       ng-click="searchPage(search.lastPage)"></i>
+                                    <i class="fa fa-refresh" ng-click="searchPage(search.pageNo)"></i>
+                                </div>
+
+                                <div class="bottom-pagec">
+                                    <p>显示<span>{{(search.pageNo-1)*search.pageSize+1}}</span>到{{search.pageNo*search.pageSize
+                                    >= search.totalRowSize && search.totalRowSize ||
+                                    search.pageNo*search.pageSize < search.totalRowSize &&
+                                    search.pageNo*search.pageSize || search.totalRowSize < 1&& 0 }}条，共<span>{{search.totalRowSize}}</span>记录
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 数据展示部分结束 -->
+        </div>
+
+<!--        <div class="take-start-box" id="addCookbookShow">-->
+<!--            <div class="take-start-small">-->
+<!--                <p>添加</p>-->
+<!--                理财渠道：-->
+<!--                <select class="chosen-select" ng-model="addTask.channel">-->
+<!--                    <option value="">全部</option>-->
+<!--                    <option value="WK">悟空理财</option>-->
+<!--                    <option value="QB">玖富钱包</option>-->
+<!--                    <option value="JF_LIFE">聚生活小程序</option>-->
+<!--                </select>-->
+<!--                <br><br>-->
+<!--                <div class="bottom-btn">-->
+<!--                    <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="addTaskTop()">确定</a>-->
+<!--                    <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" ng-click="moveTopCancel2()">取消</a>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+        <div class="modify-start-box" id="addCookbookShow">
+            <div class="add-start" style="width: 520px;">
+                <h1 align="center">创建菜谱关联关系</h1>
+                <div class="start-a">
+                    <p>关联类型:</p>
+                    <select class="chosen-select" style="width:160px;" ng-model="addCookbook.associationType" ng-options="x.key as x.value for x in cookbookTypeList">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+                <div class="start-a" ng-show="addCookbook.associationType == '2'">
+                    <p>用户id:</p>
+                    <input style="width:368px;" type="text" maxlength="20" placeholder="必填,20字符以内" ng-model="addCookbook.memberId">
+                </div>
+                <div class="start-a">
+                    <p>商品sku:</p>
+                    <input style="width:368px;" type="text" maxlength="20" placeholder="必填,20字符以内" ng-model="addCookbook.skuCode">
+                </div>
+                <div class="start-a">
+                    <p>菜谱id:</p>
+                    <textarea style="resize:none;width: 360px;height: 180px;overflow-y: scroll; margin-top: 15px;" maxlength="50" placeholder="50字符以内" ng-model="addCookbook.cookbookIds"></textarea>
+                </div>
+                <div class="start-a">
+                    <p>创建人:</p>
+                    <input style="width:368px;" type="text" maxlength="20" placeholder="必填" ng-model="addCookbook.createUserName">
+                </div>
+                <div class="bottom-btn">
+                    <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="createCookbookData()">创建</a>
+                    <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" onclick="$('#addCookbookShow').hide();">关闭</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

@@ -126,177 +126,179 @@
 
 </head>
 <body ng-app="myApp" ng-controller="rootController">
-<div id="wrapper">
-    <div class="header-box">
-        <#include "/common/top.html" encoding="UTF-8" />
-    </div>
-    <div class="left-box">
-        <div class="sidebar-collapse" style="height: 100%;overflow-y: scroll;">
-            <#include "/common/left.html" encoding="UTF-8" />
+    <div id="wrapper">
+        <div class="header-box">
+            <#include "/common/top.html" encoding="UTF-8" />
+        </div>
+        <div class="left-box">
+            <div class="sidebar-collapse" style="height: 100%;overflow-y: scroll;">
+                <#include "/common/left.html" encoding="UTF-8" />
+            </div>
         </div>
     </div>
-</div>
-<div class="content-box">
-    <div class="small-content">
-        <!-- 搜索部分开始 -->
-        <div class="small-boxb col-md-12">
-            <div class="boxb-b">
-                <p>名称：
-                    <input type="text" ng-model="search.scriptName" maxlength="25" style="width: 160px;">
-                </p>
+    <div class="content-box">
+        <div class="small-content">
+            <!-- 搜索部分开始 -->
+            <div class="small-boxb col-md-12">
+                <div class="boxb-b">
+                    <p>名称：
+                        <input type="text" ng-model="search.scriptName" maxlength="25" style="width: 160px;">
+                    </p>
+                </div>
+                <div class="boxb-b">
+                    <p>地址：
+                        <input type="text" ng-model="search.scriptUrl" maxlength="25" style="width: 160px">
+                    </p>
+                </div>
+                <div class="boxb-b">
+                    <p>类型：
+                        <select class="chosen-select" ng-model="search.scriptType" style="width:160px;">
+                            <option value="">全部</option>
+                            <option value="1">脚本</option>
+                            <option value="2">分享</option>
+                            <option value="3">流程</option>
+                        </select>
+                    </p>
+                </div>
+                <div class="boxb-b">
+                    <p>
+                        <a class="btn btn-success btn-rounded btn-blueW btn-blueWa" ng-click="queryScriptPage(1)" href="javascript:void(0)">
+                            <i class="fa fa-search"></i> <span>搜索</span>
+                        </a>
+                        <a href="javascript:void(0)" ng-click="addShow()" class="btn btn-danger btn-rounded btn-gradient btn-gradienta">
+                            <i class="fa fa-plus-square-o"></i><span>添加</span>
+                        </a>
+                    </p>
+                </div>
             </div>
-            <div class="boxb-b">
-                <p>地址：
-                    <input type="text" ng-model="search.scriptUrl" maxlength="25" style="width: 160px">
-                </p>
-            </div>
-            <div class="boxb-b">
-                <p>类型：
-                    <select class="chosen-select" ng-model="search.scriptType" style="width:160px;">
-                        <option value="">全部</option>
-                        <option value="1">脚本</option>
-                        <option value="2">分享</option>
-                        <option value="3">流程</option>
-                    </select>
-                </p>
-            </div>
-            <div class="boxb-b">
-                <p>
-                    <a class="btn btn-success btn-rounded btn-blueW btn-blueWa" ng-click="queryScriptPage(1)" href="javascript:void(0)">
-                        <i class="fa fa-search"></i> <span>搜索</span>
-                    </a>
-                    <a href="javascript:void(0)" ng-click="addShow()" class="btn btn-danger btn-rounded btn-gradient btn-gradienta">
-                        <i class="fa fa-plus-square-o"></i><span>添加</span>
-                    </a>
-                </p>
-            </div>
-        </div>
-        <!-- 搜索部分结束 -->
+            <!-- 搜索部分结束 -->
 
-        <!-- 数据展示部分开始 -->
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ibox float-e-margins" style="margin-top:10px;">
-                    <div class="ibox-content">
-                        <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
-                            <thead>
-                            <tr>
-                                <th>名称</th>
-                                <th>地址</th>
-                                <th>类型</th>
-                                <th>创建人</th>
-                                <th>创建时间</th>
-                                <th>使用次数</th>
-                                <th>操作</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr ng-repeat="v in scriptList">
-                                <td>{{v.scriptName}}</td>
-                                <td>{{v.scriptUrl}}</td>
-                                <td>{{v.scriptType == 1 ? "脚本" : v.scriptType == 2 ? "分享" : v.scriptType == 3 ?"流程" :""}}</td>
-                                <td>{{v.createUserName}}</td>
-                                <td>{{v.createTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
-                                <td>{{v.usageCount}}</td>
-                                <td>
-                                    <a href="{{v.scriptUrl}}" class="look-start" ng-click="checkHandel(v.id)">查看</a>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <div class="bottom-page">
-                            <div class="bottom-pagea">
-                                <select style="width:58px;height:23px;" name="pageSize" ng-model="search.pageSize"
-                                        ng-change="queryScriptPage()">
-                                    <option value="5">5</option>
-                                    <option value="10">10</option>
-                                    <option value="15">15</option>
-                                </select>
-                            </div>
-                            <div class="bottom-pageb">
-                                <i class="fa fa-step-backward" ng-click="queryScriptPage()"></i>
-                                <i style="font-size:16px;" class="fa fa-caret-left"
-                                   ng-click="queryScriptPage(search.pageNo-1)"></i>
-                                <p>第<span class="pageN" name="currentPage"
-                                          ng-model="search.pageNo">{{search.pageNo}}</span>共<span>{{search.lastPage}}</span>页
-                                </p>
-                                <i style="font-size:16px;" class="fa fa-caret-right"
-                                   ng-click="queryScriptPage(search.pageNo+1)"></i>
-                                <i style="margin-left:8px;" class="fa fa-step-forward"
-                                   ng-click="queryScriptPage(search.lastPage)"></i>
-                                <i class="fa fa-refresh" ng-click="queryScriptPage(search.pageNo)"></i>
-                            </div>
+            <!-- 数据展示部分开始 -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox float-e-margins" style="margin-top:10px;">
+                        <div class="ibox-content">
+                            <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+                                <thead>
+                                <tr>
+                                    <th>序号</th>
+                                    <th>名称</th>
+                                    <th>地址</th>
+                                    <th>类型</th>
+                                    <th>创建人</th>
+                                    <th>创建时间</th>
+                                    <th>使用次数</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="v in scriptList">
+                                    <td>{{$index+1}}</td>
+                                    <td>{{v.scriptName}}</td>
+                                    <td>{{v.scriptUrl}}</td>
+                                    <td>{{v.scriptType == 1 ? "脚本" : v.scriptType == 2 ? "分享" : v.scriptType == 3 ?"流程" :""}}</td>
+                                    <td>{{v.createUserName}}</td>
+                                    <td>{{v.createTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                                    <td>{{v.usageCount}}</td>
+                                    <td>
+                                        <a href="{{v.scriptUrl}}" class="look-start" ng-click="checkHandel(v.id)">查看</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="bottom-page">
+                                <div class="bottom-pagea">
+                                    <select style="width:58px;height:23px;" name="pageSize" ng-model="search.pageSize"
+                                            ng-change="queryScriptPage()">
+                                        <option value="5">5</option>
+                                        <option value="10">10</option>
+                                        <option value="15">15</option>
+                                    </select>
+                                </div>
+                                <div class="bottom-pageb">
+                                    <i class="fa fa-step-backward" ng-click="queryScriptPage()"></i>
+                                    <i style="font-size:16px;" class="fa fa-caret-left"
+                                       ng-click="queryScriptPage(search.pageNo-1)"></i>
+                                    <p>第<span class="pageN" name="currentPage"
+                                              ng-model="search.pageNo">{{search.pageNo}}</span>共<span>{{search.lastPage}}</span>页
+                                    </p>
+                                    <i style="font-size:16px;" class="fa fa-caret-right"
+                                       ng-click="queryScriptPage(search.pageNo+1)"></i>
+                                    <i style="margin-left:8px;" class="fa fa-step-forward"
+                                       ng-click="queryScriptPage(search.lastPage)"></i>
+                                    <i class="fa fa-refresh" ng-click="queryScriptPage(search.pageNo)"></i>
+                                </div>
 
-                            <div class="bottom-pagec">
-                                <p>显示<span>{{(search.pageNo-1)*search.pageSize+1}}</span>到{{search.pageNo*search.pageSize
-                                >= search.totalRowSize && search.totalRowSize ||
-                                search.pageNo*search.pageSize < search.totalRowSize &&
-                                search.pageNo*search.pageSize || search.totalRowSize < 1&& 0 }}条，共<span>{{search.totalRowSize}}</span>记录
-                                </p>
+                                <div class="bottom-pagec">
+                                    <p>显示<span>{{(search.pageNo-1)*search.pageSize+1}}</span>到{{search.pageNo*search.pageSize
+                                    >= search.totalRowSize && search.totalRowSize ||
+                                    search.pageNo*search.pageSize < search.totalRowSize &&
+                                    search.pageNo*search.pageSize || search.totalRowSize < 1&& 0 }}条，共<span>{{search.totalRowSize}}</span>记录
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <!-- 数据展示部分结束 -->
         </div>
-        <!-- 数据展示部分结束 -->
-    </div>
         <div class="take-start-box" id="channelShow">
-        <div class="take-start-small">
-            <p>添加</p>
-            理财渠道：
-            <select class="chosen-select" ng-model="addTask.channel">
-                <option value="">全部</option>
-                <option value="WK">悟空理财</option>
-                <option value="QB">玖富钱包</option>
-                <option value="JF_LIFE">聚生活小程序</option>
-            </select>
-            <br><br>
-            <div class="bottom-btn">
-                <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="addTaskTop()">确定</a>
-                <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" ng-click="moveTopCancel2()">取消</a>
+            <div class="take-start-small">
+                <p>添加</p>
+                理财渠道：
+                <select class="chosen-select" ng-model="addTask.channel">
+                    <option value="">全部</option>
+                    <option value="WK">悟空理财</option>
+                    <option value="QB">玖富钱包</option>
+                    <option value="JF_LIFE">聚生活小程序</option>
+                </select>
+                <br><br>
+                <div class="bottom-btn">
+                    <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="addTaskTop()">确定</a>
+                    <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" ng-click="moveTopCancel2()">取消</a>
+                </div>
             </div>
         </div>
-    </div>
 
         <div class="modify-start-box" id="showAdd">
-        <div class="add-start">
-            <h1 align="center">创建脚本</h1>
-            <div class="start-a">
-                <p>脚本类型:</p>
-                <select class="chosen-select" style="width:160px;" ng-model="addScript.scriptType">
-                    <option value="">全部</option>
-                    <option value="1">脚本</option>
-                    <option value="2">分享</option>
-                    <option value="3">流程</option>
-                </select>
+            <div class="add-start">
+                <h1 align="center">创建脚本</h1>
+                <div class="start-a">
+                    <p>脚本类型:</p>
+                    <select class="chosen-select" style="width:160px;" ng-model="addScript.scriptType">
+                        <option value="">全部</option>
+                        <option value="1">脚本</option>
+                        <option value="2">分享</option>
+                        <option value="3">流程</option>
+                    </select>
+                </div>
+                <div class="start-a">
+                    <p>脚本名称:</p>
+                    <input style="width:368px;" type="text" maxlength="20" placeholder="必填,20字符以内" ng-model="addScript.scriptName">
+                </div>
+                <div class="start-a">
+                    <p>链接地址:</p>
+                    <input style="width:368px;" type="text" maxlength="255" placeholder="以http:///https://开头" ng-model="addScript.scriptUrl">
+                </div>
+                <div class="start-a">
+                    <p>模板描述:</p>
+                    <textarea style="resize:none;width: 360px;height: 180px;overflow-y: scroll; margin-top: 15px;" maxlength="50" placeholder="50字符以内" ng-model="addScript.desc"
+                              id="updesc"></textarea>
+                </div>
+                <div class="start-a">
+                    <p>创建人:</p>
+                    <input style="width:368px;" type="text" maxlength="20" placeholder="必填" ng-model="addScript.createUserName">
+                </div>
+                <div class="bottom-btn">
+                    <a class="btn btn-danger btn-rounded bottom-btna start-btna" id="screenXG" href="#"
+                       ng-click="createScript()">创建</a>
+                    <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#"
+                       onclick="$('#showAdd').hide();">关闭</a>
+                </div>
             </div>
-            <div class="start-a">
-                <p>脚本名称:</p>
-                <input style="width:368px;" type="text" maxlength="20" placeholder="必填,20字符以内" ng-model="addScript.scriptName">
-            </div>
-            <div class="start-a">
-                <p>链接地址:</p>
-                <input style="width:368px;" type="text" maxlength="255" placeholder="以http:///https://开头" ng-model="addScript.scriptUrl">
-            </div>
-            <div class="start-a">
-                <p>模板描述:</p>
-                <textarea style="resize:none;width: 360px;height: 180px;overflow-y: scroll; margin-top: 15px;" maxlength="50" placeholder="50字符以内" ng-model="addScript.desc"
-                          id="updesc"></textarea>
-            </div>
-            <div class="start-a">
-                <p>创建人:</p>
-                <input style="width:368px;" type="text" maxlength="20" placeholder="必填" ng-model="addScript.createUserName">
-            </div>
-            <div class="bottom-btn">
-                <a class="btn btn-danger btn-rounded bottom-btna start-btna" id="screenXG" href="#"
-                   ng-click="createScript()">创建</a>
-                <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#"
-                   onclick="$('#showAdd').hide();">关闭</a>
-            </div>
-        </div>
 
-    </div>
+        </div>
     </div>
 </body>
 </html>

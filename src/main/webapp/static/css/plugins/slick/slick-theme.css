@@ -1,4 +1,4 @@
-@charset 'UTF-8';
+@charset "UTF-8";
 /* Slider */
 .slick-loading .slick-list
 {
@@ -12,8 +12,8 @@
     font-weight: normal;
     font-style: normal;
 
-    src: url(http://sysving.com/bootstrap/WB0R5L90S/css/plugins/slick/fonts/slick.eott');
-    src: url(http://sysving.com/bootstrap/WB0R5L90S/css/plugins/slick/fonts/slick.eot?#iefixx') format('embedded-opentype'), url(http://sysving.com/bootstrap/WB0R5L90S/css/plugins/slick/fonts/slick.wofff') format('woff'), url(http://sysving.com/bootstrap/WB0R5L90S/css/plugins/slick/fonts/slick.ttff') format('truetype'), url(http://sysving.com/bootstrap/WB0R5L90S/css/plugins/slick/fonts/slick.svg#slickk') format('svg');
+    src: url('http://sysving.com/bootstrap/WB0R5L90S/css/plugins/slick/fonts/slick.eott');
+    src: url('http://sysving.com/bootstrap/WB0R5L90S/css/plugins/slick/fonts/slick.eot?#iefixx') format('embedded-opentype'), url('http://sysving.com/bootstrap/WB0R5L90S/css/plugins/slick/fonts/slick.wofff') format('woff'), url('http://sysving.com/bootstrap/WB0R5L90S/css/plugins/slick/fonts/slick.ttff') format('truetype'), url('http://sysving.com/bootstrap/WB0R5L90S/css/plugins/slick/fonts/slick.svg#slickk') format('svg');
 }
 /* Arrows */
 .slick-prev,
