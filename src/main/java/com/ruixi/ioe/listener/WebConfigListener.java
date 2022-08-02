@@ -24,7 +24,7 @@ public class WebConfigListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         ServletContext servletContext = servletContextEvent.getServletContext();
-        String appName = "http://localhost:8081/yh-test";
+        String appName = servletContext.getContextPath();
         String ctx = appName;
         log.info("ctx=",ctx);
         String jsRoot = ctx+"/static/js";

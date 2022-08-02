@@ -1,5 +1,6 @@
 package com.ruixi.ioe.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.ruixi.ioe.core.ReturnCode;
 import com.ruixi.ioe.dao.CookbookTools;
 import com.ruixi.ioe.dao.CookbookToolsQuery;
@@ -8,10 +9,13 @@ import com.ruixi.ioe.dto.CreateCookbookParamDTO;
 import com.ruixi.ioe.enums.CookbookTypeEnum;
 import com.ruixi.ioe.mapper.CookbookToolsMapper;
 import com.ruixi.ioe.service.CookbookService;
+import com.ruixi.ioe.utils.HttpClientUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.client.HttpClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +49,7 @@ public class CookbookServiceImpl implements CookbookService {
     public void createCookbookTools(CreateCookbookParamDTO param) {
         try {
             CookbookTools tools = new CookbookTools();
+            String queryCookbookValue = null;
             //用户关联菜谱
             if(CookbookTypeEnum.MEMBERID_AND_COOKBOOKID.getRespCode().equals(param.getAssociationType())){
                 tools.setMemberId(param.getMemberId());
@@ -52,9 +57,24 @@ public class CookbookServiceImpl implements CookbookService {
                 //拼装关联菜谱字段数据
                 tools.setCookbookId(buffer.toString());
                 //调用算法接口
-            }else{
-                tools.setCookbookId("");
+                HashMap<String, String> map = new HashMap<>();
+                map.put("key","search_menu_rec:"+param.getMemberId());
+                map.put("keyGroup","search_menu_rec:%s");
+                String[] split = param.getCookbookIds().split(",");
+                HashMap<String, Double> values = new HashMap<>();
+                DecimalFormat df = new DecimalFormat( "0.000" );
+                for (String s : split) {
+                    values.put(s,Double.parseDouble(df.format(Math.random())));
+                }
+                queryCookbookValue = JSON.toJSONString(values);
+                map.put("value",queryCookbookValue);
+                String url = "http://cp-sf-sit.recommend-ranking.sitgw.yonghui.cn/admin/utils/setRedisValues";
+                String res = HttpClientUtils.sendPostByJson(url, JSON.toJSONString(map));
+                if("success".equals(res)){
+                    log.info("操作成功");
+                }
             }
+            tools.setCookbookId(queryCookbookValue);
             tools.setAssociationType(param.getAssociationType());
             tools.setCreateUserName(param.getCreateUserName());
             tools.setSkuCode(param.getSkuCode());
