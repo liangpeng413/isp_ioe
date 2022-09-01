@@ -20,4 +20,8 @@ public class CreateCookbookParamDTO {
     private String cookbookIds;
 
     private String createUserName;
+
+    private String shopID;
+
+    public String sceneID;
 }

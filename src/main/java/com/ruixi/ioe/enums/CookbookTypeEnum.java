@@ -10,7 +10,8 @@ public enum CookbookTypeEnum {
     SKU_AND_COOKBOOKID("1","商品关联菜谱"),
     MEMBERID_AND_COOKBOOKID("2","用户关联菜谱"),
     HOMEPAGE_AND_COOKBOOKID("3","首页瀑布流与菜谱关联"),
-    KEYWORDSEARCH_AND_COOKBOOKID("4","搜索词与菜谱关联");
+    KEYWORDSEARCH_AND_COOKBOOKID("4","搜索词与菜谱关联"),
+    SCENE_AND_COOKBOOKID("5","菜谱场景关联菜谱");
 
     private String code;
     private String message;

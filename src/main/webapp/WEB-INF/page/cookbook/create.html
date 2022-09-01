@@ -186,8 +186,10 @@
                                     <th>序号</th>
                                     <th>关联类型</th>
                                     <th>商品id</th>
+                                    <th>门店id</th>
+                                    <th>场景id</th>
                                     <th>用户id</th>
-                                    <th>菜谱id</th>
+                                    <th>mock明细</th>
                                     <th>创建人</th>
                                     <th>创建时间</th>
                                 </tr>
@@ -195,9 +197,12 @@
                                 <tbody>
                                 <tr ng-repeat="v in cookbookList">
                                     <td>{{$index+1}}</td>
-                                    <td>{{v.associationType== 1 ? "脚本" : v.scriptType == 2 ? "分享" : v.scriptType == 3 ?"流程" :""}}</td>
-                                    <td>{{v.skuCode}}</td>
-                                    <td>{{v.memberId}}</td>
+                                    <td>{{v.associationType== 1 ? "商品关联菜谱" : v.associationType == 2 ? "用户关联菜谱" : v.associationType == 3 ?"首页瀑布流菜谱关联" : v.associationType == 4 ?"创建搜索词与菜谱关系" : v.associationType == 5 ?"菜谱场景关联菜谱" :""}}</td>
+                                    {{v.buttonType == 1 ? v.go : ""}}
+                                    <td>{{v.skuCode != null ? v.skuCode : "_"}}</td>
+                                    <td>{{v.shopID != null ? v.shopID : "_"}}</td>
+                                    <td>{{v.sceneID != null ? v.sceneID : "_"}}</td>
+                                    <td>{{v.memberId != null ? v.memberId : "_"}}</td>
                                     <td>{{v.cookbookId}}</td>
                                     <td>{{v.createUserName}}</td>
                                     <td>{{v.createTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
@@ -273,9 +278,17 @@
                     <p>用户id:</p>
                     <input style="width:368px;" type="text" maxlength="20" placeholder="必填,20字符以内" ng-model="addCookbook.memberId">
                 </div>
-                <div class="start-a">
+                <div class="start-a" ng-show="addCookbook.associationType == '3' || addCookbook.associationType == '5'">
+                    <p>shopID:</p>
+                    <input style="width:368px;" type="text" maxlength="20" placeholder="必填,20字符以内" ng-model="addCookbook.shopID">
+                </div>
+                <div class="start-a" ng-show="addCookbook.associationType != '3' && addCookbook.associationType != '5'">
                     <p>商品sku:</p>
                     <input style="width:368px;" type="text" maxlength="20" placeholder="必填,20字符以内" ng-model="addCookbook.skuCode">
+                </div>
+                <div class="start-a" ng-show="addCookbook.associationType == '5'">
+                    <p>场景id:</p>
+                    <input style="width:368px;" type="text" maxlength="20" placeholder="必填,20字符以内" ng-model="addCookbook.sceneID">
                 </div>
                 <div class="start-a">
                     <p>菜谱id:</p>

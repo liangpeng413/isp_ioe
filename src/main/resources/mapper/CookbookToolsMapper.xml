@@ -9,9 +9,11 @@
     <result column="cookbook_id" property="cookbookId" jdbcType="VARCHAR" />
     <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="scene_id" property="sceneID" jdbcType="VARCHAR" />
+    <result column="shop_id" property="shopID" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, association_type, sku_code, member_id, cookbook_id, create_user_name, create_time
+    id, association_type, sku_code, member_id, cookbook_id, create_user_name, create_time, scene_id, shop_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select
@@ -26,10 +28,10 @@
   <insert id="insert" parameterType="com.ruixi.ioe.dao.CookbookTools" >
     insert into cookbook_tools (id, association_type, sku_code,
       member_id, cookbook_id, create_user_name,
-      create_time)
+      create_time, scene_id, shop_id)
     values (#{id,jdbcType=INTEGER}, #{associationType,jdbcType=VARCHAR}, #{skuCode,jdbcType=VARCHAR},
       #{memberId,jdbcType=VARCHAR}, #{cookbookId,jdbcType=VARCHAR}, #{createUserName,jdbcType=VARCHAR},
-      #{createTime,jdbcType=TIMESTAMP})
+      #{createTime,jdbcType=TIMESTAMP}, #{sceneID,jdbcType=VARCHAR}, #{shopID,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.ruixi.ioe.dao.CookbookTools" >
     insert into cookbook_tools
@@ -55,6 +57,12 @@
       <if test="createTime != null" >
         create_time,
       </if>
+      <if test="sceneID != null" >
+        scene_id,
+      </if>
+      <if test="shopID != null" >
+        shop_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -77,6 +85,12 @@
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sceneID != null" >
+        #{sceneID,jdbcType=VARCHAR},
+      </if>
+      <if test="shopID != null" >
+        #{shopID,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -101,6 +115,12 @@
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="sceneID != null" >
+        scene_id = #{sceneID,jdbcType=VARCHAR},
+      </if>
+      <if test="shopID != null" >
+        shop_id = #{shopID,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -111,7 +131,9 @@
       member_id = #{memberId,jdbcType=VARCHAR},
       cookbook_id = #{cookbookId,jdbcType=VARCHAR},
       create_user_name = #{createUserName,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP}
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      scene_id = #{sceneID,jdbcType=VARCHAR},
+      shop_id = #{shopID,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 

@@ -7,7 +7,8 @@ App.controller("rootController",['$scope', '$http', '$timeout', function ($scope
         {"key":"1","value":"商品关联菜谱"},
         {"key":"2","value":"用户关联菜谱"},
         {"key":"3","value":"首页瀑布流菜谱关联"},
-        {"key":"4","value":"创建搜索词与菜谱关系"}
+        {"key":"4","value":"创建搜索词与菜谱关系"},
+        {"key":"5","value":"菜谱场景关联菜谱"}
         ]
 
     self.searchPage = function (pageNum){
@@ -53,10 +54,12 @@ App.controller("rootController",['$scope', '$http', '$timeout', function ($scope
             return;
 
         }
-        if(self.addCookbook.skuCode == null || self.addCookbook.skuCode == ''){
-            alert("请输入要关联的商品skuCode");
-            return;
+        if(self.addCookbook.associationType != null && self.addCookbook.associationType != '3' && self.addCookbook.associationType != '5'){
+            if(self.addCookbook.skuCode == null || self.addCookbook.skuCode == ''){
+                alert("请输入要关联的商品skuCode");
+                return;
 
+            }
         }
         if(self.addCookbook.associationType == '2'){
             if(self.addCookbook.memberId == null || self.addCookbook.memberId == ''){
