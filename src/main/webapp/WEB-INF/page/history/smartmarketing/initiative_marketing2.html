@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>主动营销</title>
+    <link href="${cssRoot}/bootstrap.min.css" rel="stylesheet">
+    <link href="${cssRoot}/../font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <!-- FooTable -->
+    <link href="${cssRoot}/plugins/footable/footable.core.css" rel="stylesheet">
+
+    <link href="${cssRoot}/animate.css" rel="stylesheet">
+    <link href="${cssRoot}/style.css?rand=${random}" rel="stylesheet">
+    <link href="${cssRoot}/styleT.css?rand=${random}" rel="stylesheet">
+    <link href="${cssRoot}/oms/smartmarketing/index.css?rand=${random}" rel="stylesheet">
+    <link rel="stylesheet" href="${cssRoot}/plugins/select2/select2.min.css">
+    <script>
+        var globalConfig = {
+            basePath: "${ctx}",
+            staticRoot: "${staticRoot}",
+            loginName: "${Session.sessionUser.loginName}",
+            name: "${Session.sessionUser.name}",
+            email:"${Session.sessionUser.email}"
+
+        };
+    </script>
+    <style type="text/css">
+        .boxb-a > div {
+            margin: 20px 0;
+        }
+
+        #addPage .small-boxb div {
+            float: none
+        }
+
+        #addPage .small-boxb div label {
+            vertical-align: top;
+            margin-right: 10px;
+        }
+
+        #add-task-rule > div {
+            margin: 10px 0;
+        }
+
+        .addShowType div {
+            display: flex;
+            margin-left: 0;
+            align-items: center;
+        }
+
+        .addShowType div select {
+            margin-top: 10px;
+        }
+
+        .addShowType div span {
+            margin: 5px 0 0 15px;
+        }
+
+        .addShowType div input {
+            margin-top: 7px;
+        }
+
+        .addShowType div p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body ng-app="initiative_marketing" ng-controller="initiative_marketing_controller">
+<div id="wrapper">
+    <div class="header-box">
+        <#include "/common/top.html" encoding="UTF-8" />
+    </div>
+    <nav class="navbar-default navbar-static-side" role="navigation" id="HeadTitle">
+        <div class="sidebar-collapse"  style="height: 675px;overflow-y: scroll;">
+            <#include "/common/left.html" encoding="UTF-8" />
+        </div>
+    </nav>
+</div>
+<div class="content-box">
+    <div class="small-content" ng-if="viewPage=='query'">
+        <!-- 第一部分 -->
+        <div class="small-boxa">
+            <a class="btn btn-danger btn-rounded btn-gradient btn-gradienta" href="javascript:void(0)" ng-click="addChannelCode()">
+                <i class="fa fa-plus-square-o"></i> <span>营销项目创建</span>
+            </a>
+            <a class="btn btn-danger btn-rounded btn-gradient btn-gradienta" href="javascript:void(0)" ng-click="showUserQuery()">
+                <i class="fa fa-plus-square-o"></i> <span>用户查询小工具</span>
+            </a>
+            <div id="projectIdDiv" hidden="hidden">${id}</div>
+            <div id="projectChannelCodeDiv" hidden="hidden">${channelCode}</div>
+            <div id="projectPageNoDiv" hidden="hidden">${pageNo}</div>
+            <div id="projectProjectNameDiv" hidden="hidden">${projectName}</div>
+            <div id="projectRunStatusDiv" hidden="hidden">${runStatus}</div>
+            <div id="projectAuditStatusDiv" hidden="hidden">${auditStatus}</div>
+            <div id="projectCreateTimeStartDiv" hidden="hidden">${createTimeStart}</div>
+            <div id="projectCreateTimeEndDiv" hidden="hidden">${createTimeEnd}</div>
+            <div id="projectPageSizeDiv" hidden="hidden">${pageSize}</div>
+        </div>
+        <!-- 第二部分 -->
+        <div class="small-boxb col-md-12">
+            <div class="boxb-a">
+                <p style="margin-top:20px;">理财渠道：
+                    <select class="chosen-select" style="width:120px;" tabindex="2" ng-model="search.channelCode"
+                            id='searchChannelCode'>
+                        <option value="QB">玖富钱包</option>
+                        <option value="WK">悟空理财</option>
+                        <option value="SF">三方渠道</option>
+                        <option value="SC">玖富商城</option>
+                    </select>
+                </p>
+                <p>审核状态：
+                    <select class="chosen-select" style="width:150px;" tabindex="2" ng-model="search.auditStatus">
+                        <option value="">全部</option>
+                        <option value="1">待审核</option>
+                        <option value="2">审核通过</option>
+                        <option value="3">审核失败</option>
+                    </select>
+                </p>
+            </div>
+            <div class="boxb-b">
+                <p>项目名称：
+                    <input type="text" ng-model="search.projectName">
+                </p>
+                <p>创建时间：
+                    <input type="text" id="createTimeStart" style="width: 160px;" ng-model="search.createTimeStart"/> -
+                    <input type="text" id="createTimeEnd" style="width: 160px;" ng-model="search.createTimeEnd"/>
+                </p>
+            </div>
+            <div class="boxb-c">
+                <p>执行状态：
+                    <select class="chosen-select" style="width:150px;" tabindex="2" ng-model="search.runStatus">
+                        <option value="">全部</option>
+                        <option value="1">待执行</option>
+                        <option value="2">执行中</option>
+                        <option value="3">完成</option>
+                    </select>
+                </p>
+            </div>
+            <div class="boxb-d">
+                <p>
+                    <a class="btn btn-success btn-rounded btn-blueW btn-blueWa" href="javascript:void(0)" ng-click="list(1)"><i
+                            class="fa fa-search"></i> <span>搜索</span></a>
+                    <a class="btn btn-success btn-rounded btn-blueW btn-blueWb" href="javascript:void(0)" ng-click="reset()"><i
+                            class="fa fa-refresh"></i> <span>重置</span></a>
+                </p>
+            </div>
+
+        </div>
+        <!-- 第二部分 end -->
+        <!-- 第三部分 -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins" style="margin-top:10px;">
+                    <div class="ibox-content">
+                        <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+                            <thead>
+                            <tr>
+                                <th>项目id</th>
+                                <th>理财渠道</th>
+                                <th>项目名称</th>
+                                <th>创建时间</th>
+                                <th>更新时间</th>
+                                <th>创建人</th>
+                                <th>执行状态</th>
+                                <th>审核状态</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="x in initiativeList">
+                                <td>{{x.id}}</td>
+                                <td>{{getChannelCodeName(x.channelCode)}}</td>
+                                <td>{{x.projectName}}</td>
+                                <td>{{x.createTime}}</td>
+                                <td>{{x.updateTime}}</td>
+                                <td>{{x.createUserName}}</td>
+                                <td>{{getRunStatusName(x.runStatus)}}</td>
+                                <td>{{getAuditStatusName(x.auditStatus)}}</td>
+                                <td>
+                                    <span class="look-start" ng-click="checkProject(x.id)">查看</span>
+                                    <span class="modify-start" ng-click="updateProject(x.id,x.channelCode)" ng-if="x.auditStatus == 3 || x.auditStatus ==1">修改</span>
+                                    <a src="javaScript:void(0);" class="take-start" ng-click="audit(x)"
+                                            ng-if="(x.auditStatus == 1 || x.auditStatus == 3)&& x.auditUserId == loginName">审核</a>
+                                    <span class="take-start" ng-click="updateStatus(x.id, 1)"
+                                          ng-if="x.runStatus == 2 || x.runStatus == 0 && x.auditStatus == 2">暂停</span>
+                                    <span class="take-start" ng-click="updateStatus(x.id, 2)" ng-if="x.runStatus == 4">恢复</span>
+                                    <span class="take-start" ng-click="updateStatus(x.id, 3)"
+                                          ng-if="x.runStatus != 3 && x.runStatus != 5&&x.auditStatus == 2">终止</span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="bottom-page">
+                            <div class="bottom-pagea">
+                                <select style="width:58px;height:23px;" ng-model="search.pageSize" ng-change="list(1)">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                </select>
+                            </div>
+                            <div class="bottom-pageb">
+                                <i class="fa fa-step-backward" ng-click="list(1)"></i>
+                                <i style="font-size:16px;" class="fa fa-caret-left"
+                                   ng-click="list(search.pageNo-1)"></i>
+                                <p>第<span class="pageN">{{search.pageNo}}</span class="commonN">共<span>{{search.pageCount}}</span>页
+                                </p>
+                                <i style="font-size:16px;" class="fa fa-caret-right"
+                                   ng-click="list(search.pageNo+1)"></i>
+                                <i style="margin-left:8px;" class="fa fa-step-forward"
+                                   ng-click="list(search.pageCount)"></i>
+                                <i class="fa fa-refresh" ng-click="list(search.pageNo)"></i>
+                            </div>
+
+                            <div class="bottom-pagec">
+                                <p>显示<span>{{(search.pageNo-1)*search.pageSize+1}}</span>到{{search.pageNo*search.pageSize}}条，共<span>{{search.totalRowSize}}</span>记录
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 新的查看 可以 2019-05-26 -->
+    <div class="small-content" ng-if="viewPage=='check'" id="checkPage">
+        <div class="warp_zl" style="background: #FFFFFF">
+            <div class="nav_zl">
+                <div >
+                    <a class="nav_fan btn btn-success btn-rounded btn-blueW btn-blueWb" href="${ctx}/smart_marketing/initiative/to_page?channelCode={{checkProjectObj.channelCode}}&pageNo={{search.pageNo}}&projectName={{search.projectName}}&runStatus={{search.runStatus}}&auditStatus={{search.auditStatus}}&createTimeStart={{search.createTimeStart}}&createTimeEnd={{search.createTimeEnd}}&pageSize={{search.pageSize}}">返回</a>
+                </div>
+                <span class="nav_text">{{getChannelCodeName(checkProjectObj.channelCode)}}</span>
+            </div>
+            <div class="head_zl">
+                <div class="head_nav">
+                    <div class="head_txt">
+                        <div style="display: inline-block">
+                            基础信息
+                        </div>
+                        <div align="right"  class="oppo" style="display: inline-block;float: right;margin-top: -7px">
+                            <a class="btn btn-success btn-rounded btn-blueW btn-blueWa" href="javascript:void(0)"
+                               ng-click="listRunLog(1)">
+                                <i class="fa fa-search"></i> <span>执行记录</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="head_ipt">
+                        <div class="ipt_up">
+                            <span class="head_ipt_name">*项目名称：</span>
+                            <input ng-model="checkProjectObj.projectName" class="head_chen" type="text"
+                                   placeholder="最多30字符" disabled="disabled">
+                            <span class="ipt_right head_ipt_name" ng-show="checkProjectObj.channelCode !='SF' && checkProjectObj.channelCode !='SC'">*营销目的：</span>
+                            <select name="" class="head_select" ng-model="checkProjectObj.purpose" disabled="disabled" ng-show="checkProjectObj.channelCode !='SF' && checkProjectObj.channelCode !='SC'">
+                                <option value="">请选择</option>
+                                <option value="01">邀请好友出借</option>
+                                <option value="02">首投（排除邀请）</option>
+                                <option value="03">续期</option>
+                                <option value="04">流失召回</option>
+                                <option value="99">其他</option>
+                            </select>
+                            <span ng-show="checkProjectObj.channelCode !='SF' && checkProjectObj.channelCode !='SC'">*统计产品类型:</span>
+                            <select name="" class="head_select" ng-model="checkProjectObj.productType" ng-show="checkProjectObj.channelCode !='SF' && checkProjectObj.channelCode !='SC'">
+                                <option value="">请选择</option>
+                                <option value="WANG_DAI">网贷</option>
+                                <option value="BANK">银行</option>
+                                <option value="FUND">基金</option>
+                                <option value="BAO_XIAN">保险</option>
+                            </select>
+                        </div>
+                        <div class="ipt_up">
+                            <span class="head_ipt_name">*审核人:</span>
+                            <select ng-model="checkProjectObj.auditUserId" class="shen_xuan" disabled="disabled"
+                                    ng-options="x.no as x.name for x in auditPersonList">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <!-- head_nav -->
+
+                <!-- 营销部分 动作组 -->
+                <div class="list_box" ng-repeat="actionGroup in checkProjectObj.actionGroups">
+                    <div class="list_single">
+                        <div class="single_nav">
+                            <div class="single_nav_title">
+                                营销动作组
+                                <span>{{$index + 1}}</span>
+                            </div>
+                            <div class="switch">
+                                <span class="shan" ng-show="actionGroup.status == 3 || actionGroup.status == 1" ng-click="stopProjectGroup(actionGroup.actionteamId)">暂停</span>
+                                <span class="shan" ng-show="actionGroup.status == 2" ng-click="restoreProjectGroup(actionGroup.actionteamId)">恢复</span>
+                                <span class="headleSwitch">
+                                    <!--<img class="xain" src="./image/hengxian.png" alt="">-->
+                                    <img class="xain" src="${imgRoot}/hengxian.png" alt="">
+                                </span>
+                            </div>
+                        </div>
+                        <div class="dev-margin">
+                            <div>当前状态:{{actionGroup.status == 1  && '待执行' || actionGroup.status == 2 && '暂停' || actionGroup.status == 3 && '执行中' || actionGroup.status == 4 && '完成' || actionGroup.status == 0 && '无效'}}</div>
+                            <div class="single_ce">
+
+                                <span>策略描述：</span>
+                                <textarea class="single_ipt" rows="4" placeholder="最多30字符" maxlength="30"
+                                        ng-model="actionGroup.desc" disabled="disabled"></textarea>
+                            </div>
+                            <!-- single_ce -->
+                            <div class="single_hu">
+                                <span>*名单类型：</span>
+                                <select class="single_sel" data-width="200px" ng-model="actionGroup.userGroupType"
+                                        ng-change="listUserNameList(actionGroup.userGroupType)" disabled="disabled">
+                                    <option value="" >请选择</option>
+                                    <option value="RULE_GROUP" ng-show="add.channelCode!='SF'">智能画像</option>
+                                    <option value="RULE_LIST">用户名单</option>
+                                </select>
+                                <br>
+                                <br>
+                                <span>*用户分组：</span>
+                                <select class="fuzzy_search" data-width="200px" ng-model="actionGroup.userGroupId"
+                                        ng-options="u.rosterId as u.rosterName for u in ruleGroup" ng-change="userRosterType(this,actionGroup.userGroupId)"
+                                        disabled="disabled" ng-if="actionGroup.userGroupType == 'RULE_GROUP'">
+                                </select>
+                                <select class="fuzzy_search" data-width="200px"  ng-model="actionGroup.userGroupId"
+                                        ng-options="u.rosterId as u.rosterName for u in ruleList"
+                                        disabled="disabled" ng-if="actionGroup.userGroupType == 'RULE_LIST'">
+                                </select>
+                            </div>
+                            <!-- single_hu-->
+                            <div class="single_action">
+                                <span>*动作：</span>
+                            </div>
+                            <!-- single_action 查看消息 -->
+                            <div class="news_over">
+                                <div class="news_single" ng-repeat="action in actionGroup.actions">
+                                    <span class="news_txt">{{action.actionDesc}}</span>
+                                    <div class="news_right">
+                                        <span class="news_kan" ng-click="checkTemplate(action.typeValue)"
+                                              ng-show="action.type != 'jf' && action.type != 'coupon' && action.type != 'newCoupon' && action.type != 'mallCoupon'">查看</span>
+                                    </div>
+                                </div>
+                                <!-- news_single -->
+                            </div>
+                            <!-- news_over -->
+                            <div class="chu_time">
+                                *触达时间类型：
+                                <select name="" class="chu_sel" ng-model="actionGroup.touchDateType" disabled="disabled">
+                                    <option value="now">立即触达</option>
+                                    <option value="time">指定时间</option>
+                                    <option value="day">按天</option>
+                                    <option value="week">按周</option>
+                                    <option value="month">按月</option>
+                                    <option value="realtime" ng-show="actionGroup.userRosterTypeFlag && checkProjectObj.channelCode !='SC'">智能画像增量发放</option>
+                                </select>
+                                <div ng-show="actionGroup.touchDateType == 'time'">
+                                    日期：
+                                </div>
+                                <div ng-show="actionGroup.touchDateType == 'day' || actionGroup.touchDateType == 'week' || actionGroup.touchDateType == 'month'
+                                                || (actionGroup.touchDateType == 'realtime' && actionGroup.userGroupType!='RULE_LIST')">
+                                    时间范围：
+                                </div>
+                                <input type="text"  ng-model="actionGroup.runTime" autocomplete="off"
+                                       ng-show="actionGroup.touchDateType == 'day' || actionGroup.touchDateType == 'week' ||
+                                       actionGroup.touchDateType == 'month' || actionGroup.touchDateType == 'time' ||
+                                        (actionGroup.touchDateType == 'realtime' && actionGroup.userGroupType!='RULE_LIST')">
+                                <div style="display: inline-block" ng-show="actionGroup.touchDateType == 'day' || actionGroup.touchDateType == 'week' || actionGroup.touchDateType == 'month'
+                                           || (actionGroup.touchDateType == 'realtime' && actionGroup.userGroupType!='RULE_LIST')">
+                                    -<input type="text"  ng-model="actionGroup.endTime" autocomplete="off">
+                                    <span ng-show="actionGroup.touchDateType == 'realtime' && actionGroup.userGroupType!='RULE_LIST'">
+                                       限制配置：<input ng-model="actionGroup.limitDay" type="text" minlength="1" maxlength="2" style="width: 80px;" autocomplete="off">个自然日内最多触发<input type="text" autocomplete="off" minlength="1" maxlength="2" ng-model="actionGroup.limitCount" style="width: 150px;">次
+                                    </span>
+                                </div>
+                            </div>
+                            <!-- chu_time -->
+                            <div class="astrict">
+                                *是否受触达次数限制：
+                                <div class="astrict_t">
+                                    <input type="radio" class="shi removal_vals" checked="checked" value="1"
+                                           ng-model="actionGroup.removal" ng-value="1" disabled="disabled">
+                                    <span class="shitxt">是</span>
+                                </div>
+                                <div class="astrict_f">
+                                    <input type="radio" class="flas removal_vals" value="2"
+                                           ng-model="actionGroup.removal" ng-value="2" disabled="disabled">
+                                    <span class="flatxt">否</span>
+                                </div>
+                            </div>
+                            <!--astrict  -->
+                            <div class="exceed">
+                                *超过发放时间次日是否继续发放：
+                                <div class="exceed_t">
+                                    <input type="radio" class="shis continue_send_vals" value="1"
+                                           ng-model="actionGroup.continueSend" ng-value="1" disabled="disabled">是
+                                </div>
+                                <div class="exceed_f">
+                                    <input type="radio" class="fou continue_send_vals" value="2"
+                                           ng-model="actionGroup.continueSend" ng-value="2" disabled="disabled">否
+                                </div>
+
+                            </div>
+                            <div>
+                                *是否给黑名单用户发放：
+                                <input type="radio" class="shis continue_send_vals" value="1" ng-model="actionGroup.blackListLimit"
+                                       ng-value="1" >是 &nbsp;&nbsp;&nbsp;
+
+                                <input type="radio" class="fou continue_send_vals" value="2" ng-model="actionGroup.blackListLimit"
+                                       ng-value="2" >否
+                            </div>
+
+
+                            <!-- exceed -->
+
+                        <div>
+                            &nbsp;&nbsp;&nbsp;*达到多少<input ng-model="actionGroup.percent" type="text" style="width: 80px;">%用户触达失败，发放邮件提醒<input type="text" ng-model="actionGroup.mailAddress" style="width: 150px;">
+                        </div>
+
+
+
+                            <!-- exceed -->
+                        </div>
+                        <!-- dev-margin -->
+                    </div>
+                    <!-- list_single -->
+                </div>
+                <p></p>
+                <div ng-show="channelCodeName !='三方渠道'">
+                    &nbsp;&nbsp;&nbsp;*项目统计有效期<input ng-model="checkProjectObj.validTime"  placeholder="1-30个自然日" type="text" style="width: 120px;">
+                </div>
+                <!-- list_box -->
+
+            </div>
+        </div>
+
+    </div>
+    <!-- 查看 end -->
+    <div class="take-start-box" id="zt">
+        <div class="take-start-small">
+            <p align="center">
+                是否确认暂停该项目，暂停将中断执行和正在发放的项目</p>
+            <div class="bottom-btn">
+                <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="javascript:void(0)"
+                   ng-click="commitStopOrRestore()">确定</a>
+                <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="javascript:void(0)"
+                   onclick="$('#zt').hide();">取消</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="take-start-box" id="hf">
+        <div class="take-start-small">
+            <p align="center">
+                是否恢复暂停项目的执行？</p>
+            <div class="bottom-btn">
+                <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="javascript:void(0)"
+                   ng-click="commitStopOrRestore()">确定</a>
+                <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="javascript:void(0)"
+                   onclick="$('#hf').hide();">取消</a>
+            </div>
+        </div>
+    </div>
+    <!-- update 修改 -->
+    <div class="small-content" ng-if="viewPage=='update'">
+        <div class="warp_zl" style="background: #FFFFFF">
+            <div class="nav_zl">
+                <div>
+                    <a  class=" nav_fan btn btn-success btn-rounded btn-blueW btn-blueWb" href="${ctx}/smart_marketing/initiative/to_page?channelCode={{channelCode}}&pageNo={{search.pageNo}}&projectName={{search.projectName}}&runStatus={{search.runStatus}}&auditStatus={{search.auditStatus}}&createTimeStart={{search.createTimeStart}}&createTimeEnd={{search.createTimeEnd}}&pageSize={{search.pageSize}}">返回</a>
+                </div>
+                <div id="channelCode" hidden="hidden">${channelCode}</div>
+            </div>
+            <div class="head_zl">
+                <div class="head_nav">
+                    <div class="head_txt">
+                        基础信息
+                    </div>
+                    <div class="head_ipt">
+                        <div class="ipt_up">
+                            <span class="head_ipt_name">*项目名称：</span>
+                            <input ng-model="updateProjectObj.update.projectName" class="head_chen" type="text" placeholder="最多30字符">
+                            <span class="ipt_right head_ipt_name" ng-show="updateProjectObj.update.channelCode!='SF' && updateProjectObj.update.channelCode!='SC'">*营销目的：</span>
+                            <select name="" class="head_select" ng-model="updateProjectObj.update.purpose" ng-show="updateProjectObj.update.channelCode!='SF' && updateProjectObj.update.channelCode!='SC'">
+                                <option value="">请选择</option>
+                                <option value="01">邀请好友出借</option>
+                                <option value="02">首投（排除邀请）</option>
+                                <option value="03">续期</option>
+                                <option value="04">流失召回</option>
+                                <option value="99">其他</option>
+                            </select>
+                            <span ng-show="updateProjectObj.update.channelCode!='SF' && updateProjectObj.update.channelCode!='SC'">*统计产品类型:</span>
+                            <select name="" class="head_select" ng-model="updateProjectObj.update.productType" ng-show="updateProjectObj.update.channelCode!='SF' && updateProjectObj.update.channelCode!='SC'">
+                                <option value="">请选择</option>
+                                <option value="WANG_DAI">网贷</option>
+                                <option value="BANK">银行</option>
+                                <option value="FUND">基金</option>
+                                <option value="BAO_XIAN">保险</option>
+                            </select>
+                        </div>
+                        <div class="ipt_up">
+                            <span class="head_ipt_name">*审核人:</span>
+                            <select ng-model="updateProjectObj.update.auditUserId" class="shen_xuan"
+                                    ng-options="x.no as x.name for x in auditPersonList">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <!-- head_nav -->
+
+                <!-- 营销部分 动作组 update -->
+                <div class="list_box" ng-repeat="actionGroup in updateProjectObj.update.actionGroups">
+                    <div class="list_single">
+                        <div class="single_nav">
+                            <div class="single_nav_title">
+                                营销动作组
+                                <span>{{$index + 1}}</span>
+                            </div>
+                            <div class="switch">
+                                <span class="shan" ng-click="deleteActionUpdate(actionGroup)">删除</span>
+                                <span class="headleSwitch">
+                                    <!--<img class="xain" src="./image/hengxian.png" alt="">-->
+                                    <img class="xain" src="${imgRoot}/hengxian.png" alt="">
+                                </span>
+                            </div>
+                        </div>
+                        <div class="dev-margin">
+                            <div class="single_ce">
+                                <span>策略描述：</span>
+                                <textarea class="single_ipt" rows="4" placeholder="最多30字符" maxlength="30"
+                                          ng-model="actionGroup.desc"></textarea>
+                            </div>
+                            <!-- single_ce -->
+                            <div class="single_hu">
+                                <span>*名单类型</span>
+                                <select class="single_sel" data-width="200px" ng-model="actionGroup.userGroupType"
+                                        ng-change="listUserNameList(actionGroup.userGroupType)">
+                                    <option value="">请选择</option>
+                                    <option value="RULE_GROUP">智能画像</option>
+                                    <option value="RULE_LIST">用户名单</option>
+                                </select>
+                                <br>
+                                <br>
+                                <span>*用户分组:</span>
+                                <select class="fuzzy_search" data-width="200px" id="ruleGroup{{$index}}" ng-model="actionGroup.userGroupId"
+                                        ng-options="u.rosterId as u.rosterName for u in ruleGroup" ng-change="userRosterType(this,actionGroup.userGroupId)"
+                                        ng-if="actionGroup.userGroupType == 'RULE_GROUP'">
+                                </select>
+                                <select class="fuzzy_search" data-width="200px" id="ruleList{{$index}}" ng-model="actionGroup.userGroupId"
+                                        ng-options="u.rosterId as u.rosterName for u in ruleList"
+                                        ng-if="actionGroup.userGroupType == 'RULE_LIST'">
+                                </select>
+                                <a href="javascript:void(0)" ng-click="countUserGroupUserUpdate(actionGroup,channelCode,$index)">查询</a>
+                                用户数：<span id="userGroupUserCount{{$index}}"></span>
+                            </div>
+                            <!-- single_hu-->
+                            <div class="single_action">
+                                <span>*动作：</span>
+                                <span class="single_color tian" ng-click="addAction('award', actionGroup)" ng-show="add.channelCode!='SF'">添加奖励</span>
+                                <span class="single_color ban" ng-click="addAction('message', actionGroup)">添加消息模板</span>
+                            </div>
+                            <!---->
+                           <div ng-show="(actionGroup.touchDateType =='now'||actionGroup.touchDateType =='time') && actionType == 'sms' && channelCode != 'SC'">
+                                <span>
+                                    <input type="checkbox" ng-show="smsCountValue != 0" id="useInformid" name="ramsName"  ng-click="addAction('informSms', actionGroup)">
+                                    <!-- 通知类短信次数为0时禁用-->
+                                    <input type="checkbox" ng-show="smsCountValue == 0"  disabled="disabled" id="rams0" ng-click="addAction('informSms', actionGroup)">通知类短信
+                                    <input type = "text" ng-repeat="x in smsCountValue" value="{smsCountValue}">剩余{{smsCountValue}}次</input>
+                                </span>
+                            </div>
+                            <!-- single_action  update -->
+                            <div class="news_over">
+                                <div class="news_single" ng-repeat="action in actionGroup.actions">
+                                    <span class="news_txt">{{action.actionDesc}}</span>
+                                    <div class="news_right">
+                                        <span class="news_kan" ng-click="checkTemplate(action.typeValue)"
+                                              ng-show="action.type != 'jf' && action.type != 'coupon' && action.type != 'newCoupon' && action.type != 'mallCoupon'">查看</span>
+                                        <span class="news_del" ng-click="deleteAction(actionGroup, action)">删除</span>
+                                    </div>
+                                    <br>
+                                </div>
+                                <!-- news_single -->
+                            </div>
+                            <!-- news_over -->
+                            <div class="chu_time">
+                                *触达时间类型：
+                                <select name="" class="chu_sel" ng-model="actionGroup.touchDateType">
+                                    <option value="now">立即触达</option>
+                                    <option value="time">指定时间</option>
+                                    <option value="day">按天</option>
+                                    <option value="week">按周</option>
+                                    <option value="month">按月</option>
+                                    <option value="realtime" ng-show="actionGroup.userRosterTypeFlag && updateProjectObj.update.channelCode!='SC'">智能画像增量发放</option>
+                                </select>
+                                <div ng-show="actionGroup.touchDateType == 'time'">
+                                    日期：
+                                </div>
+                                <div ng-show="actionGroup.touchDateType == 'day' || actionGroup.touchDateType == 'week' || actionGroup.touchDateType == 'month'
+                                             || (actionGroup.touchDateType == 'realtime' && actionGroup.userGroupType!='RULE_LIST')">
+                                    时间范围：
+                                </div>
+                                <input type="text" id="runTime{{$index + 1}}" ng-model="actionGroup.runTime" autocomplete="off"
+                                       ng-show="actionGroup.touchDateType == 'day' || actionGroup.touchDateType == 'week' ||
+                                       actionGroup.touchDateType == 'month' || actionGroup.touchDateType == 'time' ||
+                                        (actionGroup.touchDateType == 'realtime' && actionGroup.userGroupType!='RULE_LIST')">
+                                <div style="display: inline-block" ng-show="actionGroup.touchDateType == 'day' || actionGroup.touchDateType == 'week' || actionGroup.touchDateType == 'month'
+                                       || (actionGroup.touchDateType == 'realtime' && actionGroup.userGroupType!='RULE_LIST')">
+                                    - <input type="text" id="endTime{{$index + 1}}" ng-model="actionGroup.endTime" autocomplete="off">
+                                    <span ng-show="actionGroup.touchDateType == 'realtime' && actionGroup.userGroupType!='RULE_LIST'">
+                                        限制配置：<input ng-model="actionGroup.limitDay" autocomplete="off" minlength="1" maxlength="2" type="text" style="width: 80px;">个自然日内最多触发<input type="text" ng-model="actionGroup.limitCount" minlength="1" maxlength="2" autocomplete="off" style="width: 150px;">次
+                                    </span>
+                                </div>
+                            </div>
+                            <!-- chu_time -->
+                            <div class="astrict">
+                                *是否受触达次数限制：
+
+                                <div class="astrict_t">
+                                    <input type="radio" class="shi removal_vals" checked="checked" value="1"
+                                           ng-model="actionGroup.removal" ng-value="1">
+                                    <span class="shitxt">是</span>
+                                </div>
+                                <div class="astrict_f">
+                                    <input type="radio" class="flas removal_vals" value="2"
+                                           ng-model="actionGroup.removal" ng-value="2">
+                                    <span class="flatxt">否</span>
+                                </div>
+                            </div>
+                            <!--astrict  -->
+                            <div class="exceed">
+                                *超过发放时间次日是否继续发放：
+                                <div class="exceed_t">
+                                    <input type="radio" class="shis continue_send_vals" value="1"
+                                           ng-model="actionGroup.continueSend" ng-value="1">是
+                                </div>
+                                <div class="exceed_f">
+                                    <input type="radio" class="fou continue_send_vals" value="2"
+                                           ng-model="actionGroup.continueSend" ng-value="2">否
+                                </div>
+                            </div>
+                            <!-- exceed -->
+                            <div>
+                                *是否给黑名单用户发放：
+                                <input type="radio" class="shis continue_send_vals" value="1" ng-model="actionGroup.blackListLimit"
+                                       ng-value="1" >是 &nbsp;&nbsp;&nbsp;
+
+                                <input type="radio" class="fou continue_send_vals" value="2" ng-model="actionGroup.blackListLimit"
+                                       ng-value="2" >否
+                            </div>
+
+
+                            <!-- exceed -->
+                        </div>
+                        <div>
+                            &nbsp;&nbsp;&nbsp;*达到多少<input ng-model="actionGroup.percent" type="text" style="width: 80px;">%用户触达失败，发放邮件提醒<input type="text" ng-model="actionGroup.mailAddress" style="width: 150px;">
+                        </div>
+                        <!-- dev-margin -->
+                    </div>
+                    <!-- list_single -->
+                </div>
+
+                <!-- list_box -->
+
+            </div>
+            <p></p>
+            <div ng-show="updateProjectObj.update.channelCode !='三方渠道'" style="background: #FFFFFF">
+            &nbsp;&nbsp;&nbsp;*项目统计有效期:<input ng-model="updateProjectObj.update.validTime"  placeholder="1-30个自然日" type="text" style="width: 120px;">
+           </div>
+            <div class="save_btn">
+                <span class="zeng btn btn-success btn-rounded btn-blueW btn-blueWb" ng-click="addActionGroup()">新增营销动作组</span>
+                <span class="cun btn btn-success btn-rounded btn-blueW btn-blueWb" ng-click="updateCommit()">保存</span>
+        </div>
+            <!-- head_zl -->
+        </div>
+        <!-- 消息模板弹框 -->
+        <div class="messageModel">
+            <div class="messageInfo">
+                <div class="message-title">查看消息模板</div>
+                <div class="tit">理财渠道: <span>玖富钱包</span></div>
+                <div class="tit">模板名称: <span>玖富钱包</span></div>
+                <div class="tit">模板描述: <span>玖富钱包</span></div>
+                <div class="tit">触达方式: <span>玖富钱包</span></div>
+                <div class="tit">短信内容: <span>我是内容</span></div>
+                <div class="closeMessageModel">
+                    关闭
+                </div>
+            </div>
+        </div>
+        <!-- 点击删除弹框 -->
+        <div class="confirmModel">
+            <div class="confirmModelInfo">
+                <div class="confirmModel-title">
+                    确认删除
+                </div>
+                <div class="confirmModel-target">确定删除营销动作2吗</div>
+                <div class="confirmModel-btn">
+                    <span class="confirmModel-sure btn btn-danger btn-rounded bottom-btna start-btna">确定</span>
+                    <span class="confirmModel-cancel btn btn-danger btn-rounded bottom-btnb start-btnb">取消</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- update end  -->
+
+    <!-- 查看消息模板详情 -->
+    <div class="look-start-box" id="showCheck">
+        <div class="add-look-start">
+            <h1 align="center">查看消息模板</h1>
+            <div class="look-start-a">
+                <p>理财渠道：</p>
+                <span>{{openDetail.channelCode == 'WK' && "悟空理财" ||openDetail.channelCode == 'QB' && "玖富钱包" || openDetail.channelCode == 'SF' && '三方渠道' || openDetail.channelCode == 'SC' && '玖富商城'}}</span>
+            </div>
+            <div class="start-a">
+                <p>模板名称：</p>
+                <span>{{openDetail.templateName}}</span>
+            </div>
+            <div class="start-a">
+                <p>模板描述:{{openDetail.desc}}</p>
+            </div>
+            <div class="start-a">
+                <p>触达方式：</p>
+                <span>{{openDetail.type == 'sms' && "短信" || openDetail.type == 'push' && "推送" || openDetail.type =='note' && "站内信" || openDetail.type =='banner' && "banner"}}</span>
+            </div>
+            <div class="start-a" ng-show="openDetail.type == 'note' || openDetail.type == 'push' ">
+                <p >标题:{{toupdate.title}}</p>
+                <p >内容:{{toupdate.content}}</p>
+                <p ng-show="openDetail.type == 'note' && openDetail.channelCode=='SC'">站内信类别：</p>
+                <span ng-show="openDetail.type == 'note' && openDetail.channelCode=='SC'">
+                    {{toupdate.noteType == '1' && "还款通知" || toupdate.noteType == '2' && "物流通知"  || toupdate.noteType == '3' && "订单通知" || toupdate.noteType == '4' && "活动通知" || toupdate.noteType == '5' && "服务通知"}}
+                </span>
+            </div>
+            <div class="start-a" ng-show="openDetail.type == 'sms' " >
+                <p >短信内容：{{toupdate.content}}</p>
+            </div>
+            <div class="start-a" ng-show="openDetail.type == 'banner' ">
+                <p >位置：{{toupdate.position == '0' && "首页中部宣传" || toupdate.position == '1' && "首页中部大滑块" || toupdate.position == '49' && "首页中部老用户banner"}}</p>
+
+                <div ng-repeat="x in version">
+                    <p id="version{{x}}">版本：{{x}}</p>
+                </div>
+                <div ng-repeat="y in banner">
+                    <p>图片地址：{{y}}</p>
+                </div>
+                <p>显示时间:按照时间</p>
+                <p>持续时间：{{toupdate.lasttime}}h</p>
+            </div>
+            <div class="start-a" ng-show="openDetail.type == 'push' || openDetail.type == 'banner' || openDetail.type == 'note'">
+                <p ng-show="toupdate.jumptype == '0'">跳转类型:无跳转</p>
+                <p ng-show="toupdate.jumptype == '3'">跳转类型:原生跳转</p>
+                <p ng-show="toupdate.jumptype == '3'">页面类型:{{toupdate.pagetype}}</p>
+                <p ng-show="toupdate.jumptype == '3'">跳转页面:{{toupdate.pageurl}}</p>
+                <p ng-show="toupdate.jumptype == '2'">跳转类型:链接跳转</p>
+                <p ng-show="toupdate.jumptype == '2'">链接地址:{{toupdate.pageurl}}</p>
+            </div>
+            <div class="start-a">
+                <p>创建时间:</p>
+                <span>{{openDetail.createTime}}</span>
+            </div>
+            <div class="start-a">
+                <p>创建人:</p>
+                <span>{{openDetail.createUserName}}</span>
+            </div>
+            <div class="start-a">
+                <p>最新修改时间:</p>
+                <span>{{openDetail.updateTime}}</span>
+            </div>
+            <div class="start-a">
+                <p>修改人:</p>
+                <span>{{openDetail.updateUserName}}</span>
+                <!--<input style="width:368px;" type="text" maxlength="100" maxlength="100" placeholder="100字符以内"  ng-model="openScreen.notice">-->
+            </div>
+            </n>
+            <div class="bottom-btn">
+                <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" onclick="$('.look-start-box').hide();"
+                   href="javascript:void(0)">关闭</a>
+            </div>
+        </div>
+    </div>
+    <!-- 查看消息模板详情 end -->
+    <!-- 用户查询小工具 -->
+    <div class="look-start-box" id="showUserQuery">
+        <div class="row" style="margin-top: 150px; margin-left: 200px; width: 70%">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins" style="margin-top:10px;">
+                    <div class="ibox-content">
+                        <div>
+                            <div align="left">
+                                手机号 &nbsp;<input ng-model="userQuery.mobile">
+                                用户id &nbsp;<input ng-model="userQuery.userId">
+                                <a class="btn btn-success btn-rounded btn-blueW btn-blueWa" href="javascript:void(0)"
+                                   ng-click="listUserQuery(1)"><i
+                                        class="fa fa-search"></i> <span>查询</span></a>
+                            </div>
+                            <div align="right"><a ng-click="hideUserQuery()">X</a></div>
+                            <hr>
+                        </div>
+                        <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+                            <thead>
+                            <tr>
+                                <th>执行触达时间</th>
+                                <th>用户id</th>
+                                <th>营销项目名称</th>
+                                <th>营销项目动作组</th>
+                                <th>动作类型</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="u in userQueryList">
+                                <td>{{u.touchTime}}</td>
+                                <td>{{u.memberId}}</td>
+                                <td>{{u.projectName}}</td>
+                                <td>{{u.actionName}}</td> <!-- 营销项目动作组 -->
+                                <td>{{u.type}}</td>
+                                <td>
+                                    <span class="look-start" ng-click="toCheckProject(u.projectId)">前往项目详情</span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="bottom-page">
+                            <!--<div class="bottom-pagea">-->
+                            <!--<select style="width:58px;height:23px;" ng-model="userQuery.pageSize"-->
+                            <!--ng-change="listUserQuery(1)">-->
+                            <!--<option value="5" selected="selected">5</option>-->
+                            <!--&lt;!&ndash;<option value="10">10</option>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<option value="15">15</option>&ndash;&gt;-->
+                            <!--</select>-->
+                            <!--</div>-->
+                            <div class="bottom-pageb">
+                                <i class="fa fa-step-backward" ng-click="userQuery(1)"></i>
+                                <i style="font-size:16px;" class="fa fa-caret-left"
+                                   ng-click="listUserQuery(userQuery.pageNo-1)"></i>
+                                <p>第<span class="pageN">{{userQuery.pageNo}}</span class="commonN">共<span>{{userQuery.pageCount}}</span>页
+                                </p>
+                                <i style="font-size:16px;" class="fa fa-caret-right"
+                                   ng-click="listUserQuery(userQuery.pageNo+1)"></i>
+                                <i style="margin-left:8px;" class="fa fa-step-forward"
+                                   ng-click="listUserQuery(userQuery.pageCount)"></i>
+                                <i class="fa fa-refresh" ng-click="listUserQuery(userQuery.pageNo)"></i>
+                            </div>
+
+                            <div class="bottom-pagec">
+                                <p>显示<span>{{(userQuery.pageNo-1)*userQuery.pageSize+1}}</span>到{{userQuery.pageNo*userQuery.pageSize}}条，共<span>{{userQuery.totalRowSize}}</span>记录
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 用户查询小工具 end -->
+    <div class="small-content" ng-if="viewPage=='excute'">
+        <div class="small-boxa">
+
+            <a class="btn btn-danger btn-rounded btn-gradient btn-gradienta"  ng-click="closeExcuteLog()">
+                <i class="fa fa-plus-square-o"></i> <span>返回</span>
+            </a>
+
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins" style="margin-top:10px;">
+                    <div class="ibox-content">
+                        <h2 style="color: #0e0e0e">执行记录</h2>
+                        <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+                            <thead>
+                            <tr>
+                                <th>触达执行时间</th>
+                                <th>营销动作组</th>
+                                <th>配置发放数</th>
+                                <th>触达用户数</th>
+                                <th>名单名称</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="exe in executeLogList">
+                                <td>{{exe.startTime}}</td>
+                                <td>{{exe.actionName}}</td>
+                                <td>{{exe.touchTotal}}</td>
+                                <td>{{exe.touchSuccess}}</td>
+                                <td>{{exe.userGroupName}}</td>
+                                <td>{{getAioMqRunStatusName(exe.runStatus)}}</td>
+                                <td>
+                                    <span class="look-start" ng-click="exportFailedListData(exe.recordId)">导出失败名单</span>
+                                    <span class="look-start" ng-click="lookTouchReport(exe)">查看触达报告</span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="bottom-page">
+                            <div class="bottom-pagea">
+                                <select style="width:58px;height:23px;" ng-model="searchExe.pageSize"
+                                        ng-change="listRunLog(1)">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                </select>
+                            </div>
+                            <div class="bottom-pageb">
+                                <i class="fa fa-step-backward" ng-click="listRunLog(1)"></i>
+                                <i style="font-size:16px;" class="fa fa-caret-left"
+                                   ng-click="listRunLog(searchExe.pageNo-1)"></i>
+                                <p>第<span class="pageN">{{searchExe.pageNo}}</span class="commonN">共<span>{{searchExe.pageCount}}</span>页
+                                </p>
+                                <i style="font-size:16px;" class="fa fa-caret-right"
+                                   ng-click="listRunLog(searchExe.pageNo+1)"></i>
+                                <i style="margin-left:8px;" class="fa fa-step-forward"
+                                   ng-click="listBankQuota(searchExe.pageCount)"></i>
+                                <i class="fa fa-refresh" ng-click="listBankQuota(searchExe.pageNo)"></i>
+                            </div>
+
+                            <div class="bottom-pagec">
+                                <p>显示<span>{{(searchExe.pageNo-1)*searchExe.pageSize+1}}</span>到{{searchExe.pageNo*searchExe.pageSize >= searchExe.totalRowSize && searchExe.totalRowSize || searchExe.pageNo*searchExe.pageSize < searchExe.totalRowSize && searchExe.pageNo*searchExe.pageSize || searchExe.totalRowSize < 1&& 0 }}条，共<span>{{searchExe.totalRowSize}}</span>记录
+                                </p>
+                            </div>
+                        </div>
+                        <div class="small-boxb col-md-12 look-pagea" style="height: 700px;width: 102.8%; margin-left: -20px;" ng-show="report == '1'">
+                            <h2 style="color: #0e0e0e">触达基础信息</h2>
+                            <hr/>
+                            <p>执行触达时间:{{touchReport.startTime}}</p>
+                            <p>营销动作组:{{touchReport.actionName}}</p>
+                            <p>配置发放数:{{touchReport.touchTotal}}</p>
+                            <p>触达用户数:{{touchReport.touchSuccess}}</p>
+                            <p>名单名称:{{touchReport.userGroupName}}</p>
+                            <p>触达时间类型:{{touchReport.touchDateType}}</p>
+                            <p>状态:{{getAioMqRunStatusName(touchReport.runStatus)}}</p>
+
+                            <h2 style="color: #0e0e0e">触达统计详情</h2>
+                            <hr/>
+                            <table class="footable table table-stripped" data-page-size="10" data-filter=#filter>
+                                <thead>
+                                <tr>
+                                    <th>动作类型</th>
+                                    <th>应发人数</th>
+                                    <th>应发次数</th>
+                                    <th>实发人数</th>
+                                    <th>实发次数</th>
+                                    <th>成功触达率</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="x in touchDetailInfo">
+                                    <td>{{x.type == 'sms' && '短信' || x.type == 'push' && '推送' || x.type == 'banner' && 'Banner' || x.type == 'note' && '站内信' || x.type == 'jf' && '积分' || x.type == 'coupon' && '卡券' || x.type == 'newCoupon' && '新卡券' || x.type == 'mallCoupon' && '商城卡券'}}</td>
+                                    <td>{{x.touchTotal}}</td>
+                                    <td>{{x.touchTotalCount}}</td>
+                                    <td>{{x.touchSuccessCount}}</td>
+                                    <td>{{x.touchSuccess}}</td>
+                                    <td>{{x.successPercent}}%</td>
+                                    <td>
+                                        <span class="look-start" ng-click="exportFailedListData(null,x.type)">导出失败名单</span>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+<!-- content-box end -->
+
+
+<div class="take-start-box" id="addChannelShow">
+    <div class="take-start-small newTakeEffect">
+        <h2 style="text-align: center">选择渠道</h2>
+        <div class="start-a" align="center">
+            理财渠道:
+            <select ng-model="add.channelCode" id='addChannelCode' autocomplete="off" class="interests">
+                <option value="WK" selected="selected">悟空理财</option>
+                <option value="QB">玖富钱包</option>
+                <option value="SF">三方渠道</option>
+                <option value="SC">玖富商城</option>
+            </select>
+        </div>
+        <div class="bottom-btn">
+            <!--<a href="${ctx}/smart_marketing/initiative/to_page"><i class="fa fa-line-chart"></i>主动营销</a>-->
+            <a class="btn btn-danger btn-rounded bottom-btna start-btna" id="goToAdd"
+               href="${ctx}/smart_marketing/initiative/to_add?channelCode={{add.channelCode}}">进入创建</a>
+            <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="javascript:void(0)"
+               ng-click="hideAddChannelShow()">关闭</a>
+        </div>
+    </div>
+</div>
+<!-- 添加选择渠道 end -->
+
+<!-- 查看执行记录 -->
+
+
+
+<!-- 查看执行记录 end -->
+
+<!-- 失效详情 -->
+<div class="take-start-box" id="showStart">
+    <div class="take-start-small">
+        <p align="center">您确定要{{start.startValid==0 && "生效" || start.startValid==1 && "失效"}}Banner吗？</p>
+        <div class="bottom-btn">
+            <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="javascript:void(0)"
+               ng-click="confirmStart(start.id,start.startValid)">确定</a>
+            <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="javascript:void(0)" ng-click="cancelStart()">取消</a>
+        </div>
+    </div>
+</div>
+
+<!-- 审核金融产品配置 -->
+<div class="take-start-box" id="auditShow">
+    <div class="take-start-small newTakeEffect">
+        <h2 align="center">审核</h2>
+        <ul class="isEffect">
+            <li><p>审核结果：</p>
+                <select id="auditStatus" ng-model="auditStatus">
+                    <option value="2">审核通过</option>
+                    <option value="3">审核不通过</option>
+                </select>
+            </li>
+            <!--<li class="PosiText">-->
+                <!--<p>审核描述：</p>-->
+                <!--<textarea id="auditDescription" ng-model="auditDescription" maxlength="32" cols="25" rows="4"-->
+                          <!--placeholder="选填，32字符以内"></textarea>-->
+            <!--</li>-->
+        </ul>
+        <div class="bottom-btn">
+            <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="javascript:void(0)" ng-click="confirm()">确定</a>
+            <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="javascript:void(0)"
+               onclick="$('.take-start-box').hide();">取消</a>
+        </div>
+    </div>
+</div>
+
+<!-- 上下线 暂不用 -->
+<div class="take-start-box" id="takeEffect">
+    <div class="take-start-small newTakeEffect">
+        <h2 align="center">确认{{effectRecord.onlineStatus==1 ? '下线' : '上线'}}当前银行？</h2>
+        <!--<ul class="isEffect">-->
+        <!--<li><p>审核人</p>-->
+        <!--&lt;!&ndash;  <select id="validConfirmUser" ng-model="validConfirmUser">-->
+        <!--<option value="">请选择</option>-->
+        <!--<option value="{{x.no}}-{{x.email}}" ng-repeat="x in auditPersonList">{{x.name}}</option> &ndash;&gt;-->
+        <!--<select class="interests" ng-model="effectRecord.auditPerson"  ng-options="x.name for x in auditPersonList">-->
+        <!--<option value="">请选择</option>-->
+        <!--</select>-->
+        <!--</li>-->
+        <!--<li class="PosiText">-->
+        <!--<p>审核说明</p>-->
+        <!--<textarea id="requestAuditDescription" ng-model="effectRecord.requestAuditDescription" cols="25"-->
+        <!--rows="4" placeholder="选填，30字符以内"></textarea>-->
+        <!--</li>-->
+        <!--</ul>-->
+        <div class="bottom-btn">
+            <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="javascript:void(0)"
+               ng-click="commitOnlineOrOffline()">确定</a>
+            <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="javascript:void(0)"
+               onclick="$('.take-start-box').hide();">取消</a>
+        </div>
+    </div>
+</div>
+
+<!-- 添加奖励弹框 -->
+<!-- 添加奖励弹框 -->
+<div class="add-award-Model">
+    <div class="confirmModelInfo" style="width: 500px;">
+        <div class="confirmModel-title">
+            添加奖励
+        </div>
+        <div class="addInp">
+            <div class="ipt_up_add">
+                <span class="ipt_right">奖励类型:</span>
+                <select name="" style="width: 242px;" class="head_select" ng-model="tempAction.type">
+                    <option value="" ng-show="channelCode!='SC'">请选择</option>
+                    <option value="jf" ng-show="channelCode!='SC'">积分</option>
+                    <option value="coupon" ng-show="channelCode!='SC'">卡券</option>
+                    <option value="newCoupon">新卡券</option>
+                    <option value="mallCoupon">商城卡券</option>
+                </select>
+            </div>
+            <div class="ipt_up_add">
+                <span class="ipt_right" ng-show="tempAction.type != 'jf' && tempAction.type != 'coupon'">输入项:</span>
+                <span class="ipt_right" ng-show="tempAction.type == 'coupon'">*卡券id:</span>
+                <span class="ipt_right2" ng-show="tempAction.type == 'jf'">*积分规则ID:&nbsp;
+                     <input type="text" style="width: 242px;" ng-model="tempAction.jfRuleId"><br><br>
+                </span>
+                <span class="ipt_right" style="width:78px;" ng-show="tempAction.type == 'jf'">*积分数:</span>
+                <input type="text" style="width: 242px;" ng-model="tempAction.typeValue">
+                <br/><br/>
+                <span class="ipt_right" style="width:78px;" ng-show="tempAction.type == 'jf'">*积分描述:</span>
+                <input type="text" style="width: 242px;" ng-show="tempAction.type == 'jf'"  ng-model="tempAction.actionPurposeDesc" placeholder="积分记录中用户可见,20字符以内">
+            </div>
+            <div class="confirmModel-btn">
+                <span class="confirmModel-sure btn btn-danger btn-rounded bottom-btna start-btna" ng-click="commitAddAction()">添加</span>
+                <span class="confirmModel-cancel btn btn-danger btn-rounded bottom-btnb start-btnb">关闭</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 添加消息模板弹框 -->
+<div class="add-message-Model">
+    <div class="confirmModelInfo">
+        <div class="confirmModel-title">
+            添加消息模板
+        </div>
+        <div class="addInp">
+            <div class="ipt_up_add">
+                <span class="ipt_right">触达方式:</span>
+                <select name="" class="head_select" ng-model="tempAction.type" ng-change="listMessageTemplate(tempAction.type)">
+                    <option value="" ng-show="channelCode!='SF' && channelCode!='SC'">请选择</option>
+                    <option value="sms">短信</option>
+                    <option value="banner" ng-show="channelCode!='SF' && channelCode!='SC'">banner</option>
+                    <option value="push" ng-show="channelCode!='SF'">推送</option>
+                    <option value="note" ng-show="channelCode!='SF' && channelCode!='SC'">站内信</option>
+                </select>
+            </div>
+            <div class="ipt_up_add">
+                <span class="ipt_right">选择消息模板:</span>
+                <select id="uniqueId" class="bannerId" ng-model="tempAction.typeValue" style="width: 150px"
+                        ng-options="m.id as m.templateName for m in messageTemplateList">
+                    <option value="">请选择</option>
+                </select>
+            </div>
+            <div class="confirmModel-btn">
+                <span class="confirmModel-sure btn btn-danger btn-rounded bottom-btna start-btna" ng-click="commitAddAction()">添加</span>
+                <span class="confirmModel-cancel btn btn-danger btn-rounded bottom-btnb start-btnb" ng-click="closeUpdateTemplate()">关闭</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 添加通知类短信弹框 --><!--add-informSms-Model-->
+<!-- 添加通知类短信弹框 -->
+<div class="take-start-box"  id = "informSmshide">
+    <div class="confirmModelInfo">
+        <div class="confirmModel-title">
+            添加通知类短信
+        </div>
+        <div class="addInp">
+            <div class="ipt_up_add">
+                请注意，通知类短信切勿频繁使用，否则可能会导致公司短信通道被封，如需使用通知类短信，请与运营负责人杨新博沟通后选择创建，此选项，审核人只可为杨新博
+            </div>
+            <br>
+            <div class="confirmModel-btn">
+                    <span  class="confirmModel-cancel btn btn-danger btn-rounded bottom-btnb start-btnb " onclick="$('.take-start-box').hide();"
+                           href="javascript:void(0)">我已知晓</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 查看消息模板弹框 前端提供 -->
+<div class="messageModel">
+    <div class="messageInfo">
+        <div class="message-title">查看消息模板</div>
+        <div class="tit">理财渠道: <span>玖富钱包</span></div>
+        <div class="tit">模板名称: <span>玖富钱包</span></div>
+        <div class="tit">模板描述: <span>玖富钱包</span></div>
+        <div class="tit">触达方式: <span>玖富钱包</span></div>
+        <div class="tit">短信内容: <span>我是内容</span></div>
+        <div class="closeMessageModel">
+            关闭
+        </div>
+    </div>
+</div>
+
+<script src="${jsRoot}/angular/angular.min.js"></script>
+<script src="${jsRoot}/plugins/laydate/laydate.js"></script>
+<!-- Mainly scripts -->
+<!--<script src="${jsRoot}/biz/smartmarketing/jquery-1.11.3.min.js?rand=${random}"></script>-->
+<script src="${jsRoot}/jquery-2.1.1.js"></script>
+<script src="${jsRoot}/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="${jsRoot}/bootstrap.min.js"></script>
+<script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="${jsRoot}/plugins/jeditable/jquery.jeditable.js"></script>
+
+<!-- Data Tables -->
+<script src="${jsRoot}/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.responsive.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.tableTools.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="${jsRoot}/inspinia.js"></script>
+<script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.iframe-transport.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.ui.widget.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-process.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-validate.js"></script>
+<script src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+<script src="${jsRoot}/biz/smartmarketing/initiative_marketing.js?rand=${random}"></script>
+<script src="${jsRoot}/biz/smartmarketing/smart_marketing_common.js?rand=${random}"></script>
+<script type="text/javascript" src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+<script src="${jsRoot}/DateUtil.js"></script>
+<script src="${jsRoot}/plugins/select2/select2.full.min.js?rand=${random}"></script>
+
+<script>
+    var navHight = $('.navbar-static-side').height();
+    $('.navbar-static-side').css('height', navHight - 60);
+    $('.content-box').css('height', navHight - 60);
+    $("#menus li").removeClass("active");
+    $("#smart-marketing-li").addClass("active");
+    $("#smart-marketing-initiative").addClass("active");
+    // $("#tools").addClass("collapse in");
+
+    // 添加
+    $('.btn-gradienta').click(function () {
+        /*$('.add-start-bg').show()
+          $('.start-btna').click(function(){
+          $('.add-start-bg').hide();
+        }) */
+        $('.start-btnb').click(function () {
+            $('.add-start-bg').hide()
+        })
+    });
+    // 优先级排序
+    $('.btn-gradientb').click(function () {
+        /* $('.priority-ranking').show()
+        $('.bottom-btna').click(function(){
+          $('.priority-ranking').hide()
+        }) */
+        $('.bottom-btnb').click(function () {
+            $('.priority-ranking').hide()
+        })
+    });
+    // 查看
+    $('.look-start').click(function () {
+        // $('.look-start-box').show()
+        $('.bottom-btna').click(function () {
+            $('.look-start-box').hide()
+        })
+        /* $('.bottom-btnb').click(function(){
+          $('.look-start-box').hide()
+        }) */
+    });
+    // 修改
+    $('.modify-start').click(function () {
+        $('.modify-start-box').show()
+        $('.bottom-btna').click(function () {
+            $('.modify-start-box').hide()
+        })
+        $('.bottom-btnb').click(function () {
+            $('.modify-start-box').hide()
+        })
+    });
+    // 失效
+    $('.take-start').click(function () {
+        $('.take-start-box').show()
+        $('.bottom-btna').click(function () {
+            $('.take-start-box').hide()
+        })
+        $('.bottom-btnb').click(function () {
+            $('.take-start-box').hide()
+        })
+    });
+
+    // var createTimeBe = laydate({
+    //     elem: '#createTimeBe',
+    //     istime: true,
+    //     format: 'YYYY-mm-DD hh:mm:ss',
+    //     event: 'click'
+    // });
+    //
+    // var createTimeEnd = laydate({
+    //     elem: '#createTimeEnd',
+    //     istime: true,
+    //     format: 'YYYY-mm-DD hh:mm:ss',
+    //     event: 'click'
+    // });
+
+    // ========== 前端提供 ==========
+
+    // 添加奖励
+    $('.list_single').on('click', '.single_action .tian', function () {
+        $('.add-award-Model').show()
+        currentActionGroupIdx = $(this).parents('.list_single').index()
+        console.log(currentActionGroupIdx)
+    })
+    $('.list_single').on('click', '.single_action .ban', function () {
+        $('.add-message-Model').show()
+        curryNum = $(this).parents('.list_single').index()
+    })
+    // 删除
+    $('.list_box').on('click', '.shan', function () {
+        $('.confirmModel').show()
+        var a = $(this).parents('.list_single')
+        var tet = $(this).parents('.list_single').find('.single_nav_title').text()
+        $('.confirmModel-target').html(tet)
+        $('.confirmModel-sure').on('click', function () {
+            a.remove()
+            var len = $('.list_box .single_nav_title').length
+            for (var i = 0; i < len; i++) {
+                $($('.list_box .single_nav_title')[i]).find('span').text(i + 1)
+            }
+            $('.confirmModel').hide()
+        })
+    })
+    $('.confirmModel-cancel').on('click', function () {
+        $('.confirmModel').hide()
+        $('.add-award-Model').hide()
+        $('.add-message-Model').hide()
+    })
+    var isshow = false
+    // 点击按钮 展开或者收起
+    $('.list_box').on('click', '.headleSwitch', function () {
+        isshow = !isshow
+        console.log($(this).children())
+        if (isshow) {
+            $(this).children().attr({
+                src: "${imgRoot}/jia.png",
+                alt: "Test Image"
+            })
+            $(this).parent().parent().siblings().css('display', "none")
+        } else {
+            $(this).children().attr({
+                src: "${imgRoot}/hengxian.png",
+                alt: "Test Image"
+            })
+            $(this).parent().parent().siblings().css('display', 'block')
+        }
+    })
+    // 是否去重限制
+    $('.list_box').on('click', '.shi', function () {
+        $(this).attr('checked', true)
+        console.log()
+        $(this).parent().siblings().find('.flas').attr('checked', false)
+    })
+    $('.list_box').on('click', '.flas', function () {
+        $(this).parent().siblings().find('.shi').attr('checked', false)
+        $(this).attr('checked', true)
+    })
+    // 继续发放
+    $('.list_box').on('click', '.shis', function () {
+        $(this).attr('checked', true)
+        $(this).parent().siblings().find('.fou').attr('checked', false)
+    })
+    $('.list_box').on('click', '.fou', function () {
+        $(this).parent().siblings().find('.shis').attr('checked', false)
+        $(this).attr('checked', true)
+    })
+    // 第一次 点击的 查看的时候
+    $('.list_box .list_single').on('click', '.news_kan', function () {
+        $('.messageModel').show()
+    })
+    // 第一次点击删除 的时候
+    $('.list_box .list_single').on('click', '.news_del', function () {
+        $(this).parents('.news_single').remove()
+    })
+    $('.closeMessageModel').on('click', function () {
+        $('.messageModel').hide()
+    })
+
+    $(function () {
+        $('.fuzzy_search').select2();
+        $('.bannerId').select2();
+    })
+
+</script>
+</body>
+</html>

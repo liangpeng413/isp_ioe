@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>运营小工具</title>
+    <link href="${cssRoot}/bootstrap.min.css" rel="stylesheet">
+    <link href="${staticRoot}/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <!-- FooTable -->
+    <link href="${cssRoot}/plugins/footable/footable.core.css" rel="stylesheet">
+
+    <link href="${cssRoot}/animate.css" rel="stylesheet">
+    <link href="${cssRoot}/style.css?rand=${random}" rel="stylesheet">
+    <link href="${cssRoot}/styleT.css?rand=${random}" rel="stylesheet">
+    <link href="${staticRoot}/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <style>
+        .file{
+            position: fixed;left: -500px;
+        }
+    </style>
+    <script>
+        var globalConfig = {
+            basePath: "${ctx}",
+            staticRoot: "${staticRoot}",
+            loginName:"${Session.sessionUser.loginName}"
+        };
+        function swalMsg(msg) {
+            swal({
+                title:"",
+                text:msg,
+                confirmButtonColor: "#1ab394",
+                confirmButtonText:"确定"
+            });
+        }
+
+    </script>
+
+
+</head>
+<body ng-app="myApp" ng-controller="rootController">
+<div id="wrapper">
+    <div class="header-box">
+        <#include "/common/top.html" encoding="UTF-8" />
+    </div>
+    <nav class="navbar-default navbar-static-side nav-boxa" role="navigation" id="HeadTitle">
+        <div class="sidebar-collapse"  style="height: 675px;overflow-y: scroll;">
+            <#include "/common/left.html" encoding="UTF-8" />
+            <div>
+    </nav>
+</div>
+
+<div class="content-box">
+    <div class="small-content">
+        <div class="content-box">
+            <!--发放积分-->
+            <div class="small-boxb col-md-12">
+                <div class="boxb-b">
+                    <p>	用户ID：<input type="text" style="width:150px;" ng-model="search.mobile" onkeyup="value=value.replace(/[^\d]/g,'') " ng-pattern="/[^a-zA-Z]/"></p>
+                </div>
+                <div class="boxb-b">
+                    <p>	积分数量：<input type="text" style="width:150px;" ng-model="search.point" onkeyup="value=value.replace(/[^\d]/g,'') " ng-pattern="/[^a-zA-Z]/"></p>
+                </div>
+                <div class="boxb-a">
+                    <p style="margin-top:20px;"> 描述：<input type="text" style="width:250px;" ng-model="search.desc"></p>
+                </div>
+
+                <div class="boxb-c" >
+                    <p><a class="btn btn-success btn-rounded btn-blueW btn-blueWa" href="#" ng-click="sendIntegtal()"><span>发放积分</span></a></p>
+                </div>
+                <div class="boxb-c">
+                    <p>
+                        <a href="javascript:void(0)" onclick="$('#file').click()" class="btn btn-success btn-rounded btn-blueWa"><span>批量发积分</span></a>
+                    </p>
+                    <input type="file" id="file" name="file" class="file" onchange="submitUserData(this)">
+                </div>
+                <div class="boxb-c">
+                    <p>
+                        <a href="javascript:void(0)" class="btn btn-success btn-rounded btn-blueWa" ng-click="downloadTemplate()"><span>批量上传积分模板下载</span></a>
+                    </p>
+                </div>
+            </div>
+            <!--添加绑定关系-->
+            <div class="small-boxb col-md-12">
+                <div class="boxb-b">
+                    <p>	用户ID：<input type="text" style="width:150px;" ng-model="bind.memberId" onkeyup="value=value.replace(/[^\d]/g,'') " ng-pattern="/[^a-zA-Z]/"></p>
+                </div>
+                <div class="boxb-b">
+                    <p>	邀请人ID：<input type="text" style="width:150px;" ng-model="bind.inviteMemberId" onkeyup="value=value.replace(/[^\d]/g,'') " ng-pattern="/[^a-zA-Z]/"></p>
+                </div>
+                <div class="boxb-c" >
+                    <p><a class="btn btn-success btn-rounded btn-blueW btn-blueWa" href="#" ng-click="addBindRelation()"><span>添加绑定关系</span></a></p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<div class="modify-start-box" id="editBid">
+    <div class="take-start-small newTakeEffect" style="margin-top: 455px ">
+        <img src="${imgRoot}/R7-51.gif" class="noRight-logo-name" style="width: 201px;height: 5px;">
+    </div>
+</div>
+
+<!-- Mainly scripts -->
+<script src="${jsRoot}/jquery-2.1.1.js"></script>
+<script src="${jsRoot}/bootstrap.min.js"></script>
+<script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="${jsRoot}/plugins/jeditable/jquery.jeditable.js"></script>
+
+<!-- Data Tables -->
+<script src="${jsRoot}/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.responsive.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.tableTools.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="${jsRoot}/inspinia.js"></script>
+<script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+<script type="text/javascript" src="${jsRoot}/angular/angular.min.js"></script>
+<!--  日期控件  -->
+<script src="${jsRoot}/plugins/datapicker/bootstrap-datepicker.js"></script>
+<script src="${jsRoot}/plugins/datapicker/bootstrap-datepicker.zh-CN.min.js"></script>
+<!-- 提示弹窗 -->
+<script type="text/javascript" src="${staticRoot}/js/plugins/sweetalert/sweetalert.min.js"></script>
+<script type="text/javascript" src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+<script type="text/javascript" src="${jsRoot}/biz/tools/operationTool.js?rand=${random}"></script>
+<script type="text/javascript" src="${staticRoot}/js/plugins/ajaxfileupload/ajaxfileupload.js"></script>
+<script>
+    //上传数据
+    function submitUserData(obj) {
+        var xlsfile = obj.value;
+        if(xlsfile=='') {alert("请选择需上传的excel文件!");return false;}
+        var filetype=xlsfile.substr(xlsfile.lastIndexOf(".")).toLowerCase();
+        if(filetype!='.xls' && filetype!='.xlsx'){
+            $('#editBid').hide();
+            return false;
+        }
+        // 上传文件
+        var url = globalConfig.basePath + '/operation/tool/importIntegralData';
+        $('#editBid').show();
+        $.ajaxFileUpload({
+            url:url, //你处理上传文件的服务端
+            secureuri:false,
+            fileElementId:obj.id,
+            success: function (response){
+                var str = $(response).find("body").text();//获取返回的字符串
+                var json = $.parseJSON(str);//把字符串转化为json对象
+                if(json.code=='000'){
+                    swalMsg("成功")
+                    $('#editBid').hide();
+                }else{
+                    swalMsg(json.message);
+                    $('#editBid').hide();
+                }
+            },
+            error:function(data){
+                swalMsg("文件上传失败");
+                $('#editBid').hide();
+            }
+
+        })
+    }
+</script>
+</body>
+</html>

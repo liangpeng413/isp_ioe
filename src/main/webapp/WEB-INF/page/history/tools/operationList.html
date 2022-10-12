@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>积分发放列表</title>
+ <link href="${cssRoot}/bootstrap.min.css" rel="stylesheet">
+  <link href="${cssRoot}/../font-awesome/css/font-awesome.css" rel="stylesheet">
+
+  <!-- FooTable -->
+  <link href="${cssRoot}/plugins/footable/footable.core.css" rel="stylesheet">
+
+  <link href="${cssRoot}/animate.css" rel="stylesheet">
+  <link href="${cssRoot}/style.css" rel="stylesheet">
+  <link href="${cssRoot}/styleT.css" rel="stylesheet">
+  <script>
+  var globalConfig = {
+          basePath: "${ctx}",
+          staticRoot: "${staticRoot}",
+          loginName:"${Session.sessionUser.loginName}"
+      };
+  function swalMsg(msg) {
+      swal({
+          title:"",
+          text:msg,
+          confirmButtonColor: "#1ab394",
+          confirmButtonText:"确定"
+      });
+  }
+  </script>
+
+   <style>
+/* 	.checkbox {
+	 background-Color:e-xpression(this.checked?'yellow':'buttonface');
+	} */
+/* 	element.style{
+		margin-left: -5px;
+	} */
+</style>
+</head>
+<body ng-app="myApp" ng-controller="rootController">
+<div id="wrapper">
+    <div class="header-box">
+        <#include "/common/top.html" encoding="UTF-8" />
+    </div>
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse"  style="height: 675px;overflow-y: scroll;">
+            <#include "/common/left.html" encoding="UTF-8" />
+        </div>
+    </nav>
+</div>
+<div class="content-box">
+  <div class="small-content">
+     <!-- 第一部分 -->
+    <div class="small-boxa">
+      <a class="btn btn-danger btn-rounded btn-gradient btn-gradienta"  href="javascript:void(0) " ng-click="OpenSsinglePoint()"><i class="fa fa-plus-square-o"></i> <span>发放积分</span></a>
+      <a class="btn btn-danger btn-rounded btn-gradient btn-gradienta"  href="javascript:void(0) " ng-click="OpenBatchPoint()"><i class="fa fa-plus-square-o"></i> <span>批量发积分</span></a>
+<!--
+      <a class="btn btn-danger btn-rounded btn-gradient btn-gradienta"  href="javascript:void(0) " ng-click="downloadTemplate()"><i class="fa fa-plus-square-o"></i> <span>模板下载</span></a>
+-->
+        <a class="btn btn-danger btn-rounded btn-gradient btn-gradienta" href="${fileRoot}/pointGiveTemplate.xlsx"
+           download="pointGiveTemplate.xlsx"><i class="fa fa-plus-square-o"></i> <span>积分发放模板下载</span></a>
+    </div>
+    <!-- 第二部分 -->
+    <div class="small-boxb col-md-12">
+      <div class="boxb-a">
+        <p style="margin-top:20px;">发放受众类型：
+          <select class="chosen-select"  ng-model="search.type" style="width:120px;" >
+             <option value="">全部</option>
+             <option value="0">单个客户</option>
+             <option value="1">批量客户</option>
+          </select>
+        </p>
+        <p>钱包用户ID：
+          <input  type="text"  ng-model="search.memberId" maxlength="11" placeholder="钱包用户ID">
+        </p>
+      </div>
+      <div class="boxb-b">
+        <p>积分数量：
+          <input  type="text"   ng-model="search.point">
+        </p>
+        <p>描述：
+          <input  type="text"  ng-model="search.desc" maxlength="10" placeholder="10个汉字以内">
+        </p>
+
+      </div>
+      <div class="boxb-c">
+        <p>发放状态：
+          <select class="chosen-select"  ng-model="search.status" style="width:120px;" >
+            <option value="">全部</option>
+            <option value="2">待发放</option>
+            <option value="0">发放成功</option>
+            <option value="1">发放失败</option>
+          </select>
+        </p>
+          <p>
+              批次号:
+              <input  type="text"  ng-model="search.batchid" maxlength="30" placeholder="批次号">
+          </p>
+        <p>发放时间：
+          <input id="startTime" type="text" style="width:150px;" class="input-date" ng-model="search.startTime">--
+          <input id="endTime" type="text" style="width:150px;" class="input-date" ng-model="search.endTime">
+        </p>
+      </div>
+      <div class="boxb-d">
+        <p>
+          <button style="outline:none;" class="btn btn-success btn-rounded btn-blueW btn-blueWa" href="#" ng-click="querySplashConfigList(1)"><i class="fa fa-search"></i> <span>搜索</span></button>
+          <button style="outline:none;" class="btn btn-success btn-rounded btn-blueW btn-blueWb" href="#" ng-click ="reset()"><i class="fa fa-refresh"></i> <span>重置</span></button>
+        </p>
+      </div>
+    </div>
+    <!-- 第三部分 -->
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="ibox float-e-margins" style="margin-top:10px;">
+          <div class="ibox-content">
+            <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+              <thead>
+                <tr>
+                 <!-- <th></th> -->
+                  <th>序号</th>
+                  <th>用户唯一标识</th>
+                  <th>积分数量</th>
+                  <th>描述</th>
+                  <th>发放时间</th>
+                  <th>发放状态</th>
+                  <th>批次号</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="x in splashConfigList">
+                  <!-- <td class="actived"><input type="checkbox" class="listChecked checkAll" value="{{x.id}}"></td> -->
+                  <td>{{$index+1}}</td>
+                  <td>{{x.mobile}}</td>
+                  <td>{{x.point}}</td>
+                  <td>{{x.desc}}</td>
+                  <td>{{x.createDate | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                  <td>{{x.state==0 && '发放成功' || x.state==1 && '发放失败'|| x.state==2 && '待发放' }}</td>
+                  <td>{{x.batchid }}</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="bottom-page">
+              <div class="bottom-pagea">
+                <select style="width:58px;height:23px;" ng-model="search.pageSize" ng-change="querySplashConfigList(1)">
+                  <option value="5">5</option>
+                  <option value="10">10</option>
+                  <option value="15">15</option>
+                </select>
+              </div>
+               <div class="bottom-pageb">
+                  <i class="fa fa-step-backward" ng-click="querySplashConfigList(1)"></i>
+                  <i style="font-size:16px;" class="fa fa-caret-left" ng-click="querySplashConfigList(search.pageNo-1)"></i>
+                  <p>第<span class="pageN">{{search.pageNo}}</span class="commonN">共<span>{{search.pageCount}}</span>页</p>
+                  <i style="font-size:16px;" class="fa fa-caret-right" ng-click="querySplashConfigList(search.pageNo+1)"></i>
+                  <i style="margin-left:8px;" class="fa fa-step-forward" ng-click="querySplashConfigList(search.pageCount)"></i>
+                  <i class="fa fa-refresh" ng-click="querySplashConfigList(search.pageNo)"></i>
+              </div> 
+              
+              <div class="bottom-pagec">
+                <p>显示<span>{{(search.pageNo-1)*search.pageSize+1}}</span>到{{search.pageNo*search.pageSize}}条，共<span>{{search.totalRowSize}}</span>记录</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+<!-- 发放积分 -->
+<div class="add-start-bg" id="OpenSsinglePoint" style=" ">
+  <div class="add-start">
+    <h1>发放积分</h1>
+    <div class="start-f">
+      <p>用户ID</p>
+      <input  type="text"  ng-model="add.memberId"  onkeyup="value=value.replace(/[^\d]/g,'') " ng-pattern="/[^a-zA-Z]/">
+    </div>
+    <div class="start-f">
+      <p>积分数量</p>
+      <input  type="text"   ng-model="add.point"  onkeyup="value=value.replace(/[^\d]/g,'') " ng-pattern="/[^a-zA-Z]/">
+    </div>
+    <div class="start-f">
+      <p>描述</p>
+      <input  type="text"  ng-model="add.desc"  onkeyup="checkLen(this)" maxlength="50" placeholder="50个汉字以内">
+    </div>
+
+    <div class="bottom-btn">
+      <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="javascript:void(0)" ng-click="sendIntegtal()">确定</a>
+      <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="javascript:void(0)" ng-click="CloseSsinglePoint()">取消</a>
+    </div>
+  </div>
+</div>
+
+<div class="add-start-bg" id="editBid" style="">
+    <div style="margin-top: 455px;width: 201px;height: 5px; ">
+        <img src="${imgRoot}/R7-51.gif" style="width: 201px;height: 5px;margin-left:520px">
+    </div>
+</div>
+
+
+<!-- 批量发积分-->
+<div class="add-start-bg" id="OpenBatchPoint" style="">
+  <div class="add-start">
+    <h1>批量发积分</h1>
+    <div ng-show="importMemberDiv==1" class="start-d">
+      <p>导入用户名单</p> <!-- style="height:13px;visibility:hidden;" -->
+      <input id="updateMemberFileInput" readonly name="excelName" style="width:220px;" type="text">
+      <a href="javascript:void(0)" onclick="$('#memberFile').click()" class="btn btn-success btn-rounded btn-blueWa"><span>导入用户数据</span></a>
+      <input  style="height:13px;visibility:hidden;" type="file" class="file" id="memberFile" name="memberFile" onchange="importOpenMemberData()"/>
+    </div>
+    <div class="bottom-btn">
+      <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="javascript:void(0)" ng-click="checkPointData()" ng-show="btnShow==1">校验</a>
+      <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="javascript:void(0)" ng-click="confirmGivePoint()" ng-show="btnShow==2">确认发放</a>
+      <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="javascript:void(0)" onclick="$('#OpenBatchPoint').hide()">取消</a>
+    </div>
+      <div ng-show="btnShow==2">
+          <ul class="isEffect">
+              <li>
+                  <input type="hidden" ng-model="batchNo" />
+                  <p><b>检验结果：</b></p>
+                  <div>
+                      <span>*一共发放 <b>{{totalCount}}</b> 条,总发放积分数量 <b>{{sumPoint}}</b></span></br>
+                      <span>*单笔最高发放<b>{{maxPoint}}</b></span></br>
+                      <span style="color: red"><b>符合发放条件，请仔细确认，点击发放后奖励将发放至用户账户中</b></span>
+                  </div>
+              </li>
+          </ul>
+      </div>
+
+      <div ng-show="btnShow==3">
+          <ul class="isEffect">
+              <li>
+                  <input type="hidden" ng-model="batchNo" />
+                  <p><b>检验结果：</b></p>
+                  <div>
+                      <span>*一共发放 <b>{{totalCount}}</b>条,总发放积分数量 <b>{{sumPoint}}</b></span></br>
+                      <span>*单笔最高发放 <b>{{maxPoint}}</b></span></br>
+                      <span style="color: red"><b>单笔发放超过上限，请重新上传或联系研发修改限额</b></span>
+                  </div>
+              </li>
+          </ul>
+      </div>
+  </div>
+</div>
+<script src="${jsRoot}/angular/angular.min.js"></script>
+<script src="${jsRoot}/plugins/laydate/laydate.js"></script>
+<!-- Mainly scripts -->
+<script src="${jsRoot}/jquery-2.1.1.js"></script>
+<script src="${jsRoot}/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="${jsRoot}/bootstrap.min.js"></script>
+<script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="${jsRoot}/plugins/jeditable/jquery.jeditable.js"></script>
+
+<!-- Data Tables -->
+<script src="${jsRoot}/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.responsive.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.tableTools.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="${jsRoot}/inspinia.js"></script>
+<script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.iframe-transport.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.ui.widget.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-process.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-validate.js"></script>
+<script type="text/javascript" src="${jsRoot}/biz/tools/operationTool.js?rand=${random}"></script>
+<script type="text/javascript" src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+<script type="text/javascript" src="${staticRoot}/js/plugins/ajaxfileupload/ajaxfileupload.js"></script>
+<script type="text/javascript" src="${staticRoot}/js/plugins/sweetalert/sweetalert.min.js"></script>
+<script>
+  var navHight = $('.navbar-static-side').height()
+  $('.navbar-static-side').css('height', navHight - 60)
+  $('.content-box').css('height', navHight - 60)
+  // 优先级排序
+  $('.btn-gradientb').click(function(){
+    $('.bottom-btnb').click(function(){
+      $('.priority-ranking').hide()
+    })
+  })
+  // 查看弹框
+  $('.look-start').click(function(){
+   // $('.look-start-box').show()
+    $('.bottom-btna').click(function(){
+      $('.look-start-box').hide()
+    }) 
+  })
+  var queryStartTime = laydate({
+      elem:'#startTime',
+      istime: true,
+      format: 'YYYY-mm-DD hh:mm:ss',
+      event:'click'
+  })
+  var queryEndTime = laydate({
+      elem:'#endTime',
+      istime: true,
+      format: 'YYYY-mm-DD hh:mm:ss',
+      event:'click'
+  })
+ /* var addOnlineTime = laydate({
+      elem:'#addOnlineTime',
+      istime: true,
+      format: 'YYYY-mm-DD hh:mm:ss',
+      event:'click'
+  })*/
+ /* var addOfflineTime = laydate({
+     elem:'#addOfflineTime',
+     istime: true,
+     format: 'YYYY-mm-DD hh:mm:ss',
+     event:'click'
+ })*/
+
+  function checkLen(obj){
+      var maxChars = 50;//最多字符数
+      if (obj.value.length > maxChars){
+          alert("最多输入50个字符，现已超出限制，自动截取前50个字符！");
+          obj.value = obj.value.substring(0,maxChars);
+      }
+  }
+
+</script>
+</body>
+</html>

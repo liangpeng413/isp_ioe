@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>常见问题待审核列表</title>
+    <link href="${cssRoot}/bootstrap.min.css" rel="stylesheet">
+    <link href="${staticRoot}/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <!--下拉搜索-->
+    <link href="${cssRoot}/../font-awesome/css/select2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="${cssRoot}/plugins/select2/select2.min.css">
+
+
+    <!-- FooTable -->
+    <link href="${cssRoot}/plugins/footable/footable.core.css" rel="stylesheet">
+
+    <link href="${cssRoot}/animate.css" rel="stylesheet">
+    <link href="${cssRoot}/style.css?rand=${random}" rel="stylesheet">
+    <link href="${cssRoot}/styleT.css?rand=${random}" rel="stylesheet">
+    <script>
+        var globalConfig = {
+            basePath: "${ctx}",
+            staticRoot: "${staticRoot}",
+            loginName:"${Session.sessionUser.loginName}"
+        };
+        function swalMsg(msg) {
+            swal({
+                title:"",
+                text:msg,
+                confirmButtonColor: "#1ab394",
+                confirmButtonText:"确定"
+            });
+        }
+
+    </script>
+</head>
+<body ng-app="problemReviewApp" ng-controller="problemReviewController">
+<div id="wrapper">
+    <div class="header-box">
+        <#include "/common/top.html" encoding="UTF-8" />
+    </div>
+    <nav class="navbar-default navbar-static-side" role="navigation" id="HeadTitle">
+        <div class="sidebar-collapse"  style="height: 675px;overflow-y: scroll;">
+            <#include "/common/left.html" encoding="UTF-8" />
+            </div>
+    </nav>
+</div>
+<div class="content-box">
+    <div class="small-content">
+        <!-- 第一部分 -->
+        <div class="small-boxb col-md-12">
+            <div class="boxb-a">
+                <p style="margin-top:20px;">渠道：
+                    <select id="productChannel" class="chosen-select" style="width:120px;" tabindex="2" ng-model="search.productChannel" ng-change="getTypeOneList(search.productChannel)">
+                        <option value="6">玖富商城APP</option>
+                    </select>
+                </p>
+            </div>
+            <div class="boxb-b">
+                <p>一级分类：
+                    <select id="typeOneSearch" class="chosen-select versionCheckbox" style="width:120px;" tabindex="2" ng-model="search.typeOne" ng-change="getTypeTwoList(search.typeOne)">
+                        <option value="">全部</option>
+                        <option value="{{x.value}}" ng-repeat="x in searchTypeOneList">{{x.label}}</option>
+                    </select>
+                </p>
+            </div>
+            <div class="boxb-c">
+                <p>二级分类：
+                    <select id="typeTwoSearch" class="chosen-select versionCheckbox" style="width:120px;" tabindex="2" ng-model="search.typeTwo">
+                        <option value="">全部</option>
+                        <option value="{{x.value}}" ng-repeat="x in searchTypeTwoList">{{x.label}}</option>
+                    </select>
+                </p>
+            </div>
+            <div class="boxb-c">
+                <p>操作人：
+                    <input style="width:120px;" type="text"  ng-model="search.operator">
+                </p>
+            </div>
+            <div class="boxb-c">
+                <p>问题名称关键词：
+                    <input style="width:120px;" type="text"  ng-model="search.keyword">
+                </p>
+            </div>
+            <div class="boxb-c">
+                <p>
+                    <a class="btn btn-success btn-rounded btn-blueW btn-blueWa" href="#" ng-click="pageQueryTab(1)"><i class="fa fa-search"></i> <span>搜索</span></a>
+                    <a class="btn btn-success btn-rounded btn-blueW btn-blueWb" href="#" ng-click="reset()"><i class="fa fa-refresh"></i> <span>重置</span></a>
+                </p>
+            </div>
+        </div>
+        <div class="small-boxb col-md-12">
+            <div class="boxb-c">
+                <div style="margin-left: -1px">
+                    <p>排序：
+                        <select id="createTimeSort" class="chosen-select" style="width:200px;" tabindex="2" ng-model="search.createTimeSort" ng-change="sortByCreateTime()">
+                            <option value="1">按申请时间降序排列</option>
+                            <option value="2">按申请时间升序排列</option>
+                        </select>
+                    </p>
+                </div>
+                <div style="margin-left: 900px">
+                    <a class="btn btn-danger btn-rounded btn-gradient btn-gradientb" href="javascript:void(0)" ng-click="batchPass()"><i class="fa fa-outdent"></i> <span>通过</span></a>
+                    <a class="btn btn-danger btn-rounded btn-gradient btn-gradientb" href="javascript:void(0)" ng-click="batchRefuse()"><i class="fa fa-outdent"></i> <span>拒绝</span></a>
+                </div>
+            </div>
+        </div>
+        <!-- 第二部分 -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins" style="margin-top:10px;">
+                    <div class="ibox-content">
+                        <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+                            <thead>
+                            <tr>
+                                <th><div style="margin-top: -13px"><input id="allList" type="checkbox" class="checkbox checkAll" ng-click="allListClick()"></div></th>
+                                <th>序号</th>
+                                <th>渠道</th>
+                                <th>一级分类</th>
+                                <th>二级分类</th>
+                                <th>问题名称</th>
+                                <th>审批状态</th>
+                                <th>操作人</th>
+                                <th>操作时间</th>
+                                <th>审核人</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="x in pageList">
+                                <td><input type="checkbox" class="checkbox checkAll" name="problemReview" value="{{x.id}}-{{x.auditStatus}}"></td>
+                                <td>{{$index+1}}</td>
+                                <td>{{x.productChannel==0 && '悟空理财APP' || x.productChannel==6 && '玖富商城APP'}}</td>
+                                <td>{{x.typeOneName}}</td>
+                                <td>{{x.typeTwoName}}</td>
+                                <td>{{x.question}}</td>
+                                <td>{{x.auditStatus==0 && '待审核' || x.auditStatus==1 && '审核通过' || x.auditStatus==2 && '审核拒绝'}}</td>
+                                <td>{{x.operator}}</td>
+                                <td>{{x.createTime| date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                                <td>{{x.auditPerson}}</td>
+                                <td>
+                                    <span class="look-start" ng-click="look(x)">查看</span>
+                                    <span class="take-start">
+                                        <a ng-if="x.auditStatus=='0' && loginName == x.auditNo" src="javaScript:void(0);" class="take-start" ng-click="check(x)">审核</a>
+                                    </span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="bottom-page">
+                            <div class="bottom-pagea">
+                                <select id="pageSize" style="width:58px;height:23px;">
+                                    <option value=5>5</option>
+                                    <option value=10>10</option>
+                                    <option value=15>15</option>
+                                </select>
+                            </div>
+                            <div class="bottom-pageb">
+                                <i class="fa fa-step-backward" ng-click="pageQueryTab(1)"></i>
+                                <i style="font-size:16px;" class="fa fa-caret-left" ng-click="pageQueryTab(search.pageNum-1)"></i>
+                                <p>第<span class="pageN">{{search.pageNum}}</span>共<span class="commonN">{{pages}}</span>页</p>
+                                <i style="font-size:16px;" class="fa fa-caret-right" ng-click="pageQueryTab(search.pageNum+1)"></i>
+                                <i class="fa fa-step-forward" ng-click="pageQueryTab(pages)"></i>
+                                <i class="fa fa-refresh" ng-click="pageQueryTab(search.pageNum)"></i>
+                            </div>
+                            <div class="bottom-pagec">
+                                <p>显示<span>{{(search.pageNum-1)*search.pageSize+1}}</span>到{{search.pageNum*search.pageSize}}，共<span>{{total}}</span>记录</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 查看常见问题 -->
+    <div class="look-start-box" id="problemReviewDetail">
+        <div class="add-look-start">
+            <h1>问题详情</h1>
+            <div class="look-start-a">
+                <p>渠道：</p>
+                <span>{{detail.productChannel==0 && '悟空理财APP' || detail.productChannel==6 && '玖富商城APP'}}</span>
+            </div>
+            <div class="look-start-b">
+                <p>一级分类：</p>
+                <span>{{detail.typeOneName}}</span>
+                <p>二级分类：</p>
+                <span>{{detail.typeTwoName}}</span>
+            </div>
+            <div class="look-start-b">
+                <p>问题名称：</p>
+                <span>{{detail.question}}</span>
+            </div>
+            <div class="look-start-b">
+                <p>问题解答：</p>
+                <span>{{detail.answer}}</span>
+            </div>
+            <div class="bottom-btn">
+                <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" onclick="$('#problemReviewDetail').hide()">返回</a>
+            </div>
+        </div>
+    </div>
+    <!-- 查看Tab图标 -->
+    <!-- 审核 -->
+    <div class="examine-box">
+        <div class="add-look-start">
+            <h1>待审核问题</h1>
+            <div class="look-start-a">
+                <p>渠道：</p>
+                <span>{{confirmRecord.productChannel==0 && '悟空理财APP' || confirmRecord.productChannel==6 && '玖富商城APP'}}</span>
+            </div>
+            <div class="look-start-b">
+                <p>一级分类：</p>
+                <span>{{confirmRecord.typeOneName}}</span>
+                <p>二级分类：</p>
+                <span>{{confirmRecord.typeTwoName}}</span>
+            </div>
+            <div class="look-start-b">
+                <p>问题名称：</p>
+                <span>{{confirmRecord.question}}</span>
+            </div>
+            <div class="look-start-b">
+                <p>问题解答：</p>
+                <span>{{confirmRecord.answer}}</span>
+            </div>
+            <div class="look-start-b">
+                <p>申请人：</p>
+                <span>{{confirmRecord.operator}}</span>
+            </div>
+            <h1></h1>
+            <div class="look-start-b">
+                <p>审核结果：</p>
+                <span><select id="auditStatus" ng-model="auditStatus">
+                    <option value="1">审核通过</option>
+                    <option value="2">审核拒绝</option>
+                </select></span>
+            </div>
+            <div class="look-start-b">
+                <p>审核描述：</p>
+                <span>
+                <textarea id="auditDescription" ng-model="auditDescription" maxlength="200" cols="25" rows="4" placeholder="选填，200字符以内"></textarea>
+                </span>
+            </div>
+            <div class="bottom-btn">
+                <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="confirm()" >确定</a>
+                <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" onclick="$('.examine-box').hide();">取消</a>
+            </div>
+        </div>
+    </div>
+    <!-- 审核 -->
+    <div class="take-start-box" id="batchShow">
+        <input type="hidden" id="problemIds" value="{{problem.ids}}">
+        <input type="hidden" id="problemFlag" value="{{problem.flag}}">
+        <div class="take-start-small newTakeEffect">
+            <div class="look-start-b" style="text-align: center;">
+                <p style="font-size: 20px;font-weight: bold">{{problem.tip}}</p>
+            <div>
+            <div class="bottom-btn">
+                <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="confirmBatch()">确定</a>
+                <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" onclick="$('#batchShow').hide();">取消</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Mainly scripts -->
+<script src="${jsRoot}/jquery-2.1.1.js"></script>
+<script src="${jsRoot}/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="${jsRoot}/angular/angular.min.js"></script>
+<script type="text/javascript" src="${staticRoot}/js/plugins/sweetalert/sweetalert.min.js"></script>
+<script src="${jsRoot}/plugins/laydate/laydate.js"></script>
+<script src="${jsRoot}/bootstrap.min.js"></script>
+<script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="${jsRoot}/plugins/jeditable/jquery.jeditable.js"></script>
+
+<!-- Data Tables -->
+<script src="${jsRoot}/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.responsive.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.tableTools.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="${jsRoot}/inspinia.js"></script>
+<script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.iframe-transport.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.ui.widget.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-process.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-validate.js"></script>
+<script src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+<script src="${jsRoot}/biz/resource/problemReview.js?rand=${random}"></script>
+<!-- 日期控件  -->
+<script type="text/javascript" src="${jsRoot}/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+<!-- 日期控件中文包  -->
+<script type="text/javascript" src="${jsRoot}/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="${jsRoot}/plugins/datapicker/bootstrap-datepicker.js"></script>
+<script src="${jsRoot}/plugins/datapicker/bootstrap-datepicker.zh-CN.min.js"></script>
+
+<!--下拉搜索-->
+<script src="${jsRoot}/plugins/jeditable/select2.full.min.js"></script>
+<script src="${jsRoot}/oms/ruleconfig/jquery.searchableSelect.js"></script>
+</body>
+</html>

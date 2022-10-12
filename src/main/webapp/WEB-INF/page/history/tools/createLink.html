@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>分享链接生成</title>
+  <link href="${cssRoot}/bootstrap.min.css" rel="stylesheet">
+  <link href="${staticRoot}/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+  <!-- FooTable -->
+  <link href="${cssRoot}/plugins/footable/footable.core.css" rel="stylesheet">
+
+  <link href="${cssRoot}/animate.css" rel="stylesheet">
+  <link href="${cssRoot}/style.css?rand=${random}" rel="stylesheet">
+  <link href="${cssRoot}/styleT.css?rand=${random}" rel="stylesheet">
+  <script>
+        var globalConfig = {
+            basePath: "${ctx}",
+            staticRoot: "${staticRoot}",
+            loginName:"${Session.sessionUser.loginName}"
+        };
+        function swalMsg(msg) {
+            swal({
+                title:"",
+                text:msg,
+                confirmButtonColor: "#1ab394",
+                confirmButtonText:"确定"
+            });
+        }
+
+  </script>
+</head>
+<body ng-app="linkApp" ng-controller="linkController">
+<div id="wrapper">
+    <div class="header-box">
+        <#include "/common/top.html" encoding="UTF-8" />
+    </div>
+    <nav class="navbar-default navbar-static-side" role="navigation" id="HeadTitle">
+        <div class="sidebar-collapse"  style="height: 675px;overflow-y: scroll;">
+            <#include "/common/left.html" encoding="UTF-8" />
+        <div>
+    </nav>
+</div>
+
+
+  <!-- 新增权益                               -->
+  <!-- 新增权益                              -->
+<link  href="${cssRoot}/oms/tool/look-page.css" rel="stylesheet">
+<div class="content-box"   >
+ <!--  <div class="look-pagea">
+    <button ng-click="operationType=0"><i class="fa fa-chevron-left"></i><a >返回</a></button>
+  </div> -->
+  <div class="look-pageb">
+    <div class="small-boxb col-md-12">
+      <div class="boxb-a">
+        <p style="margin-top:20px;">生成类型
+          <select style="margin-left:28px;" id="addType"  ng-model="add.type" ng-init="add.type='0'" >
+            <option value="0">仅分享链接</option>
+            <option value="2">仅分享图片</option>
+            <option value="1">分享链接和图片</option>
+           </select>
+        </p>
+
+        <p style="margin-top:20px;" class="inputSpan">
+          <span>原地址</span>
+          <input type="text" style="width:150px;height:35px;" ng-model="add.link">
+        </p>
+        <p ng-show="add.type=='0'||add.type=='1'" style="margin-top:20px;" class="inputSpan">
+          <span>分享链接</span>
+          <input  type="text" style="width:150px;height:35px;" ng-model="add.shareLink">
+        </p>
+        <p ng-show="add.type=='0'||add.type=='1'" style="margin-top:20px;" class="inputSpan">
+          <span>分享标题</span>
+          <input maxlength="25" placeholder="25个字符以内" type="text" style="width:150px;height:35px;" ng-model="add.shareTile">
+        </p>
+        <p ng-show="add.type=='0'||add.type=='1'" style="margin-top:20px;" class="inputSpan">
+          <span>分享内容</span>
+          <input maxlength="30" placeholder="30个字符以内" type="text" style="width:150px;height:35px;" ng-model="add.shareContent">
+        </p>
+        <p ng-show="add.type=='0'||add.type=='1'" style="margin-top:20px;" class="inputSpan">
+          <span>小图链接</span>
+          <input  type="text" style="width:150px;height:35px;" ng-model="add.image">
+        </p>
+        <p ng-show="add.type=='1'||add.type=='2'" style="margin-top:20px;" class="inputSpan">
+          <span>大图链接</span>
+          <input  type="text" style="width:150px;height:35px;" ng-model="add.bigImage">
+        </p>
+        <p  style="margin-top:20px;margin-right: 160px;" class="inputSpan">
+        	<a class="btn btn-success btn-rounded btn-blueW btn-blueWb" href="#" ng-click="reset()"><i class="fa fa-refresh"></i> <span>生成链接</span></a>
+        </p>
+
+      </div>
+      <div class="boxb-b">
+
+        <p style="margin-top:20px;" class="inputSpan"  ng-show="add.type=='0'">
+          <span>链接地址</span>
+          <textarea id="link0"  style="resize:none;width: 390px;height: 270px;overflow-y: scroll;" readonly="readonly">  {{add.link}}?shareOptions={"shareUrl":"{{add.shareLink}}","shareText": "{{add.shareTile}}","shareContent": "{{add.shareContent}}","image": "{{add.image}}","bigImageUrl":"","type":"1"}</textarea>
+        </p>
+        <p style="margin-top:20px;" class="inputSpan"  ng-show="add.type=='1'">
+          <span>链接地址</span>
+          <textarea id="link1"  style="resize:none;width: 390px;height: 270px;overflow-y: scroll;" readonly="readonly"> {{add.link}}?shareOptions={"shareUrl":"{{add.shareLink}}","shareText": "{{add.shareTile}}","shareContent": "{{add.shareContent}}","image": "{{add.image}}","bigImageUrl":"{{add.bigImage}}","type":"3"} </textarea>
+        </p>
+        <p style="margin-top:20px;" class="inputSpan"  ng-show="add.type=='2'">
+          <span>链接地址</span>
+          <textarea id="link2"  style="resize:none;width: 390px;height: 270px;overflow-y: scroll;" readonly="readonly">   {{add.link}}?shareOptions={"shareUrl":"","shareText": "","shareContent": "","image": "","bigImageUrl":"{{add.bigImage}}","type":"2"} </textarea>
+        </p>
+        <p style="margin-top:20px;margin-left: 180px;" class="inputSpan" >
+          <a class="btn btn-success btn-rounded btn-blueW btn-blueWb" href="#" ng-click="copy(add.type)"><i class="fa fa-refresh"></i> <span>复制</span></a>
+        </p>
+
+      </div>
+    </div>
+  </div>
+ <!--  <div class="look-pagea" style="margin-top:8px;">
+    <a class="btn btn-success btn-rounded btn-blueW btn-blueWb" href="#" ng-click="reset()"><i class="fa fa-refresh"></i> <span>生成链接</span></a>
+  </div> -->
+</div>
+<textarea name="text" id="text" cols="30" rows="10"></textarea>
+<button onclick="myCopy()">点击复制文本框内的内容</button><br>
+<script>
+    function myCopy(){
+        var ele = document.getElementById("text");
+        ele.select();
+        document.execCommand("Copy");
+        alert('chengg')
+    }
+</script>
+<!-- Mainly scripts -->
+<script src="${jsRoot}/jquery-2.1.1.js"></script>
+<script src="${jsRoot}/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="${jsRoot}/angular/angular.min.js"></script>
+<script type="text/javascript" src="${staticRoot}/js/plugins/sweetalert/sweetalert.min.js"></script>
+<script src="${jsRoot}/plugins/laydate/laydate.js"></script>
+<script src="${jsRoot}/bootstrap.min.js"></script>
+<script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="${jsRoot}/plugins/jeditable/jquery.jeditable.js"></script>
+
+<!-- Data Tables -->
+<script src="${jsRoot}/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.responsive.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.tableTools.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="${jsRoot}/inspinia.js"></script>
+<script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.iframe-transport.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.ui.widget.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-process.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-validate.js"></script>
+<script src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+<script src="${jsRoot}/biz/tools/createLink.js?rand=${random}"></script>
+<!-- 日期控件  -->
+<script type="text/javascript" src="${jsRoot}/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+<!-- 日期控件中文包  -->
+<script type="text/javascript" src="${jsRoot}/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="${jsRoot}/plugins/datapicker/bootstrap-datepicker.js"></script>
+<script src="${jsRoot}/plugins/datapicker/bootstrap-datepicker.zh-CN.min.js"></script>
+<script>
+  var navHight = $('.navbar-static-side').height()
+  $('.navbar-static-side').css('height', navHight - 60)
+  $('.content-box').css('height', navHight - 60)
+</script>
+</body>
+</html>

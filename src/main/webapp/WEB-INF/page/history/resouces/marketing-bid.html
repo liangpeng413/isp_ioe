@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>营销打标</title>
+  <link href="${cssRoot}/bootstrap.min.css" rel="stylesheet">
+  <link href="${staticRoot}/font-awesome/css/font-awesome.css" rel="stylesheet">
+  <!-- FooTable -->
+  <link href="${cssRoot}/plugins/footable/footable.core.css" rel="stylesheet">
+  <link href="${cssRoot}/animate.css" rel="stylesheet">
+  <link href="${cssRoot}/style.css?rand=${random}" rel="stylesheet">
+  <link href="${cssRoot}/styleT.css?rand=${random}" rel="stylesheet">
+  <!-- 日历 -->
+  <link href="${cssRoot}/plugins/datapicker/datepicker3.css" rel="stylesheet">
+  <link rel="stylesheet" href="${jsRoot}/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" />
+  <link href="${staticRoot}/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+  <script>
+        var globalConfig = {
+            basePath: "${ctx}",
+            staticRoot: "${staticRoot}"
+        };
+        function swalMsg(msg) {
+            swal({
+                title:"",
+                text:msg,
+                confirmButtonColor: "#1ab394",
+                confirmButtonText:"确定"
+            });
+        }
+
+  </script>
+</head>
+<body ng-app="myApp" ng-controller="rootController">
+<div id="wrapper">
+    <div class="header-box">
+        <#include "/common/top.html" encoding="UTF-8" />
+    </div>
+    <nav class="navbar-default navbar-static-side" role="navigation" id="HeadTitle">
+        <div class="sidebar-collapse"  style="height: 675px;overflow-y: scroll;">
+            <#include "/common/left.html" encoding="UTF-8" />
+        <div>
+    </nav>
+</div>
+<div class="content-box">
+  <div class="small-content">
+    <!-- 第一部分 -->
+    <div class="small-boxa">
+      <a class="btn btn-danger btn-rounded btn-gradient btn-gradienta" href="#" ng-click="addBid()"><i class="fa fa-plus-square-o"></i> <span>添加营销打标</span></a>
+      <a class="btn btn-danger btn-rounded btn-gradient btn-gradientb" href="#" ng-click="sort()"><i class="fa fa-outdent"></i> <span>优先级排序</span></a>
+    </div>
+    <!-- 第二部分 -->
+    <div class="small-boxb col-md-12">
+      <div class="boxb-a">
+        <p style="margin-top:20px;">渠道：
+          <select id="productChannel" class="chosen-select" style="width:120px;" tabindex="2" ng-model="search.productChannel" ng-change="getTypeVersion(search.productChannel)">
+            <option value="0">悟空理财APP</option>
+            <option value="1">玖富钱包APP</option>
+            <option value="2">悟空理财微信端</option>
+          </select>
+        </p>
+        <p>是否生效：
+          <select class="chosen-select" style="width:120px;" tabindex="2" ng-model="search.valid">
+            <option value="">全部</option>
+            <option value="1">生效</option>
+            <option value="0">失效</option>
+          </select>
+        </p>
+          <p>营销打标描述：
+              <input type="text" style="width:320px;"  ng-model="search.markingDescribe" id="markingDescribe" name="markingDescribe">
+          </p>
+      </div>
+     <!--  <div class="boxb-b">
+        <p>版本号：
+          <select id="productVersion" class="chosen-select versionCheckbox" style="width:150px;" tabindex="2" ng-model="search.productVersion">
+            <option value="{{x.value}}" ng-repeat="x in typeVersionList">{{x.label}}</option>
+          </select>
+        </p>
+        <p>在线时间：
+          <input type="text" style="width:150px;"  ng-model="search.onlineTime" id="queryOnlineTime" name="queryOnlineTime">
+        </p>
+      </div> -->
+      <div class="boxb-c" style="margin-left: -185px;">
+         <p>产品类型：
+         <select class="chosen-select" style="width:120px;" tabindex="2" ng-model="search.type">
+            <option value="1">网贷产品</option>
+            <option value="2" ng-show="search.productChannel==1">非网贷产品</option>
+          </select>
+          <select class="chosen-select" style="width:180px;" tabindex="2" ng-model="search.productNameType" ng-show="(search.type==1&&search.productChannel==0)||(search.type==1&&search.productChannel==2)">
+            <option value="">全部</option>
+              <option value="{{x.productSecondCat}}-{{x.productType}}-{{x.productPeriod}}" ng-repeat="x in wkProductListAPP" ng-if="x.lcProductId==null && x.productSecondCat.indexOf('C') == -1" >{{x.productType}}-{{x.productPeriod}}</option>
+              <option value="{{x.productSecondCat}}-{{x.productType}}" ng-repeat="x in wkProductListAPP" ng-if="x.lcProductId==null && x.productSecondCat.indexOf('C') != -1" >{{x.productType}}</option>
+              <option value="{{x.lcProductId}}-IdLogo-{{x.productType}}-{{x.productPeriod}}"      ng-repeat="x in wkProductListAPP" ng-if="x.lcProductId!=null" >{{x.lcProductId}}-{{x.productType}}-{{x.productPeriod}}</option>
+          </select>
+          <select class="chosen-select" style="width:180px;" tabindex="2" ng-model="search.productNameType" ng-show="(search.type==2&&search.productChannel==0)||(search.type==2&&search.productChannel==2)">
+            <option value="">全部</option>
+            <option value="{{x.value}}" ng-repeat="x in wkInvestProductList">{{x.label}}</option>
+          </select>
+          <select class="chosen-select" style="width:180px;" tabindex="2" ng-model="search.productNameType" ng-show="search.type==1&&search.productChannel==1">
+            <option value="">全部</option>
+            <option value="{{x.productName}}-{{x.period}}-{{x.onlineTime}}" ng-repeat="x in qbProductList">{{x.productName}}-{{x.period}}-{{x.standardProfit}}-{{x.onlineTime|date:"yyyy-MM-dd HH:mm:ss"}}</option>
+          </select>
+          <select class="chosen-select" style="width:180px;" tabindex="2" ng-model="search.productNameType" ng-show="search.type==2&&search.productChannel==1">
+            <option value="">全部</option>
+            <option value="{{x.value}}" ng-repeat="x in qbInvestProductList">{{x.label}}</option>
+          </select>
+        </p>
+        <p>上线状态：
+          <select class="chosen-select" style="width:120px;" tabindex="2" ng-model="search.status">
+          <option value="">全部</option>
+            <option value="0">已上线</option>
+            <option value="1">待上线</option>
+            <option value="2">已下线</option>
+          </select>
+        </p>
+      </div>
+      <div class="boxb-c">
+       	<!-- <p style="margin-top:20px;">登录状态：
+          <select id="loginStatus" class="chosen-select" style="width:120px;" tabindex="2" ng-model="search.loginStatus" ng-change="changeStatus(search.loginStatus)">
+            <option value="1">已登录</option>
+            <option value="0">未登录</option>
+          </select>
+        </p> -->
+          <p>是否审核：
+              <select class="chosen-select" style="width:120px;" tabindex="2" ng-model="search.auditStatus">
+                  <option value="">全部</option>
+                  <option value="0">待审核</option>
+                  <option value="1">审核通过</option>
+                  <option value="2">审核不通过</option>
+              </select>
+          </p>
+        <p>在线时间：
+          <input type="text" style="width:120px;"  ng-model="search.onlineTime" id="queryOnlineTime" name="queryOnlineTime">
+        </p>
+      </div>
+      <div class="boxb-c">
+      	<p style="margin:125px;">
+          <a class="btn btn-success btn-rounded btn-blueW btn-blueWa" href="#" ng-click="pageQueryMark(1)"><i class="fa fa-search"></i> <span>搜索</span></a>
+          <a class="btn btn-success btn-rounded btn-blueW btn-blueWb" href="#" ng-click="reset()"><i class="fa fa-refresh"></i> <span>重置</span></a>
+        </p>
+      </div>
+    </div>
+    <!-- 第二部分 -->
+    <!-- 第三部分 -->
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="ibox float-e-margins" style="margin-top:10px;">
+          <div class="ibox-content">
+            <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>序号</th>
+                  <th>产品</th>
+                  <!-- <th>版本号</th> -->
+                  <th>产品名称</th>
+                  <th>优先级</th>
+                  <!--<th ng-show="search.type==1">标准回报率</th>-->
+                  <th>标准回报率</th>
+                  <!--<th ng-show="search.type==1">扩展回报率</th>-->
+                  <th>扩展回报率</th>
+
+                  <th>描述</th>
+                  <!--<th ng-if="search.productChannel==1&&search.type==1">打标图片</th>-->
+                  <th>打标图片</th>
+                  <!--<th ng-if="search.type==2">打标文案</th>-->
+                  <th>打标文案</th>
+                  <th>打标标签</th>
+                  <th>打标描述</th>
+                  <th>上线时间</th>
+                  <th>下线时间</th>
+                  <th>上线状态</th>
+                  <th>是否生效</th>
+                  <th>审核状态</th>
+                  <!--<th>最后修改时间</th>-->
+                  <!--<th>修改人</th>-->
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="x in pageList">
+                  <td class="actived"><!-- <input type="checkbox" class="listChecked checkAll" value="{{x.id}}-{{x.markingDesc}}"> --></td>
+                  <td>{{$index+1}}</td>
+                  <td>{{x.productChannel==0 && '悟空理财APP' || x.productChannel==1 && '玖富钱包APP' || x.productChannel==2 && '悟空理财微信端'||x.productChannel}}</td>
+                  <!-- <td>{{x.productVersion}}</td> -->
+                  <td ng-show="(x.type==1&&x.productChannel==0)||(x.type==1&&x.productChannel==2)">网贷产品-{{x.productNameType}}</td>
+          		  <td ng-show="x.type==1&&x.productChannel==1">网贷产品-{{x.productName}}-{{x.period}}-{{x.startTime|date:"yyyy-MM-dd HH:mm:ss"}}</td>
+          		  <td ng-show="x.type==2">非网贷产品-{{x.productNameType=='flag_1' && '玖富宝' || x.productNameType=='flag_2' && '网贷' || x.productNameType=='flag_4' && '定期' || x.productNameType=='flag_5' && '股票' || x.productNameType=='flag_6' && '基金'}}</td>
+                  <td>{{x.priority}}</td>
+                  <!--<td ng-show="search.type==1">{{x.profit}}%</td>-->
+                  <td>{{x.profit}}%</td>
+                  <!--<td ng-show="search.type==1">{{x.expandProfit}}%</td>-->
+                  <td>{{x.expandProfit}}%</td>
+                  <td>{{x.markingDesc}}</td>
+                  <!--<td ng-if="search.productChannel==1&&search.type==1"><img ng-src="{{x.markingImageUrl}}" style="max-width:;height:60px;"></img></td>-->
+                  <td><img ng-src="{{x.markingImageUrl}}" style="max-width:;height:60px;"></img></td>
+                  <!--<td ng-if="search.type==2">{{x.markingText}}</td>-->
+                  <td>{{x.markingText}}</td>
+                  <td>{{x.markingLabel}}</td>
+                  <td>{{x.markingDescribe}}</td>
+                  <td>{{x.onlineTime| date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                  <td>{{x.offlineTime| date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                  <td>{{x.status==0 && '已上线' || x.status==1 && '待上线' || x.status==2 && '已下线'}}</td>
+                  <td>{{x.valid=='0' && '未生效' || x.valid=='1' && '已生效'}}</td>
+                  <td>{{x.auditStatus==0 && '待审核' || x.auditStatus==1 && '审核通过' || x.auditStatus==2 && '审核失败'}}</td>
+                  <!--<td>{{x.updateTime| date:'yyyy-MM-dd HH:mm:ss'}}</td>-->
+                  <!--<td>{{x.operationPerson}}</td>-->
+                  <td>
+                    <span class="look-start" ng-click="preOperate(1,x)">查看</span>
+                    <span class="modify-start" ng-click="preOperate(2,x)">修改</span>
+                    <span class="take-start" ng-click="preOperate(3,x)">{{x.valid=='0'?"生效":"失效"}}</span>
+                    <span class="modify-start" ng-click="preOperate(4,x)" ng-if="x.auditStatus==0 && loginName == x.auditNo">审核</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="bottom-page">
+              <div class="bottom-pagea">
+                <select id="pageSize" style="width:58px;height:23px;">
+                  <option value=5>5</option>
+                  <option value=10>10</option>
+                  <option value=15>15</option>
+                </select>
+              </div>
+              <div class="bottom-pageb">
+                  <i class="fa fa-step-backward" ng-click="pageQueryMark(1)"></i>
+                  <i style="font-size:16px;" class="fa fa-caret-left" ng-click="pageQueryMark(search.pageNum-1)"></i>
+                  <p>第<span class="pageN">{{search.pageNum}}</span class="commonN">共<span>{{pages}}</span>页</p>
+                  <!-- <i style="margin-left:8px;" class="fa fa-angle-right"></i> -->
+                  <i style="font-size:16px;" class="fa fa-caret-right" ng-click="pageQueryMark(search.pageNum+1)"></i>
+                  <i class="fa fa-step-forward" ng-click="pageQueryMark(pages)"></i>
+                  <i class="fa fa-refresh" ng-click="pageQueryMark(search.pageNum)"></i>
+
+              </div>
+              <div class="bottom-pagec">
+                <p>显示<span>{{(search.pageNum-1)*search.pageSize+1}}</span>到{{search.pageNum*search.pageSize}}，共<span>{{total}}</span>记录</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 第三部分 -->
+  <!-- 添加营销打标 -->
+  <div class="add-start-bg" id="addBid">
+    <div class="add-start">
+        <h1 align="center">添加营销打标</h1>
+        <div class="start-a">
+          <p>渠道：</p>
+          <select id="productChannelAdd"  ng-model="add.productChannel" ng-init="add.productChannel='0'" ng-change="getTypeVersion(add.productChannel)">
+            <option value="0">悟空理财APP</option>
+            <option value="1">玖富钱包APP</option>
+            <option value="2">悟空理财微信端</option>
+          </select>
+          <!-- <h2>版本号： <span ng-repeat="v in typeVersionList"><input type="checkbox" class="versionCheckbox checkAll" value="{{v.label}}"/>{{v.label}}</span> -->
+          </h2>
+        </div>
+        <div class="start-b">
+         <!--  <p>登录状态:</p>
+          <input id="login" type="checkbox" class="checkbox checkAll" value="1"  ng-click="loginClick()" ng-model="login">已登录
+          <input id="logout" type="checkbox" class="checkbox checkAll" value="0"  ng-click="logoutClick()" ng-model="logout">未登录 -->
+          <p>产品类型：</p>
+          <select class="chosen-select" style="width:120px;" tabindex="2" ng-model="add.type">
+            <option value="1">网贷产品</option>
+            <option value="2" ng-show="add.productChannel==1">非网贷产品</option>
+          </select>
+           <select class="chosen-select" style="width:120px;" tabindex="2" ng-model="add.productNameType" ng-show="(add.type==1&&add.productChannel==0)||(add.type==1&&add.productChannel==2)">
+            <option value="">请选择</option>
+               <option value="{{x.productSecondCat}}-{{x.productType}}-{{x.productPeriod}}" ng-repeat="x in wkProductListAPP" ng-if="x.lcProductId==null && x.productSecondCat.indexOf('C') == -1" >{{x.productType}}-{{x.productPeriod}}</option>
+               <option value="{{x.productSecondCat}}-{{x.productType}}" ng-repeat="x in wkProductListAPP" ng-if="x.lcProductId==null && x.productSecondCat.indexOf('C') != -1" >{{x.productType}}</option>
+               <option value="{{x.lcProductId}}-IdLogo-{{x.productType}}-{{x.productPeriod}}"      ng-repeat="x in wkProductListAPP" ng-if="x.lcProductId!=null" >{{x.lcProductId}}-{{x.productType}}-{{x.productPeriod}}</option>
+           </select>
+          <select class="chosen-select" style="width:120px;" tabindex="2" ng-model="add.productNameType" ng-show="add.type==1&&add.productChannel==1">
+            <option value="">请选择</option>
+            <option value="{{x.productName}}-{{x.period}}-{{x.standardProfit}}-{{x.onlineTime}}" ng-repeat="x in qbProductList">{{x.productName}}-{{x.period}}-{{x.standardProfit}}-{{x.onlineTime|date:"yyyy-MM-dd HH:mm:ss"}}</option>
+          </select>
+          <select class="chosen-select" style="width:180px;" tabindex="2" ng-model="add.productNameType" ng-show="add.type==2&&add.productChannel==1">
+            <option value="">全部</option>
+            <option value="{{x.value}}" ng-repeat="x in qbInvestProductList">{{x.label}}</option>
+          </select>
+<select class="chosen-select" style="width:180px;" tabindex="2" ng-model="add.productNameType" ng-show="(add.type==2&&add.productChannel==0)||(add.type==2&&add.productChannel==2)">
+            <option value="">全部</option>
+            <option value="{{x.value}}" ng-repeat="x in wkInvestProductList">{{x.label}}</option>
+          </select>
+        </div>
+
+        <div class="start-b">
+          <p>描述：</p>
+          <input style="width:368px;" type="text" maxlength="30" placeholder="选填，30字符以内" ng-model="add.markingDesc">
+        </div>
+        <div class="start-b" ng-show="add.type == 1 && add.productChannel == 1">
+            <p>打标文案：</p>
+            <input style="width:368px;" type="text" maxlength="10" placeholder="选填，10字符以内" ng-model="add.markingText">
+        </div>
+        <div class="start-g" ng-show="add.type==2">
+        <p>打标文案：</p>
+        <input type="text" ng-model="add.markingText">
+        <p>背景色值：</p>
+        <input type="text" ng-model="add.color">
+    </div>
+        <!--<div class="start-d" ng-show="add.type==1 && add.productChannel==1">-->
+          <!--<p>打标图片：</p>-->
+          <!--<input type="file" id="addPicture" name="file" size="1" style="position:absolute;display: none;">-->
+          <!--<input style="width:220px;" id="fileUrl" type="text" ng-model="add.markingImageUrl">-->
+          <!--<a class="btn btn-success btn-rounded btn-blueWa" href="#" onclick="$('#addPicture').click();" id="image_prew"><span>点击上传</span></a>-->
+        <!--</div>-->
+        <!--<div class="start-e" ng-show="add.type==1 && add.productChannel!=1">
+          <p>标准回报率：</p>
+          <input style="width:164px" type="text" ng-model="add.profit" >
+          <p>扩展回报率：</p>
+          <input type="text" ng-model="add.expandProfit">
+        </div>-->
+        <div class="start-e" ng-show="add.type==1 && add.productChannel!=1">
+            <p>打标标签：</p>
+            <input style="width:164px" type="text" ng-model="add.markingLabel" >
+            <p>打标描述：</p>
+            <input type="text" ng-model="add.markingDescribe">
+        </div>
+        <div class="start-f">
+          <p>上线时间：</p>
+          <input type="text" id="addOnlineTime" ng-model="add.onlineTime" >
+          <p>下线时间：</p>
+          <input type="text" id="addOfflineTime" ng-model="add.offlineTime" style="margin-left: 2px">
+        </div>
+        <div class="start-g" ng-show="add.type==1">
+          <!--<p ng-show="add.productChannel==1&&add.type==1">打标文案：</p>-->
+          <!--<input type="text" ng-model="add.markingText" ng-show="add.productChannel==1">-->
+          <p>是否生效：</p>
+          <select id="" ng-model="add.valid" ng-init="add.valid='1'">
+            <option value="1">生效</option>
+            <option value="0">失效</option>
+          </select>
+        </div>
+        <div class="start-g" ng-show="add.type==2">
+            <p>是否生效：</p>
+            <select id="" ng-model="add.valid" ng-init="add.valid='1'">
+                <option value="1">生效</option>
+                <option value="0">失效</option>
+            </select>
+        </div>
+        <div class="start-g">
+            <p>审核人：</p>
+            <select id="auditPersion" ng-model="add.auditPersion" ng-options="x.name for x in auditPersionList">
+                <option value="">请选择</option>
+                <!--<option value={{x}} ng-repeat="x in auditPersionList">{{x.name}}</option>-->
+
+            </select>
+            <p>提审说明：</p>
+            <input type="text" ng-model="add.requestAuditDescription" maxlength="18" placeholder="选填，18字符以内">
+        </div>
+        <!-- <div class="start-h">
+          <p>展示人群：</p>
+            <input id="all" type="checkbox" class="checkbox checkAll" value="0" checked="checked" ng-click="complete()" ng-model="allxx">全部
+        </div>
+        <div class="start-i">
+          <p></p>
+          <input id="white" type="checkbox" class="checkbox checkAll" value="1" ng-click="baiChecked()" disabled="disabled" ng-model="whitexx">白名单
+          <select ng-model="add.whiteId" id="whiteID" disabled="disabled">
+            <option value="0">请选择</option>
+            <option value="{{x.id}}" ng-repeat="x in whiteList_qb" ng-if="add.productChannel=='1'">{{x.listName}}</option>
+            <option value="{{x.id}}" ng-repeat="x in whiteList_wk" ng-if="add.productChannel != '1'">{{x.listName}}</option>
+          </select>
+        </div>
+        <div class="start-j">
+          <p></p>
+          <input id="black" type="checkbox" class="checkbox checkAll" value="2" disabled="disabled" ng-click="blackClick()" ng-model="blackxx">黑名单
+          <select ng-model="add.blackId" id="blackSelect" disabled="disabled">
+            <option value="0">请选择</option>
+            <option value="{{x.id}}" ng-repeat="x in blackList_qb" ng-if="add.productChannel=='1'">{{x.listName}}</option>
+            <option value="{{x.id}}" ng-repeat="x in blackList_wk" ng-if="add.productChannel!='1'">{{x.listName}}</option>
+          </select>
+        </div> -->
+        <div class="bottom-btn">
+          <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#"  ng-click="checkAddOnlineTime()">确定</a>
+          <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" ng-click="closeAddBid()">取消</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 添加营销打标 -->
+  <!-- 优先级排序 -->
+  <div class="priority-ranking" id="addSort">
+    <div class="priority-ranking-small">
+      <h1>营销打标优先级排序</h1>
+      <div class="ranking-small">
+        <div class="ranking-smalla">优先级排序
+          <i class="fa fa-caret-down smalla-red" ng-click="moveDown()"></i>
+          <i class="fa fa-caret-up" ng-click="moveUp()"></i>
+         <!--  <i class="fa fa-times" ng-click="del()"></i> -->
+          <p><span style="color:#ff2327;">*</span>编号越大，优先级越低</p>
+        </div>
+        <div class="ranking-smallb">
+        	<table>
+            <thead>
+            <tr>
+              <td></td>
+              <td class="tdNumber">优先级编号</td>
+              <td>营销打标描述</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="x in strotList">
+              <td class="iptCheck"><input type="checkbox" class="moveCheckbox sort" value="{{$index}}"></td>
+              <td class="tdNumber"><input type="hidden" ng-model="hehe.a">{{$index+1}}</td>
+              <td><input type="hidden" ng-model="hehe.b">{{x.markingDescribe}}</td>
+            </tr>
+            </tbody>
+        	</table>
+        </div>
+      </div>
+      <div class="bottom-btn">
+        <a class="btn btn-danger btn-rounded bottom-btna" href="#" ng-click="moveSave()">确定</a>
+        <a class="btn btn-danger btn-rounded bottom-btnb" href="#" ng-click="moveCancel()">取消</a>
+      </div>
+    </div>
+  </div>
+  <!-- 优先级排序 -->
+  <!-- 查看营销打标 -->
+  <div class="look-start-box" id="detailBid">
+    <div class="add-look-start">
+        <h1 align="center">营销打标详情</h1>
+        <div class="look-start-a">
+          <p>渠道：</p>
+          <span>{{detail.productChannel==0 && '悟空理财APP' || detail.productChannel==1 && '玖富钱包APP' || detail.productChannel==2 && '悟空理财微信端'||detail.productChannel}}</span>
+          <!-- <p style="margin-left:90px;">版本号：</p>
+          <span>{{detail.productVersion}}</span> -->
+        </div>
+       <!--  <div class="look-start-b">
+          <p>登录状态：</p>
+          <span>{{detail.loginStatus==0 && '未登录' || detail.loginStatus==1 && '已登录'}}</span>
+        </div> -->
+        <div class="look-start-a">
+          <p>产品类型：</p>
+          <span ng-show="(detail.type==1&&detail.productChannel==0)||(detail.type==1&&detail.productChannel==2)">网贷产品-{{detail.productNameType}}</span>
+          <span ng-show="detail.type==1&&detail.productChannel==1">网贷产品-{{detail.productName}}-{{detail.period}}-{{detail.startTime|date:"yyyy-MM-dd HH:mm:ss"}}</span>
+          <span ng-show="detail.type==2">非网贷产品-{{detail.productNameType=='flag_1' && '玖富宝' || detail.productNameType=='flag_2' && '网贷' || detail.productNameType=='flag_4' && '定期' || detail.productNameType=='flag_5' && '股票' || detail.productNameType=='flag_6' && '基金'}}</span>
+        </div>
+        <div class="look-start-b">
+          <p>优先级排序：</p>
+          <span>{{detail.priority}}</span>
+        </div>
+        <div class="look-start-b">
+          <p>描述：</p>
+          <span>{{detail.markingDesc}}</span>
+        </div>
+        <div class="start-b" ng-show="detail.type == 1 && detail.productChannel != 1">
+            <p>打标标签：</p>
+            <span>{{detail.markingLabel}}</span>
+            <p>打标描述：</p>
+            <span>{{detail.markingDescribe}}</span>
+        </div>
+        <div class="start-b" ng-show="detail.type == 1 && detail.productChannel == 1">
+            <p>打标文案：</p>
+            <span>{{detail.markingText}}</span>
+        </div>
+        <div class="look-start-g" ng-show="detail.type==2">
+          <p>打标文案：</p>
+          <span>{{detail.markingText}}</span>
+          <p>背景色值：</p>
+          <span>{{detail.color}}</span>
+        </div>
+        <!--<div class="look-start-d" ng-show="detail.type==1 && detail.productChannel==1">-->
+          <!--<p>营销打标图片：</p>-->
+          <!--<img ng-src="{{detail.markingImageUrl}}" alt="">-->
+        <!--</div>-->
+        <!--<div class="look-start-c" ng-show="detail.type==1">-->
+          <!--<p>标准回报率：</p>-->
+          <!--<span>{{detail.profit}}%</span>-->
+          <!--<p>扩展回报率：</p>-->
+          <!--<span>{{detail.expandProfit}}%</span>-->
+        <!--</div>-->
+        <div class="look-start-f">
+          <p>上线时间：</p>
+          <span>{{detail.onlineTime}}</span>
+          <p style="margin-left:50px;">下线时间：</p>
+          <span>{{detail.offlineTime}}</span>
+        </div>
+        <div class="look-start-g">
+          <!--<p ng-show="detail.productChannel==1">打标文案：</p>-->
+          <!--<span ng-show="detail.productChannel==1">{{detail.markingText}}</span>-->
+          <p style="margin-left:26px;">是否生效：</p>
+          <span>{{detail.valid=='0' && '未生效' || detail.valid=='1' && '已生效'}}</span>
+        </div>
+        <!-- <div class="look-start-h">
+          <p>展示人群：</p>
+          <span>{{detail.showType=='0' && '全部' || detail.showType=='1' && '白名单'|| detail.showType=='2' && '黑名单'|| detail.showType=='3' && '黑白名单'}}</span>
+        </div> -->
+        <div class="look-start-i">
+          <p>最后修改时间：</p>
+          <span>{{detail.updateTime}}</span>
+          <p>修改人：</p>
+          <span>{{detail.operationPerson}}</span>
+        </div>
+        <div class="look-start-j">
+          <p>创建时间：</p>
+          <span>{{detail.createTime}}</span>
+          <p style="margin-left:53px;">创建人：</p>
+          <span>{{detail.createPerson}}</span>
+        </div>
+        <div class="look-start-j">
+            <p>提审说明：</p>
+            <span>{{detail.requestAuditDescription}}</span>
+            <p style="margin-left:53px;">审核结果：</p>
+            <span>{{detail.auditStatus==0 &&'待审核' || detail.auditStatus==1 &&'审核通过' || detail.auditStatus==2 && '审核失败'}}</span>
+        </div>
+        <div class="look-start-j">
+            <p>审核时间：</p>
+            <span>{{detail.auditTime}}</span>
+            <p style="margin-left:53px;">审核人：</p>
+            <span>{{detail.auditPerson}}</span>
+        </div>
+        <div class="look-start-j">
+            <p>审核描述：</p>
+            <span>{{detail.auditDescription}}</span>
+        </div>
+
+        <div class="bottom-btn">
+          <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" onclick="$('#detailBid').hide()">关闭</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 查看营销打标 -->
+  <!-- 修改营销打标 -->
+  <div class="modify-start-box" id="editBid">
+    <div class="add-start">
+        <h1 align="center">修改营销打标</h1>
+        <div class="start-a">
+          <p>渠道：</p>
+          <span>{{operationRecord.productChannel==0 && "悟空理财app" || operationRecord.productChannel==1 && "玖富钱包app" || operationRecord.productChannel==2 && "悟空理财微信端" || "其他"}}</span>
+         <!--  <h2>版本号：<span>{{operationRecord.productVersion}}</span></h2> -->
+        </div>
+        <div class="start-c">
+         <!-- <p>登录状态:</p>
+         <span>{{operationRecord.loginStatus==0 && '未登录' || operationRecord.loginStatus==1 && '已登录'}}</span> -->
+         <!--  <input id="loginEdit" type="checkbox" class="checkbox checkAll" value="1"  ng-click="loginEditClick()" ng-model="loginEdit">已登录
+          <input id="logoutEdit" type="checkbox" class="checkbox checkAll" value="0"  ng-click="logoutEditClick()" ng-model="logoutEdit">未登录 -->
+          <p>产品类型：</p>
+          <select class="chosen-select" style="width:120px;" tabindex="2" ng-model="operationRecord.type">
+            <option value="1">网贷产品</option>
+            <option value="2" ng-show="operationRecord.productChannel==1">非网贷产品</option>
+          </select>
+          <select class="chosen-select" style="width:120px;" tabindex="2" id="operationRecordproductNameType" ng-model="operationRecord.productNameType"
+                  ng-show="(operationRecord.type==1&&operationRecord.productChannel==0)||(operationRecord.type==1&&operationRecord.productChannel==2)">
+              <option value="">请选择</option>
+              <option value="{{x.productSecondCat}}-{{x.productType}}-{{x.productPeriod}}" ng-repeat="x in wkProductListAPP" ng-if="x.lcProductId==null && x.productSecondCat.indexOf('C') == -1" >{{x.productType}}-{{x.productPeriod}}</option>
+              <option value="{{x.productSecondCat}}-{{x.productType}}" ng-repeat="x in wkProductListAPP" ng-if="x.lcProductId==null && x.productSecondCat.indexOf('C') != -1" >{{x.productType}}</option>
+              <option value="{{x.lcProductId}}-IdLogo-{{x.productType}}-{{x.productPeriod}}"      ng-repeat="x in wkProductListAPP" ng-if="x.lcProductId!=null" >{{x.lcProductId}}-{{x.productType}}-{{x.productPeriod}}</option>
+          </select>
+          <select class="chosen-select" style="width:120px;" tabindex="2" id="editProductNameType" ng-model="operationRecord.productNameType" ng-show="operationRecord.type==1&&operationRecord.productChannel==1">
+            <option value="">请选择</option>
+            <option value="{{x.productName}}-{{x.period}}-{{x.onlineTime}}" ng-repeat="x in qbProductList">{{x.productName}}-{{x.period}}-{{x.standardProfit}}-{{x.onlineTime|date:"yyyy-MM-dd HH:mm:ss"}}</option>
+          </select>
+          <select class="chosen-select" style="width:180px;" tabindex="2" ng-model="operationRecord.productNameType" ng-show="operationRecord.type==2&&operationRecord.productChannel==1">
+            <option value="">全部</option>
+            <option value="{{x.value}}" ng-repeat="x in qbInvestProductList">{{x.label}}</option>
+          </select>
+		  <select class="chosen-select" style="width:180px;" tabindex="2" ng-model="operationRecord.productNameType" ng-show="(operationRecord.type==2&&operationRecord.productChannel==0)||(operationRecord.type==2&&operationRecord.productChannel==2)">
+            <option value="">全部</option>
+            <option value="{{x.value}}" ng-repeat="x in wkInvestProductList">{{x.label}}</option>
+          </select>
+          <!-- <p>优先级排序</p>
+          <input style="width:200px;" type="text" placeholder="选填" ng-model="operationRecord.priority"> -->
+        </div>
+        <div class="start-b">
+          <p>描述：</p>
+          <input style="width:368px;" type="text" maxlength="30" placeholder="选填，30字符以内" ng-model="operationRecord.markingDesc">
+        </div>
+        <div class="start-b" ng-show="operationRecord.type == 1 && operationRecord.productChannel == 1">
+            <p>打标文案：</p>
+            <input style="width:368px;" type="text" maxlength="10" placeholder="选填，10字符以内" ng-model="add.markingText">
+        </div>
+        <div class="start-g" ng-show="operationRecord.type==2">
+          <p>打标文案：</p>
+          <input type="text" ng-model="operationRecord.markingText">
+          <p>背景色值：</p>
+          <input type="text" ng-model="operationRecord.color">
+        </div>
+        <!--<div class="start-d" ng-show="operationRecord.type==1 && operationRecord.productChannel==1">-->
+          <!--<p>图片：</p>-->
+          <!--<input type="file" id="editPicture" name="file" size="1" style="position:absolute;display: none;">-->
+          <!--<input style="width:220px;" id="fileUrl1" type="text" ng-model="operationRecord.markingImageUrl">-->
+          <!--<a class="btn btn-success btn-rounded btn-blueWa" href="#" onclick="$('#editPicture').click();" id="image_prew1"><span>点击上传</span></a>-->
+        <!--</div>-->
+        <div class="start-e" ng-show="operationRecord.type==1 && operationRecord.productChannel!=1">
+            <p>打标标签：</p>
+            <input style="width:164px" type="text" ng-model="operationRecord.markingLabel" >
+            <p>打标描述：</p>
+            <input type="text" ng-model="operationRecord.markingDescribe">
+        </div>
+        <div class="start-f">
+          <p>上线时间：</p>
+          <input type="text" id="operationOnlineTime" ng-model="operationRecord.onlineTime" >
+          <p>下线时间：</p>
+          <input type="text" id="operationOfflineTime" ng-model="operationRecord.offlineTime" >
+        </div>
+        <div class="start-g">
+          <!--<p ng-show="operationRecord.productChannel==1">打标文案：</p>-->
+          <!--<input type="text" ng-model="operationRecord.markingText" ng-show="operationRecord.productChannel==1">-->
+          <p>是否生效：</p>
+          <select id="" ng-model="operationRecord.valid" ng-init="operationRecord.valid='1'">
+            <option value="1">生效</option>
+            <option value="0">失效</option>
+          </select>
+        </div>
+
+        <div class="start-g">
+            <p>审核人：</p>
+            <select id="update_auditPersion" ng-model="operationRecord.auditPersion" ng-options="x.name for x in auditPersionList">
+                <option value="">请选择</option>
+            </select>
+            <p>提审说明：</p>
+            <input type="text" ng-model="operationRecord.requestAuditDescription" maxlength="18" placeholder="选填，18字符以内">
+        </div>
+      <!--  <div class="start-h">
+        <p>展示人群：</p>
+        <input ng-model="u.quanbuClick" type="checkbox" id="quanbu" class="updateCheckbox checkAll" value="0" ng-click="allSelect()">全部
+      </div>
+      <div class="start-i">
+        <p></p>
+        <input  ng-model="u.baimingdClick" type="checkbox" id="baimingdan" class="updateCheckbox checkAll" value="1" disabled="disabled" ng-click="baiClick()">白名单
+        <select ng-model="operationRecord.whiteId" disabled="disabled" id="bDropDown">
+          <option value="0">请选择</option>
+           <option value="{{x.id}}" ng-repeat="x in whiteList_qb" ng-show="operationRecord.productChannel=='1'">{{x.listName}}</option>
+           <option value="{{x.id}}" ng-repeat="x in whiteList_wk" ng-show="operationRecord.productChannel != '1'">{{x.listName}}</option>
+        </select>
+      </div>
+      <div class="start-j">
+        <p></p>
+        <input ng-model="u.heimingdanClick" type="checkbox" id="heimingdan" class="updateCheckbox checkAll" value="2" disabled="disabled" ng-click="heiClick()">黑名单
+        <select ng-model="operationRecord.blackId" disabled="disabled" id="heiSelect">
+          <option value="0">请选择</option>
+          <option value="{{x.id}}" ng-repeat="x in blackList_qb" ng-show="operationRecord.productChannel=='1'">{{x.listName}}</option>
+          <option value="{{x.id}}" ng-repeat="x in blackList_wk" ng-show="operationRecord.productChannel!='1'">{{x.listName}}</option>
+        </select>
+      </div> -->
+        <div class="bottom-btn">
+          <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="javascript:void(0)" ng-click="checkEditOnlineTime()">确定</a>
+          <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="javascript:void(0)" ng-click="updateCancel()">取消</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 修改营销打标 -->
+  <!-- 失效营销打标 -->
+  <!--<div class="take-start-box" id="effectBid">-->
+    <!--<div class="take-start-small">-->
+      <!--<p>您确定要{{operationRecord.valid=='0'?"生效":"失效"}}该营销打标吗？</p>-->
+      <!--<div class="bottom-btn">-->
+        <!--<a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="validateRecord()">确定</a>-->
+        <!--<a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" onclick="$('#effectBid').hide()">取消</a>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
+    <!--生效失效营销打标-->
+    <div class="take-start-box" id="effectBid">
+        <div class="take-start-small newTakeEffect">
+            <h2 align="center">{{operationRecord.valid=='0'?'生效':'失效'}}提示</h2>
+            <ul class="isEffect">
+                <li>
+                    <p>审核人：</p>
+                    <select id="valid_auditPersion" ng-model="valid.auditPersion" ng-options="x.name for x in auditPersionList">
+                        <option value="">请选择</option>
+                    </select>
+                </li>
+                <li class="PosiText"><p>提审说明：</p><textarea  ng-model="valid.auditDescription" maxlength="32" cols="25" rows="4" placeholder="{{operationRecord.valid=='0'?'生效':'失效'}}资源位"></textarea></li>
+            </ul>
+            <div class="bottom-btn">
+                <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="validateRecord()">确定</a>
+                <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" onclick="$('#effectBid').hide()" ng-click="cancelValidateRecord()">取消</a>
+            </div>
+        </div>
+    </div>
+  <!-- 失效营销打标 -->
+
+    <!-- 审核弹窗 -->
+    <div class="take-start-box" id="auditShow">
+        <div class="take-start-small newTakeEffect">
+            <h2>审核</h2>
+            <ul class="isEffect">
+                <li><p>审核结果：</p>
+                    <select id="auditStatus" ng-model="audit.auditStatus">
+                        <option value="1">审核通过</option>
+                        <option value="2">审核不通过</option>
+                    </select>
+                </li>
+                <li class="PosiText"><p>审核描述：</p><textarea id="auditDescription" ng-model="audit.auditDescription" maxlength="32" cols="25" rows="4" placeholder="选填，32字符以内"></textarea></li>
+            </ul>
+            <div class="bottom-btn">
+                <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="confirm()" >确定</a>
+                <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" onclick="$('.take-start-box').hide();">取消</a>
+            </div>
+        </div>
+    </div>
+    <!--审核完成-->
+    
+    <!-- 添加上线时间弹窗提示 -->
+    <div class="take-start-box" id="checkShow">
+        <div class="take-start-small newTakeEffect">
+            <h2></h2>
+            <ul class="isEffect">
+                <li>&nbsp&nbsp&nbsp&nbsp</li>
+                <li style="margin-top:20px;">您设置的打标时间为今天</br>
+生效后会覆盖今天线上现有的记录</br>
+是否确认保存?</br></li>
+            </ul>
+            <div class="bottom-btn">
+                <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="saveBid()" >确定</a>
+                <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" onclick="$('.take-start-box').hide();">取消</a>
+            </div>
+        </div>
+    </div>
+    <!--添加上线时间弹窗提示-->
+    
+    <!-- 修改上线时间弹窗提示 -->
+    <div class="take-start-box" id="editCheckShow">
+        <div class="take-start-small newTakeEffect">
+            <h2></h2>
+            <ul class="isEffect">
+                <li>&nbsp&nbsp&nbsp&nbsp</li>
+                <li style="margin-top:20px;">您设置的打标时间为今天</br>
+生效后会覆盖今天线上现有的记录</br>
+是否确认保存?</br></li>
+            </ul>
+            <div class="bottom-btn">
+                <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="saveEditBid()" >确定</a>
+                <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" onclick="$('.take-start-box').hide();">取消</a>
+            </div>
+        </div>
+    </div>
+    <!--修改上线时间弹窗提示-->
+
+</div>
+<!-- Mainly scripts -->
+<script src="${jsRoot}/jquery-2.1.1.js"></script>
+<script src="${jsRoot}/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="${jsRoot}/angular/angular.min.js"></script>
+<script type="text/javascript" src="${staticRoot}/js/plugins/sweetalert/sweetalert.min.js"></script>
+<script src="${jsRoot}/plugins/laydate/laydate.js"></script>
+<script src="${jsRoot}/bootstrap.min.js"></script>
+
+<script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="${jsRoot}/plugins/jeditable/jquery.jeditable.js"></script>
+
+<!-- Data Tables -->
+<script src="${jsRoot}/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.responsive.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.tableTools.min.js"></script>
+
+
+<!-- Custom and plugin javascript -->
+<script src="${jsRoot}/inspinia.js"></script>
+<script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.iframe-transport.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.ui.widget.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-process.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-validate.js"></script>
+<script src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+<script src="${jsRoot}/biz/resource/marketingBid.js?rand=${random}"></script>
+<!-- 日历 -->
+<!-- 日期控件  -->
+<script type="text/javascript" src="${jsRoot}/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+<!-- 日期控件中文包  -->
+<script type="text/javascript" src="${jsRoot}/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="${jsRoot}/plugins/datapicker/bootstrap-datepicker.js"></script>
+<script src="${jsRoot}/plugins/datapicker/bootstrap-datepicker.zh-CN.min.js"></script>
+<script>
+    var globalConfig = {
+        basePath: "${ctx}",
+        staticRoot: "${staticRoot}",
+        loginName:"${Session.sessionUser.loginName}"
+    };
+</script>
+
+<script>
+  /*$(document).ready(function(){
+	  function onMenuClick(){
+        	$("#menus li").removeClass("active");
+        	$("#marketingBid").addClass("active");
+      }
+      onMenuClick();
+  });*/
+  /*var navHight = $('.navbar-static-side').height()
+  $('.navbar-static-side').css('height', navHight - 60)
+  $('.content-box').css('height', navHight - 60)*/
+  /* // 添加
+  $('.btn-gradienta').click(function(){
+    $('.add-start-bg').show()
+    $('.start-btna').click(function(){
+      $('.add-start-bg').hide()
+    })
+    $('.start-btnb').click(function(){
+      $('.add-start-bg').hide()
+    })
+  })
+  // 优先级排序
+  $('.btn-gradientb').click(function(){
+    $('.priority-ranking').show()
+    $('.bottom-btna').click(function(){
+      $('.priority-ranking').hide()
+    })
+    $('.bottom-btnb').click(function(){
+      $('.priority-ranking').hide()
+    })
+  })
+  // 查看
+  $('.look-start').click(function(){
+    $('.look-start-box').show()
+    $('.bottom-btna').click(function(){
+      $('.look-start-box').hide()
+    })
+    $('.bottom-btnb').click(function(){
+      $('.look-start-box').hide()
+    })
+  })
+  // 修改
+  $('.modify-start').click(function(){
+    $('.modify-start-box').show()
+    $('.bottom-btna').click(function(){
+      $('.modify-start-box').hide()
+    })
+    $('.bottom-btnb').click(function(){
+      $('.modify-start-box').hide()
+    })
+  })
+  // 失效
+  $('.take-start').click(function(){
+    $('.take-start-box').show()
+    $('.bottom-btna').click(function(){
+      $('.take-start-box').hide()
+    })
+    $('.bottom-btnb').click(function(){
+      $('.take-start-box').hide()
+    })
+  }) */
+  var queryOnlineTime = laydate({
+      elem:'#queryOnlineTime',
+      istime: true,
+      format: 'YYYY-MM-DD',
+      event:'click'
+  })
+
+   var addOnlineTime = laydate({
+      elem:'#addOnlineTime',
+      istime: true,
+      format: 'YYYY-mm-DD hh:mm:ss',
+      event:'click'
+  })
+
+  var queryOfflineTime = laydate({
+      elem:'#addOfflineTime',
+      istime: true,
+      format: 'YYYY-mm-DD hh:mm:ss',
+      event:'click',
+      type:'datetime',
+      ready:function (date) {
+          if(!$.trim($("#addOfflineTime").val())){
+              this.datetime.hour=23;
+              this.datetime.hour=59;
+              this.datetime.hour=59;
+          }
+      },
+      choose: function(dates){ //选择好日期的回调
+          var offlineTimes = dates.split(" ");
+          var time = offlineTimes[1].split(":");
+          if(time[0]==00&&time[1]==00&&time[2]==00){
+              var miniTime="23:59:59";
+              $("#addOfflineTime").val(offlineTimes[0]+" "+miniTime);
+          }
+      }
+  })
+
+  var editOnlineTime = laydate({
+      elem:'#operationOnlineTime',
+      istime: true,
+      format: 'YYYY-mm-DD hh:mm:ss',
+      event:'click'
+  })
+
+  var editOfflineTime = laydate({
+      elem:'#operationOfflineTime',
+      istime: true,
+      format: 'YYYY-mm-DD hh:mm:ss',
+      event:'click'
+  })
+
+</script>
+</body>
+</html>

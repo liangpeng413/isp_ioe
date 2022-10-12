@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>任务中心</title>
+    <link href="${cssRoot}/bootstrap.min.css" rel="stylesheet">
+    <link href="${staticRoot}/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <!-- FooTable -->
+    <link href="${cssRoot}/plugins/footable/footable.core.css" rel="stylesheet">
+
+    <link href="${cssRoot}/animate.css" rel="stylesheet">
+    <link href="${cssRoot}/style.css?rand=${random}" rel="stylesheet">
+    <link href="${cssRoot}/styleT.css?rand=${random}" rel="stylesheet">
+    <link href="${staticRoot}/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <style type="text/css">
+        .boxb-a > div {
+            margin: 20px 0;
+        }
+
+        #addPage .small-boxb div {
+            float: none
+        }
+
+        #addPage .small-boxb div label {
+            vertical-align: top;
+            margin-right: 10px;
+        }
+
+        #add-task-rule > div {
+            margin: 10px 0;
+        }
+        .addShowType div{
+        	display:flex;
+        	margin-left: 0;
+    		align-items: center;
+        }
+        .addShowType div select{
+        	margin-top:10px;
+        }
+        .addShowType div span{
+        	margin: 5px 0 0 15px;
+        }
+        .addShowType div input{
+        	margin-top:7px;
+        }
+        .addShowType div p{
+        	margin: 0;
+        }
+    </style>
+    <script>
+        var globalConfig = {
+            basePath: "${ctx}",
+            staticRoot: "${staticRoot}",
+            loginName: "${Session.sessionUser.loginName}",
+            userName: "${Session.sessionUser.name}",
+            levelId:"${RequestParameters["levelId"]}",
+            investChannel:"${RequestParameters["investChannel"]}"
+        };
+
+        function swalMsg(msg) {
+            swal({
+                title: "",
+                text: msg,
+                confirmButtonColor: "#1ab394",
+                confirmButtonText: "确定"
+            });
+        }
+
+    </script>
+</head>
+<body ng-app="setEquityApp" ng-controller="setEquityController">
+<div id="wrapper">
+    <div class="header-box">
+        <#include "/common/top.html" encoding="UTF-8" />
+    </div>
+    <nav class="navbar-default navbar-static-side nav-boxa" role="navigation" id="HeadTitle">
+        <div class="sidebar-collapse"  style="height: 675px;overflow-y: scroll;">
+            <#include "/common/left.html" encoding="UTF-8" />
+            <div>
+    </nav>
+</div>
+<div class="content-box">
+    <div class="small-content"  id="addPage">
+        <div style="height: 60px; line-height: 60px;">
+            <a class="btn btn-blueW "  href="${ctx}/vip/vipLevel">返回</a>
+            <span ng-show="levelId && investChannel">
+                <input id="checkFlag"  type="checkbox" ng-model="editable" value="false" ng-click="changeEdit(editable)"
+                       style="vertical-align: middle; margin-left: 20px;margin-right: 5px"/>
+                <span style="position: relative;top:5px">可编辑</span>
+            </span>
+        </div>
+
+        <div class="small-boxb col-md-12">
+            <div class="boxb-a" style="width: 100%">
+               <div class="look-pageb">
+			    <div class="ibox-content">
+			      <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+			        <thead>
+			          <tr>
+			            <th></th>
+			            <th>权益名称</th>
+			            <th>icon亮起图标</th>
+			            <th>是否置顶</th>
+			            <th>是否热门</th>
+			          </tr>
+			        </thead>
+			        <tbody id="dataContent">
+			         <ins><input type="file" id="addPicture"  name="file" size="1" style="position:absolute;display: none;"></ins>
+			          <tr ng-repeat="x in pageList">
+			            <td ng-if="x.initialization=='T'">
+			            <input  ng-disabled="!x.init"   ng-checked="x.whetherToEnjoy=='T'?'checked':''" type="checkbox" name="box"  id="box{{x.priType}}" value={{x.priType}} ng-click="changeStatus(x)" >
+			            </td>
+			               <td ng-if="x.initialization=='F'">
+			                <input  ng-disabled="!editable"   ng-checked="x.whetherToEnjoy=='T'?'checked':''" type="checkbox" name="box"  id="box{{x.priType}}" value={{x.priType}} ng-click="changeStatus(x)" >
+			               </td>
+			            <td>{{x.priName}}
+			            <input type="text" id="priName{{x.priType}}"  value="{{x.priName}}" size="1" style="display: none;">
+			            </td>
+			            <td >
+			            <span ng-if="x.picStatus==1">
+			            ——————
+			            </span>
+			            <span ng-if="x.picStatus!=1">
+			             <input style="display: none;"  id="pIcon{{x.priType}}" type="text" value="{{x.priIcon}}" > 
+			               <img  id="img{{x.priType}}"  style="float:none"  ng-click="showUrl(this)"  src="{{x.priIcon}}"/>
+			            </span>
+                          <input style="display: none;" style="width:220px;"  id="fileUrl{{x.priType}}" type="text" value="" > 
+                         <a ng-show="editable && x.init" class="btn btn-success btn-rounded btn-blueWa" href="#" ng-click="addIcon(x)"
+                       id="pew{{x.priType}}"><span>点击上传</span></a>
+			            </td>
+			            <td>
+			              <input  ng-disabled="!x.top"  id="priMain{{x.priType}}" name="priMain" type="radio"  id="top{{x.priType}}"  ng-checked="x.priMain=='T'?'checked':''"  value="{{x.priId}}"  ng-click="changePri(x)">是
+			            </td>
+			            <td>
+			               <input ng-disabled="!editable" type="checkbox" id="hot{{x.priType}}" ng-checked="x.hot=='T'?'checked':''" name="hot"  ng-click="changeHot(x)">是
+			            </td>
+			          </tr>
+			        </tbody>
+			      </table>
+			    </div>
+			  </div>
+           </div>
+                <div style="text-align: center;" ng-if="editable">
+                    <a href="javascript:void(0)" ng-click="saveVipEquity()" class="btn btn-info btn-rounded btn-gradient btn-gradienta">
+                        <i class="fa fa-plus-square-o"></i><span>保存</span>
+                    </a>
+                </div>
+                <hr>
+            </div>
+        </div>
+    </div>
+<!-- icon显示 -->
+ <div class="priority-ranking" id="addSort">
+    <div class="priority-ranking-small">
+      <h1>icon图片</h1>
+      <div class="ranking-small" >
+      	     <img  id="showImg"  style="float:none;width: 450px;height: 260px;" ng-click="showUrl(this)" />
+        </div>    
+      <div class="bottom-btn">
+        <a class="btn btn-danger btn-rounded bottom-btnb" href="#" ng-click="moveCancel()">关闭</a>
+      </div>
+    </div>
+  </div>
+<script src="${jsRoot}/jquery-2.1.1.js"></script>
+<script src="${jsRoot}/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="${jsRoot}/angular/angular.min.js"></script>
+<script type="text/javascript" src="${staticRoot}/js/plugins/sweetalert/sweetalert.min.js"></script>
+<script src="${jsRoot}/plugins/laydate/laydate.js"></script>
+<script src="${jsRoot}/bootstrap.min.js"></script>
+<script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="${jsRoot}/plugins/jeditable/jquery.jeditable.js"></script>
+
+<!-- Data Tables -->
+<script src="${jsRoot}/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.responsive.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.tableTools.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="${jsRoot}/inspinia.js"></script>
+<script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload.js"></script> 
+<script src="${jsRoot}/plugins/fileUpload/jquery.iframe-transport.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.ui.widget.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-process.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-validate.js"></script>
+<script src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+<script src="${jsRoot}/biz/vip/vipSetEquity.js?rand=${random}"></script>
+<script type="text/javascript" src="${staticRoot}/js/plugins/ajaxfileupload/ajaxfileupload.js"></script>
+</body>
+</html>

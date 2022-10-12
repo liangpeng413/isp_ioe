@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>人工外呼任务列表</title>
+    <link href="${cssRoot}/bootstrap.min.css" rel="stylesheet">
+    <link href="${cssRoot}/../font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="${cssRoot}/../font-awesome/css/select2.min.css" rel="stylesheet">
+
+    <!-- FooTable -->
+    <link href="${cssRoot}/plugins/footable/footable.core.css" rel="stylesheet">
+
+    <link href="${cssRoot}/animate.css" rel="stylesheet">
+    <link href="${cssRoot}/style.css?rand=${random}" rel="stylesheet">
+    <link href="${cssRoot}/styleT.css?rand=${random}" rel="stylesheet">
+
+    <!--<link href="${cssRoot}/oms/ruleconfig/jquery.searchableSelect2.css" rel="stylesheet" type="text/css">-->
+    <style>
+        ul,li{
+            list-style:none;
+        }
+    </style>
+    <script>
+        var globalConfig = {
+            basePath: "${ctx}",
+            staticRoot: "${staticRoot}",
+            loginName: "${Session.sessionUser.loginName}"
+        };
+    </script>
+</head>
+<body ng-app="callTask" ng-controller="callTaskController">
+<div id="wrapper">
+    <div class="header-box">
+        <#include "/common/top.html" encoding="UTF-8" />
+    </div>
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse"  style="height: 675px;overflow-y: scroll;">
+            <#include "/common/left.html" encoding="UTF-8" />
+        </div>
+    </nav>
+</div>
+<div class="content-box">
+    <div class="small-content">
+        <!-- 第一部分 -->
+        <div class="small-boxb col-md-12">
+            <a class="ivr-button btn btn-danger btn-rounded btn-gradient btn-gradienta" ng-click="showAddTab()">
+                <i class="fa fa-plus-square-o"></i>
+                <span>创建外呼任务</span>
+            </a>
+        </div>
+        <!-- 第一部分完 -->
+
+        <!--第二部分-->
+        <div class="small-boxb col-md-12">
+            <div class="boxb-a">
+                <p style="margin-top:20px;">任务名称：
+                    <input style="width:255px;" type="text" maxlength="30"  ng-model="search.taskName">
+                </p>
+                <p >任务状态：
+                    <select id="taskStatus" class="chosen-select" style="width:255px;" tabindex="2" ng-model="search.taskStatus">
+                        <option value="">全部</option>
+                        <option value="100">删除</option>
+                        <option value="101">任务初始入库</option>
+                        <option value="201">用户ID获取进行中</option>
+                        <option value="203">用户ID获取成功完成</option>
+                        <option value="202">用户ID获取失败</option>
+                        <option value="301">任务手机号获取进行中</option>
+                        <option value="303">任务手机号获取完成</option>
+                        <option value="302">任务手机号获取失败</option>
+                        <option value="401">任务话术获取进行中</option>
+                        <option value="403">任务话术获取完成</option>
+                        <option value="402">任务话术获取失败</option>
+                        <option value="501">任务发送R3进行中</option>
+                        <option value="502">任务发送R3失败</option>
+                        <option value="503">任务发送R3批量成功</option>
+                        <option value="603">任务项下无用户</option>
+                    </select>
+                </p>
+            </div>
+            <!--<div class="boxb-b">-->
+                <!--<p >产品渠道：-->
+                    <!--<select id="productChannel" class="chosen-select" style="width:120px;" tabindex="2" ng-model="search.platform" >-->
+                        <!--<option value="">全部</option>-->
+                        <!--<option value="1">悟空理财</option>-->
+                        <!--<option value="2">玖富钱包</option>-->
+                    <!--</select>-->
+                <!--</p>-->
+            <!--</div>-->
+
+            <div class="boxb-b">
+                <p >产品渠道：
+                    <select id="productChannel" class="chosen-select" style="width:120px;" tabindex="2" ng-model="search.platform" >
+                        <option value="">全部</option>
+                        <option value="1">悟空理财</option>
+                        <option value="2">玖富钱包</option>
+                        <option value="3">三方渠道</option>
+                    </select>
+                </p>
+
+                <p >外呼类型：
+                    <select class="chosen-select" style="width:120px;" tabindex="2" ng-model="search.memberListName">
+                        <option value="">全部</option>
+                        <option value="0">固定批次</option>
+                        <option value="1">单次</option>
+                    </select>
+                </p>
+            </div>
+            <!--<div class="boxb-b">-->
+                <!--<p >批次：-->
+                    <!--<select class="chosen-select" style="width:120px;" tabindex="2" ng-model="search.memberListName">-->
+                        <!--<option value="">全部</option>-->
+                        <!--<option value="0">固定批次</option>-->
+                        <!--<option value="1">单次</option>-->
+                    <!--</select>-->
+                <!--</p>-->
+            <!--</div>-->
+
+            <div class="boxb-c">
+                <p>
+                    <a class="btn btn-success btn-rounded btn-blueW btn-blueWa"  ng-click="pageQueryCallTask(1)"><i class="fa fa-search"></i> <span>查询</span></a>
+                    <a class="btn btn-success btn-rounded btn-blueW btn-blueWb"  ng-click="reset()"><i class="fa fa-refresh"></i> <span>重置</span></a>
+                </p>
+            </div>
+        </div>
+        <!--第二部分完-->
+
+        <!-- 第三部分 -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins" style="margin-top:10px;">
+                    <div class="ibox-content">
+                        <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+                            <thead>
+                            <tr>
+                                <th>任务ID</th>
+                                <th>任务名称</th>
+                                <th>产品渠道</th>
+                                <th>用户数</th>
+                                <th>成功分发数</th>
+                                <th>任务创建时间</th>
+                                <th>名单分发日期</th>
+                                <th>任务状态</th>
+                                <th>任务更新时间</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="x in callTasktList">
+                                <!--<td class="actived"></td>-->
+                                <td>{{x.id}}</td>
+                                <td>{{x.taskName}}</td>
+                                <td>{{x.platform == 1 && '悟空理财' || x.platform == 2 && '玖富钱包' || x.platform == 3 && '三方渠道' || '--'}}</td>
+                                <td>{{x.memberCount}}</td>
+                                <td>{{x.memberSuccCount}}</td>
+                                <td>{{x.createTime}}</td>
+                                <td>{{x.lastSendTime}}</td>
+                                <td>{{x.taskStatus==100 && '删除' || x.taskStatus==101 && '任务初始入库' ||
+                                    x.taskStatus==201 && '用户ID获取进行中' ||
+                                    x.taskStatus==203 && '用户ID获取成功完成' ||
+                                    x.taskStatus==202 && '用户ID获取失败' ||
+                                    x.taskStatus==301 && '任务手机号获取进行中' ||
+                                    x.taskStatus==303 && '任务手机号获取完成' ||
+                                    x.taskStatus==302 && '任务手机号获取失败' ||
+                                    x.taskStatus==401 && '任务话术获取进行中' ||
+                                    x.taskStatus==403 && '任务话术获取完成' ||
+                                    x.taskStatus==402 && '任务话术获取失败' ||
+                                    x.taskStatus==501 && '任务发送R3进行中' ||
+                                    x.taskStatus==502 && '任务发送R3失败' ||
+                                    x.taskStatus==503 && '任务发送R3批量成功'||
+                                    x.taskStatus==603 && '任务项下无用户' ||'--'}}
+                                </td>
+                                <td>{{x.updateTime}}</td>
+                                <td>
+                                    <span class="modify-start" ng-click="updateTaskShow(x)" ng-show="x.memberListName!='0'">详情</span>
+                                    <span class="modify-start" ng-show="x.memberListName=='0'">固定批次</span>
+                                    <span class="look-start" ng-show="x.taskStatus==100">已删除</span>
+                                    <span class="look-start" ng-click="delButton(x.id)" ng-show="x.taskStatus==101">删除</span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="bottom-page">
+                            <div class="bottom-pageb">
+                                <i class="fa fa-step-backward" ng-click="pageQueryCallTask(1)"></i>
+                                <i style="font-size:16px;" class="fa fa-caret-left" ng-click="pageQueryCallTask(search.pageNo-1)"></i>
+                                <p>第<span class="pageN">{{search.pageNo}}</span class="commonN">共<span>{{search.pageCount}}</span>页</p>
+                                <i style="font-size:16px;" class="fa fa-caret-right" ng-click="pageQueryCallTask(search.pageNo+1)"></i>
+                                <i style="margin-left:8px;" class="fa fa-step-forward" ng-click="pageQueryCallTask(search.pageCount)"></i>
+                                <i class="fa fa-refresh" ng-click="pageQueryCallTask(search.pageNo)"></i>
+                            </div>
+
+                            <div class="bottom-pagec">
+                                <p>显示<span>{{(search.pageNo-1)*search.perPageRowSize+1}}</span>到{{search.pageNo*search.perPageRowSize}}条，共<span>{{search.totalRowSize}}</span>记录
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 第三部分完 -->
+    </div>
+</div>
+
+<!--创建弹窗-->
+
+<div class="add-start-bg" id="showAdd">
+    <div class="add-start" style="height: 526px;margin-top: 90px;margin-left: -200px;/">
+        <h1 ng-show="showDiv==0">创建外呼任务</h1>
+        <h1 ng-show="showDiv==1">查看外呼任务</h1>
+        <div class="start-a">
+            <p>理财渠道：<b style="color: red;">*</b></p>
+            <select style="width: 126px;"  ng-model="add.platform" id="platformValue" ng-change="changePlatformValue()">
+                <option value="1">悟空理财</option>
+                <option value="2">玖富钱包</option>
+                <option value="3">三方渠道</option>
+            </select>
+        </div>
+        <div class="start-b">
+            <p>任务名称：<b style="color: red;">*</b></p>
+            <input style="width:368px;" type="text" maxlength="30" placeholder="30字符以内" ng-model="add.taskName">
+        </div>
+        <div class="start-b">
+            <p>名单类型：<b style="color: red;">*</b></p>
+            <!--<select id="userStrategy" name="userTagType" style="width: 167px;" ng-model="add.memberListName" ng-change="changeFindChannelGroups()"></select>-->
+            <select id="userStrategy" name="userTagType" style="width: 167px;" ng-model="add.memberListName" ng-change="changeFindChannelGroups()">
+                <option value="{{x.key}}" ng-repeat="x in strategyList">{{x.value}}</option>
+            </select>
+        </div>
+
+        <div class="start-b deploy-item-filter select1" id="userNameLikeSearch">
+            <p>模糊搜索：<b style="color: red;">*</b></p>
+            <select class="mySelect" id="memberId" class="filter-select" style="width: 382px;" ng-model="add.memberListId">
+                <option value="{{x.rosterId}}" ng-repeat="x in strChannelGroups">{{x.rosterName}}</option>
+            </select>
+        </div>
+        <div class="start-b">
+            <p>名单分发截止时间：<b style="color: red;">*</b></p>
+            <input type="text" autocomplete="off" id="stickStartTime" ng-model="add.lastSendTime"/>
+        </div>
+
+        <div class="start-b" style="margin-left: 28px;margin-top: 24px;">
+            <input type="checkBox" class="checkAll" onclick="clickAll()" id="all"/>
+            <label for="all">全部     R3外呼系统字段</label>
+            <table class="start-b" border="1" cellspacing="0" cellpadding="0">
+                <tbody>
+                    <tr>
+                        <td style="width: 50px;"><input type="checkBox" class="checkOne" onclick="clickOne()" id="platform" value="platform" style="margin-left: 17px;"/></td>
+                        <td style="width: 100px;">渠道</td>
+
+                        <td style="width: 50px;"><input type="checkBox" class="checkOne" onclick="clickOne()" id="user_type" value="user_type" style="margin-left: 17px;"/></td>
+                        <td>用户类型</td>
+                    </tr>
+
+                    <tr>
+                        <td><input type="checkBox" class="checkOne" onclick="clickOne()" id="user_name" value="user_name" style="margin-left: 17px;"/></td>
+                        <td>姓名</td>
+
+                        <td><input type="checkBox" class="checkOne" onclick="clickOne()" id="user_sex" value="user_sex" style="margin-left: 17px;"/></td>
+                        <td>性别</td>
+                    </tr>
+
+                    <tr>
+                        <td><input type="checkBox" class="checkOne" onclick="clickOne()" id="user_age" value="user_age" style="margin-left: 17px;"/></td>
+                        <td>年龄</td>
+
+                        <td><input type="checkBox" class="checkOne" onclick="clickOne()" id="user_province" value="user_province" style="margin-left: 17px;"/></td>
+                        <td>省份</td>
+                    </tr>
+
+                    <tr>
+                        <td><input type="checkBox" class="checkOne" onclick="clickOne()" id="user_city" value="user_city" style="margin-left: 17px;"/></td>
+                        <td>市</td>
+
+                        <td><input type="checkBox" class="checkOne" onclick="clickOne()" id="user_vip_level" value="user_vip_level" style="margin-left: 17px;"/></td>
+                        <td>用户等级</td>
+                    </tr>
+
+                    <tr>
+                        <td><input type="checkBox" class="checkOne" onclick="clickOne()" id="user_phone" value="user_phone" style="margin-left: 17px;"/></td>
+                        <td>手机号</td>
+
+                        <td><input type="checkBox" class="checkOne" onclick="clickOne()" id="id_card_no" value="id_card_no" style="margin-left: 17px;"/></td>
+                        <td>证件号</td>
+                    </tr>
+
+                    <tr>
+                        <td><input type="checkBox" class="checkOne" onclick="clickOne()" id="real_name_time" value="real_name_time" style="margin-left: 17px;"/></td>
+                        <td>实名时间</td>
+
+                        <td><input type="checkBox" class="checkOne" onclick="clickOne()" id="bind_card_time" value="bind_card_time" style="margin-left: 17px;"/></td>
+                        <td>绑卡时间</td>
+                    </tr>
+
+                    <tr>
+                        <td><input type="checkBox" class="checkOne" onclick="clickOne()" id="invest_first_time" value="invest_first_time" style="margin-left: 17px;"/></td>
+                        <td>首投时间</td>
+
+                        <td><input type="checkBox" class="checkOne" onclick="clickOne()" id="invest_first_product" value="invest_first_product" style="margin-left: 17px;"/></td>
+                        <td>首投产品</td>
+                    </tr>
+
+                    <tr>
+                        <td><input type="checkBox" class="checkOne" onclick="clickOne()" id="invest_first_money" value="invest_first_money" style="margin-left: 17px;"/></td>
+                        <td>首投金额</td>
+
+                        <td><input type="checkBox" class="checkOne" onclick="clickOne()" id="invest_second_product" value="invest_second_product" style="margin-left: 17px;"/></td>
+                        <td>第二笔投资产品</td>
+                    </tr>
+
+                    <tr>
+                        <td><input type="checkBox" class="checkOne" onclick="clickOne()" id="invest_second_money" value="invest_second_money" style="margin-left: 17px;"/></td>
+                        <td>累计投资金额</td>
+
+                        <td><input type="checkBox" class="checkOne" onclick="clickOne()" id="hold_money" value="hold_money" style="margin-left: 17px;"/></td>
+                        <td>在库金额</td>
+                    </tr>
+
+                    <tr>
+                        <td><input type="checkBox" class="checkOne" onclick="clickOne()" id="coupon_count" value="coupon_count" style="margin-left: 17px;"/></td>
+                        <td>可用卡券数</td>
+
+                        <td><input type="checkBox" class="checkOne" onclick="clickOne()" id="invite_friend_count" value="invite_friend_count" style="margin-left: 17px;"/></td>
+                        <td>邀请好友数</td>
+                    </tr>
+
+                    <tr>
+                        <td><input type="checkBox" class="checkOne" onclick="clickOne()" id="invest_new_time" value="invest_new_time" style="margin-left: 17px;"/></td>
+                        <td>最新投资时间</td>
+
+                        <td><input type="checkBox" class="checkOne" onclick="clickOne()" id="history_recent_expire_time" value="history_recent_expire_time" style="margin-left: 17px;"/></td>
+                        <td>最近一笔到期金额</td>
+                    </tr>
+
+                    <tr>
+                        <td><input type="checkBox" class="checkOne" onclick="clickOne()" id="pro_channel" value="pro_channel" style="margin-left: 17px;"/></td>
+                        <td>推广渠道</td>
+
+                        <td><input type="checkBox" class="checkOne" onclick="clickOne()" id="guest_channel" value="guest_channel" style="margin-left: 17px;"/></td>
+                        <td>获客渠道</td>
+                    </tr>
+
+                    <tr>
+                        <td><input type="checkBox" class="checkOne" onclick="clickOne()" id="new_product_remaining_days" value="new_product_remaining_days" style="margin-left: 17px;"/></td>
+                        <td>21天新手标有效期剩余天数</td>
+
+                        <td><input type="checkBox" class="checkOne" onclick="clickOne()" id="other_new_product_remaining_days" value="other_new_product_remaining_days" style="margin-left: 17px;"/></td>
+                        <td>其它新手标有效期剩余天数</td>
+                    </tr>
+
+                    <tr>
+                        <td><input type="checkBox" class="checkOne" onclick="clickOne()" id="loss_days" value="loss_days" style="margin-left: 17px;"/></td>
+                        <td>流失天数</td>
+
+                    </tr>
+
+                    <tr>
+                        <td><input type="checkBox" class="checkOne" onclick="clickOne()" id="last_open_bank_name" value="last_open_bank_name" style="margin-left: 17px;"/></td>
+                        <td>最近一次开户银行名称</td>
+
+                        <td><input type="checkBox" class="checkOne" onclick="clickOne()" id="device_no" value="device_no" style="margin-left: 17px;"/></td>
+                        <td>设备号</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkBox" class="checkOne" onclick="clickOne()" id="last_weeks_open_bank_count" value="last_weeks_open_bank_count" style="margin-left: 17px;"/></td>
+                        <td>最近一周银行开户次数</td>
+
+                        <td><input type="checkBox" class="checkOne" onclick="clickOne()" id="last_open_bank_date" value="last_open_bank_date" style="margin-left: 17px;"/></td>
+                        <td>最近一次银行开户时间</td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="start-b" style="margin-top: 10px;">
+            <p>建议话术: </p>
+            <textarea style="resize:none;width: 390px;height: 262px;overflow-y: scroll;" placeholder="最多支持300个汉字"
+                      maxlength="300" ng-model="add.recommendTalk"></textarea>
+        </div>
+        <div class="start-b">
+            <p>备注：</p>
+            <input type="text" maxlength="15" placeholder="最多支持15个汉字" ng-model="add.remark"/>
+        </div>
+
+        <div class="bottom-btn">
+            <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="saveTask()" ng-show="showDiv==0">确定</a>
+            <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="updaeTask()" ng-show="showDiv==1 && add.taskStatus==101">修改</a>
+            <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" ng-click="closeAddWav()">取消</a>
+        </div>
+    </div>
+</div>
+
+
+<div class="add-start-bg" id="delShow">
+    <div style="height: 133px;margin-top: 325px;margin-left: -200px;position: fixed;width: 600px;background: #fff;left: 50%;/">
+        <div class="start-a" style="margin-left: 256px;margin-top: 18px;">
+            <p>是否确认删除？</p>
+        </div>
+        <div class="bottom-btn">
+            <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="delSubmit()">确定</a>
+            <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" ng-click="closeDel()">取消</a>
+        </div>
+    </div>
+</div>
+
+<script src="${jsRoot}/angular/angular.min.js"></script>
+<script src="${jsRoot}/plugins/laydate/laydate.js"></script>
+<!-- Mainly scripts -->
+<script src="${jsRoot}/jquery-2.1.1.js"></script>
+<script src="${jsRoot}/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="${jsRoot}/bootstrap.min.js"></script>
+<script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="${jsRoot}/plugins/jeditable/jquery.jeditable.js"></script>
+<!--下拉搜索-->
+<script src="${jsRoot}/plugins/jeditable/select2.full.min.js"></script>
+
+<!-- Data Tables -->
+<script src="${jsRoot}/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.responsive.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.tableTools.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="${jsRoot}/inspinia.js"></script>
+<script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.iframe-transport.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.ui.widget.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-process.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-validate.js"></script>
+<script src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+<script type="text/javascript" src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+
+<script src="${jsRoot}/biz/call/callTask.js?rand=${random}"></script>
+
+<script src="${jsRoot}/oms/ruleconfig/jquery.searchableSelect.js"></script>
+
+<script type="text/javascript" charset="utf-8">
+    $(function(){
+        $('.mySelect').select2();
+    })
+
+    function clickAll(){
+        $(".checkOne").prop("checked",$(".checkAll").prop("checked"));
+    }
+
+    function clickOne(){
+        var allChecked = true;
+        $(".checkOne").each(function(){
+            if($(this).prop("checked") == false){
+                allChecked = false;
+            };
+        });
+        if(allChecked){
+            $(".checkAll").prop("checked",true);
+        } else {
+            $(".checkAll").prop("checked",false);
+        }
+    }
+</script>
+
+<script>
+    $(function() {
+        $('.take-start-box').on('click', function () {
+            $('#imgShow').hide();
+        })
+    })
+
+    var stickStartTime = laydate({
+        elem:'#stickStartTime',
+        istime: true,
+        format: 'YYYY-mm-DD hh:mm:ss',
+        event:'click'
+    });
+
+//    //用户画像类型-用户名单联动联动
+//    $(document).on("change","#userStrategy",function(){
+//        findChannelGroups();
+//    });
+
+//    //用户策略类型初始化
+//    $.ajax({
+//        type: "post",
+//        url: globalConfig.basePath + "/operation/init/byKey",
+//        data: "type=2",
+//        async: false,
+//        dataType: "json",
+//        success: function (data) {
+//            if (data.code != '000') {
+//                alert(data.message);
+//                return;
+//            }
+//            var res = data.resp;
+//            if (res != "" && res != null) {
+//                var str = "";
+//                for (var i = 0; i < res.length; i++) {
+//                    str += "<option value='" + res[i].key + "'>" + res[i].value + "</option>"
+//                }
+//                //附加改变事件
+//                $("#userStrategy").html(str);
+//                //用户画像分组名单生成
+//                findChannelGroups();
+//            }
+//        }
+//    });
+
+//    $(document).on("change","#platformValue",function(){
+//        findChannelGroups();
+//    });
+
+    // 查询渠道现有分组
+//    function findChannelGroups(userTag) {
+//        var channelCode = $("#platformValue").val();
+//        if(channelCode==1){
+//            channelCode='WK';
+//        }else if(channelCode==2){
+//            channelCode='QB';
+//        }
+//        if ($("#userStrategy").val() == "NO_RULE") {
+//            //$("#userNames").html("");
+//            $("#userNames").html("<option value=''></option>");
+//            $("#userNames").next().remove();
+//            $('#userNames').searchableSelect();
+//            $('#userNameLikeSearch').hide();
+//        }else {
+//            $.post(globalConfig.basePath + "/ruleConfig/findChannelGroups", "channelCode=" + channelCode + "&rosterType=" + $("#userStrategy").val(), function (data) {
+//                var strChannelGroups = "";
+//                if (data.code != '000') {
+//                    alert(data.message);
+//                    return;
+//                }
+//
+//                if (data.resp.length > 0) {
+//                    $('#userNameLikeSearch').show();
+//                }
+//
+//                for (var i = 0; i < data.resp.length; i++) {
+//                    strChannelGroups += "<option value='" + data.resp[i].rosterId + "'>" + data.resp[i].rosterName + "</option>";
+//                }
+//                $("#userNames").html(strChannelGroups);
+//                $("#userNames").next().remove();
+//                $('#userNames').searchableSelect();
+//            }, "json");
+//        }
+//    };
+
+</script>
+</body>
+</html>

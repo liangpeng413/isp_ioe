@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>节日礼</title>
+ <link href="${cssRoot}/bootstrap.min.css" rel="stylesheet">
+  <link href="${cssRoot}/../font-awesome/css/font-awesome.css" rel="stylesheet">
+
+  <!-- FooTable -->
+  <link href="${cssRoot}/plugins/footable/footable.core.css" rel="stylesheet">
+
+  <link href="${cssRoot}/animate.css" rel="stylesheet">
+  <link href="${cssRoot}/style.css?rand=${random}" rel="stylesheet">
+  <link href="${cssRoot}/styleT.css?rand=${random}" rel="stylesheet">
+  <script>
+      var globalConfig = {
+          basePath: "${ctx}",
+          staticRoot: "${staticRoot}",
+        	  loginName:"${Session.sessionUser.loginName}"
+      };
+  </script>
+</head>
+<body ng-app="splashApp" ng-controller="splashController">
+<div id="wrapper">
+    <div class="header-box">
+        <#include "/common/top.html" encoding="UTF-8" />
+    </div>
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse"  style="height: 675px;overflow-y: scroll;">
+            <#include "/common/left.html" encoding="UTF-8" />
+        <div>
+    </nav>
+</div>
+<div class="content-box">
+  <div class="small-content">
+    <!-- 第一部分 -->
+    <div class="small-boxa">
+      <a class="btn btn-danger btn-rounded btn-gradient btn-gradienta" href="#" ng-click="addScreen()"><i class="fa fa-plus-square-o"></i> <span>新建奖励领取</span></a>
+    </div>
+    <!-- 第二部分 -->
+    <div class="small-boxb col-md-12">
+      <div class="boxb-a">
+        <p style="margin-top:20px;">理财渠道:
+          <select class="chosen-select" style="width:120px;" tabindex="2" ng-model="search.productChannel" id='searchproductChannel' ng-change="getTypeVersionList(search.productChannel,'','')">
+             <!-- <option ng-repeat="x in typeProductChannelList" value="{{x.value}}">{{x.label}}</option> -->
+            	<option value="0">悟空理财APP</option>
+             <option value="1">玖富钱包APP</option>
+          </select>
+        </p>
+        <p>上线状态:
+          <select class="chosen-select" style="width:120px;" tabindex="2" ng-model="search.status">
+            <option value="">全部</option>
+            <option value="0">已上线</option>
+            <option value="1">待上线</option>
+            <option value="2">已下线</option>
+          </select>
+        </p> 
+        
+      </div>
+      <div class="boxb-b">
+        <p>配置类型:
+          <select id="searchConfigType" class="chosen-select" style="width:150px;" tabindex="2" ng-model="search.configType" >
+            <option value="1">玖耀汇节日礼</option>
+          </select>
+        </p>
+        <p>是否生效：
+          <select class="chosen-select" style="width:150px;" tabindex="2" ng-model="search.delFlag">
+            <option value="">全部</option>
+            <option value="T">无效</option>
+            <option value="F">生效</option>
+          </select>
+        </p>
+        
+      </div>
+        <div class="boxb-c">
+        <p>是否审核：
+          <select class="chosen-select" style="width:120px;"  tabindex="2" ng-model="search.auditStatus">
+            <option value="">全部</option>
+            <option value="0">待审核</option>
+            <option value="1">审核通过</option>
+            <option value="2">审核失败</option>
+          </select>
+        </p>
+      </div>
+        <div class="boxb-c">  
+        <p>
+          <a class="btn btn-success btn-rounded btn-blueW btn-blueWa" href="#" ng-click="querySplashConfigList(1)"><i class="fa fa-search"></i> <span>搜索</span></a>
+          <a class="btn btn-success btn-rounded btn-blueW btn-blueWb" href="#" ng-click ="reset()"><i class="fa fa-refresh"></i> <span>重置</span></a>
+        </p>
+      </div>
+        
+       <!--  <div  class="boxb-d">
+        <p>
+          <a class="btn btn-success btn-rounded btn-blueW btn-blueWa" href="#" ng-click="querySplashConfigList(1)"><i class="fa fa-search"></i> <span>搜索</span></a>
+          <a class="btn btn-success btn-rounded btn-blueW btn-blueWb" href="#" ng-click ="reset()"><i class="fa fa-refresh"></i> <span>重置</span></a>
+        </p>
+      </div> -->
+    </div>
+    <!-- 第二部分 -->
+    <!-- 第三部分 -->
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="ibox float-e-margins" style="margin-top:10px;">
+          <div class="ibox-content">
+            <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+              <thead>
+                <tr>
+                 <!-- <th></th> -->
+                  <th>序号</th>
+                  <th>名称</th>
+                  <th>渠道</th>
+                  <th>奖励类型</th>
+                  <th>积分数/卡券ID</th>
+                 <th>上线时间</th>
+                  <th>下线时间</th>
+                   <th>可领用户数</th>
+                  <th>备注</th>
+                  <th>上线状态</th>
+                  <th>生效状态</th>
+                  <th>审核状态</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="x in splashConfigList">
+                  <!-- <td class="actived"><input type="checkbox" class="listChecked checkAll" value="{{x.id}}"></td> -->
+                  <td>{{$index+1}}</td>
+                   <td>{{x.title}}</td>
+                   <td>{{x.productChannel==3 && '会员PLUS' || x.productChannel==0 && '悟空理财APP' || x.productChannel==1 && '玖富钱包APP' || x.productChannel==2 && '悟空理财微信端'||x.productChannel}}</td>
+                  <td>{{x.giftType==1 && '积分' || x.giftType==2 && '卡劵' || x.giftType==3 && '奖池' || '其他' }}</td>
+                  <td>{{x.giftValue}}</td>
+                   <td>{{x.onlineTime| date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                  <td>{{x.offlineTime| date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                  <td><p>{{x.maxCount}}<p></td>
+                  <td>{{x.remarks}}</td>
+                  <td>{{x.status==0 && '已上线' || x.status==1 && '待上线' || x.status==2 && '已下线'}}</td>
+                  <td>{{x.delFlag=='T' && '失效' || x.delFlag=='F' && '已生效'}}</td>
+                   <td>{{x.auditStatus=='0' && '待审核' || x.auditStatus=='2' && '审核失败' || x.auditStatus=='1' && '审核通过'}}</td>
+                 <!--  <td>{{x.updateTime| date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                  <td>{{x.operationPerson}}</td> -->
+                  <td>
+                    <span class="look-start" ng-click="check(x)">查看</span>
+                    <span class="modify-start" ng-show="x.ispush=='F'" ng-click="update(x)">修改</span>
+                    <!-- <span class="take-start" ng-show="x.valid==0" ng-click="start(x.id,x.valid)">生效</span>
+                    <span class="take-start" ng-show="x.valid==1" ng-click="start(x.id,x.valid)">失效</span> -->
+                     <!-- <span class="take-start" ng-show="x.auditStatus=='1'"  ng-click="preOperate(3,x)">{{x.status=='0'?"生效":"失效"}}</span> -->
+                     <span class="take-start" ng-show="x.auditStatus=='1' && x.delFlag=='F'"  ng-click="preOperate(3,x)">失效</span>
+                    <a  ng-if="x.auditStatus=='0' && loginName == x.auditNo" src="javaScript:void(0);" class="take-start" ng-click="audit(x)" >审核</a>
+                    
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="bottom-page">
+              <div class="bottom-pagea">
+                <select style="width:58px;height:23px;" ng-model="search.pageSize" ng-change="querySplashConfigList(1)">
+                  <option value="5">5</option>
+                  <option value="10">10</option>
+                  <option value="15">15</option>
+                </select>
+              </div>
+               <div class="bottom-pageb">
+                  <i class="fa fa-step-backward" ng-click="querySplashConfigList(1)"></i>
+                  <i style="font-size:16px;" class="fa fa-caret-left" ng-click="querySplashConfigList(search.pageNo-1)"></i>
+                  <p>第<span class="pageN">{{search.pageNo}}</span class="commonN">共<span>{{search.pageCount}}</span>页</p>
+                  <i style="font-size:16px;" class="fa fa-caret-right" ng-click="querySplashConfigList(search.pageNo+1)"></i>
+                  <i style="margin-left:8px;" class="fa fa-step-forward" ng-click="querySplashConfigList(search.pageCount)"></i>
+                  <i class="fa fa-refresh" ng-click="querySplashConfigList(search.pageNo)"></i>
+              </div> 
+              
+              <div class="bottom-pagec">
+                <p>显示<span>{{(search.pageNo-1)*search.pageSize+1}}</span>到{{search.pageNo*search.pageSize}}条，共<span>{{search.totalRowSize}}</span>记录</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 第三部分 -->
+  <!-- 添加 -->
+  <div class="add-start-bg" id="addShow">
+    <div class="add-start">
+        <h1 align="center">新建领取奖励</h1>
+        <div class="start-a">
+          <p>*理财渠道:</p>
+          <select ng-model="add.productChannel" id='addproductChannel' ng-change="getAddTypeVersionList(add.productChannel,2)">
+            <option value="0">悟空理财APP</option>
+            <option value="1">玖富钱包APP</option>
+          </select>
+        </div>
+        <div class="start-a">
+          <p>*配置类型:</p>
+          <select ng-model="add.configType" id='addConfigType' >
+            <option value="1">玖耀汇节日礼</option>
+          </select>
+        </div>
+        
+        <div class="start-a">
+         	<p>*名称:</p>
+         	<input style="width:368px;" type="text" maxlength="15" placeholder="15字符以内" ng-model="add.title">
+        </div>
+        <div class="start-a">
+         	<p>*领取规则:</p>
+         	<input style="width:368px;" type="text" maxlength="50" maxlength="50" placeholder="50字符以内" ng-model="add.rule">
+        </div>
+        
+         <div class="start-a">
+         	<p>*奖励类型:</p>
+         	 <label ><input  type="radio" name="giftType" ng-model="add.giftType" style="height:12px;margin:auto"   value="1">积分</label>
+         	<!--  <label ng-show="add.productChannel==1"><input type="radio" name="giftType"  ng-model="add.giftType" style="height:12px;margin:auto"  value="2">卡券</label> -->
+         	  <label><input type="radio" name="giftType"  ng-model="add.giftType" style="height:12px;margin:auto"  value="2">卡券</label>
+         	 <label ng-show="add.productChannel==0"><input type="radio" name="giftType"  ng-model="add.giftType" style="height:12px;margin:auto"  value="3">奖池ID</label>
+        </div>
+        
+         <div class="start-a">
+         <!--  1-积分 2-卡劵 3-奖池ID' -->
+            <p ng-show="add.giftType==1">*积分值:</p>
+         	<!-- <p ng-show="add.giftType==2">*卡券ID:</p> -->
+         	<p ng-show="add.giftType==2">*卡券ID:</p>
+         	
+         	<p ng-show="add.giftType==3">*奖池ID:</p>
+         	<input style="width:368px;" type="number" maxlength="30"  ng-model="add.giftValue">
+        </div>
+        <div class="start-a">
+         	<p>*可领总数:</p>
+         	<input style="width:368px;" type="number" maxlength="30"  placeholder="-1为不限次数"  ng-model="add.maxCount">
+        </div>
+         <div class="start-a">
+         	<p>*上线时间:</p>
+         	<input type="text" id="queryOnlineTime" ng-model="add.onlineTime">
+        </div>
+         <div class="start-a">
+         	<p>*下线时间:</p>
+         	 <input type="text" id="queryOfflineTime" ng-model="add.offlineTime">
+        </div>
+        <div class="start-a">
+         	<p>备注:</p>
+         	<input style="width:368px;" type="text" maxlength="50" maxlength="50" placeholder="50字符以内" ng-model="add.remarks">
+        </div>
+        
+        <div class="start-a">
+         	<p >*审核人：</p>
+	      	<span style="margin-left: -5px;">
+	          <select class="interests" ng-model="add.auditPerson" ng-options="x.name for x in auditPersionList">
+	            <option value="">请选择</option>
+	          </select>
+	      	</span>
+        </div>      
+        
+        <div class="start-a">
+         	<p>*提审说明：</p>
+         	<span><input ng-model="add.requestAuditDescription" style="width:180px;" class="interests" type="text"  maxlength="18" placeholder="18个汉字以内"></span>
+        </div> 
+          
+        <div class="bottom-btn">
+          <a class="btn btn-danger btn-rounded bottom-btna start-btna"  id="screenTJ"  href="#" ng-click="commitScreen()">确定</a>
+          <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#">取消</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 添加节日礼 -->
+  
+  <!-- 查看节日礼详情 -->
+  <div class="look-start-box" id="showCheck">
+    <div class="add-look-start">
+        <h1 align="center">查看节日礼</h1>
+        <div class="look-start-a">
+          <p>理财渠道：</p>
+          <span>{{openScreen.productChannel==3 && "会员PLUS" || openScreen.productChannel==0 && "悟空理财app" || openScreen.productChannel==1 && "玖富钱包app" || openScreen.productChannel==2 && "悟空理财微信端" || "其他"}}</span>
+        </div>
+        
+        <div class="start-a">
+          <p>理财渠道：</p>
+        <span>{{openScreen.productChannel==3 && "会员PLUS" || openScreen.productChannel==0 && "悟空理财app" || openScreen.productChannel==1 && "玖富钱包app" || openScreen.productChannel==2 && "悟空理财微信端" || "其他"}}</span>
+        </div>
+        <div class="start-a">
+          <p>配置类型：</p>
+          <span>{{openScreen.configType==1 && "玖耀汇节日礼" || "其他"}}</span>
+        </div>
+        <div class="start-a">
+         	<p>名称：</p>
+         	<span>{{openScreen.title}}</span>
+        </div>
+        <div class="start-a">
+         	<p>领取规则：</p>
+         	<span>{{openScreen.rule}}</span>
+        </div>
+        
+         <div class="start-a">
+         	<p>奖励类型：</p>
+         	 <span>{{openScreen.giftType==1 && "积分" || openScreen.giftType==2 && "卡券" || openScreen.giftType==3 && "奖池" || "其他"}}</span>
+        </div>
+        
+         <div class="start-a">
+         	<p ng-show="openScreen.giftType==1">积分值：</p>
+         	<p ng-show="openScreen.giftType==2">卡券ID：</p>
+         	<p ng-show="openScreen.giftType==3">奖池ID：</p>
+         	<span>{{openScreen.giftValue}}</span>
+        </div>
+        
+        <div class="start-a">
+         	<p>可领总数：</p>
+         	<span>{{openScreen.maxCount}}</span>
+        </div>
+         <div class="start-a">
+         	<p>已领用户数：</p>
+         	<span>{{openScreen.curCount}}</span>
+        </div>
+        
+        <div class="look-start-f">
+          <p>{{openScreen.positions==205 && "活动上线时间" || "上线时间"}}：</p>
+          <span>{{openScreen.onlineTime}}</span>
+          
+        </div>
+         <div class="look-start-f">
+          <p>{{openScreen.positions==205 && "活动下线时间" || "下线时间"}}：</p>
+          <span>{{openScreen.offlineTime}}</span>
+        </div>
+        <div class="look-start-g">
+          <p>是否生效：</p>
+          <span>{{openScreen.delFlag=='T' && '失效' || openScreen.delFlag=='F' && '已生效'}}</span>
+        </div>
+        <div class="look-start-i">
+          <p>最后修改时间：</p>
+          <span>{{openScreen.updateTime}}</span>
+        </div>
+         <div class="look-start-i">
+          <p>修改人：</p>
+          <span>{{openScreen.operationPerson}}</span>
+        </div>
+        <div class="look-start-i">
+          <p>审核结果：</p>
+          <span>{{openScreen.auditStatus==0 && '待审核' || openScreen.auditStatus==1 && '审核通过' || openScreen.auditStatus==2 && '审核失败'}}</span>
+        </div>
+         <div class="start-a">
+         	<p>备注：</p>
+         	<span>{{openScreen.remarks}}</span>
+        </div>
+        <div class="look-start-i">
+          <p>提审说明：</p>
+          <span>{{openScreen.requestAuditDescription}}</span> 
+        </div>
+         <div class="look-start-i">
+          <p>审核人：</p>
+          <span>{{openScreen.auditPerson}}</span>
+        </div>
+         <div class="look-start-i">
+          <p>审核时间：</p>
+          <span>{{openScreen.auditTime}}</span>
+        </div>
+         <div class="look-start-i">
+          <p>审核描述：</p>
+          <span>{{openScreen.auditDescription}}</span>
+        </div>
+        <div class="look-start-j">
+          <p>创建时间：</p>
+          <span>{{openScreen.createTime}}</span>
+        </div>
+         <div class="look-start-j">
+          <p>创建人：</p>
+          <span>{{openScreen.createPerson}}</span>
+        </div>
+        <div class="bottom-btn">
+          <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#"  ng-click="checkOKAndNO()">关闭</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 查看详情 -->
+ <!-- 修改详情 -->
+  <div class="modify-start-box" id="showUpdate">
+    <div class="add-start">
+        <h1 align="center">修改领取奖励</h1>
+        <div class="start-a">
+          <p>理财渠道:</p>
+         <!--  <span>{{updateScene.productChannel==3 && "会员PLUS" || updateScene.productChannel==0 && "悟空理财app" || updateScene.productChannel==1 && "玖富钱包app" || updateScene.productChannel==2 && "悟空理财微信端" || "其他"}}</span> -->
+          <select ng-model="updateScene.productChannel" id="editproductChannel" ng-change="getEditTypeVersionList(updateScene.productChannel)" disabled="disabled">
+            <option value="0">悟空理财APP</option>
+            <option value="1">玖富钱包APP</option>
+          </select> 
+        </div>
+        <div class="start-a">
+          <p>*配置类型:</p>
+          <select ng-model="updateScene.configType" id='updateSceneConfigType' >
+            <option value="1">玖耀汇节日礼</option>
+          </select>
+        </div>
+        <div class="start-a">
+         	<p>*名称:</p>
+         	<input style="width:368px;" type="text" maxlength="15" placeholder="15字符以内" ng-model="updateScene.title">
+        </div>
+        <div class="start-a">
+         	<p>*领取规则:</p>
+         	<input style="width:368px;" type="text"  maxlength="50" maxlength="50" placeholder="50字符以内" ng-model="updateScene.rule">
+        </div>
+        
+         <div class="start-a">
+         	<p>*奖励类型:</p>
+         	 <label ><input  type="radio" name="updateScenegiftType" ng-model="updateScene.giftType" style="height:12px;margin:auto"   value="1">积分</label>
+         	 <!-- <label ng-show="updateScene.productChannel==1"><input type="radio" name="updateScenegiftType"  ng-model="updateScene.giftType" style="height:12px;margin:auto"  value="2">卡券</label> -->
+         	 <label><input type="radio" name="updateScenegiftType"  ng-model="updateScene.giftType" style="height:12px;margin:auto"  value="2">卡券</label>
+         	 <label ng-show="updateScene.productChannel==0"><input type="radio" name="updateScenegiftType"  ng-model="updateScene.giftType" style="height:12px;margin:auto"  value="3">奖池ID</label>
+        </div>
+        
+         <div class="start-a">
+         	<p ng-show="updateScene.giftType==1">*积分值:</p>
+         	<p ng-show="updateScene.giftType==2">*卡券ID:</p>
+         	<p ng-show="updateScene.giftType==3">*奖池ID:</p>
+         	<input style="width:368px;" type="text" maxlength="30"  ng-model="updateScene.giftValue">
+        </div>
+        
+        <div class="start-a">
+         	<p>*可领总数:</p>
+         	<input style="width:368px;" type="text" maxlength="30"  placeholder="-1为不限次数"  ng-model="updateScene.maxCount">
+        </div>
+         <div class="start-a">
+         	<p>*上线时间:</p>
+         	<input type="text" id="updateOnlineTime" ng-model="updateScene.onlineTime">
+        </div>
+         <div class="start-a">
+         	<p>*下线时间:</p>
+         	 <input type="text" id="updateOfflineTime" ng-model="updateScene.offlineTime">
+        </div>
+        <div class="start-a">
+         	<p>备注:</p>
+         	<input style="width:368px;" type="text" maxlength="30" placeholder="50字符以内" ng-model="updateScene.remarks">
+        </div>
+        
+        <div class="start-a">
+         	<p >*审核人：</p>
+	      	<span style="margin-left: -5px;">
+	          <select class="interests" ng-model="updateScene.auditPerson" ng-options="x.name for x in auditPersionList">
+	            <option value="">请选择</option>
+	          </select>
+	      	</span>
+        </div>      
+        
+        <div class="start-a">
+         	<p>提审说明：</p>
+         	<span><input ng-model="updateScene.requestAuditDescription" style="width:180px;" class="interests" type="text"  maxlength="18" placeholder="18个汉字以内"></span>
+        </div> 
+      <div class="bottom-btn">
+          <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="confirmUpdate()">确定</a>
+          <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" ng-click="updateCancel()">取消</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 修改节日礼详情 -->
+    <!-- 审核金融产品配置 -->
+	  <div class="take-start-box" id="auditShow">
+	    <div class="take-start-small newTakeEffect">
+	      <h2 align="center">审核</h2>
+	      <ul class="isEffect">
+	        <li><p>审核结果：</p>
+	          <select id="auditStatus" ng-model="auditStatus">
+	            <option value="1">审核通过</option>
+	            <option value="2">审核不通过</option>
+	          </select>
+	        </li>
+	        <li class="PosiText"><p>审核描述：</p><textarea id="auditDescription" ng-model="auditDescription" maxlength="32" cols="25" rows="4" placeholder="选填，32字符以内"></textarea></li>
+	      </ul>
+	      <div class="bottom-btn">
+	        <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="confirm()" >确定</a>
+	        <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" ng-click="cancelAuditShow()">取消</a>
+	      </div>
+	    </div>
+	  </div>
+	  
+<div class="take-start-box" id="takeEffect" >
+    <div class="take-start-small newTakeEffect">
+      <h2 align="center">{{effectRecord.delFlag=='F' && '失效' || effectRecord.delFlag=='T' && '生效'}}提示</h2>
+      <ul class="isEffect">
+        <li><p>审核人</p> 
+         <!--  <select id="validConfirmUser" ng-model="validConfirmUser">
+          	<option value="">请选择</option>
+            <option value="{{x.no}}-{{x.email}}" ng-repeat="x in auditPersionList">{{x.name}}</option> -->
+             <select class="interests" ng-model="effectRecord.auditPerson" ng-options="x.name for x in auditPersionList">
+            <option value="">请选择</option>
+          </select>
+        </li>
+        <li class="PosiText"><p>审核说明</p><textarea id="requestAuditDescription" ng-model="effectRecord.requestAuditDescription" cols="25" rows="4" placeholder="选填，30字符以内"></textarea></li>
+      </ul>
+      <div class="bottom-btn">
+        <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="validateRecord()">确定</a>
+        <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" ng-click="cancelTakeEffect()">取消</a>
+      </div>
+    </div>
+  </div>  
+</div>
+<script src="${jsRoot}/angular/angular.min.js"></script>
+<script src="${jsRoot}/plugins/laydate/laydate.js"></script>
+    <!-- Mainly scripts -->
+<script src="${jsRoot}/jquery-2.1.1.js"></script>
+<script src="${jsRoot}/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="${jsRoot}/bootstrap.min.js"></script>
+<script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="${jsRoot}/plugins/jeditable/jquery.jeditable.js"></script>
+
+<!-- Data Tables -->
+<script src="${jsRoot}/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.responsive.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.tableTools.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="${jsRoot}/inspinia.js"></script>
+<script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.iframe-transport.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.ui.widget.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-process.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-validate.js"></script>
+<script src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+<script src="${jsRoot}/biz/tools/activeTopvipGift.js?rand=${random}"></script>
+<script type="text/javascript" src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+<script>
+  var navHight = $('.navbar-static-side').height()
+  $('.navbar-static-side').css('height', navHight - 60)
+  $('.content-box').css('height', navHight - 60)
+    $("#menus li").removeClass("active");
+    $("#gift_menus").addClass("active");
+    $("#tools").addClass("collapse in");
+  // 添加节日礼
+  $('.btn-gradienta').click(function(){
+	/*$('.add-start-bg').show()
+      $('.start-btna').click(function(){
+      $('.add-start-bg').hide();
+    }) */
+    $('.start-btnb').click(function(){
+      $('.add-start-bg').hide()
+    })
+  })
+  // 优先级排序
+  $('.btn-gradientb').click(function(){
+    /* $('.priority-ranking').show()
+    $('.bottom-btna').click(function(){
+      $('.priority-ranking').hide()
+    }) */
+    $('.bottom-btnb').click(function(){
+      $('.priority-ranking').hide()
+    })
+  })
+  // 查看节日礼
+  $('.look-start').click(function(){
+   // $('.look-start-box').show()
+    $('.bottom-btna').click(function(){
+      $('.look-start-box').hide()
+    }) 
+    /* $('.bottom-btnb').click(function(){
+      $('.look-start-box').hide()
+    }) */
+  })
+  // 修改节日礼
+  $('.modify-start').click(function(){
+    $('.modify-start-box').show()
+    $('.bottom-btna').click(function(){
+      $('.modify-start-box').hide()
+    })
+    $('.bottom-btnb').click(function(){
+      $('.modify-start-box').hide()
+    })
+  })
+  // 失效节日礼
+  $('.take-start').click(function(){
+    $('.take-start-box').show()
+    $('.bottom-btna').click(function(){
+      $('.take-start-box').hide()
+    })
+    $('.bottom-btnb').click(function(){
+      $('.take-start-box').hide()
+    })
+  })
+
+  
+  var queryOnlineTime = laydate({
+      elem:'#queryOnlineTime',
+      istime: true,
+      format: 'YYYY-mm-DD hh:mm:ss',
+      event:'click'
+  })
+
+  var queryOfflineTime = laydate({
+      elem:'#queryOfflineTime',
+      istime: true,
+      format: 'YYYY-mm-DD hh:mm:ss',
+      event:'click'
+  })
+
+   var updateOnlineTime = laydate({
+      elem:'#updateOnlineTime',
+      istime: true,
+      format: 'YYYY-mm-DD hh:mm:ss',
+      event:'click'
+  })
+
+  var updateOfflineTime = laydate({
+      elem:'#updateOfflineTime',
+      istime: true,
+      format: 'YYYY-mm-DD hh:mm:ss',
+      event:'click'
+  }) 
+
+</script>
+</body>
+</html>

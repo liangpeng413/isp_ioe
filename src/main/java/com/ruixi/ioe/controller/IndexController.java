@@ -25,8 +25,17 @@ public class IndexController {
      * @return
      */
     @RequestMapping(value="/cookbook/create")
-    public String restab(){
+    public String resTab(){
         return "/cookbook/create";
+    }
+
+    /**
+     * @deprecated 跳转至菜谱数据创建
+     * @return
+     */
+    @RequestMapping(value="/category/selected")
+    public String resCategory(){
+        return "/category/selected";
     }
 
     /**

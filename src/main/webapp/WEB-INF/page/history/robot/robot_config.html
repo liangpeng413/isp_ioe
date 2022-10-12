@@ -1,0 +1,1669 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>悟空机器人配置</title>
+    <link href="${cssRoot}/bootstrap.min.css" rel="stylesheet">
+    <link href="${staticRoot}/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="${cssRoot}/oms/abtest/infor-statistics.css" rel="stylesheet">
+    <link href="${cssRoot}/oms/ruleconfig/jquery.searchableSelect.css" rel="stylesheet" type="text/css">
+
+    <link href="${staticRoot}/css/oms/ruleconfig/myStyle.css" rel="stylesheet"> <!-- 1 -->
+    <!--基本样式-->
+    <link rel="stylesheet" href="${cssRoot}/oms/smartmarketing/index.css"> <!-- 1 -->
+    <link href="${staticRoot}/css/oms/ruleconfig/select-mania.css" rel="stylesheet" type="text/css"> <!-- 1 -->
+    <!--自定义样式-->
+    <link href="${staticRoot}/css/oms/ruleconfig/select-mania-theme-darkblue.css" rel="stylesheet" type="text/css">
+    <!-- 1 -->
+    <link href=".${staticRoot}/css/oms/ruleconfig/select-mania-theme-green.css" rel="stylesheet" type="text/css">
+    <!-- 1 -->
+    <link href="${staticRoot}/css/oms/ruleconfig/select-mania-theme-orange.css" rel="stylesheet" type="text/css">
+    <!-- 1 -->
+    <link href="${staticRoot}/css/oms/ruleconfig/select-mania-theme-red.css" rel="stylesheet" type="text/css"><!-- 1 -->
+    <link href="${staticRoot}/css/oms/ruleconfig/select-mania-theme-square.css" rel="stylesheet" type="text/css">
+    <!-- 1 -->    <!--下拉选择-->
+    <link href="${cssRoot}/../font-awesome/css/select2.min.css" rel="stylesheet">
+    <!-- FooTable -->
+    <link href="${cssRoot}/plugins/footable/footable.core.css" rel="stylesheet">
+    <link href="${cssRoot}/styleT2.css?rand=${random}" rel="stylesheet">
+    <link href="${cssRoot}/animate.css" rel="stylesheet">
+    <link href="${cssRoot}/style.css?rand=${random}" rel="stylesheet">
+    <link href="${cssRoot}/styleT.css?rand=${random}" rel="stylesheet">
+    <link href="${staticRoot}/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <link href="${cssRoot}/oms/ruleconfig/jquery.searchableSelect2.css" rel="stylesheet" type="text/css">
+    <script>
+        var globalConfig = {
+            basePath: "${ctx}",
+            staticRoot: "${staticRoot}",
+            loginName: "${Session.sessionUser.loginName}",
+            userName: "${Session.sessionUser.name}",
+        };
+
+        function swalMsg(msg) {
+            swal({
+                title: "",
+                text: msg,
+                confirmButtonColor: "#1ab394",
+                confirmButtonText: "确定"
+            });
+        }
+
+    </script>
+    <style>
+        .boxb-a ul {
+            float: left;
+            width: 33.3%;
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .boxb-a ul li {
+            margin-top: 20px;
+        }
+
+        #auditing div {
+            float: none;
+        }
+
+        #auditing input {
+            width: 200px;
+            margin-left: 30px;
+            margin-right: 50px;
+        }
+        #auditing2 div {
+            float: none;
+        }
+
+        #auditing2 input {
+            width: 200px;
+            margin-left: 30px;
+            margin-right: 50px
+        }
+
+        #auditing3 div {
+            float: none;
+        }
+
+        #auditing3 input {
+            width: 200px;
+            margin-left: 30px;
+            margin-right: 50px
+        }
+        .boxb-a div, #saveButton {
+            float: none;
+        }
+
+
+        .boxb-a select, .boxb-a[type='text'] {
+            width: 150px;
+            margin-left: 15px;
+        }
+
+        .boxb-a > div {
+            margin: 20px 0;
+        }
+
+        #addPage .small-boxb div {
+            float: none
+        }
+
+        #addPage .small-boxb div label {
+            vertical-align: top;
+            margin-right: 10px;
+        }
+
+        #add-task-rule > div {
+            margin: 10px 0;
+        }
+
+        .addShowType div {
+            display: flex;
+            margin-left: 0;
+            align-items: center;
+        }
+
+        .addShowType div select {
+            margin-top: 10px;
+        }
+
+        .addShowType div span {
+            margin: 5px 0 0 15px;
+        }
+
+        .addShowType div input {
+            margin-top: 7px;
+        }
+
+        .addShowType div p {
+            margin: 0;
+        }
+        .small-content{
+
+        }
+        .content-box{
+            /*         	width:150% */
+            overflow-x:scroll;
+        }
+        tr span:not(:last-child){
+            color:#000;
+        }
+        .bottom-pageb i{
+            cursor:pointer;
+        }
+        .table-list {
+            width: 70%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .table-list th, .table-list td {
+            border: 1px solid #dee2e6;
+            line-height: 2;
+            text-align: center;
+            vertical-align: middle;
+            padding: 0 15px;
+        }
+
+    </style>
+</head>
+<body ng-app="robot_configController" ng-controller="robot_configController">
+<div id="wrapper">
+    <div class="header-box">
+        <#include "/common/top.html" encoding="UTF-8" />
+    </div>
+    <nav class="navbar-default navbar-static-side nav-boxa" role="navigation">
+        <div class="sidebar-collapse"  style="height: 675px;overflow-y: scroll;">
+            <#include "/common/left.html" encoding="UTF-8" />
+        </div>
+    </nav>
+</div>
+<div class="content-box">
+    <div class="small-content">
+        <div class="pageOne" ng-show="viewPage == 'one'">
+        <div class="small-boxb col-md-12" style="height: 80px; line-height: 80px;">
+            <a class="btn btn-success btn-blueW btn-blueWa"
+               style="margin-right: 15px" id="returnBack" ng-click="addToConfig()">新增配置</a>
+            <a class="btn btn-success btn-blueW btn-blueWa" style="margin-right: 15px" ng-click="priorityManager()"
+               id="excel">优先级管理</a>
+            <a class="btn btn-success btn-blueW btn-blueWa" ng-click="hotManager()"
+               style="margin-right: 15px">热门管理</a>
+            <span style="font-size: 20px;" id="spilt"></span>
+            <span style="font-size: 20px;"></span>
+        </div>
+        <div class="small-boxb col-md-12">
+                <div class="boxb-a">
+                    <p style="margin-top:20px;">页面：
+                        <select class="chosen-select" name="strategyStatus" style="width:160px;"
+                                ng-model="search.pageCode" tabindex="2"
+                                id="strategyStatus" ng-change="clearSonSelectValue()">
+                            <option value="">--请选择--</option>
+                            <option value="launcher">launcher</option>
+                            <option value="liCai">理财</option>
+                            <option value="life">生活</option>
+                            <option ng-repeat="x in conventionalList" value="{{x.id}}">{{x.tabName}}</option>
+                        </select>
+                    </p>
+                    <p>上线状态： <select class="chosen-select" name="strategyStatus" style="width:160px;"
+                                     ng-model="search.status" tabindex="2">
+                        <option value="">--请选择--</option>
+                        <option value="">全部</option>
+                        <option value=0>已上线</option>
+                        <option value=2>已下线</option>
+                        <option value=1>待上线</option>
+                    </select>
+                    </p>
+                </div>
+                <div class="boxb-a">
+                    <p style="margin-top:20px;">位置：
+                        <select class="chosen-select" name="strategyStatus" style="width:160px;"
+                                ng-model="search.positionNo" tabindex="2" ng-change="clearResourceTypeValue()">
+                            <option value="">--请选择--</option>
+                            <option  value="1" ng-show="search.pageCode == 'launcher'">默认</option>
+                            <option  value="2" ng-show="search.pageCode == 'launcher'">日历</option>
+                            <option  value="3" ng-show="search.pageCode == 'launcher'">通用推荐</option>
+                            <option  value="4" ng-show="search.pageCode != 'launcher'">顶部运营位</option>
+                            <option  value="5" ng-show="search.pageCode == 'life' || search.pageCode == 'liCai'">推荐位</option>
+                            <option  value="6" ng-show="search.pageCode != 'launcher' && search.pageCode != 'liCai' && search.pageCode != 'life'">普通内容推荐</option>
+                        </select>
+                    </p>
+                    <p>生效状态：
+                        <select class="chosen-select" name="strategyResult" style="width:160px;"
+                                ng-model="search.valid" tabindex="2"
+                                id="strategyResult">
+                            <option value="">--请选择--</option>
+                            <option value="">全部</option>
+                            <option value="1">生效</option>
+                            <option value="2">失效</option>
+                        </select>
+                    </p>
+                </div>
+                <div class="boxb-a">
+                    <p style="margin-top:20px;">资源位类型：
+                        <select class="chosen-select" name="strategyStatus" style="width:160px;"
+                                ng-model="search.resourceType" tabindex="2">
+                            <option value="">--请选择--</option>
+                            <option value="1" ng-show="search.pageCode == 'launcher' && search.positionNo != '3'">通用</option>
+                            <option value="2" ng-show="search.positionNo != '1' && search.positionNo != '2' && search.positionNo != '6'">营销推荐</option>
+                            <option value="3" ng-show="search.pageCode == 'launcher' && search.positionNo == '3'">资讯内容</option>
+                            <option value="4" ng-show="search.pageCode!='launcher' && search.pageCode!='liCai' && search.pageCode!='life' && search.positionNo == '6'">内容推荐</option>
+                            <option value="5" ng-show="search.pageCode!='launcher' && search.pageCode!='liCai' && search.pageCode!='life' && search.positionNo == '6'">专题推荐</option>
+                        </select>
+                    </p>
+                    <p style="margin-top:20px;">审核状态：
+                        <select class="chosen-select" name="resultType" ng-model="search.auditStatus"
+                                style="width:160px;" tabindex="2"
+                                id="resultType">
+                            <option value="">--请选择--</option>
+                            <option value="">全部</option>
+                            <option value="2">审核通过</option>
+                            <option value="3">审核不通过</option>
+                            <option value="1">待审核</option>
+                        </select>
+                    </p>
+                </div>
+                <div class="boxb-c">
+                    <p style="margin-top:20px;">
+                        <a class="btn btn-success btn-rounded btn-blueW btn-blueWa" href="#"
+                           ng-click="queryRobotConfigList()"><i
+                                class="fa fa-search"></i> <span>搜索</span></a>
+                        <a class="btn btn-success btn-rounded btn-blueW btn-blueWb" href="#" ng-click="reset2()"><i
+                                class="fa fa-refresh"></i> <span>重置</span></a>
+                    </p>
+                </div>
+
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins" style="margin-top:10px;">
+                    <div class="ibox-content">
+                        <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+                            <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>渠道</th>
+                                <th>名称</th>
+                                <th>页面</th>
+                                <th>位置</th>
+                                <th>资源位类型</th>
+                                <th>上线时间</th>
+                                <th>下线时间</th>
+                                <th>上线状态</th>
+                                <th>生效状态</th>
+                                <th>审核状态</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="x in initiativeList">
+                                <td>{{x.id}}</td>
+                                <td>悟空机器人</td>
+                                <td>{{x.configName}}</td>
+                                <td> {{x.pageCode == 'liCai' && '理财页' || x.pageCode == 'life' && '生活页' ||  x.pageCode != 'launcher'  && x.pageCode != 'liCai' && x.pageCode != 'life' && x.tabName
+                                    || x.pageCode == 'launcher' && 'launcher'}}</td>
+                                <td>     {{x.positionNo == '1' && '默认' || x.positionNo == '2' && '日历' || x.positionNo == '3' && '通用推荐' ||
+                                    x.positionNo == '4' && '顶部运营位' || x.positionNo == '5' && '推荐位' || x.positionNo == '6' && '普通内容推荐'}}</td>
+                                <td>{{x.resourceType == '1' && '通用' || x.resourceType == '2'&& '营销推荐' || x.resourceType == '3' && '资讯内容' || x.resourceType == '4' && '内容推荐'
+                                    || x.resourceType == '5' && '专题推荐'}}&nbsp;&nbsp;&nbsp;</td>
+                                <td>{{x.onlineTime}}</td>
+                                <td>{{x.offlineTime}}</td>
+                                <td>{{x.status==0 && '已上线' || x.status==1 && '待上线' || x.status==2 && '已下线'}}</td>
+                                <td>{{x.valid == '1' && '生效' || x.valid == '2' && '失效'}}</td>
+                                <td>{{x.auditStatus == '1' && '待审核' || x.auditStatus == '2' && '审核通过' || x.auditStatus == '3' && '审核失败'}}</td>
+                                <td>
+                                    <a ng-show="x.auditStatus=='1' && x.auditor == loginName" href="#" ng-click="shenpi(x.id)"
+                                       class="look-start">审核</a>&nbsp;
+                                    <a ng-click="effectOrInvalid(x.valid,x.id)"
+                                       class="look-start">{{x.valid == '1' && '失效' || x.valid == '2' && '生效'}}</a><br/>
+                                    <a ng-click="updateRobotConfig(x)"
+                                       class="look-start">修改</a>&nbsp;
+                                    <a href="#" ng-click="checkRobotConfigById(x.id)" class="look-start">查看</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="bottom-page">
+                            <div class="bottom-pagea">
+                                <select style="width:58px;height:23px;" ng-model="search.pageSize"
+                                        ng-change="queryRobotConfigList()">
+                                    <option value="">--请选择--</option>
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                </select>
+                            </div>
+                            <div class="bottom-pageb">
+                                <i class="fa fa-step-backward" ng-click="queryRobotConfigList(1)"></i>
+                                <i style="font-size:16px;" class="fa fa-caret-left"
+                                   ng-click="queryRobotConfigList(search.pageNo-1)"></i>
+                                <p>第<span class="pageN" ng-model="search.pageNo">{{search.pageNo}}</span>共<span>{{search.pageCount}}</span>页
+                                </p>
+                                <i style="font-size:16px;" class="fa fa-caret-right"
+                                   ng-click="queryRobotConfigList(search.pageNo+1)"></i>
+                                <i style="margin-left:8px;" class="fa fa-step-forward"
+                                   ng-click="queryRobotConfigList(search.pageCount)"></i>
+                                <i class="fa fa-refresh" ng-click="queryRobotConfigList(search.pageNo)"></i>
+                            </div>
+
+                            <div class="bottom-pagec">
+                                <p>显示<span>{{(search.pageNo-1)*search.pageSize+1}}</span>到{{search.pageNo*search.pageSize > search.totalRowSize && search.totalRowSize || search.pageNo*search.pageSize < search.totalRowSize && search.pageNo*search.pageSize || search.totalRowSize < 1&& 0 }}条，共<span>{{search.totalRowSize}}</span>记录
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <div class="head_zl" ng-show="viewPage == 'two'">
+            <div >
+                <a class="nav_fan btn btn-blueW" ng-click="returnPageOne()">返回</a>
+            </div><br/>
+        <div class="head_nav" id="addConfigDiv">
+
+            <div class="head_txt">
+                基础信息
+            </div>
+            <div class="head_ipt">
+                <div class="ipt_up">
+                    <span class="head_ipt_name">*页面:</span>
+                    {{add.pageCode == 'liCai' && '理财页' || add.pageCode == 'life' && '生活页' ||  add.pageCode == 'configPage' && '常用页面类型配置项'
+                    || add.pageCode == 'launcher' && 'launcher'||add.tabName!=null &&add.tabName}}&nbsp;&nbsp;&nbsp;
+
+                    <span class="head_ipt_name">*位置:</span>
+                    {{add.positionNo == '1' && '默认' || add.positionNo == '2' && '日历' || add.positionNo == '3' && '通用推荐' ||
+                    add.positionNo == '4' && '顶部运营位' || add.positionNo == '5' && '推荐位' || add.positionNo == '6' && '普通内容推荐'}}&nbsp;&nbsp;&nbsp;
+                    <span class="head_ipt_name" style="display:inline-block;width:auto;">*资源位类型:</span>
+                    &nbsp;&nbsp;&nbsp;{{add.resourceType == '1' && '通用' || add.resourceType == '2'&& '营销推荐' || add.resourceType == '3' && '资讯内容' || add.resourceType == '4' && '内容推荐'
+                     || add.resourceType == '5' && '专题推荐'}}&nbsp;&nbsp;&nbsp;
+                </div>
+                <div class="ipt_up">
+                    *名称:<input type="text" ng-model="add.configName"  placeholder="最多50字符" maxlength="50">
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <span ng-show="add.pageCode == 'liCai' && add.positionNo == '5'">*理财页推荐tab名称:</span>
+                    <span ng-show="add.pageCode == 'life' && add.positionNo == '5'">生活页推荐tab名称:</span>
+                    <span ng-show="add.positionNo == '6'">*内容推荐tab名称:</span>
+                    <span ng-show="(add.pageCode == 'liCai' && add.positionNo == '5') || (add.pageCode == 'life' && add.positionNo == '5') || add.positionNo == '6'">
+                        <select ng-model="add.tabId" id="addPageSelect">
+                            <option value="">--请选择--</option>
+                            <option ng-repeat="x in tabList" value="{{x.id}}">{{x.tabName}}</option>
+                        </select>
+                    </span>
+                </div>
+
+            </div>
+
+
+
+
+    </div>
+            <div class="list_box">
+                <div class="list_single">
+                    <div class="single_nav">
+                        <div class="single_nav_title">
+                            配置信息
+                        </div>
+                        <div class="switch">
+                  <!--<img class="xain" src="./image/hengxian.png" alt="">-->
+                </span>
+                        </div>
+                    </div>
+                    <div class="dev-margin">
+                        <div class="wen_an" ng-repeat=" x in add.welcomeText track by $index" ng-show="add.positionNo == 1">
+                            <span>*欢迎文案：</span>
+                            <input class="single_ipt" type="text" id="wel{{$index+1}}" placeholder="50字符以内" maxlength="50"/>
+                            <a class="look-start-1" ng-click="addText()">➕</a><a  ng-click="lessText($index)">➖</a></span><br/>
+                        </div>
+                        <div class="show_type" ng-show="add.positionNo != '1' && add.positionNo != '2'">
+                            <span>*展示样式</span>
+                           <span ng-show="(add.positionNo == '3' && add.resourceType == '2') ||add.resourceType == '3'"><input type="radio" name="showType" value="1"  id="tonglan">通栏(1个)</span>  &nbsp;
+
+                            <span ng-show="add.positionNo == '5' || (add.positionNo == '3' && add.resourceType == '2') || add.resourceType == '4' || add.resourceType == '5'||add.positionNo == '4'">
+                                <input type="radio" name="showType" id="zhongtui"  value="2">中推荐位(2个)</span>
+
+                            <span ng-show="add.resourceType == '5'"><input type="radio" name="showType" value="3" id="xiaotuijian"/>小推荐位(3个)</span>
+                        </div>
+                        <div ng-show="add.positionNo != '1' && add.positionNo != '2'">
+                            <br>
+                            *新建类型:
+                            &nbsp;&nbsp;&nbsp;<span style="color: blue" ng-show="(add.positionNo == '3' && add.resourceType == '2') || (add.pageCode == 'liCai' && add.positionNo == '5')" ng-click="addProductCofig()">产品</span>&nbsp;&nbsp;&nbsp;
+
+                            <span style="color: blue" ng-click="customCofig()" ng-show="(add.positionNo == '3' && add.resourceType == '2') || (add.pageCode == 'life' && add.positionNo == '5')">自定义</span>
+
+                            &nbsp;&nbsp;&nbsp;<span style="color: blue" ng-click="pictureCofig()" ng-show="(add.positionNo == '3' && add.resourceType == '2') || add.positionNo == '4' || (add.pageCode == 'life' && add.positionNo == '5')">图片</span>
+
+                            &nbsp;&nbsp;&nbsp;<span style="color: blue" ng-click="thematiCofig()" ng-show="add.resourceType == '5'">专题</span>
+
+                            &nbsp;&nbsp;&nbsp;<span style="color: blue" ng-click="collectionCofig()" ng-show="add.resourceType == '4'">内容合集</span>
+
+
+                            &nbsp;&nbsp;&nbsp;<span style="color: blue" ng-click="singleCofig()" ng-show="add.resourceType == '4'">内容单片</span>
+
+                            &nbsp;&nbsp;&nbsp;<span style="color: blue" ng-click="newsCofig()" ng-show="add.resourceType == '3'">资讯内容</span>
+
+                                                        <table class="table-list" >
+                                                            <thead>
+                                                            <tr>
+                                                                <th>序号</th>
+                                                                <th>类型</th>
+                                                                <th>推荐名称</th>
+                                                                <th>操作</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            <tr class="pushOl" ng-repeat="x in add.typeList track by $index">
+                                                                <td>{{$index+1}}</td>
+                                                                <td>{{x.taskObject == 'newsConfig' && '资讯' || x.taskObject == 'productConfig' && '产品'
+                                                                    ||x.taskObject == 'customConfig' && '自定义' || x.taskObject == 'pictureConfig' && '图片'
+                                                                    || x.taskObject == 'singleContent' && '内容单片' || x.taskObject == 'contentCollection' && '内容合集'
+                                                                    || x.taskObject == 'thematicConfig' && '专题'}}</td>
+                                                                <td>{{x.recommandName==null?x.titleName:x.recommandName}}</td>
+                                                                <td>
+                                                                    <span class="headleLook" style="color: blue" ng-click="updateTypeInfo(x)">修改</span>
+                                                                    <span class="headleLook" style="color: blue" ng-click="onlineOrOfflineTime(x)">上下线时间</span>
+                                                                    <span class="headleLook" style="color: blue" ng-click="deleteFromTypeList(x)">删除</span>
+                                                                    <span class="headleLook" style="color: blue"  ng-click="moveList('W',x)">上移</span>
+                                                                    <span class="headleLook" style="color: blue" ng-click="moveList('S',x)">下移</span>
+                                                                    <span class="headleLook" style="color: blue" ng-show="add.positionNo == '6'" ng-click="addHot(x)">添加热门</span>
+
+                                                                </td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+
+
+                        </div><br>
+                        <div class="chu_time">
+                            *背景底图：
+                            <input type="radio"  name="backGround" ng-model="backGround"  value="1" ng-click="backGroundType1()" id="radioImg">图片 &nbsp;&nbsp;&nbsp;&nbsp; <input type="file" id="addPicture" name="file" size="1"
+                                                                                                     style="position:absolute;display: none;" >
+                            <input type="file" id="addVideo" name="file" size="1"
+                                   style="position:absolute;display: none;" ><input type="radio" name="backGround"  value="2" ng-model="backGround" ng-click="backGroundType2()"id="radioVideo">视频 &nbsp;&nbsp;&nbsp;
+                            <input type="text" id="fileUrl" ng-model="add.backGround">
+                            <a class="btn  btn-success btn-rounded btn-blueWa"   id="image_prew" ng-click="upLoadBackGround()" >点击上传</a>
+                            <br><br>
+                            <div ng-show="add.positionNo == '1'">
+                                跳转链接：<input type="text" id="jumpLink" style="width: 400px;" ng-model="add.skipUrl">
+                            </div>
+                            <br>
+                            <div>
+                                语音引导文案：<input  ng-model="add.videoText" type="text" id="videoText" placeholder="最多50字符" maxlength="50" style="width: 300px;">
+                            </div>
+                            <br>
+                            <div ng-show="add.positionNo != '1' && add.positionNo != '2'">
+                                *受众用户：<select ng-model="add.audienceUser">
+                                            <option value="">--请选择--</option>
+                                            <option value="0">全部</option>
+                                            <option value="1">白名单</option>
+                                            <option value="2">黑名单</option>
+                                          </select>
+                            </div><br>
+
+                            <div ng-show="add.audienceUser == '1' || add.audienceUser == '2'">
+                                <span>*名单类型:</span>
+                                <select  name="userTagType" style="width: 167px;" ng-model="add.rosterType" ng-change="changeFindChannelGroups()">
+                                    <option value="">--请选择--</option>
+                                    <option  ng-repeat="x in strategyList" value="{{x.key}}">{{x.value}}</option>
+                                </select>
+                            </div><br>
+                            <div class="start-b deploy-item-filter select1" ng-show="add.rosterType !='NO_RULE' && add.audienceUser !='0' && (add.audienceUser == '1' || add.audienceUser == '2')">
+                                *用户分组:
+                                <select class="mySelect" ng-model="add.rosterId" id="memberId" class="filter-select" style="width: 315px;" >
+                                    <option value="">--请选择--</option>
+                                    <option value="{{x.rosterId}}" ng-repeat="x in strChannelGroups">{{x.rosterName}}</option>
+                                </select>
+                            </div>
+
+                            <br/>
+                            <div>
+
+                                *上线时间：<input id="upTime" type="text"
+                                                           ng-model="add.onlineTime"
+                                                           style="width: 200px;" name="validTime" required="required">
+                                *下线时间：<input id="downTime" type="text"
+                                                           ng-model="add.offlineTime"
+                                                           style="width: 200px;" name="invalidTime" required="required">
+                            </div>
+                            <br/>
+                            <div>
+                                审核人:
+                                <select style="width: 100px;" ng-model="add.auditor">
+                                    <option value="">--请选择--</option>
+                                    <option ng-repeat="x in auditPersonList" value="{{x.no}}">{{x.name}}</option>
+                                </select> &nbsp;&nbsp;&nbsp;&nbsp;
+                                提审说明:
+                                <input type="text" id="Desc" ng-model="add.reviewIntro" style="width: 200px;">
+
+                            </div>
+
+
+                        </div>
+                        <!-- exceed -->
+                    </div>
+
+
+
+                    <!-- exceed -->
+                </div>
+                <!-- dev-margin -->
+            </div>
+            <div class="bottom-btn">
+                <a class="btn btn-success btn-blueW btn-blueWa" ng-model="isUpdate" ng-show="isUpdate == '1'" href="#" ng-click="addCommit()">保存</a>
+                <a class="btn btn-success btn-blueW btn-blueWa" ng-model="isUpdate" ng-show="isUpdate == '2'" href="#" ng-click="updateCommit()">修改</a>
+            </div>
+
+
+
+        </div>
+
+        <!--查看-->
+        <div class="head_zl" ng-show="viewPage == 'check'">
+            <div >
+                <a class="nav_fan btn btn-blueW" ng-click="viewPage = 'one'">返回</a>
+            </div><br/>
+            <div class="head_nav" >
+
+                <div class="head_txt">
+                    基础信息
+                </div>
+                <div class="head_ipt">
+                    <div class="ipt_up">
+                        <span class="head_ipt_name">*页面:</span>
+                        {{robotDetail.pageCode == 'liCai' && '理财页' || robotDetail.pageCode == 'life' && '生活页' ||  robotDetail.pageCode == 'configPage' && '常用页面类型配置项'
+                        || robotDetail.pageCode == 'launcher' && 'launcher'||robotDetail.tabName!=null&&robotDetail.tabName}}&nbsp;&nbsp;&nbsp;
+
+                        <span class="head_ipt_name">*位置:</span>
+                        {{robotDetail.positionNo == '1' && '默认' || robotDetail.positionNo == '2' && '日历' || robotDetail.positionNo == '3' && '通用推荐' ||
+                        robotDetail.positionNo == '4' && '顶部运营位' || robotDetail.positionNo == '5' && '推荐位' || robotDetail.positionNo == '6' && '普通内容推荐'}}&nbsp;&nbsp;&nbsp;
+                        <span class="head_ipt_name">*资源位类型:</span>
+                        {{robotDetail.resourceType == '1' && '通用' || robotDetail.resourceType == '2'&& '营销推荐' || robotDetail.resourceType == '3' && '资讯内容' || robotDetail.resourceType == '4' && '内容推荐'
+                        || robotDetail.resourceType == '5' && '专题推荐'}}&nbsp;&nbsp;&nbsp;
+                    </div>
+                    <div class="ipt_up">
+                        *名称:{{robotDetail.configName}}
+
+                       &nbsp; &nbsp; <span ng-show="robotDetail.tabIdName!=null&&robotDetail.tabIdName!=''">推荐tab名称: {{robotDetail.tabIdName}}</span>
+                    </div>
+
+                </div>
+
+
+
+
+            </div>
+            <div class="list_box">
+                <div class="list_single">
+                    <div class="single_nav">
+                        <div class="single_nav_title">
+                            配置信息
+                        </div>
+                        <div class="switch">
+                            <!--<img class="xain" src="./image/hengxian.png" alt="">-->
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="dev-margin">
+                        <div class="wen_an" ng-repeat=" x in robotDetail.welcomeText" ng-show="robotDetail.positionNo == '1'">
+                            <div>*欢迎文案：{{x}}</div><br/>
+                        </div>
+                        <div class="show_type" ng-show="robotDetail.positionNo != '1' && robotDetail.positionNo != '2'">
+                            <span>*展示样式:</span>
+                            <span ng-show="robotDetail.showType==1">通栏(1个)</span>  &nbsp;
+
+                            <span ng-show="robotDetail.showType==2">中推荐位(2个)</span>
+
+                            <span ng-show="robotDetail.showType==3">小推荐位(3个)</span>
+                        </div>
+                        <div ng-show="robotDetail.positionNo != '1' && robotDetail.positionNo != '2'">
+                            <br>
+
+                            <table class="table-list" >
+                                <thead>
+                                <tr>
+                                    <th>序号</th>
+                                    <th>类型</th>
+                                    <th>推荐名称</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr class="pushOl" ng-repeat="x in robotDetail.typeList track by $index">
+                                    <td>{{$index+1}}</td>
+                                    <td>{{x.taskObject == 'newsConfig' && '资讯' || x.taskObject == 'productConfig' && '产品'
+                                        ||x.taskObject == 'customConfig' && '自定义' || x.taskObject == 'pictureConfig' && '图片'
+                                        || x.taskObject == 'singleContent' && '内容单片' || x.taskObject == 'contentCollection' && '内容合集'
+                                        || x.taskObject == 'thematicConfig' && '专题'}}</td>
+                                    <td>{{x.recommandName==null?x.titleName:x.recommandName}}</td>
+                                    <td>
+                                        <span class="headleLook" style="color: blue" ng-click="lookForRobotConfigOnlineOrOfflineTime(x)">上下线时间</span>
+                                        <span class="headleLook" style="color: blue" ng-click="queryTypeInfo(x)">查看</span>
+
+                                    </td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+
+
+                        </div>
+                        <br>
+
+
+                        <div class="chu_time">
+                            <div>*背景底图：{{robotDetail.backGround}}</div>
+
+                             <br/>
+                            <div ng-show="robotDetail.resourceType == 1">
+                                跳转链接：{{robotDetail.skipUrl}}
+                            </div>
+                            <br>
+                            <div>
+                                语音引导文案：{{robotDetail.videoText}}
+                            </div>
+                            <br>
+                            <div ng-show="robotDetail.positionNo !='1' && robotDetail.positionNo !='2'">
+                                *受众用户：{{robotDetail.audienceUser == '0' && '全部' || robotDetail.audienceUser == '1' && '白名单' || robotDetail.audienceUser == '2' && '黑名单'}}
+
+                            </div><br>
+
+                            <div ng-show="robotDetail.audienceUser == '1' || robotDetail.audienceUser == '2'">
+                                <span>*名单类型:</span>
+                                {{robotDetail.rosterTypeName}}
+                            </div><br>
+                            <div class="start-b deploy-item-filter select1" ng-show="robotDetail.rosterType !='NO_RULE' && robotDetail.audienceUser !='0'">
+                                *用户分组:{{robotDetail.rosterName}}
+
+                            </div>
+
+                            <br/>
+                            <div>
+
+                                *上线时间：{{robotDetail.onlineTime}}
+                                *下线时间：{{robotDetail.offlineTime}}
+                            </div>
+                            <br/>
+                            <div>
+
+                                审核人:{{robotDetail.auditorName}}
+
+                                提审说明:{{robotDetail.reviewIntro}}
+
+
+                            </div>
+
+
+                        </div>
+                        <!-- exceed -->
+                    </div>
+
+
+
+                    <!-- exceed -->
+                </div>
+                <!-- dev-margin -->
+            </div>
+            <div class="bottom-btn">
+                <!--<a class="btn btn-success btn-blueW btn-blueWa"  href="#" ng-click="updateCommit(1)">保存</a>-->
+            </div>
+
+
+
+        </div>
+
+    </div>
+    <div class="take-start-box" id="auditShow">
+        <div class="take-start-small newTakeEffect">
+            <h2>审核</h2>
+            <ul class="isEffect">
+                <li><p>审核结果：</p>
+                    <select id="auditStatus" ng-model="shenheresult">
+                        <option value="">--请选择--</option>
+                        <option value="2">审核通过</option>
+                        <option value="3">审核不通过</option>
+                    </select>
+                </li>
+            </ul>
+            <div class="bottom-btn">
+                <input type="hidden" id='strId'>
+                <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#"
+                   ng-click="auditConfirm()">确定</a>
+                <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#"
+                   onclick="$('.take-start-box').hide();">取消</a>
+            </div>
+        </div>
+
+
+    </div>
+
+    <!--优先级排序-->
+    <div class="priority-ranking" id="configPriority">
+        <div class="priority-ranking-small">
+            <h1 align="center">任务优先级排序</h1>
+            <div class="ranking-small">
+                <div class="ranking-smalla">优先级排序
+                    <i id="downMove" class="fa fa-caret-down " ng-click="move('X')"></i>
+                    <i id="upMove" class="fa fa-caret-up" ng-click="move('S')"></i>
+                    <!--   <i class="fa fa-times" ng-click="remove()"></i> -->
+                    <p><span style="color:#ff2327;">*</span>编号越大，优先级越低</p>
+                </div>
+                <div class="ranking-smalla" ng-show="(search.pageCode=='liCai' && search.positionNo=='5')||(search.pageCode=='life' && search.positionNo=='5') ||(search.pageCode!='life'
+        && search.pageCode!='liCai' && search.pageCode!='launcher' && search.positionNo == '6')">
+                    关联tab：
+                    <select    style="width:120px;" ng-model="AssociatedTabId" ng-change="selectConfigByTabId(AssociatedTabId)">
+                        <option value="">--请选择--</option>
+                        <option ng-repeat="x in priorityTabList" value="{{x.id}}">{{x.tabName}}</option>
+                        <!--<option value="1">网贷</option>
+                        <option value="2">基金</option>
+                        <option value="3">保险</option>
+                        <option value="4">股票</option>-->
+                    </select>
+                </div>
+                <div class="ranking-smallb">
+                    <!--  <table class="footable table table-stripped"  style="border-collapse: collapse;" data-page-size="8" data-filter=#filter> -->
+                    <table class="footable" >
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <td class="tdNumber">优先级编号</td>
+                            <td>任务名称</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="x in sortList" style="border-collapse: collapse;">
+                            <td><input type="checkbox" class="moveCheckbox iptCheck"  value="{{$index+1}}"></td>
+                            <td class="tdNumber"><input type="hidden" ng-model="hehe.a">{{$index+1}}</td>
+                            <td><input type="hidden" ng-model="hehe.b">{{x.configName}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="bottom-btn">
+                <a class="btn btn-danger btn-rounded bottom-btna" href="#" ng-click="moveCommit()">确定</a>
+                <a class="btn btn-danger btn-rounded bottom-btnb" href="#" ng-click="moveCancel()">取消</a>
+            </div>
+        </div>
+    </div>
+
+    <!--热门优先级排序-->
+    <div class="priority-ranking" id="hotPriority">
+        <div class="priority-ranking-small">
+            <h1 align="center">热门管理</h1>
+            <div class="ranking-small">
+                <div class="ranking-smalla">优先级排序
+                    <i  class="fa fa-caret-down " ng-click="hotMove('X')"></i>
+                    <i  class="fa fa-caret-up" ng-click="hotMove('S')"></i>
+                    <!--   <i class="fa fa-times" ng-click="remove()"></i> -->
+                    <p><span style="color:#ff2327;">*</span>编号越大，优先级越低</p>
+                </div>
+                <div class="ranking-smalla">
+                    热门页面：
+                    <select  id="searchContentTab"  style="width:120px;" ng-model="configObject.searchContentTab" ng-change="searchContentTab()">
+                        <option value="">--请选择--</option>
+                        <option ng-repeat="x in hotTabList" value="{{x.id}}">{{x.tabName}}</option>
+                        <!--<option value="1">网贷</option>
+                        <option value="2">基金</option>
+                        <option value="3">保险</option>
+                        <option value="4">股票</option>-->
+                    </select>
+                </div>
+                <div class="ranking-smallb">
+                    <!--  <table class="footable table table-stripped"  style="border-collapse: collapse;" data-page-size="8" data-filter=#filter> -->
+                    <table class="table-list" >
+                        <thead>
+                        <tr>
+                            <td >选择</td>
+                            <td class="tdNumber">优先级编号</td>
+                            <td>文件名称</td>
+                            <td>操作</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="x in hotSortList" style="border-collapse: collapse;">
+                            <td><input type="checkbox" class="hotMoveCheckbox"  value="{{$index+1}}"></td>
+                            <td class="tdNumber"><input type="hidden" ng-model="hehe.a">{{$index+1}}</td>
+                            <td><input type="hidden" ng-model="hehe.b">{{x.contentCollection.fileObject.fileName!=null?x.contentCollection.fileObject.fileName:x.singleContent.fileName!=null?x.singleContent.fileName:x.thematicConfig.fileObject.fileName}}</td>
+                            <td class="headleLook" style="color: blue" ng-click="deleteHot(x)">删除</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="bottom-btn">
+                <a class="btn btn-danger btn-rounded bottom-btna" href="#" ng-click="hotMoveCommit()">确定</a>
+                <a class="btn btn-danger btn-rounded bottom-btnb" href="#" ng-click="moveCancel()">取消</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="take-start-box" id="addConfigShow">
+        <div class="take-start-small newTakeEffect">
+            <h2 style="text-align: center">新增配置</h2>
+            <div class="start-a" align="center">
+                *页面:
+                <select class="chosen-select" name="strategyStatus" style="width:160px;"
+                        ng-model="add.pageCode" tabindex="2" ng-change="clearPositionNoAndResourceType(1)">
+                    <option value="">--请选择--</option>
+                    <option value="launcher">launcher</option>
+                    <option value="liCai">理财</option>
+                    <option value="life">生活</option>
+                    <option ng-repeat="x in conventionalList" value="{{x.id}}">{{x.tabName}}</option>
+                </select>
+                <br/><br/><br/>
+                *位置:
+                <select class="chosen-select" name="strategyStatus" style="width:160px;"
+                        ng-model="add.positionNo" tabindex="2"  ng-change="clearPositionNoAndResourceType(2)">
+                    <option value="">--请选择--</option>
+                    <option ng-show="add.pageCode=='launcher'" value="1">默认</option>
+                    <option ng-show="add.pageCode=='launcher'" value="2">日历</option>
+                    <option ng-show="add.pageCode=='launcher'" value="3">通用推荐</option>
+                    <option ng-show="add.pageCode!='launcher'" value="4">顶部运营位</option>
+                    <option ng-show="add.pageCode=='liCai' || add.pageCode=='life'"value="5">推荐位</option>
+                    <option ng-show="add.pageCode!='launcher' && add.pageCode!='liCai' && add.pageCode!='life'" value="6">普通内容推荐</option>
+                </select>
+                <br/><br/><br/>
+                *资源位类型:
+                <select class="chosen-select" name="strategyStatus" style="width:160px;"
+                        ng-model="add.resourceType" tabindex="2">
+                    <option value="">--请选择--</option>
+                    <option value="1" ng-show="add.pageCode == 'launcher' && add.positionNo != '3'" >通用</option>
+                    <option value="2" ng-show="add.positionNo != '1' && add.positionNo != '2' && add.positionNo != '6'">营销推荐</option>
+                    <option value="3" ng-show="add.pageCode == 'launcher' && add.positionNo == '3'">资讯内容</option>
+                    <option value="4" ng-show="add.pageCode!='launcher' && add.pageCode!='liCai' && add.pageCode!='life' && add.positionNo == '6'">内容推荐</option>
+                    <option value="5" ng-show="add.pageCode!='launcher' && add.pageCode!='liCai' && add.pageCode!='life' && add.positionNo == '6'">专题推荐</option>
+                </select>
+
+            </div>
+
+            <div class="bottom-btn">
+                <!--<a href="${ctx}/smart_marketing/initiative/to_page"><i class="fa fa-line-chart"></i>主动营销</a>-->
+                <a class="btn btn-danger btn-rounded bottom-btna start-btna" id="goToAdd"
+                   ng-click="showAddPage()">进入创建</a>
+                <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#"
+                   ng-click="hideAddConfigShow()">关闭</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="take-start-box" id="showInvalid">
+        <div class="take-start-small">
+            <p align="center">您确定要{{effectAndInvalid.valid == 1 && '失效' || effectAndInvalid.valid == 2 && '生效'}}此tab配置吗？</p>
+            <div class="bottom-btn">
+                <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#"
+                   ng-click="confirmInvalid()">确定</a>
+                <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#"
+                   onclick="$('#showInvalid').hide();">取消</a>
+            </div>
+        </div>
+    </div>
+
+    <!--添加自定义配置-->
+    <div class="add-start-bg" id="addCustom">
+        <div class="add-start">
+            <h1 align="center">自定义推荐配置</h1>
+
+            <div class="start-d" style="margin-top: 0px">
+                <p>*推荐名称：</p>
+                <input ng-model="configObject.recommandName" style="width:368px;" type="text" maxlength="20" placeholder="20字符以内">
+            </div>
+            <div class="start-d" style="margin-top: 0px">
+                <p>*标题：</p>
+                <input ng-model="configObject.title" style="width:368px;" type="text" maxlength="20" placeholder="20字符以内">
+            </div>
+
+
+            <div>
+                <p>*内容：</p>
+                <input ng-model="configObject.content"  style="width:368px;"  placeholder="20字符以内" type="text" maxlength="20">
+            </div>
+            <div class="start-d">
+                <p><b style="color: red;">*</b>图片：</p>
+                <input type="file" id="custom" name="file" size="1" style="position:absolute;display: none;">
+                <input style="width:220px;" id="customfile" type="text" ng-model="configObject.pictureUrl">
+                <a class="btn btn-success btn-rounded btn-blueWa" href="#" ng-click="customJumpFileUploads('4','#custom','#customfile','图片')" id="image_prew2"><span>点击上传</span></a>
+            </div>
+            <div class="start-d">
+                <p>背景：</p>
+                <input type="file" id="customB" name="file" size="1" style="position:absolute;display: none;">
+                <input style="width:220px;" id="customBfile" type="text" ng-model="configObject.backGround">
+                <a class="btn btn-success btn-rounded btn-blueWa" href="#" ng-click="customJumpFileUploads('4','#customB','#customBfile','背景')" id="image_prew3"><span>点击上传</span></a>
+            </div>
+
+            <div class="start-d" style="margin-top: 0px">
+                <p>*按钮文案：</p>
+                <input ng-model="configObject.buttonText" style="width:368px;" type="text" maxlength="20" placeholder="20字符以内">
+            </div>
+
+            <div class="start-a">
+                <p><span style="color: red;">*</span>跳转类型:</p>
+                <select ng-model="configObject.jumpType" ng-change="clearInputUrl()">
+                    <option value="">--请选择--</option>
+                    <option value="1">音频</option>
+                    <option value="2">视频</option>
+                    <option value="3">文章</option>
+                    <option value="4">跳转链接</option>
+                </select>
+            </div>
+
+            <div ng-show="configObject.jumpType == '4'">
+                <p>*链接地址：</p>
+                <input ng-model="configObject.linkAddr" style="width:368px;" type="text" maxlength="100" >
+            </div>
+            <div ng-show="configObject.jumpType != '4'">
+                <p>*文件：</p>
+                <input type="file" id="customJumpFile" name="file" size="1" style="position:absolute;display: none;">
+                <input style="width:220px;" id="customJumpFile2" type="text" ng-model="configObject.linkAddr">
+                <a class="btn btn-success btn-rounded btn-blueWa" href="#"  ng-click="customJumpFileUploads('10','#customJumpFile','#customJumpFile2','自定义文件')" id="image_prew4"><span>点击上传</span></a>
+            </div>
+            <div class="bottom-btn">
+                <a ng-show="isAdd == '1'" class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="addConfig(7)">确定</a>
+                <a ng-show="isAdd == '2' && isShow=='2'" class="btn btn-danger btn-rounded bottom-btna start-btna" ng-click="commitUpdate(7)" href="#" id="addCustomFix">修改</a>
+                <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" ng-click="closeCustom()">关闭</a>
+            </div>
+        </div>
+    </div>
+
+    <!--添加专题内容配置-->
+    <div class="add-start-bg" id="addThematic" >
+        <div class="add-start">
+            <h1 align="center">专题</h1>
+
+            <div class="start-d" style="margin-top: 0px">
+                <p>*标题名称：</p>
+                <input ng-model="configObject.titleName" style="width:368px;" type="text" maxlength="20" placeholder="20字符以内" ng-required="true">
+            </div>
+            <div class="start-d">
+                <p><b style="color: red;">*</b>封面：</p>
+                <input type="file" id="thematicCover" name="file" size="1" style="position:absolute;display: none;">
+                <input style="width:220px;" id="thematicCover2" type="text" ng-model="configObject.cover">
+                <a class="btn btn-success btn-rounded btn-blueWa" href="#" ng-click="fileUploads('4','#thematicCover','#thematicCover2','2','封面')" id="upThematicCover"><span>点击上传</span></a>
+            </div>
+            <div class="start-d">
+                <p>标签：</p>
+                <input type="file" id="thematicTitle" name="file" size="1" style="position:absolute;display: none;">
+                <input style="width:220px;" id="thematicTitle2" type="text" ng-model="configObject.label">
+                <a class="btn btn-success btn-rounded btn-blueWa" href="#"  ng-click="fileUploads('4','#thematicTitle','#thematicTitle2','2','标签')" id="upThematicTitle"><span>点击上传</span></a>
+            </div>
+
+
+            <div>
+                <p>文件：</p>
+                <a class="btn btn-success btn-rounded btn-blueWa" href="#" ng-click="topicUpload()"><span>批量上传</span></a>
+            </div>
+            <br>
+
+            <div class="start-d" style="margin-top: 0px">
+                <p>*内容简介：</p>
+                <textarea id="addAnnouncementDesc" style="resize:none;width: 360px;height: 180px;overflow-y: scroll;"
+                          placeholder="300字以内"
+                          maxlength="300" ng-model="configObject.contentIntro"></textarea>
+            </div>
+
+            <div class="bottom-btn">
+                <a ng-show="isAdd== '1' ||isAfter=='1'" class="btn btn-danger btn-rounded bottom-btna start-btna" id="screenTJ" href="#" ng-click="addConfig(6)">确定</a>
+                <a ng-show="isAdd == '2' &&isShow=='2'" class="btn btn-danger btn-rounded bottom-btna start-btna" ng-click="commitUpdate(6)"  href="#" id="addThematicFix" >修改</a>
+                <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" ng-click="closeThematic()">关闭</a>
+            </div>
+        </div>
+    </div>
+
+
+    <!--添加内容合集配置-->
+    <div class="add-start-bg" id="addCollection">
+        <div class="add-start">
+            <h1 align="center">合集</h1>
+
+            <div class="start-d" style="margin-top: 0px">
+                <p>*标题名称：</p>
+                <input ng-model="configObject.titleName" style="width:368px;" type="text" maxlength="20" placeholder="20字符以内"  required >
+            </div>
+            <div class="start-d">
+                <p><b style="color: red;">*</b>封面：</p>
+                <input type="file" id="collectionCover" name="file" size="1" style="position:absolute;display: none;">
+                <input style="width:220px;" id="collectionCover2" type="text" ng-model="configObject.cover">
+                <a class="btn btn-success btn-rounded btn-blueWa" href="#" onclick="$('#collectionCover').click();" id="upCollectionCover"><span>点击上传</span></a>
+            </div>
+            <div class="start-d">
+                <p>标签：</p>
+                <input type="file" id="collectionTitle" name="file" size="1" style="position:absolute;display: none;">
+                <input style="width:220px;" id="collectionTitle2" type="text" ng-model="configObject.label">
+                <a class="btn btn-success btn-rounded btn-blueWa" href="#" ng-click="addPictureLabel()" id="upCollectionTitle"><span>点击上传</span></a>
+            </div>
+
+             <div>
+                 <p>总期数：</p>
+                 <input ng-model="configObject.allPeriods" placeholder="不能超过999期" style="width:368px;" type="number"  min="1">
+             </div>
+
+            <div class="start-a">
+                <p><span style="color: red;">*</span>文件类型:</p>
+                <select ng-model="configObject.fileType" ng-change="clearfileObject()" ng-disabled="configObjectFileType=='2'" id="configObjectFileType">
+                    <option value="1">音频</option>
+                    <option value="2">视频</option>
+                    <option value="3">文章</option>
+                    <option value="4">漫画</option>
+                </select>
+            </div>
+            <div>
+                <p>*文件：</p>
+                <a class="btn btn-success btn-rounded btn-blueWa" ng-click="fileManage()" href="#" ><span>文件库管理</span></a>
+            </div>
+            <br>
+
+            <div class="start-d" style="margin-top: 0px">
+                <p>*内容简介：</p>
+                <textarea  style="resize:none;width: 360px;height: 180px;overflow-y: scroll;"
+                          placeholder="300字以内"
+                          maxlength="300" ng-model="configObject.contentIntro"></textarea>
+            </div>
+
+            <div class="bottom-btn">
+                <a ng-show="isAdd == '1'" class="btn btn-danger btn-rounded bottom-btna start-btna" id="screenTJ" href="#" ng-click="addConfig(5)">确定</a>
+                <a ng-show="isAdd == '2' &&isShow=='2'" class="btn btn-danger btn-rounded bottom-btna start-btna" ng-click="commitUpdate(5)" href="#" id="addCollectionFix" >修改</a>
+                <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" ng-click="closeCollection()">关闭</a>
+            </div>
+        </div>
+    </div>
+
+
+    <!--添加内容单片配置-->
+    <div class="add-start-bg" id="addSingle">
+        <div class="add-start">
+            <h1 align="center">合集</h1>
+
+            <div class="start-d" style="margin-top: 0px">
+                <p>*标题名称：</p>
+                <input ng-model="configObject.titleName" style="width:368px;" type="text" maxlength="20" placeholder="20字符以内">
+            </div>
+            <div class="start-d">
+                <p><b style="color: red;">*</b>封面：</p>
+                <input type="file" id="singleCover" name="file" size="1" style="position:absolute;display: none;">
+                <input style="width:220px;" id="singleCover2" type="text" ng-model="configObject.cover">
+                <a class="btn btn-success btn-rounded btn-blueWa" href="#" ng-click="fileUploads('4','#singleCover','#singleCover2','2','封面')" id="upsingleCover"><span>点击上传</span></a>
+            </div>
+            <div class="start-d">
+                <p>标签：</p>
+                <input type="file" id="singleTitle" name="file" size="1" style="position:absolute;display: none;">
+                <input style="width:220px;" id="singleTitle2" type="text" ng-model="configObject.label">
+                <a class="btn btn-success btn-rounded btn-blueWa" href="#" ng-click="fileUploads('4','#singleTitle','#singleTitle2','2','标签')"  id="upsingleTitle"><span>点击上传</span></a>
+            </div>
+
+            <div class="start-a">
+                <p><span style="color: red;">*</span>文件类型:</p>
+                <select ng-model="configObject.fileType" ng-change="clearFileUrl()">
+                    <option value="1">音频</option>
+                    <option value="2">视频</option>
+                    <option value="3">文章</option>
+                    <option value="4">漫画</option>
+                </select>
+            </div>
+            <div>
+                <p>*文件：</p>
+                <input type="file" id="singleFile" name="file" size="1" style="position:absolute;display: none;">
+                <input style="width:220px;" id="singleFile2" type="text" ng-model="add.imageUrl">
+                <a class="btn btn-success btn-rounded btn-blueWa" href="#" ng-click="fileUploads('10','#singleFile','#singleFile2','2','文件')"  id="upsingleTitleFile"><span>点击上传</span></a>
+            </div>
+            <br>
+
+            <div class="start-d" style="margin-top: 0px">
+                <p>*内容简介：</p>
+                <textarea  style="resize:none;width: 360px;height: 180px;overflow-y: scroll;"
+                           placeholder="300字以内"
+                           maxlength="300" ng-model="configObject.contentIntro"></textarea>
+            </div>
+
+            <div class="bottom-btn">
+                <a ng-show="isAdd == '1'" class="btn btn-danger btn-rounded bottom-btna start-btna"  href="#" ng-click="addConfig(4)">确定</a>
+                <a class="btn btn-danger btn-rounded bottom-btna start-btna" ng-click="commitUpdate(4)"  href="#" ng-show="isAdd == '2' &&isShow=='2'" id="addSingleFix">修改</a>
+                <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" ng-click="closeSingle()">关闭</a>
+            </div>
+        </div>
+    </div>
+
+    <!--文件合集管理器-->
+    <div class="add-start-bg" id="fileManage">
+        <div class="add-start">
+            <h1 align="center">合集文件管理</h1>
+
+
+            <div class="start-d" id="fileHide">
+                <p><b style="color: red;">*</b>文件期数：</p>
+<!--
+                <input type="file" id="fileManange" name="file" size="1" style="position:absolute;display: none;">
+-->
+                <select  id="periods">
+                    <option value="">--请选择--</option>
+                    <option ng-repeat="x in filePeriods" value="{{x}}">{{x}}</option>
+                </select>
+<!--
+                <a class="btn btn-success btn-rounded btn-blueWa" href="#"  ng-click="fileManangeUpload()" id="upfileManage"><span>点击上传</span></a>
+-->
+            </div>
+            <div class="start-d" id="fileHide1" ng-if="configObject.fileType==2">
+                <p><b style="color: red;">*</b>文件名称：</p>
+                <input type="text"  id="fileName" >
+                <p><b style="color: red;">*</b>文件时常：</p>
+                <input type="text"  id="fileTime">
+            </div>
+            <div class="start-d" id="fileHide2">
+                <p><b style="color: red;">*</b>上传文件：</p>
+                <input ng-if="configObject.fileType==2" style="width:220px;" id="manageFile" type="text" ng-model="videoUrl">
+                <input type="file" id="fileManange" name="file" size="1" style="position:absolute;display: none;">
+                <a class="btn btn-success btn-rounded btn-blueWa" href="#"  ng-click="fileManangeUpload()" id="upfileManage">
+                    <span >确认点击</span>
+                </a>
+            </div>
+            <br/>
+            <div >
+                <div class="ranking-smallb">
+                        <table class="table-list" >
+                            <thead>
+                            <tr>
+                                <th>期数</th>
+                                <th style="white-space:nowrap;word-break:keep-all;"   nowrap="nowrap">文件名</th>
+                                <th style="white-space:nowrap;word-break:keep-all;"   nowrap="nowrap">更新时间</th>
+                                <th style="white-space:nowrap;word-break:keep-all;"   nowrap="nowrap">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody style="width: auto;height: auto">
+                            <tr class="pushO2" ng-repeat="x in configObject.fileObject" >
+                                <td>{{x.periods}}</td>
+                                <th style="white-space:nowrap;word-break:keep-all;"   nowrap="nowrap">{{x.fileName}}</th>
+                                <td style="white-space:nowrap;word-break:keep-all;"   nowrap="nowrap">{{x.updateTime}}</td>
+                                <td style="white-space:nowrap;word-break:keep-all;"   nowrap="nowrap">
+                                    <span class="headleLooks" style="color: blue" ng-click="deleteFromCollectionManage(x)">删除</span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                </div>
+                <!-- news_single -->
+            </div>
+
+
+            <br>
+
+
+
+            <div class="bottom-btn">
+                <a class="btn btn-danger btn-rounded bottom-btna start-btna" id="fileManageEnt" ng-show="isShow!='1'" href="#" ng-click="checkPeriods()" >确定</a>
+                <a class="btn btn-danger btn-rounded bottom-btna start-btna" id="fileManageClose" href="#" ng-click="closeAddHot()" >关闭</a>
+            </div>
+        </div>
+    </div>
+
+
+    <!--添加热门-->
+    <div class="add-start-bg" id="addHot">
+        <div class="add-start">
+            <h1 align="center">热门管理</h1>
+
+
+            <div class="start-d">
+                <p><b style="color: red;">*</b>*页面：</p>
+                <select ng-model="hotPage" ng-change="clearcheckbox()" >
+                    <option value="">--请选择--</option>
+                    <option ng-repeat="x in hotTabList" value="{{x.id}}">{{x.tabName}}</option>
+                </select>
+            </div>
+
+            <div class="ranking-smallb">
+                <div class="news_single" style="width: auto;height: auto" >
+                    <table class="table-list" >
+                        <thead>
+                        <tr>
+                            <th>期数</th>
+                            <th>文件名</th>
+                            <th>更新时间</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr class="pushOl" ng-repeat="x in addHotfileObject track by $index">
+
+
+                            <td>{{x.periods}}</td>
+                            <td>{{x.fileName}}</td>
+                            <td>{{x.updateTime}}</td>
+
+                            <td>
+
+                                <!--<span class="headleLook" style="color: blue" ng-click="deleteFromCollectionManage(x)">删除</span>-->
+                                <input type="checkbox" ng-model="flag" name="fileFlag" id="hotFile{{$index}}"  ng-click="addHots(flag,x,$index)">
+
+
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+                <!-- news_single -->
+            </div>
+
+
+            <br>
+
+
+
+            <div class="bottom-btn">
+                <a class="btn btn-danger btn-rounded bottom-btna start-btna"  href="#" ng-click="hotFileManage()">确定</a>
+                <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" ng-click="addHotFileClose()">关闭</a>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!--文件专题批量上传-->
+    <div class="add-start-bg" id="topicManage">
+        <div class="add-start">
+            <h1 align="center">合集文件管理</h1>
+
+
+            <div class="start-d" id="topicManageHide">
+                <input type="file" id="topicManange" name="file" size="1" style="position:absolute;display: none;">
+                <p><span style="color: red;">*</span>文件类型:</p>
+                <select   id="fileType" >
+                    <option value="">请选择</option>
+                    <option value="1">音频</option>
+                    <option value="2">视频</option>
+                    <option value="3">文章</option>
+                </select>
+                <a class="btn btn-success btn-rounded btn-blueWa" href="#" ng-click="topicManangeUploade()" id="uptopicManage"><span>点击上传</span></a>
+            </div>
+
+            <div class="ranking-smallb">
+                <div class="news_single" >
+                    <table class="table-list" >
+                        <thead>
+                        <tr>
+                            <th  style="white-space:nowrap;word-break:keep-all;"   nowrap="nowrap">类型</th>
+                            <th style="white-space:nowrap;word-break:keep-all;"   nowrap="nowrap">文件名</th>
+                            <th style="white-space:nowrap;word-break:keep-all;"   nowrap="nowrap">更新时间</th>
+                            <th style="white-space:nowrap;word-break:keep-all;"   nowrap="nowrap">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="pushOl" ng-repeat="x in configObject.fileObject track by $index">
+                            <td>{{x.fileType=='1'&&"音频"||
+                                x.fileType=='2'&&"视频"||
+                                x.fileType=='3'&&"文章"||
+                                x.fileType=='4'&&"漫画"
+                                }}</td>
+                            <td style="white-space:nowrap;word-break:keep-all;"   nowrap="nowrap">{{x.fileName}}</td>
+                            <td style="white-space:nowrap;word-break:keep-all;"   nowrap="nowrap">{{x.updateTime}}</td>
+                            <td style="white-space:nowrap;word-break:keep-all;"   nowrap="nowrap">
+
+                                <span class="headleLooks" name="closeDelete"  style="color: blue" ng-click="deleteFromCollectionManage(x)">删除</span>
+
+
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+                <!-- news_single -->
+            </div>
+
+
+            <br>
+
+
+
+            <div class="bottom-btn">
+                <a class="btn btn-danger btn-rounded bottom-btna start-btna" id="topicManageEnt"  href="#" ng-click="topicManageHide()">确定</a>
+            </div>
+        </div>
+    </div>
+
+
+    <!--添加资讯配置-->
+    <div class="add-start-bg" id="addNews">
+        <div class="add-start">
+            <h1 align="center">资讯配置</h1>
+
+            <div class="start-d" style="margin-top: 0px">
+                <p>*推荐名称：</p>
+                <input ng-model="configObject.recommandName" style="width:368px;" type="text" maxlength="20" placeholder="20字符以内">
+            </div>
+            <div class="start-d" style="margin-top: 0px">
+                <p>*标签：</p>
+                <input ng-model="configObject.label" style="width:368px;" type="text" maxlength="20" placeholder="20字符以内">
+            </div>
+
+            <div class="start-d" style="margin-top: 0px">
+                <p>*内容：</p>
+                <textarea  style="resize:none;width: 360px;height: 180px;overflow-y: scroll;"
+                           placeholder="100字以内"
+                           maxlength="100" ng-model="configObject.content"></textarea>
+            </div>
+
+
+            <div class="start-d">
+                <p>背景：</p>
+                <input type="file" id="newsCover" name="file" size="1" style="position:absolute;display: none;">
+                <input style="width:220px;" id="newsCover2" type="text" ng-model="configObject.backGround">
+                <a class="btn btn-success btn-rounded btn-blueWa" href="#" onclick="$('#newsCover').click();" id="upNewCover"><span>点击上传</span></a>
+            </div>
+
+
+            <div class="start-a">
+                <p><span style="color: red;">*</span>跳转类型:</p>
+                <select ng-model="configObject.jumpType" id="jumpType" ng-change="clearInputUrl()">
+                    <option value="">--请选择--</option>
+                    <option value="1">音频</option>
+                    <option value="2">视频</option>
+                    <option value="3">文章</option>
+                    <option value="4">跳转链接</option>
+                </select>
+            </div>
+
+            <div ng-show="configObject.jumpType == '4'">
+                <p>*链接地址：</p>
+                <input ng-model="configObject.linkAddr" style="width:368px;" type="text" maxlength="100" >
+            </div>
+
+            <div ng-show="configObject.jumpType != '4'">
+                <p>*文件：</p>
+                <input type="file" id="newsFile" name="file" size="1" style="position:absolute;display: none;">
+                <input style="width:220px;" id="newsFile2" type="text" ng-model="configObject.linkAddr">
+                <a class="btn btn-success btn-rounded btn-blueWa" href="#" ng-click="uploadNews()" id="upNewsFile"><span>点击上传</span></a>
+            </div>
+            <br>
+
+
+
+            <div class="bottom-btn">
+                <a ng-show="isAdd == '1'" class="btn btn-danger btn-rounded bottom-btna start-btna" id="screenTJ" href="#" ng-click="addConfig(3)">确定</a>
+                <a class="btn btn-danger btn-rounded bottom-btna start-btna" ng-click="commitUpdate(3)" ng-show="isAdd == '2'&& isShow=='2'" href="#" id="addNewsFix" >修改</a>
+                <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" ng-click="closeNews()">关闭</a>
+            </div>
+        </div>
+    </div>
+
+
+    <!--图片配置-->
+    <div class="add-start-bg" id="Realtime">
+        <div class="add-start">
+            <h1 align="center">推荐配置</h1>
+
+            <div class="start-d" style="margin-top: 0px">
+                <p>*推荐名称：</p>
+                <input ng-model="configObject.recommandName" style="width:368px;" type="text" maxlength="20" placeholder="20字符以内">
+            </div>
+
+
+
+            <div class="start-d">
+                <p><b style="color: red;">*</b>图片：</p>
+                <input type="file" id="customPicture" name="file" size="1" style="position:absolute;display: none;">
+                <input style="width:220px;" id="customPicture2" ng-show="add.positionNo == 4" type="text" ng-model="configObject.topPicture">
+                <input style="width:220px;" id="customPicture3" ng-show="add.positionNo != 4" type="text" ng-model="configObject.pictureUrl">
+                <a class="btn btn-success btn-rounded btn-blueWa" href="#" onclick="$('#customPicture').click();" id="image_prew5"><span>点击上传</span></a>
+            </div>
+
+            <div>
+                <p>链接地址：</p>
+                <input ng-model="configObject.linkAddr" style="width:368px;" type="text" maxlength="100" >
+            </div>
+            <br><br><br><br><br><br><br><br><br>
+            <div class="bottom-btn">
+                <!--<a href="${ctx}/smart_marketing/initiative/to_page"><i class="fa fa-line-chart"></i>主动营销</a>-->
+                <a class="btn btn-danger btn-rounded bottom-btna start-btna" ng-show="isAdd == '1'"
+                   ng-click="addConfig(2)">确定</a>
+                <a class="btn btn-danger btn-rounded bottom-btna start-btna" ng-show="isAdd == '2' &&isShow=='2'"
+                   ng-click="commitUpdate(2)" id="RealtimeFix"
+                   >修改</a>
+                <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#"
+                   ng-click="closePictureConfig()">关闭</a>
+            </div>
+        </div>
+    </div>
+
+
+    <!--产品配置-->
+    <div class="add-start-bg" id="addShow">
+        <div class="add-start">
+            <h1 align="center">产品配置</h1>
+
+            <div class="start-d" style="margin-top: 0px">
+                <p>*推荐名称：</p>
+                <input ng-model="configObject.recommandName" style="width:368px;" type="text" maxlength="20" placeholder="20字符以内">
+            </div>
+            <div class="start-d" style="margin-top: 0px">
+                <p>*亮点文案：</p>
+                <input ng-model="configObject.lightText" style="width:368px;" type="text" maxlength="20" placeholder="20字符以内">
+            </div>
+
+
+            <div>
+                <p>产品介绍：</p>
+                <input ng-model="configObject.productIntro"  style="width:368px;"  placeholder="30字符以内" type="text" maxlength="30">
+            </div>
+            <div ng-repeat="x in configObject.introLabel track by $index">
+                <p>介绍标签：</p>
+                <input class="single_ipt" type="text" id="int{{$index+1}}"  placeholder="50字符以内" maxlength="50"/>
+                <a ng-show="isProductLabel == '1'" id="addProductLabel" class="look-start-1" ng-click="addLabel()">➕</a><a ng-show="isProductLabel == '1'" id="subProductLabel"  ng-click="lessLabel($index)">➖</a></span><br/>
+            </div>
+            <div class="start-d">
+                <p>背景：</p>
+                <input type="file" id="addPicture1" name="file" size="1" style="position:absolute;display: none;">
+                <input style="width:220px;" id="fileUrl1" type="text" ng-model="configObject.backGround">
+                <a class="btn btn-success btn-rounded btn-blueWa" href="#"  ng-click="fileUploads('4','#addPicture1','#fileUrl1','2','背景')" id="image_prew1"><span>点击上传</span></a>
+            </div>
+            <div class="start-a">
+                <p><span style="color: red;">*</span>产品类型:</p>
+                <select ng-model="configObject.productType" ng-change="getAllProduct(configObject.productType)">
+                    <option value="">--请选择--</option>
+                    <option value="1">网贷</option>
+                    <option value="2">基金</option>
+                    <option value="3">银行精选</option>
+                </select>
+            </div>
+            <div class="start-a" ng-show="configObject.productType != '2'">
+                <p><span style="color: red;">*</span>选择产品:</p>
+                <select ng-model="configObject.productCode"  class="mySelect2"   style="width: 315px;" id="product" class="filter-select" onchange="angular.element(this).scope().echoProductInformation($('#product').val(),angular.element(this).scope().configObject.productType)">
+<!--                <select ng-model="configObject.productCode"  class="mySelect" style="width: 315px;" id="product" class="filter-select" onchange="angular.element(this).scope().echoProductInformation($('#product').val(),angular.element(this).scope().configObject.productType)">-->
+                    <option value="">--请选择--</option>
+                    <option  ng-repeat="x in productList" value="{{x.productCode}}">{{x.productTypeDescribe}}</option>
+                </select>
+            </div>
+            <div class="start-a" ng-show="configObject.productType == '2'">
+                <p><span style="color: red;">*</span>基金代码:</p>
+                <span><input ng-model="configObject.productCode" onblur="selectFundByFundCode()" placeholder="请输入基金Code" style="width:180px;" class="fundInfo" type="text" maxlength="100"></span>
+            </div>
+            <div id="greyColor" class="start-a"  ng-show="configObject.productType == '1'">
+                <p>*产品名称：</p><span id="productId"></span><br>
+                <p >产品利率：</p><span id="productLiLv"></span>
+
+            </div>
+            <div  class="start-a" ng-show="configObject.productType == '2'">
+                <p>*基金类型：</p><span id="fundType" ng-model="configObject.fundType"></span><br>
+                <p>*基金名称：</p>
+                <span><input ng-model="configObject.fundName" id="fundName" style="width:180px;" class="interests" type="text" maxlength="100"></span><br>
+                <p>*利率类型：</p>
+                <span>
+                    <select ng-model="configObject.rateType" id="rateFund" onchange="getFundRate()">
+                    <option value="">--请选择--</option>
+                     <option ng-repeat="x in fundYieldFHBBase" value="{{x.code}}">{{x.label}}</option>
+                   </select>
+                </span><br>
+                <p>利率：</p><span id="rate"></span>
+            </div>
+            <div class="start-a" ng-show="configObject.productType == '3'">
+                <p>*产品名称：</p>
+                <span><input ng-model="configObject.productTypeDescribe" style="width:180px;" id="productName" class="interests" type="text" maxlength="100"></span><br>
+                <p>期限：</p><span id="term"></span><br>
+                <p>期限描述：</p><span id="termDesc"></span><br>
+                <p>利率：</p><span id="bankRate"></span><br>
+                <p>利率类型：</p><span id="bankRateType"></span>
+
+            </div>
+
+
+
+            <div class="start-f">
+                </span>
+                <p>*链接地址：</p><span><input ng-model="configObject.linkAddr" style="width:180px;" class="interests" id="bankAddr" type="text" maxlength="100"></span>
+            </div>
+            <div class="bottom-btn">
+                <a ng-show="isAdd == '1'" class="btn btn-danger btn-rounded bottom-btna start-btna" id="screenTJ" href="#" ng-click="addConfig(1)">确定</a>
+                <a ng-show="isAdd == '2' && isShow=='2'" class="btn btn-danger btn-rounded bottom-btna start-btna"  href="#" ng-click="commitUpdate(1)" id="addShowFix">修改</a>
+                <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" ng-click="closeProduct()">关闭</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="take-start-box" id="addChannelShow">
+        <div class="take-start-small newTakeEffect">
+            <h2 style="text-align: center">上下线时间</h2>
+            <div class="start-a" align="center">
+                上线时间:
+               <input type="text" id="olineTime"  style="width: 200px;">
+                <br><br><br>
+                下线时间
+                <input type="text" id="offTime"  style="width: 200px;">
+            </div>
+            <div class="bottom-btn">
+                <!--<a href="${ctx}/smart_marketing/initiative/to_page"><i class="fa fa-line-chart"></i>主动营销</a>-->
+                <a ng-show="isTimeShow == '1'" class="btn btn-danger btn-rounded bottom-btna start-btna"
+                   href="#" ng-click="getOnlineOrOffTimeForConfig()">确定</a>
+                <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#"
+                   ng-click="hideTypeListTime()">关闭</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="${jsRoot}/angular/angular.min.js"></script>
+<script src="${jsRoot}/plugins/laydate/laydate.js"></script>
+<script src="${jsRoot}/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- Mainly scripts -->
+<script src="${jsRoot}/jquery-2.1.1.js"></script>
+<script src="${jsRoot}/oms/robot/robotConfig.js"></script>
+<script src="${jsRoot}/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="${jsRoot}/bootstrap.min.js"></script>
+<script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="${jsRoot}/plugins/jeditable/jquery.jeditable.js"></script>
+<script type="text/javascript" src="${staticRoot}/js/select-mania.js"></script>
+<!-- Data Tables -->
+<script src="${jsRoot}/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.responsive.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.tableTools.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="${jsRoot}/inspinia.js"></script>
+<script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.iframe-transport.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.ui.widget.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-process.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-validate.js"></script>
+<script src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+<script src="${jsRoot}/biz/offlineactivitymanage/auditOfflineActivity.js?rand=${random}"></script>
+<script type="text/javascript" src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+<script src="${jsRoot}/plugins/sweetalert/sweetalert.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="${jsRoot}/oms/ruleconfig/jquery.searchableSelect.js"></script>
+<script src="${jsRoot}/plugins/jeditable/select2.full.min.js"></script>
+<script src="${jsRoot}/plugins/select2/select2.full.min.js?rand=${random}"></script>
+<script type="text/javascript" charset="utf-8">
+
+
+
+    var navHight = $('.navbar-static-side').height()
+    $('.navbar-static-side').css('height', navHight - 60)
+    $('.content-box').css('height', navHight - 60);
+    $("#menus li").removeClass("active");
+    // $("#strategyIndexs li").removeClass("active");
+    // $("#smartService").addClass("active");
+    // $("#strategyIndexs").addClass("collapse in");
+    // $("#strategyIndex_menus").addClass("active");
+    //
+
+
+       function clearFund() {
+           $('#fundType').html("");
+           $('#fundType').val("");
+           $('#fundName').val("");
+           $('#bankAddr').val("");
+           $('#rateFund').val("");
+           $('#rate').html("");
+       }
+     var  rateList;
+    function selectFundByFundCode() {
+        debugger
+        var fundCode = $('.fundInfo').val();
+        if(!fundCode){
+            alert("请输入基金代码");
+            clearFund();
+            return;
+        }
+        $.ajax({
+            type: 'GET',
+            url: globalConfig.basePath + "/robot_Config/getFundInfoList?fundCode=" + fundCode,
+            async: false,
+            dataType: "json",
+            success: function (data) {
+                console.log("data:",data);
+                if (data.code == '000') {
+                    if(data.resp.resCode=="5000"){
+                        alert("请输入正确的基金代码");
+                        clearFund();
+                        return;
+                    }
+                    $('#fundType').html(data.resp.data.fundType);
+                    $('#fundType').val(data.resp.data.fundType);
+                    $('#fundName').val(data.resp.data.fundName);
+                    rateList = data.resp.data.fundYieldBO;
+                    $('#bankAddr').val(data.resp.data.detailUrl);
+                    //$scope.$apply();
+                    return;
+                } else {
+                    alert(data.message);
+                }
+
+            }
+
+        })
+    }
+
+    function getFundRate() {
+        debugger
+        if(!rateList){
+            var fundCode = $('.fundInfo').val();
+            if(fundCode){
+                selectFundByFundCode();
+            }
+        }
+        for (var i in rateList){
+            if ($('#rateFund').val() == i){
+                var rateListElement = rateList[i];
+                if(!rateListElement){
+                    alert("利率类型为空不能保存!");
+                    $('#rate').html("");
+                    return;
+
+                }
+                 $('#rate').html(rateListElement);
+            }
+        }
+
+    }
+
+
+
+</script>
+
+</body>
+</html>
+
+
+

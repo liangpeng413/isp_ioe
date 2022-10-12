@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>会员权益设置</title>
+  <link href="${cssRoot}/bootstrap.min.css" rel="stylesheet">
+  <link href="${staticRoot}/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+  <!-- FooTable -->
+  <link href="${cssRoot}/plugins/footable/footable.core.css" rel="stylesheet">
+
+  <link href="${cssRoot}/animate.css" rel="stylesheet">
+  <link href="${cssRoot}/style.css?rand=${random}" rel="stylesheet">
+  <link href="${cssRoot}/styleT.css?rand=${random}" rel="stylesheet">
+  <script>
+        var globalConfig = {
+            basePath: "${ctx}",
+            staticRoot: "${staticRoot}",
+            loginName:"${Session.sessionUser.loginName}"
+        };
+        function swalMsg(msg) {
+            swal({
+                title:"",
+                text:msg,
+                confirmButtonColor: "#1ab394",
+                confirmButtonText:"确定"
+            });
+        }
+        
+  </script>
+</head>
+<body ng-app="rightsApp" ng-controller="rightsController">
+<div id="wrapper">
+    <div class="header-box">
+        <#include "/common/top.html" encoding="UTF-8" />
+    </div>
+    <nav class="navbar-default navbar-static-side" role="navigation" id="HeadTitle">
+        <div class="sidebar-collapse"  style="height: 675px;overflow-y: scroll;">
+            <#include "/common/left.html" encoding="UTF-8" />
+        <div>
+    </nav>
+</div>
+<div class="content-box" ng-show="operationType==0">
+  <div class="small-content">
+    <!-- 第一部分 -->
+    <div class="small-boxa">
+     <a style="margin-left: 10px;" class="btn btn-blueW "  href="${ctx}/vip/vipLevel">返回</a>
+      <a class="btn btn-danger btn-rounded btn-gradient btn-gradienta" href="javascript:void(0)" ng-click="addRights()"><i class="fa fa-plus-square-o"></i> <span>新增权益</span></a>
+    </div>
+    <!-- 第二部分 -->
+    <div class="small-boxb col-md-12">
+       <div class="boxb-c">
+        <p>权益主标题：
+           <input style="width:120px;" type="text"  ng-model="search.priName">
+        </p>
+       </div>
+       <div class="boxb-a">
+        <p style="margin-top:20px;">理财渠道：
+          <select id="searchProductChannel" class="chosen-select" style="width:120px;" tabindex="2" ng-model="search.productChannel" >
+            <option value="0">悟空理财APP</option>
+            <option value="1">玖富钱包APP</option>
+          </select>
+        </p>
+         
+      </div>
+     
+      <div class="boxb-c">
+        <p>当前状态：
+         <select class="chosen-select" style="width:120px;" tabindex="2" ng-model="search.status">
+            <option value="">全部</option>
+            <option value="0">失效中</option>
+            <option value="1">生效中</option>
+            <option value="2">待审核</option>
+          </select>
+        </p>
+      </div>
+      
+      <div class="boxb-c">
+           <p>
+          <a class="btn btn-success btn-rounded btn-blueW btn-blueWa" href="#" ng-click="pageQueryRights(1)"><i class="fa fa-search"></i> <span>搜索</span></a>
+          <a class="btn btn-success btn-rounded btn-blueW btn-blueWb" href="#" ng-click="reset()"><i class="fa fa-refresh"></i> <span>重置</span></a>
+        </p>
+      </div>
+      
+    </div>
+    <!-- 第二部分 -->
+    <!-- 第三部分 -->
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="ibox float-e-margins" style="margin-top:10px;">
+          <div class="ibox-content">
+            <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>序号</th>
+                  <th>理财渠道</th>
+                  <th>权益主标题</th>
+                  <th>权益副标题</th>
+                  <th>置顶标题</th>
+                  <th>置顶副标题</th>
+                  <th>未登录icon图片</th>
+                  <th>置顶icon</th>
+                  <th>跳转链接</th>
+                  <th>当前状态</th>
+                  <th>备注</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="x in pageList">
+                  <td class="actived"><!-- <input type="checkbox" class="listChecked checkAll" value="{{x.id}}-{{x.desc}}"> --></td>
+                  <td>{{$index+1}}</td>
+                  <td>{{x.productChannel==0 && '悟空理财APP' || x.productChannel==1 && '玖富钱包APP' || x.productChannel==2 && '悟空理财微信端'||x.productChannel}}</td>
+                  <td>{{x.priName}}</td>
+                  <td>{{x.priSubName}}</td>
+                  <td>{{x.toppingTitle}}</td>
+                  <td>{{x.toppingSubTitile}}</td>
+                  <td><img ng-src="{{x.icon}}" style="max-width:;height:60px;"></img></td>
+                  <td><img ng-src="{{x.toppingImg}}" style="max-width:;height:60px;"></img></td>
+                  <td><p style="width:250px;line-height: 20px;margin-top: 20px;word-wrap: break-word;">{{x.jumpLink}}<p></td>
+                  <td>{{x.auditStatus==0 && '待审核' || x.auditStatus==1 && '生效中' || x.auditStatus==2 && '审核不通过'|| x.auditStatus==3 && '失效中'}}</td>
+                  <td>{{note}}</td>
+                  <td>
+                    <span class="look-start" ng-click="preOperate(1,x)">查看</span>
+                    <span  ng-show="x.auditStatus=='0' && loginName == x.auditNo" src="javaScript:;" class="take-start" ng-click="audit(x)" >审核</span>
+                    <span  ng-show="x.auditStatus=='1' && x.delFlag=='F' && x.initialization=='F'" class="take-start" ng-click="preOperate(3,x)">失效</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="bottom-page">
+              <div class="bottom-pagea">
+                <select id="pageSize" style="width:58px;height:23px;">
+                  <option value=5>5</option>
+                  <option value=10>10</option>
+                  <option value=15>15</option>
+                </select>
+              </div>
+              <div class="bottom-pageb">
+                  <i class="fa fa-step-backward" ng-click="pageQueryRights(1)"></i>
+                  <i style="font-size:16px;" class="fa fa-caret-left" ng-click="pageQueryRights(search.pageNum-1)"></i>
+                  <p>第<span class="pageN">{{search.pageNum}}</span class="commonN">共<span>{{pages}}</span>页</p>
+                  <!-- <i style="margin-left:8px;" class="fa fa-angle-right"></i> -->
+                  <i style="font-size:16px;" class="fa fa-caret-right" ng-click="pageQueryRights(search.pageNum+1)"></i>
+                  <i class="fa fa-step-forward" ng-click="pageQueryRights(pages)"></i>
+                  <i class="fa fa-refresh" ng-click="pageQueryRights(search.pageNum)"></i>
+              </div>
+              <div class="bottom-pagec">
+                 <p>显示<span>{{(search.pageNum-1)*search.pageSize+1}}</span>到{{search.pageNum*search.pageSize}}，共<span>{{total}}</span>记录</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 第三部分 -->
+
+  <!-- 优先级排序 -->
+ <div class="priority-ranking" id="addSort">
+    <div class="priority-ranking-small">
+      <h1>浮标优先级排序</h1>
+      <div class="ranking-small">
+      	<div class="ranking-smalla">优先级排序
+          <i class="fa fa-caret-down smalla-red" ng-click="moveDown()"></i>
+          <i class="fa fa-caret-up" ng-click="moveUp()"></i>
+         <!--  <i class="fa fa-times" ng-click="del()"></i> -->
+          <p><span style="color:#ff2327;">*</span>编号越大，优先级越低</p>
+        </div>
+        <div class="ranking-smallb">
+      		<table>
+            <thead>
+            <tr>
+              <td></td>
+              <td class="tdNumber">优先级编号</td>
+              <td >浮标描述</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="x in strotList">
+              <td class="iptCheck"><input type="checkbox" class="moveCheckbox sort" value="{{$index}}"></td>
+              <td class="tdNumber"><input type="hidden" ng-model="hehe.a">{{$index+1}}</td>
+              <td><input type="hidden" ng-model="hehe.b">{{x.desc}}</td>
+            </tr>
+            </tbody>
+        	</table>
+        </div>
+        </div>    
+      <div class="bottom-btn">
+        <a class="btn btn-danger btn-rounded bottom-btna" href="#" ng-click="moveSave()">确定</a>
+        <a class="btn btn-danger btn-rounded bottom-btnb" href="#" ng-click="moveCancel()">取消</a>
+      </div>
+    </div>
+  </div>
+  <!-- 优先级排序 -->
+  <!-- 查看浮标详情 -->
+  <div class="look-start-box" id="detailRights" >
+    <div class="add-look-start">
+        <h1>查看浮标</h1>
+        <div class="look-start-a">
+          <p>理财渠道：</p>
+          <span>{{detail.productChannel==0 && '悟空理财APP' || detail.productChannel==1 && '玖富钱包APP' || detail.productChannel==2 && '悟空理财微信端'||detail.productChannel}}</span>
+        </div>
+        <div class="look-start-d">
+          <p>未登录icon图片：</p>
+          <img ng-src="{{detail.icon}}" alt="">
+        </div>
+        <div class="look-start-d">
+          <p>未亮起icon图片：</p>
+          <img ng-src="{{detail.grayDisplayImg}}" alt="">
+        </div>
+        <div class="look-start-b">
+          <p>权益主标题：</p>
+          <span>{{detail.priName}}</span>
+        </div>
+        <div class="look-start-b">
+          <p>权益副标题：</p>
+          <span>{{detail.priSubName}}</span>
+        </div>
+        <div class="look-start-b">
+          <p>跳转链接：</p>
+          <span>{{detail.jumpLink}}</span>
+        </div>
+        <div class="look-start-c">
+          <p>权益对象：</p>
+          <span>{{detail.equityObject}}</span>
+        </div>
+        <div class="look-start-d">
+          <p>权益介绍：</p>
+           <span>{{detail.introduction}}</span>
+        </div>
+        <div class="look-start-e">
+          <p>备注：</p>
+          <span style="width:385px;line-height: 20px;word-wrap: break-word;">{{detail.note}}</span>
+        </div>
+        <div class="look-start-f">
+          <p>展示人群：</p>
+          <span>{{detail.whitelist=='F' && '全部' || detail.whitelist=='T' && '白名单'}}</span>
+        </div>
+        <div ng-show="detail.whitelist=='T'" class="look-start-g">
+          <p>白名单：</p>
+          <span>{{detail.whitelistId}}</span>
+        </div>
+       
+       
+       <div class="look-start-d">
+          <p>置顶icon图片：</p>
+          <img ng-src="{{detail.toppingImg}}" alt="">
+        </div>
+        <div class="look-start-b">
+          <p>置顶权益主标题：</p>
+          <span>{{detail.toppingTitle}}</span>
+        </div>
+        <div class="look-start-b">
+          <p>置顶权益副标题：</p>
+          <span>{{detail.toppingSubTitile}}</span>
+        </div>
+        <div class="bottom-btn">
+          <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" onclick="$('#detailRights').hide()">关闭</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 查看浮标详情 -->
+ 
+  <!-- 失效浮标详情 -->
+  <div class="take-start-box" id="effectFloat">
+    <div class="take-start-small">
+      <p>您确定要{{operationRecord.valid=='T'?"生效":"失效"}}浮标信息吗？</p>
+      <div class="bottom-btn">
+        <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="validateRecord()">确定</a>
+        <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" onclick="$('#effectFloat').hide()">取消</a>
+      </div>
+    </div>
+  </div>
+  <!-- 失效浮标详情 -->
+   <div class="take-start-box" id="takeEffect" >
+    <div class="take-start-small newTakeEffect">
+      <h2>{{effectRecord.delFlag=='F' && '失效' || effectRecord.delFlag=='T' && '生效'}}提示</h2>
+      <ul class="isEffect">
+        <li><p>审核人</p> 
+          <select id="validConfirmUser" ng-model="validConfirmUser">
+          	<option value="">请选择</option>
+            <option value="{{x.no}}-{{x.email}}" ng-repeat="x in userList">{{x.name}}</option>
+          </select>
+        </li>
+        <li class="PosiText"><p>审核说明</p><textarea id="requestAuditDescription" ng-model="requestAuditDescription" cols="25" rows="4" placeholder="选填，30字符以内"></textarea></li>
+      </ul>
+      <div class="bottom-btn">
+        <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="validateRecord()">确定</a>
+        <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" onclick="$('.take-start-box').hide();">取消</a>
+      </div>
+    </div>
+  </div>
+  <!-- 审核 -->
+  <div class="examine-box">
+    <div class="take-start-small newTakeEffect">
+      <h2>审核</h2>
+      <ul class="isEffect">
+        <li><p>审核结果：</p>
+          <select id="auditStatus" ng-model="auditStatus">
+            <option value="1">审核通过</option>
+            <option value="2">审核不通过</option>
+          </select>
+        </li>
+        <li class="PosiText"><p>审核描述：</p><textarea id="auditDescription" ng-model="auditDescription" maxlength="32" cols="25" rows="4" placeholder="选填，32字符以内"></textarea></li>
+      </ul>
+      <div class="bottom-btn">
+        <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="confirm()" >确定</a>
+        <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" onclick="$('.examine-box').hide();">取消</a>
+      </div>
+    </div>
+  </div>
+  <!-- 审核 -->
+</div>
+
+  <!-- 新增权益                               -->
+  <!-- 新增权益                              -->
+<link ng-if="operationType==2" href="${cssRoot}/oms/vip/rights/look-page.css" rel="stylesheet">
+<div class="content-box"   ng-show="operationType==2" >
+  <div class="look-pagea">
+    <button ng-click="operationType=0"><i class="fa fa-chevron-left"></i><a >返回</a></button>
+  </div>
+  <div class="look-pageb">
+    <div class="small-boxb col-md-12">
+      <div class="boxb-a">
+        <p style="margin-top:20px;">产品渠道：
+          <select id="addProductChannel"  ng-model="add.productChannel" ng-init="add.productChannel='0'" >
+            <option value="0">悟空理财APP</option>
+            <option value="1">玖富钱包APP</option>
+           </select>
+        </p>
+        <!--  <p>未登录icon图片<a class="btn btn-success btn-rounded btn-blueWa upload" href="#"><span style="color:#fff">点击上传</span></a>
+        </p>-->
+        <p>未登录icon图片<input type="file" id="addPicture1" name="file" size="1" style="position:absolute;display: none;">
+          <input style="width:220px;" id="fileUrl1" type="text" ng-model="add.icon">
+          <a class="btn btn-success btn-rounded btn-blueWa" href="#" onclick="$('#addPicture1').click();" id="image_prew1"><span>点击上传</span></a></p>
+          <p>未亮起icon图片<input type="file" id="addPicture2" name="file" size="1" style="position:absolute;display: none;">
+          <input style="width:220px;" id="fileUrl2" type="text" ng-model="add.grayDisplayImg">
+          <a class="btn btn-success btn-rounded btn-blueWa" href="#" onclick="$('#addPicture2').click();" id="image_prew2"><span>点击上传</span></a></p>
+         <!-- <p>未亮起icon图片<a class="btn btn-success btn-rounded btn-blueWa upload" href="#"><span style="color:#fff">点击上传</span></a>
+        </p> -->
+        <p style="margin-top:20px;" class="inputSpan">
+          <span>权益主标题</span>
+          <input maxlength="6" placeholder="必填，6个汉字以内" type="text" style="width:150px;height:35px;" ng-model="add.priName">
+        </p>
+        <p style="margin-top:20px;" class="inputSpan">
+          <span>权益副标题</span>
+          <input maxlength="7" placeholder="必填，7个汉字以内" type="text" style="width:150px;height:35px;" ng-model="add.priSubName">
+        </p>
+        <p style="margin-top:20px;" class="inputSpan">
+          <span>跳转链接</span>
+          <input placeholder="必填" type="text" style="width:150px;height:35px;" ng-model="add.jumpLink">
+        </p>
+        <p style="margin-top:20px;" class="inputSpan">
+          <span>权益对象</span>
+          <span ng-if="add.productChannel=='1'" ng-repeat="x in qbRights"><input type="radio" name="vipLevel"   ng-value='{{x.val}}'>{{x.text}}</span>
+           <span ng-if="add.productChannel!='1'" ng-repeat="x in wkRights"><input type="checkbox" class="rightsCheckbox checkAll" value="{{x.val}}"/>{{x.text}}</span> 
+        </p>
+        <p style="margin-top:20px;" class="inputtextarea" >
+          <span>权益介绍</span>
+          <textarea maxlength="200" placeholder="必填，200个汉字以内" style="width:200px;height:80px;" ng-model="add.introduction">这里写内容</textarea>
+        </p>
+        <p style="margin-top:20px;" class="inputtextarea"><span>备注</span>
+          <textarea maxlength="100" style="width:200px;height:80px;" ng-model="add.note">这里写内容</textarea>
+        </p>
+        <p class="radio"  ng-init="add.whitelist='F'">
+          <span><input id="quanbu" type="radio" name="showType"  ng-click="radioChange('F')"  ng-value='F' ng-checked=true>全部</span>
+          <span class="whiteList"><input id="white" type="radio" name="showType"  ng-click="radioChange('T')" ng-value='T' >白名 单</span>
+          <select ng-model="add.whitelistId"  id="whiteID" disabled="disabled" >
+            <option value="">请选择</option>
+            <option value="{{x.id}}" ng-repeat="x in whiteList_qb" ng-if="add.productChannel=='1'">{{x.listName}}</option>
+            <option value="{{x.id}}" ng-repeat="x in whiteList_wk" ng-if="add.productChannel != '1'">{{x.listName}}</option>
+          </select>
+        </p>
+        <p style="margin-top:20px;">审核人：
+            <select class="interests" ng-model="add.auditPerson" ng-options="x.name for x in userList">
+              <option value="">请选择</option>
+          	</select>
+          提审说明：
+          <input type="text" maxlength="18" placeholder="选填，18个汉字以内" ng-model="add.requestAuditDescription" style="width:150px;height:35px;">
+        </p>
+      </div>
+      <div class="boxb-b">
+        <p>icon图片<input type="file" id="addPicture3" name="file" size="1" style="position:absolute;display: none;">
+          <input style="width:220px;" id="fileUrl3" type="text" ng-model="add.toppingImg">
+          <a class="btn btn-success btn-rounded btn-blueWa" href="#" onclick="$('#addPicture3').click();" id="image_prew3"><span>点击上传</span></a>
+        </p>
+        <p style="margin-top:20px;" class="inputSpan">
+          <span>权益主标题</span>
+          <input maxlength="6" placeholder="必填，6个汉字以内" type="text" style="width:150px;height:35px;" ng-model="add.toppingTitle">
+        </p>
+        <p style="margin-top:20px;" class="inputSpan" >
+          <span>权益副标题</span>
+          <input maxlength="12" placeholder="必填，12个汉字以内" type="text" style="width:150px;height:35px;" ng-model="add.toppingSubTitile">
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="look-pagea" style="margin-top:8px;">
+    <button class="JianBian" ng-click="saveRights()"><i class="fa fa-chevron-left" ></i><span>确定</span></button>
+  </div>
+</div>
+<!-- Mainly scripts -->
+<script src="${jsRoot}/jquery-2.1.1.js"></script>
+<script src="${jsRoot}/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="${jsRoot}/angular/angular.min.js"></script>
+<script type="text/javascript" src="${staticRoot}/js/plugins/sweetalert/sweetalert.min.js"></script>
+<script src="${jsRoot}/plugins/laydate/laydate.js"></script>
+<script src="${jsRoot}/bootstrap.min.js"></script>
+<script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="${jsRoot}/plugins/jeditable/jquery.jeditable.js"></script>
+
+<!-- Data Tables -->
+<script src="${jsRoot}/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.responsive.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.tableTools.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="${jsRoot}/inspinia.js"></script>
+<script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload.js"></script> 
+<script src="${jsRoot}/plugins/fileUpload/jquery.iframe-transport.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.ui.widget.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-process.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-validate.js"></script>
+<script src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+<script src="${jsRoot}/biz/vip/rights.js?rand=${random}"></script>
+<!-- 日期控件  -->
+<script type="text/javascript" src="${jsRoot}/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+<!-- 日期控件中文包  -->
+<script type="text/javascript" src="${jsRoot}/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="${jsRoot}/plugins/datapicker/bootstrap-datepicker.js"></script>
+<script src="${jsRoot}/plugins/datapicker/bootstrap-datepicker.zh-CN.min.js"></script>
+<script>
+  var navHight = $('.navbar-static-side').height()
+  $('.navbar-static-side').css('height', navHight - 60)
+  $('.content-box').css('height', navHight - 60)
+ /*  // 添加浮标
+  $('.btn-gradienta').click(function(){
+    $('.add-start-bg').show()
+    $('.start-btna').click(function(){
+      $('.add-start-bg').hide()
+    })
+    $('.start-btnb').click(function(){
+      $('.add-start-bg').hide()
+    })
+  })
+  // 优先级排序
+  $('.btn-gradientb').click(function(){
+    $('.priority-ranking').show()
+    $('.bottom-btna').click(function(){
+      $('.priority-ranking').hide()
+    })
+    $('.bottom-btnb').click(function(){
+      $('.priority-ranking').hide()
+    })
+  })
+  // 查看浮标
+  $('.look-start').click(function(){
+    $('.look-start-box').show()
+    $('.bottom-btna').click(function(){
+      $('.look-start-box').hide()
+    })
+    $('.bottom-btnb').click(function(){
+      $('.look-start-box').hide()
+    })
+  })
+  // 修改浮标
+  $('.modify-start').click(function(){
+    $('.modify-start-box').show()
+    $('.bottom-btna').click(function(){
+      $('.modify-start-box').hide()
+    })
+    $('.bottom-btnb').click(function(){
+      $('.modify-start-box').hide()
+    })
+  })
+  // 失效浮标
+  $('.take-start').click(function(){
+    $('.take-start-box').show()
+    $('.bottom-btna').click(function(){
+      $('.take-start-box').hide()
+    })
+    $('.bottom-btnb').click(function(){
+      $('.take-start-box').hide()
+    })
+  }) */
+  
+</script>
+</body>
+</html>

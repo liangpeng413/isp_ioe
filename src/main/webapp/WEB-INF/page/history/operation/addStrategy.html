@@ -1,0 +1,1632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Title</title>
+<link href="${cssRoot}/bootstrap.min.css" rel="stylesheet">
+<link href="${staticRoot}/font-awesome/css/font-awesome.css"
+	rel="stylesheet">
+
+<!-- FooTable -->
+<link href="${cssRoot}/plugins/footable/footable.core.css"
+	rel="stylesheet">
+
+<link href="${cssRoot}/animate.css" rel="stylesheet">
+<link href="${cssRoot}/style.css?rand=${random}" rel="stylesheet">
+<link href="${cssRoot}/styleT2.css?rand=${random}" rel="stylesheet">
+<link href="${cssRoot}/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<link href="${cssRoot}/oms/ruleconfig/jquery.searchableSelect2.css" rel="stylesheet" type="text/css">
+
+<style>
+.biaoti {
+	color: black;
+	font-size: 16px;
+	font-weight: bold;
+	margin-bottom: 20px
+}
+
+#yesInputConfig, #noConfig {
+	height: 12px;
+}
+
+.boxb-a ul {
+	float: left;
+	width: 33.3%;
+	list-style: none;
+	margin-top: 20px;
+}
+
+.boxb-a ul li {
+	margin-top: 20px;
+}
+
+#auditing {
+	float: none;
+	margin-left: 0px;
+}
+
+#auditing div {
+	float: none;
+}
+
+#auditing input {
+	width: 200px;
+	margin-left: 30px;
+	margin-right: 50px
+}
+
+.boxb-a div, #saveButton {
+	float: none;
+}
+
+#saveButton {
+	margin-left: 0px;
+}
+
+.boxb-a select, .boxb-a[type='text'] {
+	width: 150px;
+	margin-left: 15px;
+}
+
+.noneConfig {
+	font-weight: 600;
+	font-style: normal;
+	color: #999999;
+	font-size: 18px;
+	text-align: left;
+	line-height: normal;
+}
+
+#triggerStrategyContext {
+	margin-left: 0px;
+}
+</style>
+<script>
+        var globalConfig = {
+            basePath: "${ctx}",
+            staticRoot: "${staticRoot}",
+            loginName: "${Session.sessionUser.loginName}",
+            userName: "${Session.sessionUser.name}",
+            fId: "${(Session.fId)!''}",
+            channel: "${(Session.channel)!''}",
+            channelCode: "${(Session.channelCode)!''}",
+            fType: "${(Session.fType)!''}",
+            serviceCode: "${(Session.serviceCode)!''}",
+            userWay: "${(Session.userWay)!''}",
+            userActionCode: "${(Session.userActionCode)!''}",
+            strategyId: "${(Session.strategyId)!''}",
+            addStrategyType: "${(Session.addStrategyType)!''}"
+        };
+        if(!(globalConfig.fId||globalConfig.channel||globalConfig.channelCode||globalConfig.fType||globalConfig.serviceCode||globalConfig.userWay||globalConfig.userActionCode||globalConfig.addStrategyType)){
+        	alert("请重新选择服务！！！")
+        	window.location.href=globalConfig.basePath+"/strategyIndex";
+        }
+        function swalMsg(msg) {
+            swal({
+                title: "",
+                text: msg,
+                confirmButtonColor: "#1ab394",
+                confirmButtonText: "确定"
+            });
+        }
+    </script>
+</head>
+<body>
+	<div id="wrapper">
+		<div class="header-box"><#include
+			"/common/top.html"encoding="UTF-8" /></div>
+		<nav class="navbar-default navbar-static-side nav-boxa"
+			role="navigation" id="HeadTitle">
+			<div class="sidebar-collapse"  style="height: 675px;overflow-y: scroll;">
+				<#include "/common/left.html" encoding="UTF-8" /></div>
+		</nav>
+	</div>
+	
+	<div class="content-box">
+		<div class="small-content" id="addPage">
+			<div style="height: 60px; line-height: 60px;">
+				<a class="btn btn-blueW " id="returnBack" href="javascript:void(0)">返回</a>
+				<span style="font-size: 20px; margin-left: 20px">${(Session.channel)!''}
+					- ${(Session.fType)!''} - ${(Session.userWay)!''}</span>
+			</div>
+			
+			<!-- <li class="deploy-item-filter" id="userNameLikeSearch">
+				                                模糊搜索111：
+				             <select name="userTag" id="userNames" class="filter-select"></select>
+				             <label id="不能删用于模糊搜索占位"></label>
+				        </li> -->
+				        
+			<div class="small-boxb col-md-12">
+			<!-- <div> -->
+			
+			
+			
+				<div class="boxb-a" style="width: 100%">
+					<ul id="addStrategy-left">
+						<li class="biaoti">行为策略配置</li>
+						<li><label>服务类型：</label><span id="serveType">新用户流程</span></li>
+						<li><label>用户行为：</label><span id="userBehavior">充值行为</span></li>
+						<li><label>触发节点：<b style="color: red;">*</b></label> <select
+							id="triggerNode" name="touchCode">
+								<option value="1">**</option>
+								<option value="2">**</option>
+						</select></li>
+						<li id="yesConfig">
+							<label>是否配触发策略：</label>
+							<input
+							    id="yesInputConfig" type="radio" value="1" checked="checked"
+							name="IS_EFFECT"><span>是</span>
+							<input id="noConfig"
+							    type="radio" value="0" name="IS_EFFECT" style="margin-left: 50px">
+							<span>否</span>
+						</li>
+						<li><label id="triggerStrategy">触发策略：</label>
+							<div id="triggerStrategyContext">
+								<!-- <div>
+                                <label>累计失败次数：</label><input placeholder="1-15" type="number" style="margin-left: 15px" min="2" max="15" required="required"/>
+                            </div>
+                            <div>
+                                <label>累计失败金额范围：</label>
+                                <div>
+                                   		大于等于<input placeholder="1" type="number" style="margin-left: 25px" min="1" required="required"/>
+                                </div>
+                                <div style="margin-top: 10px">
+                                    	小于<input placeholder="最高999999999" type="number" style="margin-left: 51px" max="999999999" required="required"/>
+                                </div>
+                            </div> -->
+							</div></li>
+					</ul>
+					<ul id="addStrategy-center">
+						<li class="biaoti">服务策略策略配置</li>
+						<li><label>名单类型：</label> <select id="userStrategy"
+							name="userTagType">
+						</select></li>
+						
+						<li class="deploy-item-filter" id="userNameLikeSearch">
+				                                模糊搜索：
+				             <select name="userTag" id="userNames" class="filter-select"></select>
+				             <label id="不能删用于模糊搜索占位"></label>
+				        </li>
+		        
+						<!-- <li><label>用户名单：</label> <select id="userNames"
+							name="userTag">
+								<option value=""></option>
+						</select></li> -->
+						
+						
+						<li><label>触达类型：</label> <select id="strategyType"
+							name="touchType">
+								<option value="">*</option>
+								<option value="">*</option>
+								<option value="">*</option>
+								<option value="">*</option>
+								<option value="">*</option>
+						</select></li>
+						<li id="strategyWay"><label>触达方式：</label><span
+							class="noneConfig">无配置</span></li>
+						<li id="strategyTime"><label>触达时间：</label><span
+							class="noneConfig">无配置</span></li>
+						<li id="strategyPage"><label>触达页面：</label><span
+							class="noneConfig">无配置</span></li>
+						<li id="strategyConfig"><label>触达配置：</label><span
+							class="noneConfig">无配置</span></li>
+
+					</ul>
+					<ul id="addStrategy-right">
+						<li class="biaoti">监控配置</li>
+						<li><label>预期结果状态：</label> <select id="expResultStatus"
+							name="strategyResult">
+								<option value="">*</option>
+								<option value="">*</option>
+								<option value="">*</option>
+						</select></li>
+						<li><label>执行触达后</label> <input type="number" min="1" max="7"
+							required="required" placeholder="1-7"
+							style="width: 80px; margin: 0px 15px;" name="strategyCycle">
+							<label>自然日内有效</label></li>
+					</ul>
+
+				</div>
+				<div id="auditing">
+					<div>
+
+						<label>上线时间：</label><input id="startTime" type="text"
+							style="width: 200px;" name="validTime" required="required">
+						<label>下线时间：</label><input id="endTime" type="text"
+							style="width: 200px;" name="invalidTime" required="required">
+					</div>
+					<div style="margin-top: 20px; float: none;">
+						<label>审核人：</label> <select
+							style="width: 200px; margin-left: 39px; margin-right: 50px"
+							name="approverId" id="auditor">
+							<option value="">**</option>
+							<option value="">**</option>
+						</select> <label>审核留言：</label><input placeholder="" type="text"
+							name="approverNote" id="approverNote" />
+					</div>
+				</div>
+				<div style="text-align: center; float: none;">
+					<a href="javascript:void(0)" id="saveButton"
+						class="btn btn-info btn-rounded btn-gradient btn-gradienta"> <i
+						class="fa fa-plus-square-o"></i><span>保存</span>
+					</a>
+				</div>
+				<br> <br>
+			</div>
+		</div>
+	</div>
+	<script src="${jsRoot}/jquery-2.1.1.js"></script>
+	<script src="${jsRoot}/bootstrap.min.js"></script>
+	<script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+	<script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+	<script src="${jsRoot}/plugins/jeditable/jquery.jeditable.js"></script>
+
+	<script src="${jsRoot}/jquery-2.1.1.js"></script>
+	<script src="${jsRoot}/plugins/jquery-ui/jquery-ui.min.js"></script>
+	<script src="${jsRoot}/angular/angular.min.js"></script>
+	<script type="text/javascript"
+		src="${staticRoot}/js/plugins/sweetalert/sweetalert.min.js"></script>
+	<script src="${jsRoot}/plugins/laydate/laydate.js"></script>
+	<script src="${jsRoot}/bootstrap.min.js"></script>
+
+	<script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+	<script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+	<script src="${jsRoot}/plugins/jeditable/jquery.jeditable.js"></script>
+
+
+	<!-- Custom and plugin javascript -->
+	<script src="${jsRoot}/inspinia.js"></script>
+	<script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+	<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload.js"></script>
+	<script src="${jsRoot}/plugins/fileUpload/jquery.iframe-transport.js"></script>
+	<script src="${jsRoot}/plugins/fileUpload/jquery.ui.widget.js"></script>
+	<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-process.js"></script>
+	<script
+		src="${jsRoot}/plugins/fileUpload/jquery.fileupload-validate.js"></script>
+	<script src="${jsRoot}/plugins/ajaxfileupload/ajaxfileupload.js"></script>
+
+	<!-- Data Tables -->
+	<script src="${jsRoot}/plugins/dataTables/jquery.dataTables.js"></script>
+	<script src="${jsRoot}/plugins/dataTables/dataTables.bootstrap.js"></script>
+	<script src="${jsRoot}/plugins/dataTables/dataTables.responsive.js"></script>
+	<script src="${jsRoot}/plugins/dataTables/dataTables.tableTools.min.js"></script>
+	<script src="${jsRoot}/plugins/laydate/laydate.js"></script>
+	<script src="${jsRoot}/DateUtil.js"></script>
+	<!-- Custom and plugin javascript -->
+	<script src="${jsRoot}/inspinia.js"></script>
+	<script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+	<script type="text/javascript" src="${jsRoot}/angular/angular.min.js"></script>
+	<!--  日期控件  -->
+	<script src="${jsRoot}/plugins/datapicker/bootstrap-datepicker.js"></script>
+	<script
+		src="${jsRoot}/plugins/datapicker/bootstrap-datepicker.zh-CN.min.js"></script>
+	<!-- 提示弹窗 -->
+	<script type="text/javascript"
+		src="${staticRoot}/js/plugins/sweetalert/sweetalert.min.js"></script>
+	<script type="text/javascript"
+		src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+	<script type="text/javascript"
+		src="${jsRoot}/oms/taskQuery.js?rand=${random}"></script>
+	<script type="text/javascript"
+		src="${jsRoot}/oms/taskDetail.js?rand=${random}"></script>
+	
+	<script src="${jsRoot}/oms/ruleconfig/jquery.searchableSelect.js"></script>
+	<script type="text/javascript">
+	
+	
+	
+function isUpdate(){//是否修改
+	if(globalConfig.addStrategyType=="find"){
+		$("#returnBack").after("<input type='checkbox'  id='isUpdate' style='height:13px;margin-left: 20px'>是否修改")
+		$("#saveButton").hide();
+		$(document).on('click',"#isUpdate",function(){
+			if($("#isUpdate").get(0).checked){//选中,修改
+				$("#saveButton").show();
+			}else{
+				$("#saveButton").hide();
+			}
+		});
+	}
+}
+
+function findAndShow(){//查询返现
+	if(globalConfig.addStrategyType=="add"){
+		return;
+	}
+ 	var strategyId = globalConfig.strategyId;
+ 	if(strategyId==null||strategyId=="null"||strategyId==""){
+ 		alert("请重新选择服务！！！")
+    	window.location.href=globalConfig.basePath+"/strategyIndex";
+ 	}
+	 $.post(globalConfig.basePath + "/strategy/detail","strategyId="+strategyId,function(data){
+		if(data.code!=="000"){
+			alert(data.message)
+		}
+		var res=data.resp;
+		var strategyDto=res.strategyDto;
+		var touchWayDto=res.touchWayDto;
+		$("#auditor").val(res.approverId);
+		$("#approverNote").val(res.approverNote);
+		//先选中联动相关主要字段  触发节点影响触发策略   用户策略类型影响用户名单  触达类型影响触达方式   触达方式影响触达内容
+		//触发节点
+		$("#triggerNode").eq(0).val(strategyDto.touchCode);
+		 $("#yesConfig").html("<label >是否配触发策略：</label> <input id='yesInputConfig' type='radio' value='1' checked='checked'"
+                 +  "name='IS_EFFECT'><span>是</span><input id='noConfig' type='radio' value='0' name='IS_EFFECT' style='margin-left: 50px'><span>否</span></li>");
+		postTriggerStrategy(strategyDto.touchCode);
+		//用户策略
+		$("#userStrategy").eq(0).val(strategyDto.userTagType);
+		findChannelGroups(strategyDto.userTag);
+
+		setTimeout(function(){
+			$('.searchable-select-item').each(function(){
+				 if($(this).attr("data-value") == strategyDto.userTag){
+					 $('.searchable-select-holder').eq(0).html($(this).html());
+				 }
+			 });
+		}, 2000);
+
+        //触达类型
+        $("#strategyType").val(strategyDto.touchType);
+        createStrategyWay(strategyDto.touchType);
+        if(strategyDto.touchType!="QA"){
+	        //触达方式
+	        $("#strategyWaySelect").val(touchWayDto.touchWay);
+	        //生成对应触达方式页面
+	        strategyWaySelect($("#strategyWaySelect option:selected").html());
+
+        }
+		 for (var key in strategyDto) {
+		    if(key!="touchStrategyList"){
+		    	if($("[name='"+key+"']").eq(0)){
+		    		$("[name='"+key+"']").eq(0).val(strategyDto[key]);
+		    	}
+		    }else{
+		    	var touchStrategyList=strategyDto.touchStrategyList;
+		    	for (var i = 0; i < touchStrategyList.length; i++) {
+		    		var attrKey=touchStrategyList[i].attrKey
+		    		var attrValue=touchStrategyList[i].attrValue
+		    		if(attrKey=="IS_EFFECT"){
+		    			$("input[type=radio][name="+attrKey+"][value="+attrValue+"]").attr("checked",true);
+		    		}else if($("[name='"+attrKey+"']").eq(0)){
+		    			$("[name='"+attrKey+"']").eq(0).val(attrValue);
+		    		}
+				}
+		    }
+		}
+		//增加时间配置输入框
+		if(touchWayDto.touchTimeType=="SMARTTOUCH"){
+			 var muchtime="<li><label>时间配置：</label><input placeholder='5-1440' min='5' max='1440' type='number' style='margin-left: 15px; width:80px' name='muchTime'/>分钟内未达到预期结果</li>";
+			 $("[name='touchTimeType']").eq(0).parent().after(muchtime);
+		}
+		for (var key in touchWayDto) {
+
+			if(key!="touchWayList"){
+				if($("[name='"+key+"']").eq(0)){
+		    		$("[name='"+key+"']").eq(0).val(touchWayDto[key]);
+		    	}
+			}else{
+				var touchWayList=touchWayDto.touchWayList;
+
+				var CUR_SKIP_TYPE = "";
+				var CUR_BANNER_BTN_URL_TYPE = "";
+
+				var CUR_SKIP_URL;
+				var CUR_BANNER_BTN_URL;
+
+				var CUR_PAGE_TYPE = "";
+				var CUR_PRIMORDIAL_PAGE = "";
+
+				for (var i = 0; i < touchWayList.length; i++) {
+		    		var attrKey=touchWayList[i].attrKey
+		    		var attrValue=touchWayList[i].attrValue
+		    		if(attrKey=="POP_PAGE_IMG"){
+		    			if($("#headPic")){
+		    				$("#headPic").attr("src", attrValue);
+		    			}
+		    			if($("#fileUrl")){
+		    				$("#fileUrl").val(data.resp);
+		    			}
+		    		}else if(attrKey=="AWARD_YTPE"){//奖励类型
+		    			if(attrValue=="CARD"){//卡券
+		    				var award2 = "<li class='award'><label>卡券ID：</label><input placeholder='' type='number' style='margin-left: 15px' name='AWARD_CONTENT'/><span style='color:red'></span></li>";
+		    	            var award3 = "<li class='award'><label>是否启动卡券模型辅助：</label><input value='1' type='radio' name='IS_OPEN_CARD_HELP' style='margin-left:15px;height:13px'/>是<input value='0' type='radio' name='IS_OPEN_CARD_HELP' style='margin-left:15px ;height:13px'  checked='checked'/>否</li>";
+		    				$(".award:not(':eq(0)')").remove();
+		    	            $(".award:eq(0)").after(award2,award3);
+		    			}
+		    			if(attrValue=="JIFEN"){//积分
+		    				var award2 = "<li class='award'><label>积分：</label><input placeholder='1-99999' type='number' style='margin-left: 15px' name='AWARD_CONTENT' required='required'/></li>";
+		    				$(".award:not(':eq(0)')").remove();
+		    	            $(".award:eq(0)").after(award2);
+		    			}
+		    			$("[name='"+attrKey+"']").val(attrValue);
+		    		}else if(attrKey=="IS_OPEN_CARD_HELP"){
+		    			if(attrValue){
+		    				$("input[type=radio][name="+attrKey+"][value="+attrValue+"]").attr("checked",true);
+		    			}
+		    		}else if(attrKey=="SKIP_TYPE"){//跳转类型C
+		    			CUR_SKIP_TYPE = attrValue;
+		    			$("[name='"+attrKey+"']").val(attrValue);
+		    			$("[name='"+attrKey+"']").trigger("change");
+					}else if(attrKey=="BANNER_BTN_URL_TYPE"){//跳转类型
+						CUR_BANNER_BTN_URL_TYPE = attrValue;
+		    			$("[name='"+attrKey+"']").val(attrValue);
+		    			$("[name='"+attrKey+"']").trigger("change");
+					}else if(attrKey=="SKIP_URL"){//跳转地址
+						CUR_SKIP_URL = attrValue;
+					}else if(attrKey=="BANNER_BTN_URL"){//跳转地址
+						CUR_BANNER_BTN_URL = attrValue;
+					}
+					else if(attrKey=="PAGE_TYPE"){//原生跳转对应的页面类型
+						CUR_PAGE_TYPE = attrValue;
+					}else if(attrKey=="PRIMORDIAL_PAGE"){//原生跳转页面地址
+						CUR_PRIMORDIAL_PAGE = attrValue;
+					}else if($("[name='"+attrKey+"']")){
+		    			$("[name='"+attrKey+"']").val(attrValue);
+		    		}
+				}
+
+				//特殊处理链接跳转和原生跳转的返现
+				if(CUR_SKIP_TYPE != "" || CUR_BANNER_BTN_URL_TYPE != ""){
+					if(CUR_SKIP_TYPE == 'URL'){
+						$('#SKIP_URL').val(CUR_SKIP_URL);
+					}else if(CUR_BANNER_BTN_URL_TYPE == 'URL'){
+						$('#BANNER_BTN_URL').val(CUR_BANNER_BTN_URL);
+					}else if(CUR_SKIP_TYPE == 'PRIMORDIAL'){
+						$('#PAGE_TYPE').val(CUR_PAGE_TYPE);
+						$('#PAGE_TYPE').trigger("change");
+                        bindPageTypeChange(CUR_PRIMORDIAL_PAGE);
+						$('#PRIMORDIAL_PAGE').val(CUR_PRIMORDIAL_PAGE);
+					}else if(CUR_BANNER_BTN_URL_TYPE == 'PRIMORDIAL'){
+						$('#PAGE_TYPE').val(CUR_PAGE_TYPE);
+						$('#PAGE_TYPE').trigger("change");
+						$('#PRIMORDIAL_PAGE').val(CUR_PRIMORDIAL_PAGE);
+					}
+				}
+			}
+		}
+		$("#triggerNode option:not(:selected)").remove();
+		$("input[name=IS_EFFECT]:not(:checked)").next().remove()
+        $("input[name=IS_EFFECT]:not(:checked)").remove();
+		if($("input[name=IS_EFFECT]:checked").val()==0){
+			$("#triggerStrategyContext").html("");
+		}
+
+	},"json");
+}
+	function GetQueryString(name){//获取地址栏参数
+	     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+	     var r = window.location.search.substr(1).match(reg);
+	     if(r!=null)return  unescape(r[2]); return null;
+	}
+	$(document).on('change',"#awardType",function(){//奖励类型改变
+		if($("#awardType").val()=="CARD"){//卡券
+			var award2 = "<li class='award'><label>卡券ID：</label><input placeholder='' type='number' style='margin-left: 15px' name='AWARD_CONTENT'/><span style='color:red'></span></li>";
+            var award3 = "<li class='award'><label>是否启动卡券模型辅助：</label><input value='1' type='radio' name='IS_OPEN_CARD_HELP' style='margin-left:15px;height:13px'/>是<input value='0' type='radio' name='IS_OPEN_CARD_HELP' style='margin-left:15px ;height:13px'  checked='checked'/>否</li>";
+			$(".award:not(':eq(0)')").remove();
+            $(".award:eq(0)").after(award2,award3);
+		}
+		if($("#awardType").val()=="JIFEN"){//积分
+			var award2 = "<li class='award'><label>积分：</label><input placeholder='1-99999' type='number' style='margin-left: 15px' name='AWARD_CONTENT' required='required'/></li>";
+			$(".award:not(':eq(0)')").remove();
+            $(".award:eq(0)").after(award2);
+		}
+	})
+    function triggerNodeChange() {
+    	$(document).on('change',"#triggerNode",function(){
+//     		alert("触发节点改变，触发策略生成")
+            //触发策略生成 triggerNodeId节点key
+            $("#yesConfig").html("<label >是否配触发策略：</label> <input id='yesInputConfig' type='radio' value='1' checked='checked'"
+                                         +  "name='IS_EFFECT'><span>是</span><input id='noConfig' type='radio' value='0' name='IS_EFFECT' style='margin-left: 50px'><span>否</span></li>")
+            postTriggerStrategy($("#triggerNode").val());
+            /* if($("#triggerNode").val()=="QB_USER_PAY_FAIL" || $("#triggerNode").val()=="QB_USER_RECHARGE_FAIL"){
+            	if($("#strategyType").val()=="USER_DEFINED"){
+            		$("#strategyType").append("<option value='BANNER'>专属banner</option>");
+            	}
+            } */
+    	});
+    }
+
+  /*   function userStrategyChange() {
+        $(document).on('change',"#userStrategy",function(){
+//             alert("用户策略改变,用户名单生成")//###################################################
+            var val = $("#userStrategy").val();
+            $.ajax({
+                type: "post",
+                url: globalConfig.basePath + "/operation/init/byKey",
+                data: "type=3&code=" + val,
+                async: false,
+                dataType: "json",
+                success: function (userData) {
+//                     alert("用户名单生成：" + userData)//###################################################
+                    if (userData.resp != "" && userData.resp != null) {
+                        var option = "";
+                        for (var i = 0; i < userData.resp.length; i++) {
+                            option += "<option value='" + userData.resp[i].key + "'>" + userData.resp[i].value + "</option>";
+                        }
+                        $("#userNames").html(option);
+                    }
+                }
+            });
+        });
+    } */
+    function createStrategyWaySelect(strategyTypeData){
+    	var strategyWay="";
+    	if (strategyTypeData.resp != "" && strategyTypeData.resp != null) {
+            strategyWay += "<label>触达方式：</label><select id='strategyWaySelect' name='touchWay'>";
+            for (var i = 0; i < strategyTypeData.resp.length; i++) {
+                if (strategyTypeData.resp[i].key == "NO_CONFIG") {
+//                 	alert("无配置")//###################################################
+                    $("#strategyWay").html("<label>触达方式：</label><span class='noneConfig'>无配置</span>");
+                	$("#strategyWay").after("<li id='strategyTime'></li><li id='strategyPage'></li><li id='strategyConfig'></li>")
+                    $("#strategyTime").html("<label>触达时间：</label><span class='noneConfig'>无配置</span>");
+                    $("#strategyPage").html("<label>触达页面：</label><span class='noneConfig'>无配置</span>");
+                    $("#strategyConfig").html("<label>触达配置：</label><span class='noneConfig'>无配置</span>");
+                    return;
+                }
+                //展示所有
+                strategyWay += "<option value='" + strategyTypeData.resp[i].key + "'>" + strategyTypeData.resp[i].value + "</option>";
+               /*  //如果触发节点为钱包支付失败，充值失败， banner不显示
+                if(strategyTypeData.resp[i].key!="BANNER"){
+               	 	strategyWay += "<option value='" + strategyTypeData.resp[i].key + "'>" + strategyTypeData.resp[i].value + "</option>";
+           	 	}else{
+	           		//是banner，并且是钱包支付失败，充值失败,添加， 否则跳过
+	           		if($("#triggerNode").val()=="QB_USER_PAY_FAIL" || $("#triggerNode").val()=="QB_USER_RECHARGE_FAIL"){
+           			 strategyWay += "<option value='" + strategyTypeData.resp[i].key + "'>" + strategyTypeData.resp[i].value + "</option>";
+                    }
+           	 	} */
+            }
+            strategyWay += "</select>";
+            $("#strategyWay").html(strategyWay);
+//				alert($("#strategyWaySelect").html()+",value="+$("#strategyWaySelect").val());
+            //触达方式及内容生成
+            strategyWaySelect($("#strategyWaySelect option:selected").html());
+        }
+    }
+	function createStrategyWay(strategyTypeValue){
+		 var strHtml = $("#strategyType option:selected").html();
+         $("#strategyWay").nextAll().remove();
+         $(".award").remove();
+         var strategyWay="";
+//          alert(strHtml)
+         if (strHtml == "奖励") {
+//              alert("选择的奖励,奖励内容生成")//###################################################    AWARD_CONTENT:value
+             var award1 = "<li class='award'><label>奖励类型：</label><select id='awardType' name='AWARD_YTPE'>" +
+                 "<option value='CARD'>卡券</option>" +
+                 "<option value='JIFEN'>积分</option>" +
+                 "<option value='COUPON'>新卡券</option>" +
+                 "</select></li>";
+             var award2 = "<li class='award'><label>卡券ID：</label><input placeholder='' type='number' style='margin-left: 15px' name='AWARD_CONTENT'/><span  style='color:red'></span></li>";
+             var award3 = "<li class='award'><label>是否启动卡券模型辅助：</label><input placeholder='' type='radio' name='IS_OPEN_CARD_HELP' style='margin-left: 15px;height:13px' value='1'/>是<input placeholder='' type='radio' name='IS_OPEN_CARD_HELP' style='margin-left: 15px ;height:13px' checked='checked' value='0'/>否</li>";
+             //在触达方式之前添加li标签
+             $("#strategyWay").before(award1, award2, award3);
+         }
+         $.ajax({
+             type: "post",
+             url: globalConfig.basePath + "/operation/init/byKey",
+             data: "type=5&code=" + strategyTypeValue,
+             async: false,
+             dataType: "json",
+             success: function (strategyTypeData) {
+            	 createStrategyWaySelect(strategyTypeData);
+             }
+         })
+	}
+    function strategyTypeChange() {
+        $(document).on('change',"#strategyType",function(){
+//             alert("触达类型改变,触发方式生成")//###################################################
+            var value = $(this).val();
+            createStrategyWay(value);
+        })
+    }
+
+    function strategyWayChange() {
+        $(document).on('change',"#strategyWay",function(){
+//             alert("触达方式改变,触达内容生成")//###################################################
+            //触达方式及内容生成
+            strategyWaySelect($("#strategyWay option:selected").html());
+        })
+    }
+
+    //获取图片url
+    function getObjectURL(file) {
+        var url = null;
+        if (window.createObjectURL != undefined) {
+            url = window.createObjectURL(file);
+        } else if (window.URL != undefined) {
+            url = window.URL.createObjectURL(file);
+        } else if (window.webkitURL != undefined) {
+            url = window.webkitURL.createObjectURL(file);
+        }
+        return url;
+    }
+    function isEffectClick(){
+    	$(document).on('change',"input[name=IS_EFFECT]",function(){
+    	    	var $this=$(this);
+    	    	if($this.val()==0){//否，触发策略置灰
+    	    		$("#triggerStrategyContext").html("")
+//     	    		$("#triggerStrategyContext input").val("");
+//     	    		$("#triggerStrategyContext input").attr("readonly","readonly");
+    	    	}else{
+    	    		postTriggerStrategy($("#triggerNode").val());
+    	    	}
+    	    });
+    }
+
+    function postTriggerStrategy(triggerNodeId) {
+        //触发策略生成    triggerNodeId节点key
+        if($("input[name=IS_EFFECT]:checked").val()=="0"){
+        	return;
+        }
+//         alert("触发策略生成")
+        $.ajax({
+            type: "post",
+            url: globalConfig.basePath + "/operation/init/byKey",
+            data: "node=" + triggerNodeId,
+            async: false,
+            dataType: "json",
+            success: function (data) {
+                if (data.code != '000') {
+                    alert(data.message);
+                    return;
+                }
+                var $data = data.resp;
+                var triggerStrategy = "";
+                if ($data != "" && $data != null) {
+                    $("#triggerStrategy").next().html("");
+                    var str = "";
+                    var select = "";
+                    var text = "";
+                    var node = "";
+                    var count=0;
+                    for (var i = 0; i < $data.length; i++) {
+                        var remarks = $data[i].remarks;
+                        var type = $data[i].type;
+                        var description = $data[i].description;
+                        var parentCode = $data[i].parentCode;
+                        var ownCode = $data[i].ownCode;
+                        var key = $data[i].key;
+
+                        var selectCountSum=0;
+                        if (type == "select") {//下拉框内的option
+                            //所有内含select的放到一组div，不是select的独自一组div
+                            var num = 0;
+                            //在本数组中不存在次text的父节点，就单起一组div
+                            for (var j = 0; j < $data.length; j++) {
+                                if (parentCode == $data[j].ownCode) {
+                                    num++;
+                                }
+                                if($data[j].type=="select"){
+                                	selectCountSum++;
+                                }
+                            }
+                            if (num == 0) {
+
+                                if (count == 0) {
+                                    select = "<div style='margin-bottom:15px'><label>" + remarks + "：</label>" + "<select name='"+ownCode+"'><option value='" + key + "'>" + description + "</option>";
+                                    count++;
+                                } else {
+                                    select = select + "<option value='" + key + "'>" + description + "</option>"
+                                    count++;
+                                }
+                                if (count == selectCountSum) {
+                                    select = select + "</select></div>";
+                                    triggerStrategy += select;
+                                }
+                            }
+                        }
+
+                        if (type == "text") {//输入框
+                            var num = 0;
+                            //在本数组中不存在次text的父节点，就单起一组div
+                            for (var j = 0; j < $data.length; j++) {
+                                if (parentCode == $data[j].ownCode) {
+                                    num++;
+                                }
+                            }
+                            if (num == 0) {
+                                text = "<div style='margin-bottom:15px'><label>" + remarks + "：</label>" + "<input placeholder='" + description + "' type='text' style='margin-left: 15px' name='"+key+"' required='required'/></div>";
+                                triggerStrategy += text;
+                            }
+                        }
+                        if (type == "number") {//输入框
+                            var num = 0;
+                            //在本数组中不存在次text的父节点，就单起一组div
+                            for (var j = 0; j < $data.length; j++) {
+                                if (parentCode == $data[j].ownCode) {
+                                    num++;
+                                }
+                            }
+                            if (num == 0) {
+                                text = "<div style='margin-bottom:15px'><label>" + remarks + "：</label>" + "<input placeholder='" + description + "' type='number' style='margin-left: 15px' name='"+key+"' required='required'/></div>";
+                                triggerStrategy += text;
+                            }
+                        }
+                        if (type == "none") {//节点，以下分级
+                            var num = 0;
+                            //在本数组中不存在次text的父节点，就单起一组div
+                            for (var j = 0; j < $data.length; j++) {
+                                if (parentCode == $data[j].ownCode) {
+                                    num++;
+                                }
+                            }
+                            if (num == 0) {
+                                //遍历本数组，讲子元素填充
+                                var sonCode = "";
+                                count = 0;
+                                var selectStr=""
+                                for (var z = 0; z < $data.length; z++) {
+                                    if (ownCode == $data[z].parentCode) {
+                                        if ($data[z].type == "text") {
+                                            text = "<div style='margin-bottom:15px'><label>" + $data[z].remarks + "：</label><input placeholder='" + $data[z].description + "' type='text' style='margin-left: 15px' name='"+$data[z].key+"' required='required'/></div>";
+                                            sonCode += text;
+                                        }
+                                        if ($data[z].type == "number") {
+                                            text = "<div style='margin-bottom:15px'><label>" + $data[z].remarks + "：</label><input placeholder='" + $data[z].description + "' type='number' style='margin-left: 15px' name='"+$data[z].key+"' required='required'/></div>";
+                                            sonCode += text;
+                                        }
+                                        selectCountSum=0;
+                                        if ($data[z].type == "select") {//下拉框内的option
+                                            //所有内含select的放到一组div，不是select的独自一组div
+                                            var num = 0;
+                                            //在本数组中不存在次text的父节点，就单起一组div
+                                            for (var q = 0; q < $data.length; q++) {
+                                                if (parentCode == $data[q].ownCode) {
+                                                    num++;
+                                                }
+                                                if($data[q].type=="select"){
+                                                	selectCountSum++;
+                                                }
+                                            }
+                                            if (num == 0) {
+
+                                                if (count == 0) {
+                                                	selectStr = "<div style='margin-bottom:15px'><label>" + $data[z].remarks + "：</label>" + "<select name='"+$data[z].ownCode+"'><option value='" + $data[z].key + "'>" + $data[z].description + "</option>";
+                                                    count++;
+                                                } else {
+                                                	selectStr = selectStr + "<option value='" + $data[z].key + "'>" + $data[z].description + "</option>"
+                                                    count++;
+                                                }
+                                                if (count == selectCountSum) {
+                                                	selectStr = selectStr + "</select></div>";
+                                                	sonCode += selectStr;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                node = "<div style='margin-bottom:15px'><label>" + remarks + "：</label><div>" + sonCode + "</div></div>"
+                                triggerStrategy += node;
+                            }
+                        }
+                    }
+                }
+                $("#triggerStrategyContext").html(triggerStrategy);
+                //触发节点无触发策略配置项，则是否启动触发策略按钮选择否，value=0
+                if(triggerStrategy==""){
+//                 	alert($("#triggerStrategyContext").html());
+                	$("input[type=radio][name=IS_EFFECT][value=0]").attr("checked",true);
+                	$("input[type=radio][name=IS_EFFECT][value=1]").next().remove();
+                	$("input[type=radio][name=IS_EFFECT][value=1]").remove();
+                }
+            }
+        });
+    }
+
+    //触发方式改变事件
+    function strategyWaySelect(strategyWayValue) {
+//     	alert("选择的触达方式为" + strategyWayValue)//###################################################
+        $("#strategyWay").nextAll().remove();
+        var str = "";
+
+        if (strategyWayValue == "软弹窗") {
+            str += "<li><label>跳转类型：</label> <select id='skipType' name='SKIP_TYPE'></select></li>";
+            //str += "<li><label>链接地址：</label><input placeholder='' type='text' style='margin-left: 15px' name='SKIP_URL' required='required'/></li>";
+            str += "<li class='LI_SKIP_URL'><label>链接地址：</label><input placeholder='' type='text' style='margin-left: 15px' id='SKIP_URL' name='SKIP_URL' required='required'/></li>";
+            str += "<li class='LI_PAGE_TYPE'><label>页面类型：</label><select id='PAGE_TYPE' name='PAGE_TYPE'></select></li>";
+            str += "<li class='LI_PRIMORDIAL_PAGE'><label>跳转页面：</label><select id='PRIMORDIAL_PAGE' name='PRIMORDIAL_PAGE'></select></li>";
+            str += "<li><label>弹窗内容：</label><textarea maxlength='20' rows='2' cols='10' placeholder='不超过20个字' style='margin-left: 15px;resize:none;height: 50px;width: 150px' name='POP_PAGE_CONTENT' required='required' ></textarea></li>";
+            str += "<li><label>按钮文案：</label><input placeholder='不超过4个字' maxlength='4' type='text' style='margin-left: 15px' name='BTN_CONTENT' required='required'/></li>";
+            str += "<li><label>触达时间：</label> <select id='strategyTime' name='touchTimeType'></select></li>";
+            /* str += "<li><label>触达页面：</label> <select id='strategyPage' name='TOUCH_PAGE'></select></li>"; */
+        }
+        if (strategyWayValue == "弹窗") {
+            str += "<li><label>跳转类型：</label> <select id='skipType' name='SKIP_TYPE'></select></li>";
+            str += "<li><img id='headPic' src='${staticRoot}/img/9f_logo.png' width='50px' height='50px' style='padding: 5px'>"
+                + "<span  id='uploadPhoto' class='btn btn-info btn-rounded btn-gradient btn-gradienta'>上传图片</span>"
+                + "<input id='upload' type='file' name='file' style='display: none' accept='image/!*'><input id='fileUrl' type='hidden' name='POP_PAGE_IMG' required='required'></li>";
+            //str += "<li><label>链接地址：</label><input placeholder='' type='text' style='margin-left: 15px' name='SKIP_URL' required='required'/></li>";
+            str += "<li class='LI_SKIP_URL'><label>链接地址：</label><input placeholder='' type='text' style='margin-left: 15px' id='SKIP_URL' name='SKIP_URL' required='required'/></li>";
+            str += "<li class='LI_PAGE_TYPE'><label>页面类型：</label><select id='PAGE_TYPE' name='PAGE_TYPE'></select></li>";
+            str += "<li class='LI_PRIMORDIAL_PAGE'><label>跳转页面：</label><select id='PRIMORDIAL_PAGE' name='PRIMORDIAL_PAGE'></select></li>";
+            str += "<li><label>弹窗内容：</label><textarea maxlength='20' rows='2' cols='10' placeholder='不超过20个字' style='margin-left: 15px;resize:none;height: 50px;width: 150px' name='POP_PAGE_CONTENT' required='required'></textarea></li>";
+            str += "<li><label>按钮文案：</label><input placeholder='不超过4个字' maxlength='4' type='text' style='margin-left: 15px'  name='BTN_CONTENT' required='required'/></li>";
+            str += "<li><label>触达时间：</label> <select id='strategyTime' name='touchTimeType'></select></li>";
+            /* str += "<li><label>触达页面：</label> <select id='strategyPage' name='TOUCH_PAGE'></select></li>"; */
+        }
+        if (strategyWayValue == "短信") {
+            str += "<li><label>短信内容：</label><br><textarea maxlength='100' rows='5' cols='10' placeholder='不超过100个字' style='margin-left: 15px;resize:none;height: 160px;width: 300px' name='MESSAGE_CONTENT' required='required'></textarea></li>";
+            str += "<li><label>触达时间：</label><select id='strategyTime' name='touchTimeType'></select></li>";
+            /* str += "<li><label>触达页面：</label><span class='noneConfig'>无配置</span></li>"; */
+        }
+        if (strategyWayValue == "站内信") {
+         	str += "<li><label>站内信标题：</label><br><textarea maxlength='15' rows='2' cols='10' placeholder='不超过15个字' style='margin-left: 15px;resize:none;height: 50px;width: 300px' name='TOUCH_PUSH_TITLE' required='required'></textarea></li>";
+            str += "<li><label>站内信内容：</label><br><textarea maxlength='100' rows='5' cols='10' placeholder='不超过100个字' style='margin-left: 15px;resize:none;height: 160px;width: 300px' name='TOUCH_PUSH_CONTENT' required='required'></textarea></li>";
+            str += "<li><label>触达时间：</label><select id='strategyTime' name='touchTimeType'></select></li>";
+            /* str += "<li><label>触达页面：</label><span class='noneConfig'>无配置</span></li>"; */
+        }
+        if (strategyWayValue == "推送") {
+        	str += "<li><label>跳转类型：</label> <select id='skipType' name='SKIP_TYPE'></select></li>";
+        	str += "<li class='LI_SKIP_URL'><label>链接地址：</label><input placeholder='' type='text' style='margin-left: 15px' id='SKIP_URL' name='SKIP_URL' required='required'/></li>";
+            str += "<li class='LI_PAGE_TYPE'><label>页面类型：</label><select id='PAGE_TYPE' name='PAGE_TYPE'></select></li>";
+            str += "<li class='LI_PRIMORDIAL_PAGE'><label>跳转页面：</label><select id='PRIMORDIAL_PAGE' name='PRIMORDIAL_PAGE'></select></li>";
+        	str += "<li><label>标题内容：</label><br><textarea maxlength='15' rows='2' cols='10' placeholder='不超过15个字' style='margin-left: 15px;resize:none;height: 50px;width: 150px' name='TOUCH_PUSH_TITLE' required='required'></textarea></li>";
+            str += "<li><label>推送内容：</label><br><textarea maxlength='30' rows='2' cols='10' placeholder='不超过30个字' style='margin-left: 15px;resize:none;height: 50px;width: 150px' name='TOUCH_PUSH_CONTENT' required='required'></textarea></li>";
+            str += "<li><label>触达时间：</label><select id='strategyTime' name='touchTimeType'></select></li>";
+            /* str += "<li><label>触达页面：</label><span class='noneConfig'>无配置</span></li>"; */
+        }
+//         if(strategyWayValue == "专属banner"){
+       	if(strategyWayValue.search("专属banner") != -1){
+        	str += "<li><label>banner内容：</label><br><textarea maxlength='20' rows='2' cols='10' placeholder='不超过20个字' style='margin-left: 15px;resize:none;height: 50px;width: 150px' name='BANNER_CONTENT' required='required'></textarea></li>";
+            str += "<li><label>按钮文案：</label><input placeholder='不超过4个字' maxlength='4' type='text' style='margin-left: 15px'  name='BANNER_BTN_CONTENT' required='required'/></li>";
+            str += "<li><label>跳转类型：</label><select id='skipType' name='BANNER_BTN_URL_TYPE'></select></li>";
+            str += "<li class='LI_SKIP_URL'><label>链接地址：</label><input placeholder='' type='text' style='margin-left: 15px' id='BANNER_BTN_URL' name='BANNER_BTN_URL' required='required'/></li>";
+            str += "<li class='LI_PAGE_TYPE'><label>页面类型：</label><select id='PAGE_TYPE' name='PAGE_TYPE'></select></li>";
+            str += "<li class='LI_PRIMORDIAL_PAGE'><label>跳转页面：</label><select id='PRIMORDIAL_PAGE' name='PRIMORDIAL_PAGE'></select></li>";
+            str += "<li><label>触达时间：</label><select id='strategyTime' name='touchTimeType'></select></li>";
+            /* str += "<li><label>触达页面：</label><select id='strategyPage' name='BANNER_TOUCH_PAGE'></select></li>"; */
+        }
+        var str1 = "<li id='restrictConfig'><label>限制配置：<input placeholder='1-30' min='1' max='30' type='number' style='margin-left: 15px; width:80px' name='touchTimeCount'/>个自然日内最多触发</label><input placeholder='1-10' min='1' max='10' type='number' style='margin-left: 15px; width:80px' name='touchCount'/>次 <input type='hidden' name='touchCountType' value='DAY'></li>";
+        str += str1;
+        if($("#strategyType").val()=="CUSTOMER_SERVICE"||$("#strategyType").val()=="PHONE"){
+        	str="";
+        	if(strategyWayValue.search("专属banner") != -1){
+                str += "<li><label>触达时间：</label></label> <select id='strategyTime' name='touchTimeType'></select></li>";
+                /* str += "<li><label>触达页面：</label><select id='strategyPage' name='BANNER_TOUCH_PAGE'></select></li>"; */
+                str += "<li id='restrictConfig'><label>限制配置：</label><span class='noneConfig'>无配置</span></li>";
+        	}
+        	if(strategyWayValue == "软弹窗"){
+        		str += "<li><label>触达时间：</label></label> <select id='strategyTime' name='touchTimeType'></select></li>";
+                /* str += "<li><label>触达页面：</label><select id='strategyPage' name='TOUCH_PAGE'></select></li>"; */
+                str += "<li id='restrictConfig'><label>限制配置：</label><span class='noneConfig'>无配置</span></li>";
+        	}
+        }
+       if($("#strategyType").val()=="AWARD"){
+        	if(strategyWayValue.search("专属banner") != -1){
+        		str="";
+        		str += "<li><label>banner内容：</label><br><textarea maxlength='20' rows='2' cols='10' placeholder='不超过20个字' style='margin-left: 15px;resize:none;height: 50px;width: 150px' name='BANNER_CONTENT' required='required'></textarea></li>";
+                str += "<li><label>触达时间：</label></label> <select id='strategyTime' name='touchTimeType'></select></li>";
+                /* str += "<li><label>触达页面：</label><select id='strategyPage' name='BANNER_TOUCH_PAGE'></select></li>"; */
+                str+="<li id='restrictConfig'><label>限制配置：<input placeholder='1-30' min='1' max='30' type='number' style='margin-left: 15px; width:80px' name='touchTimeCount'/>个自然日内最多触发</label><input placeholder='1-10' min='1' max='10' type='number' style='margin-left: 15px; width:80px' name='touchCount'/>次 <input type='hidden' name='touchCountType' value='DAY'></li>";
+        	}
+        	if(strategyWayValue == "软弹窗"){
+        		str="";
+        		str += "<li><label>弹窗内容：</label><textarea maxlength='20' rows='2' cols='10' placeholder='不超过20个字' style='margin-left: 15px;resize:none;height: 50px;width: 150px' name='POP_PAGE_CONTENT' required='required' ></textarea></li>";
+        		str += "<li><label>触达时间：</label></label> <select id='strategyTime' name='touchTimeType'></select></li>";
+                /* str += "<li><label>触达页面：</label><select id='strategyPage' name='TOUCH_PAGE'></select></li>"; */
+                str+="<li id='restrictConfig'><label>限制配置：<input placeholder='1-30' min='1' max='30' type='number' style='margin-left: 15px; width:80px' name='touchTimeCount'/>个自然日内最多触发</label><input placeholder='1-10' min='1' max='10' type='number' style='margin-left: 15px; width:80px' name='touchCount'/>次 <input type='hidden' name='touchCountType' value='DAY'></li>";
+        	}
+
+        }
+        $("#strategyWay").after(str);
+        getStrategyWaySelect();
+    }
+
+  	//跳转类型改变事件
+	function bindSkipTypeChange(){
+    	var skipType = $('#skipType').val();
+    	var skipType2 = $('#BANNER_BTN_URL_TYPE').val();
+    	if( skipType == "URL" || skipType2 == "URL"){
+        	$('.LI_SKIP_URL').show();
+        	$("#SKIP_URL").removeAttr("readonly");
+        	$('#SKIP_URL').attr("disabled",false);
+        	$("#BANNER_BTN_URL").removeAttr("readonly");
+        	$('#BANNER_BTN_URL').attr("disabled",false);
+        	$('.LI_PAGE_TYPE').hide();
+        	$('#PAGE_TYPE').attr("disabled",true);
+        	$('.LI_PRIMORDIAL_PAGE').hide();
+        	$('#PRIMORDIAL_PAGE').attr("disabled",true);
+        }
+    	if( skipType == "PRIMORDIAL" || skipType2 == "PRIMORDIAL" ){
+    		$('.LI_SKIP_URL').hide();
+    		$("#SKIP_URL").attr("readonly", "readonly");
+    		$('#SKIP_URL').attr("disabled",true);
+    		$("#BANNER_BTN_URL").attr("readonly", "readonly");
+    		$('#BANNER_BTN_URL').attr("disabled",true);
+        	$('.LI_PAGE_TYPE').show();
+        	$('#PAGE_TYPE').attr("disabled",false);
+        	$('.LI_PRIMORDIAL_PAGE').show();
+        	$('#PRIMORDIAL_PAGE').attr("disabled",false);
+
+        	//根据渠道初始化页面类型
+        	var condition = "";
+    		if(globalConfig.channelCode == 'WK'){
+    			condition = "type=17";
+    		}
+    		if(globalConfig.channelCode == 'QB'){
+    			condition = "type=18";
+    		}
+    		$.ajax({
+                type: "post",
+                url: globalConfig.basePath + "/operation/init/byKey",
+                data: condition,
+                async: false,
+                dataType: "json",
+                success: function (data) {
+	               	if (data.code != '000') {
+	                        alert(data.message);
+	                        return;
+	                }
+	                var res = data.resp;
+	                if (res != "" && res != null) {
+	                	var option = "";
+	                    for (var i = 0; i < res.length; i++) {
+	                    	option += "<option value='" + res[i].key + "'>" + res[i].value + "</option>";
+	                    }
+	                    $("#PAGE_TYPE").html(option);
+	                    $(document).on("change","#PAGE_TYPE",function(){
+	                    	bindPageTypeChange();
+	                    });
+	                    bindPageTypeChange();
+	                }
+                }
+    		});
+        }
+    }
+
+	//根据页面类型绑定原生跳转地址
+    function bindPageTypeChange(page) {
+    	var PAGE_TYPE = $('#PAGE_TYPE').val();
+    	$.post(globalConfig.basePath + "/operation/init/byKey","type=19&code="+PAGE_TYPE,function(data){
+        	var str="";
+        	if(data.resp){
+        		for (var i = 0; i < data.resp.length; i++) {
+        		    if (page && data.resp[i].key == page) {
+                        str+="<option value='"+data.resp[i].key+"' selected='selected'>"+data.resp[i].value+"</option>";
+                    } else {
+                        str+="<option value='"+data.resp[i].key+"'>"+data.resp[i].value+"</option>";
+					}
+    			}
+        	}
+        	$("#PRIMORDIAL_PAGE").html(str)
+        },"json")
+    }
+
+    //初始化相关下拉菜单及事件
+     function getStrategyWaySelect() {
+        //跳转类型
+        if ($("#skipType")) {
+        	 $.ajax({
+                 type: "post",
+                 url: globalConfig.basePath + "/operation/init/byKey",
+                 data: "type=6" ,
+                 async: false,
+                 dataType: "json",
+                 success: function (data) {
+                	 if (data.code != '000') {
+                         alert(data.message);
+                         return;
+                     }
+                     var res = data.resp;
+                     if (res != "" && res != null) {
+                         var option = "";
+                         for (var i = 0; i < res.length; i++) {
+                             option += "<option value='" + res[i].key + "'>" + res[i].value + "</option>";
+                         }
+                         $("#skipType").html(option);
+                         $(document).on("change","#skipType",function(){
+                          	bindSkipTypeChange();
+                          });
+                          bindSkipTypeChange();
+                     }
+                 }
+           })
+        }
+        //  触达时间
+        if ($("#strategyTime")) {
+        	 $.ajax({
+                 type: "post",
+                 url: globalConfig.basePath + "/operation/init/byKey",
+                 data: "type=7" ,
+                 async: false,
+                 dataType: "json",
+                 success: function (data) {
+                	 if (data.code != '000') {
+                         alert(data.message);
+                         return;
+                     }
+                     var res = data.resp;
+                     if (res != "" && res != null) {
+                         var option = "";
+                         //触达方式短信，推送，站内信  有智能触达
+                         var strategyWaySelectVal=$("#strategyWaySelect").val();
+
+                         for (var i = 0; i < res.length; i++) {
+                        	 if(strategyWaySelectVal!="MESSAGE"&&strategyWaySelectVal!="PUSH"&&strategyWaySelectVal!="PUSH_MAIL"){
+                        		 if(res[i].key=="SMARTTOUCH"){
+                        			 continue ;
+                        		 }
+                        	 }
+                             option += "<option value='" + res[i].key + "'>" + res[i].value + "</option>";
+                         }
+                         $("#strategyTime").html(option);
+                         $(document).on("change","#strategyTime",function(){
+                        	 $("[name=muchTime]").parent().remove();
+                        	 if($("#strategyTime").val()=="SMARTTOUCH"){
+                        		 $("#strategyTime").parent().after("<li><label>时间配置：</label><input placeholder='5-1440' min='5' max='1440' type='number' style='margin-left: 15px; width:80px' name='muchTime'/>分钟内未达到预期结果</li>");
+                        	 }
+                         })
+                     }
+                 }
+           })
+        }
+        //触达页面
+        if ($("#strategyPage")) {
+        	 $.ajax({
+                 type: "post",
+                 url: globalConfig.basePath + "/operation/init/byKey",
+                 data: "type=8" ,
+                 async: false,
+                 dataType: "json",
+                 success: function (data) {
+                	 if (data.code != '000') {
+                         alert(data.message);
+                         return;
+                     }
+                     var res = data.resp;
+                     if (res != "" && res != null) {
+                         var option = "";
+                         for (var i = 0; i < res.length; i++) {
+                             option += "<option value='" + res[i].key + "'>" + res[i].value + "</option>";
+                         }
+                         $("#strategyPage").html(option);
+                     }
+                 }
+           })
+        }
+        //上传照片
+        if ($("#uploadPhoto")) {
+            $("#uploadPhoto").click(function () {
+                $("#upload").click();
+                $("#upload").on("change", function () {
+                    var objUrl = getObjectURL(this.files[0]);
+                    if (objUrl) {
+                        $("#headPic").attr("src", objUrl);
+                    }
+                    var file = $("#upload")[0].files[0];
+                    var formData = new FormData();
+                    formData.append("file", file);
+                    $.ajax({
+                        type: "post",
+                        url: "${ctx}/appconfig/file/uploadPic",
+                        async: false,
+                        cache: false,
+                        data: formData,
+                        contentType: false,//由于提交的对象是FormData,所以要在这里更改上传参数的类型
+                        processData: false,//提交对象是FormData,不需要对数据做任何处理
+                        success: function (data) {
+                            if (data.code != "000") {
+                                alert("上传失败");
+                                return;
+                            }
+                            $("#fileUrl").val(data.resp);
+                            alert("上传成功");
+                        }
+                    });
+                })
+            });
+        }
+    }
+	function verifyAwardId(){
+		 $(document).on("focus","[name=AWARD_CONTENT]",function(){
+			 $("[name=AWARD_CONTENT]").next().html("");
+		 });
+		 $(document).on("blur","[name=AWARD_CONTENT]",function(){
+			 var couponId = $("[name=AWARD_CONTENT]").val();
+			 $.post("${ctx}/prize/getCouponNameOP","couponId="+couponId+"&channel="+globalConfig.channelCode,function(data){
+				 if(data.code!="000"){
+					 $("[name=AWARD_CONTENT]").next().html(data.message);
+				 }else{
+					 $("[name=AWARD_CONTENT]").next().html("");
+				 }
+			 },"json")
+		 });
+	}
+	//查询渠道现有分组
+	  function findChannelGroups(userTag){
+	 	if($("#userStrategy").val()=="NO_RULE"){
+				//$("#userNames").html("");
+				$("#userNames").html("<option value=''></option>");
+				$("#userNames").next().remove();
+		    	$('#userNames').searchableSelect();
+		    	$('#userNameLikeSearch').hide();
+		}
+	 	else{
+			$.post(globalConfig.basePath + "/ruleConfig/FindChannelGroups","channelCode="+globalConfig.channelCode+"&rosterType="+$("#userStrategy").val(), function (data) {
+				var strChannelGroups="";
+		    	if(data.code!='000'){
+		        	alert(data.message);
+		        	return;
+		        }
+
+		    	if(data.resp.length > 0){
+		    		$('#userNameLikeSearch').show();
+		    	}
+
+		    	for (var i = 0; i < data.resp.length; i++) {
+		   			strChannelGroups+="<option value='"+data.resp[i].rosterId+"'>"+data.resp[i].rosterName+"</option>";
+				}
+		    	$("#userNames").html(strChannelGroups);
+		    	$("#userNames").next().remove();
+		    	$('#userNames').searchableSelect();
+		    }, "json");
+		}
+
+
+		/* if($("#userStrategy").val()=="NO_RULE"){
+			$("#userNames").html("")
+		}else{
+			$.post("${ctx}/ruleConfig/findChannelGroups","channelCode="+globalConfig.channelCode+"&rosterType="+$("#userStrategy").val(), function (data) {
+				var strChannelGroups="";
+		    	if(data.code!='000'){
+		        	alert(data.message);
+		        	return;
+		        }
+		   		for (var i = 0; i < data.resp.length; i++) {
+		   			strChannelGroups+="<option value='"+data.resp[i].rosterId+"'>"+data.resp[i].rosterName+"</option>"
+					}
+		    	$("#userNames").html(strChannelGroups)
+		    	if(userTag!=null){
+		    		$("#userNames").eq(0).val(userTag);
+		    	}
+		    }, "json");
+		} */
+	  }
+
+</script>
+	<script type="text/javascript">
+
+    $("#returnBack").on("click", function () {
+        window.location.href=globalConfig.basePath +"/strategyIndex/strategyListLevel2";
+    });
+    //时间插件使用
+    var queryStartTime = laydate({
+        elem: '#startTime',
+        istime: true,
+        format: 'YYYY-mm-DD hh:mm:ss',
+        event: 'click'
+    });
+    var queryEndTime = laydate({
+        elem: '#endTime',
+        istime: true,
+        format: 'YYYY-mm-DD hh:mm:ss',
+        event: 'click'
+    });
+    //页面初始化
+    //填充服务类型及用户行为
+    $(function () {
+
+    	//是否修改按钮。只在查询进入时存在
+    	isUpdate();
+    	isEffectClick();
+    	verifyAwardId();
+        $("#serveType").html(globalConfig.fType);
+        $("#userBehavior").html(globalConfig.userWay);
+
+        //触发节点生成       sId行为key
+        $.ajax({
+            type: "post",
+            url: globalConfig.basePath + "/operation/init/byKey",
+            data: "type=1&code=" + globalConfig.userActionCode,
+            async: false,
+            dataType: "json",
+            success: function (data) {
+                if (data.code != '000') {
+                    alert(data.message);
+                    return;
+                }
+                var res = data.resp;
+                if (res != "" && res != null) {
+                    var str = "";
+                    for (var i = 0; i < res.length; i++) {
+                        str += "<option value='" + res[i].key + "'>" + res[i].value + "</option>"
+                    }
+                    $("#triggerNode").html(str);
+                }
+                postTriggerStrategy($("#triggerNode").val());
+                triggerNodeChange();
+
+            }
+        });
+        //用户策略类型初始化
+        $.ajax({
+            type: "post",
+            url: globalConfig.basePath + "/operation/init/byKey",
+            data: "type=2",
+            async: false,
+            dataType: "json",
+            success: function (data) {
+                if (data.code != '000') {
+                    alert(data.message);
+                    return;
+                }
+                var res = data.resp;
+                if (res != "" && res != null) {
+                    var str = "";
+                    for (var i = 0; i < res.length; i++) {
+                        str += "<option value='" + res[i].key + "'>" + res[i].value + "</option>"
+                    }
+                    //附加改变事件
+                    $("#userStrategy").html(str);
+                    //用户画像分组名单生成
+                    findChannelGroups();
+                }
+            }
+        });
+
+        //触达类型初始化
+        $.ajax({
+            type: "post",
+            url: globalConfig.basePath + "/operation/init/byKey",
+            data: "type=4",
+            async: false,
+            dataType: "json",
+            success: function (data) {
+                if (data.code != '000') {
+                    alert(data.message);
+                    return;
+                }
+                var res = data.resp;
+                if (res != "" && res != null) {
+                    var option = "";
+                    for (var i = 0; i < res.length; i++) {
+                        option += "<option value='" + res[i].key + "'>" + res[i].value + "</option>";
+                    }
+                    var value = "";
+                    var strHtml = "";
+                    var strategyWay = "";
+
+                    //附加事件
+                    $("#strategyType").html(option);
+                    strategyTypeChange();
+                    //触达类型初始化结束
+                    var value = $("#strategyType").val();
+//                     alert(value)
+                    strategyWayChange();
+                    //初始化触达方式及类容
+                    $.ajax({
+                        type: "post",
+                        url: globalConfig.basePath + "/operation/init/byKey",
+                        data: "type=5&code=" + value,
+                        async: false,
+                        dataType: "json",
+                        success: function (strategyTypeData) {
+                        	createStrategyWaySelect(strategyTypeData);
+                        }
+                    })
+                }
+            }
+        });
+        //预期结果状态生成
+        $.ajax({
+              type: "post",
+              url: globalConfig.basePath + "/operation/init/byKey",
+              data: "type=9" ,
+              async: false,
+              dataType: "json",
+              success: function (data) {
+              	if (data.code != '000') {
+                      alert(data.message);
+                      return;
+                  }
+                  var res = data.resp;
+                  var option = "";
+                  if (res != "" && res != null) {
+                      for (var i = 0; i < res.length; i++) {
+                          option += "<option value='" + res[i].key + "'>" + res[i].value + "</option>";
+                      }
+                      $("#expResultStatus").html(option);
+                  }
+              }
+        })
+        //审核人生成
+        $.ajax({
+              type: "post",
+              url: globalConfig.basePath + "/operation/init/byKey",
+              data:  "type=10",
+              async: false,
+              dataType: "json",
+              success: function (data) {
+            	  if (data.code != '000') {
+                      alert(data.message);
+                      return;
+                  }
+                  var res = data.resp;
+                  var option = "";
+                  if (res != "" && res != null) {
+                      for (var i = 0; i < res.length; i++) {
+                          option += "<option value='" + res[i].key + "'>" + res[i].value + "</option>";
+                      }
+                      $("#auditor").html(option);
+                  }
+              }
+        });
+        //用户画像类型-用户名单联动联动
+        $(document).on("change","#userStrategy",function(){
+        	findChannelGroups();
+        })
+      //修改及查询是，进行查询返显页面
+        findAndShow();
+        //保存，修改
+        $("#saveButton").on("click",function(){
+			var param="";
+        	var channel=globalConfig.channelCode;//渠道
+        	var serviceTypeCode=globalConfig.serviceCode;//服务类型
+        	var userActionCode=globalConfig.userActionCode;//用户行为
+        	param="&channel="+channel+"&serviceTypeCode="+serviceTypeCode+"&userActionCode="+userActionCode;
+            for (var i=0;i<$("select").length;i++){
+                var key = $("select").eq(i).attr("name");
+                var value = $("select").eq(i).val();
+                if(key){
+                	param+="&"+key+"="+value;
+                }
+                if(key=='approverId'){
+	                var approverNameKey="approverName";
+	                var approverNameValue=$("select").eq(i).find("option:selected").html();
+	                param+="&"+approverNameKey+"="+approverNameValue;
+                }
+            }
+            var $input = $("input").not("[type='file']").not("[type='radio']");
+            for (var i=0; i<$input.length; i++){
+                var key = $input.eq(i).attr("name");
+                var value = $input.eq(i).val();
+                if(key){
+                	 param+="&"+key+"="+value;
+                }
+            }
+            var $radio = $("input[type='radio']:checked");
+            for (var i=0; i<$radio.length; i++){
+                var key = $radio.eq(i).attr("name");
+                var value = $radio.eq(i).val();
+                if(key){
+                	 param+="&"+key+"="+value;
+                }
+            }
+            var $textarea=$("textarea");
+            for(var i=0; i<$textarea.length; i++){
+            	var key = $textarea.eq(i).attr("name");
+                var value = $textarea.eq(i).val();
+                if(key){
+               	 param+="&"+key+"="+value;
+               }
+            }
+            //校验
+            var $val;
+            if($("#awardType").val()=="JIFEN"){//如果是 积分,校验积分输入范围
+            	$val=$("[name=AWARD_CONTENT]").val()
+            	if($val==""||$val=="null"||$val==0){
+            		alert("积分为空");
+            		return;
+            	}
+            	if($val<1 || $val>99999){
+            		alert("积分输入不符合要求");
+            		return;
+            	}
+            }
+
+            if( $("input[name=IS_EFFECT]:checked").val()=="1"){
+            	/* $val = $("[name=SUM_FAIL_COUNT]").val()//累计失败次数
+               	if($val==""||$val=="null"||$val==0){
+               		alert("累计失败次数为空");
+               		return;
+               	}
+            	if($val<1||$val>15){
+               		alert("累计失败次数不符合要求");
+               		return;
+               	} */
+            	$val = $("[name=SUM_MIN_FAIL_COUNT]").val()//累计失败次数
+               	if($val==""||$val=="null"||$val==0){
+               		alert("累计失败次数范围为空");
+               		return;
+               	}
+               	if($val<1||$val>15){
+               		alert("累计失败次数不符合要求");
+               		return;
+               	}
+            	$val = $("[name=SUM_MAX_FAIL_COUNT]").val()//累计失败次数
+               	if($val==""||$val=="null"||$val==0){
+               		alert("累计失败次数范围为空");
+               		return;
+               	}
+            	if($val<1||$val>15){
+               		alert("累计失败次数不符合要求");
+               		return;
+            	}
+
+               	$val = $("[name=SUM_MIN_AMOUNT]").val()//累计金额大于等于
+               	if($val==""||$val=="null"||$val==0){
+               		alert("累计金额最小值为空");
+               		return;
+               	}
+               	if($val<1||$val>999999999){
+               		alert("累计金额最小值不符合要求");
+               		return;
+               	}
+               	$val = $("[name=SUM_MAX_AMOUNT]").val()//累计金额小于
+               	if($val==""||$val=="null"||$val==0){
+               		alert("累计金额最大值为空");
+               		return;
+               	}
+               	if($val<1||$val>999999999){
+               		alert("累计金额最大值不符合要求");
+               		return;
+               	}
+               	var max=parseInt($val);
+               	var min=parseInt($("[name=SUM_MIN_AMOUNT]").val());
+               	if(max<min){
+               		alert("累计金额最大值小于最小值");
+               		return;
+               	}
+            }
+            $val = $("[name=userTagType]").val()//用户策略类型
+           	if($val!="NO_RULE"){
+           	 	$val = $("[name=userTag]").val()//用户名单
+           		if($val==""||$val=="null"){
+           			alert("用户名单为空");
+           			return;
+           		}
+           	}
+
+            var skipType = $("[name=SKIP_TYPE]").val();
+            if(skipType == 'URL'){
+	           	$val = $("[name=SKIP_URL]").val()//链接地址校验
+	           	if($val==""||$val=="null"){
+	           		alert("链接地址为空");
+	           		return;
+	           	}
+            }
+
+           	$val=$("[name=POP_PAGE_CONTENT]").val();
+           	if($val==""||$val=="null"){
+           		alert("弹窗内容为空");
+           		return;
+           	}
+           	$val=$("[name=BTN_CONTENT]").val();
+           	if($val==""||$val=="null"){
+           		alert("按钮文案为空");
+           		return;
+           	}
+           	$val=$("[name=POP_PAGE_IMG]").val();
+           	if($val==""||$val=="null"){
+           		alert("尚未上传图片");
+           		return;
+           	}
+           	$val=$("[name=MESSAGE_CONTENT]").val();
+           	if($val==""||$val=="null"){
+           		alert("短信内容为空");
+           		return;
+           	}
+           	$val=$("[name=TOUCH_PUSH_TITLE]").val();
+           	if($val==""||$val=="null"){
+           		alert("标题内容为空");
+           		return;
+           	}
+           	$val=$("[name=TOUCH_PUSH_CONTENT]").val();
+           	if($val==""||$val=="null"){
+           		alert("推送内容为空");
+           		return;
+           	}
+           	$val=$("[name=PUSH_MAIL]").val();
+           	if($val==""||$val=="null"){
+           		alert("站内信内容为空");
+           		return;
+           	}
+           	$val=$("[name=BANNER_CONTENT]").val();
+           	if($val==""||$val=="null"){
+           		alert("banner内容为空");
+           		return;
+           	}
+           	$val=$("[name=BANNER_BTN_CONTENT]").val();
+           	if($val==""||$val=="null"){
+           		alert("按钮文案为空");
+           		return;
+           	}
+
+           	var bannerBtnUrlType = $("[name=BANNER_BTN_URL_TYPE]").val();
+            if(bannerBtnUrlType == 'URL'){
+	           	$val = $("[name=BANNER_BTN_URL]").val()//链接地址校验
+	           	if($val==""||$val=="null"){
+	           		alert("banner链接地址为空");
+	           		return;
+	           	}
+            }
+
+           	$val=$("[name=strategyCycle]").val();
+           	if($val==""||$val=="null"||$val==0){
+           		alert("触发有效期为空");
+           		return;
+           	}
+           	if($val<1||$val>7){
+           		alert("触发有效期不符合要求");
+           		return;
+           	}
+
+           	$val=$("[name=touchCount]").val();
+           	if($val==""||$val=="null"||$val==0){
+           		alert("限制配置为空");
+           		return;
+           	}
+
+           	$val=$("[name=touchTimeCount]").val();
+           	if($val==""||$val=="null"||$val==0){
+           		alert("限制配置为空");
+           		return;
+           	}
+
+           	if($val<1||$val>10){
+           		alert("限制配置不符合要求");
+           		return;
+           	}
+           	var awardRes = $("[name=AWARD_CONTENT]").next().html();
+           	if(awardRes!=null){
+           		if(awardRes!=""&&awardRes!="null"){
+               		alert(awardRes);
+               		return;
+               	}
+           	}
+        	var dataFormat=/^((((1[6-9]|[2-9]\d)\d{2})-(0?[13578]|1[02])-(0?[1-9]|[12]\d|3[01]))|(((1[6-9]|[2-9]\d)\d{2})-(0?[13456789]|1[012])-(0?[1-9]|[12]\d|30))|(((1[6-9]|[2-9]\d)\d{2})-0?2-(0?[1-9]|1\d|2[0-8]))|(((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))-0?2-29-))(\s(([01]\d{1})|(2[0123])):([0-5]\d):([0-5]\d))?$/;
+           	var startTime=$("#startTime").val();
+           	var endTime=$("#endTime").val();
+           	if(startTime!=""&&startTime!="null"&&startTime!=null){
+           		if (!dataFormat.test(startTime)) {
+            		alert("上线时间请输入正确的时间")
+            		return;
+            	}
+           	}
+           	if(endTime!=""&&endTime!="null"&&endTime!=null){
+           		if (!dataFormat.test(endTime)) {
+            		alert("下线时间请输入正确的时间")
+            		return;
+            	}
+           	}
+
+           	if(startTime!=""&&startTime!="null"&&startTime!=null&&endTime!=""&&endTime!="null"&&endTime!=null){
+	           	var start=new Date(startTime.replace("-", "/").replace("-", "/"));
+	           	var end=new Date(endTime.replace("-", "/").replace("-", "/"));
+	           	if(end<start){
+	           		alert("下线时间不得小于上线时间")
+	        		return;
+	           	}
+           	}
+
+        	if(globalConfig.addStrategyType=="add"){
+        		param=encodeURI(param);
+        		$.post(globalConfig.basePath + "/strategy/insert","a=a"+param,function(data){
+        			alert(data.message);
+        			if(data.code=="000"){
+        			window.location.href=globalConfig.basePath +"/strategyIndex/strategyListLevel2";
+        			}
+        		},"json")
+        	}else{
+        		var strategyId=globalConfig.strategyId;//策略id
+        		var touchContentId="";//触发内容id
+        		var touchWayId="";//触达id
+        		param+="&strategyId="+strategyId;
+        		param+="&touchContentId="+touchContentId;
+        		param+="&touchWayId="+touchWayId;
+        		param=encodeURI(param);
+        		$.post(globalConfig.basePath + "/strategy/update","a=a"+param,function(data){
+                    alert(data.message);
+                    if(data.code=="000"){
+            			window.location.href=globalConfig.basePath +"/strategyIndex/strategyListLevel2";
+            			}
+        		},"json")
+        	}
+        })
+    });
+
+
+</script>
+
+
+</body>
+</html>

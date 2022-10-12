@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>事件类型配置</title>
+    <link href="${cssRoot}/bootstrap.min.css" rel="stylesheet">
+    <link href="${cssRoot}/../font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="${cssRoot}/../font-awesome/css/select2.min.css" rel="stylesheet">
+
+    <!-- FooTable -->
+    <link href="${cssRoot}/plugins/footable/footable.core.css" rel="stylesheet">
+
+    <link href="${cssRoot}/animate.css" rel="stylesheet">
+    <link href="${cssRoot}/style.css?rand=${random}" rel="stylesheet">
+    <link href="${cssRoot}/styleT.css?rand=${random}" rel="stylesheet">
+    <style>
+        ul,li{
+            list-style:none;
+        }
+    </style>
+    <script>
+        var globalConfig = {
+            basePath: "${ctx}",
+            staticRoot: "${staticRoot}",
+            loginName: "${Session.sessionUser.loginName}"
+        };
+    </script>
+</head>
+<body ng-app="eventConfig" ng-controller="eventConfigController">
+<div id="wrapper">
+    <div class="header-box">
+        <#include "/common/top.html" encoding="UTF-8" />
+    </div>
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse"  style="height: 675px;overflow-y: scroll;">
+            <#include "/common/left.html" encoding="UTF-8" />
+        </div>
+    </nav>
+</div>
+<div class="content-box">
+    <div class="small-content">
+        <!-- 第一部分 -->
+        <div class="small-boxb col-md-12">
+            <a class="ivr-button btn btn-danger btn-rounded btn-gradient btn-gradienta" ng-click="showAddEventConfig()">
+                <i class="fa fa-plus-square-o"></i>
+                <span>新增事件类型</span>
+            </a>
+            <a class="ivr-button btn btn-danger btn-rounded btn-gradient btn-gradienta" ng-click="showEventConfigPriorityShow()">
+                <i class="fa fa-plus-square-o"></i>
+                <span>事件通知优先级排序</span>
+            </a>
+            <a class="ivr-button btn btn-danger btn-rounded btn-gradient btn-gradienta" ng-click="showEventConfigPriorityShow2()">
+                <i class="fa fa-plus-square-o"></i>
+                <span>日历标注优先级</span>
+            </a>
+        </div>
+        <!-- 第一部分完 -->
+
+        <!--第二部分-->
+        <div class="small-boxb col-md-12">
+            <div class="boxb-a">
+                <p style="margin-top:20px;">渠道：
+                    <select class="chosen-select" style="width:255px;" tabindex="2" ng-model="search.channel">
+                        <option value="qb">钱包</option>
+                        <option value="wk">悟空</option>
+                        <option value="jq">机器人</option>
+                    </select>
+                </p>
+            </div>
+
+            <div class="boxb-a">
+                <p style="margin-top:20px;">是否生效：
+                    <select class="chosen-select" style="width:255px;" tabindex="2" ng-model="search.isEffect">
+                        <option value="">全部</option>
+                        <option value="1">是</option>
+                        <option value="0">否</option>
+                    </select>
+                </p>
+            </div>
+            <div class="boxb-c">
+                <p>
+                    <a class="btn btn-success btn-rounded btn-blueW btn-blueWa"  ng-click="pageQueryEventConfig(1)"><i class="fa fa-search"></i> <span>查询</span></a>
+                    <a class="btn btn-success btn-rounded btn-blueW btn-blueWb"  ng-click="reset()"><i class="fa fa-refresh"></i> <span>重置</span></a>
+                </p>
+            </div>
+        </div>
+        <!--第二部分完-->
+
+        <!-- 第三部分 -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins" style="margin-top:10px;">
+                    <div class="ibox-content">
+                        <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>渠道</th>
+                                <th>事件类型名称</th>
+                                <th>icon图片</th>
+                                <th>日历标注类型</th>
+                                <th>生效状态</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="x in eventConfigList">
+                                <td>{{$index+1}}</td>
+                                <td>{{x.channel=='qb' && '玖富钱包' || x.channel=='wk' && '悟空理财' || x.channel=='jq' && '机器人'}}</td>
+                                <td>{{x.eventName}}</td>
+                                <td>{{x.iconUrl}}</td>
+                                <td>{{x.labelType=='0' && '无' || x.labelType=='1' && '右上角圆点' || x.labelType=='2' && '底部文字标注' || x.labelType=='3' && '底部图形标注'}}</td>
+                                <td>{{x.isEffect=='0' && '失效' || x.isEffect=='1' && '生效'}}</td>
+                                <td>
+                                    <span class="modify-start" ng-click="checkAndUpdate(x.id,1)">查看</span>
+                                    <span class="modify-start" ng-click="checkAndUpdate(x.id,2)">修改</span>
+                                    <span class="look-start" ng-show="x.isEffect=='1'" ng-click="effectOperation(0,x.id)">失效</span>
+                                    <span class="look-start" ng-show="x.isEffect=='0'" ng-click="effectOperation(1,x.id)">生效</span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="bottom-page">
+                            <div class="bottom-pageb">
+                                <i class="fa fa-step-backward" ng-click="pageQueryEventConfig(1)"></i>
+                                <i style="font-size:16px;" class="fa fa-caret-left" ng-click="pageQueryEventConfig(search.pageNo-1)"></i>
+                                <p>第<span class="pageN">{{search.pageNo}}</span class="commonN">共<span>{{search.pageCount}}</span>页</p>
+                                <i style="font-size:16px;" class="fa fa-caret-right" ng-click="pageQueryEventConfig(search.pageNo+1)"></i>
+                                <i style="margin-left:8px;" class="fa fa-step-forward" ng-click="pageQueryEventConfig(search.pageCount)"></i>
+                                <i class="fa fa-refresh" ng-click="pageQueryEventConfig(search.pageNo)"></i>
+                            </div>
+                            <div class="bottom-pagec">
+                                <p>显示<span>{{(search.pageNo-1)*search.perPageRowSize+1}}</span>到{{search.pageNo*search.perPageRowSize}}条，共<span>{{search.totalRowSize}}</span>记录
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 第三部分完 -->
+    </div>
+</div>
+<!--添加弹窗-->
+<div class="add-start-bg" id="showAddPopup">
+    <div class="add-start" style="height: 630px;margin-top: 90px;">
+        <h1>新增事件类型</h1>
+        <div class="start-a">
+            <p style="width: 150px;">渠道：<b style="color: red;">*</b></p>
+            <select style="width: 200px;" ng-model="eventParam.channel" ng-disabled="popupShow==1 || popupShow==2">
+                <option value="">全部</option>
+                <option value="qb">钱包</option>
+                <option value="wk">悟空</option>
+                <option value="jq">机器人</option>
+            </select>
+        </div>
+        <div class="start-b">
+            <p style="width: 150px;">事件类型名称：<b style="color: red;">*</b></p>
+            <input style="width: 200px;" type="text" maxlength="30" placeholder="30字符以内" ng-model="eventParam.eventName" ng-disabled="popupShow==1">
+        </div>
+        <div class="start-b">
+            <p style="width: 150px;">关联事件类型：<b style="color: red;">*</b></p>
+            <select style="width: 200px;" ng-model="eventParam.eventRule" ng-disabled="popupShow==1 || popupShow==2">
+                <option value="">请选择</option>
+                <option value="0">生日提醒</option>
+                <option value="1">用户添加提醒</option>
+                <option value="2">网贷续期</option>
+                <option value="3">网贷转让</option>
+                <option value="4">散标还款</option>
+                <option value="6">月账户</option>
+                <option value="5">自定义事件</option>
+            </select>
+        </div>
+
+        <div class="start-b">
+            <p style="width: 150px;">icon图片：<b style="color: red;">*</b></p>
+            <input type="file" id="addIcon" name="file" size="1" style="position:absolute;display: none;">
+            <input style="width:200px;" type="text" id="iconUrl" ng-model="eventParam.iconUrl" ng-disabled="popupShow==1">
+            <a class="btn btn-success btn-rounded btn-blueWa" id="image_prew" href="#" style="margin-left: 10px;" onclick="$('#addIcon').click();" ng-show="popupShow!=1"><span>点击上传</span></a>
+        </div>
+
+        <div class="start-b" style="margin-top: 10px;">
+            <p style="width: 150px;">日历标注类型: <b style="color: red;">*</b></p>
+            <select style="width: 200px;" ng-model="eventParam.labelType" ng-disabled="popupShow==1">
+                <option value="">请选择</option>
+                <option value="0">无</option>
+                <option value="1">右上角圆点</option>
+                <option value="2">底部文字标注</option>
+                <option value="3">底部图形标注</option>
+            </select>
+        </div>
+
+        <div class="start-b" ng-show="eventParam.labelType==1 || eventParam.labelType == 2">
+            <p style="width: 150px;">预设色值：<b style="color: red;" ng-show="eventParam.labelType == 2">*</b></p>
+            <select style="width: 200px;" ng-model="eventParam.colorValue" ng-disabled="popupShow==1">
+                <option value="">请选择</option>
+                <option value="#FF3747">红色</option>
+                <option value="#68BAFF">蓝色</option>
+                <option value="#FF8400">橙色</option>
+                <option value="#47DA7E">绿色</option>
+                <option value="#FFDE00">黄色</option>
+            </select>
+        </div>
+
+        <div class="start-b" ng-show="eventParam.labelType==2">
+            <p style="width: 150px;">文案: <b style="color: red;">*</b></p>
+            <input type="text" style="width: 200px;height:35px;" maxlength="3" placeholder="最多3个字符" ng-model="eventParam.text" ng-disabled="popupShow==1">
+        </div>
+
+        <div class="start-b" ng-show="eventParam.labelType==3">
+            <p style="width: 150px;">底部图片：<b style="color: red;">*</b></p>
+            <input type="file" id="addBottomPhoto" name="file" size="1" style="position:absolute;display: none;">
+            <input style="width:200px;" type="text" id="addBottomPhotoUrl"  ng-model="eventParam.bottomUrl" ng-disabled="popupShow==1">
+            <a class="btn btn-success btn-rounded btn-blueWa" id="image_prew_bottom" href="#" style="margin-left: 10px;" onclick="$('#addBottomPhoto').click();" ng-show="popupShow!=1"><span>点击上传</span></a>
+        </div>
+
+        <div class="bottom-btn">
+            <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="addOrUpEventConfig(0)" ng-show="popupShow==0">确定</a>
+            <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="addOrUpEventConfig(2)" ng-show="popupShow==2">修改</a>
+            <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" ng-click="cancelAddEventConfig()">取消</a>
+        </div>
+    </div>
+</div>
+
+<!--生效失效弹窗-->
+<div class="take-start-box" id="showIsEffectPopup">
+    <div class="take-start-small">
+        <p>你确定{{effectType==1 && '生效' || effectType==0 && '失效' }}吗？</p>
+        <div class="bottom-btn">
+            <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="commitEffect(effectType,effectId)">确定</a>
+            <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" ng-click="cancelEffect()">取消</a>
+        </div>
+    </div>
+</div>
+
+<!-- 优先级排序 -->
+<div class="priority-ranking" id="showPriority">
+    <div class="priority-ranking-small" style="margin-top: 220px;">
+
+        <h1 align="center">任务优先级排序</h1>
+        <div class="ranking-small">
+            <div class="ranking-smalla">优先级排序
+                <i id="downMove" class="fa fa-caret-down " ng-click="move('X')"></i>
+                <i id="upMove" class="fa fa-caret-up" ng-click="move('S')"></i>
+                <p><span style="color:#ff2327;">*</span>编号越大，优先级越低</p>
+            </div>
+            <div class="ranking-smallb">
+                <table class="footable" >
+                    <thead>
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <td class="tdNumber">优先级编号</td>
+                        <td>任务名称</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="x in strotList" style="border-collapse: collapse;">
+                        <td><input type="checkbox" class="moveCheckbox iptCheck"  value="{{$index+1}}"></td>
+                        <td class="tdNumber"><input type="hidden" ng-model="hehe.a">{{$index+1}}</td>
+                        <td><input type="hidden" ng-model="hehe.b">{{x.eventName}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="bottom-btn">
+            <a class="btn btn-danger btn-rounded bottom-btna" href="#" ng-click="moveCommit()">确定</a>
+            <a class="btn btn-danger btn-rounded bottom-btnb" href="#" ng-click="cancelPriority()">取消</a>
+        </div>
+    </div>
+</div>
+
+<!-- 日历优先级排序 -->
+<div class="priority-ranking" id="showCalendarPriority">
+    <div class="priority-ranking-small" style="margin-top: 220px;">
+        <h1 align="center">任务优先级排序</h1>
+        <div class="ranking-small">
+            <div class="ranking-smalla">优先级排序
+                <i id="downMove2" class="fa fa-caret-down " ng-click="move2('X')"></i>
+                <i id="upMove2" class="fa fa-caret-up" ng-click="move2('S')"></i>
+                <p><span style="color:#ff2327;">*</span>编号越大，优先级越低</p>
+            </div>
+            <div class="ranking-smalla">
+                标注类型：
+                <select style="width:200px;" ng-model="labelType" ng-change="priorityOperation()">
+                    <option value="">请选择</option>
+                    <option value="0">右上角圆点</option>
+                    <option value="1">底部</option>
+                </select>
+            </div>
+            <div class="ranking-smallb">
+                <table class="footable" >
+                    <thead>
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <td class="tdNumber">优先级编号</td>
+                        <td>任务名称</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="x in strotList" style="border-collapse: collapse;">
+                        <td><input type="checkbox" class="moveCheckbox iptCheck"  value="{{$index+1}}"></td>
+                        <td class="tdNumber"><input type="hidden" ng-model="hehe.a">{{$index+1}}</td>
+                        <td><input type="hidden" ng-model="hehe.b">{{x.eventName}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="bottom-btn">
+            <a class="btn btn-danger btn-rounded bottom-btna" href="#" ng-click="moveCalendarCommit()">确定</a>
+            <a class="btn btn-danger btn-rounded bottom-btnb" href="#" ng-click="cancelCalendarPriority()">取消</a>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="${jsRoot}/angular/angular.min.js"></script>
+<script src="${jsRoot}/plugins/laydate/laydate.js"></script>
+<!-- Mainly scripts -->
+<script src="${jsRoot}/jquery-2.1.1.js"></script>
+<script src="${jsRoot}/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="${jsRoot}/bootstrap.min.js"></script>
+<script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="${jsRoot}/plugins/jeditable/jquery.jeditable.js"></script>
+<!--下拉搜索-->
+<script src="${jsRoot}/plugins/jeditable/select2.full.min.js"></script>
+
+<!-- Data Tables -->
+<script src="${jsRoot}/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.responsive.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.tableTools.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="${jsRoot}/inspinia.js"></script>
+<script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.iframe-transport.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.ui.widget.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-process.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-validate.js"></script>
+<script src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+<script type="text/javascript" src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+<!--自定义js-->
+<script type="text/javascript" src="${jsRoot}/biz/calendar/calendarEventConfig.js?rand=${random}"></script>
+
+
+<script src="${jsRoot}/oms/ruleconfig/jquery.searchableSelect.js"></script>
+
+<script type="text/javascript" charset="utf-8">
+    $(function(){
+        $('.mySelect').select2();
+    })
+
+    var navHight = $('.navbar-static-side').height();
+    $('.navbar-static-side').css('height', navHight - 60);
+    $('.content-box').css('height', navHight - 60);
+    $("#menus li").removeClass("active");
+    $("#calendar-li").addClass("active");
+    $("#calendar-config").addClass("active");
+</script>
+
+<script>
+    $(function() {
+        $('.take-start-box').on('click', function () {
+            $('#imgShow').hide();
+        })
+    })
+
+    var stickStartTime = laydate({
+        elem:'#stickStartTime',
+        istime: true,
+        format: 'YYYY-mm-DD hh:mm:ss',
+        event:'click'
+    });
+</script>
+</body>
+</html>

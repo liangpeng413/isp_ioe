@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>公告位</title>
+    <link href="${cssRoot}/bootstrap.min.css" rel="stylesheet">
+    <link href="${cssRoot}/../font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <!-- FooTable -->
+    <link href="${cssRoot}/plugins/footable/footable.core.css" rel="stylesheet">
+
+    <link href="${cssRoot}/animate.css" rel="stylesheet">
+    <link href="${cssRoot}/style.css?rand=${random}" rel="stylesheet">
+    <link href="${cssRoot}/styleT.css?rand=${random}" rel="stylesheet">
+    <script>
+        var globalConfig = {
+            basePath: "${ctx}",
+            staticRoot: "${staticRoot}",
+            loginName: "${Session.sessionUser.loginName}"
+        };
+    </script>
+</head>
+<body ng-app="popupApp" ng-controller="popupController">
+<div id="wrapper">
+    <div class="header-box">
+        <#include "/common/top.html" encoding="UTF-8" />
+    </div>
+    <nav class="sidebar-collapse navbar-default navbar-static-side" role="navigation">
+        <div  style="height: 675px;overflow-y: scroll;">
+            <#include "/common/left.html" encoding="UTF-8" />
+        </div>
+    </nav>
+</div>
+<div class="content-box">
+    <div class="small-content">
+        <!-- 第一部分 -->
+        <div class="small-boxa">
+            <a class="btn btn-danger btn-rounded btn-gradient btn-gradienta" href="#" ng-click="addPopup()"><i class="fa fa-plus-square-o"></i>
+                <span>添加公告</span></a>
+            <a class="btn btn-danger btn-rounded btn-gradient btn-gradientb" href="#" ng-click="stort()"><i class="fa fa-outdent"></i> <span>优先级排序</span></a>
+        </div>
+        <!-- 第二部分 -->
+        <div class="small-boxb col-md-12">
+            <div class="boxb-a">
+                <p style="margin-top:20px;">渠道：
+                    <select class="chosen-select" style="width:120px;" tabindex="2" ng-model="search.productChannel" id='searchproductChannel'
+                            ng-change="getTypeVersionList(search.productChannel)">
+                        <option value="0">悟空理财APP</option>
+                        <option value="1">玖富钱包APP</option>
+                        <option value="2">悟空理财微信端</option>
+                    </select>
+                </p>
+                <p>是否上线：
+                    <select class="chosen-select" style="width:120px;" tabindex="2" ng-model="search.status">
+                        <option value="">全部</option>
+                        <option value="0">已上线</option>
+                        <option value="1">待上线</option>
+                        <option value="2">已下线</option>
+                    </select>
+                </p>
+            </div>
+
+            <div class="boxb-b">
+                <p>版本号：
+                    <select id="searchproductVersion" class="chosen-select" style="width:150px;" tabindex="2" ng-model="search.productVersion"
+                            ng-change="searchPostionCheck()">
+                        <option value="">全部</option>
+                        <option ng-repeat="x in typeVersionList" value="{{x.label}}">{{x.label}}</option>
+                        <!-- <option value="2.1">2.1</option>
+                        <option value="4.0">4.0</option> -->
+                    </select>
+                </p>
+                <p>是否生效：
+                    <select class="chosen-select" style="width:150px;" tabindex="2" ng-model="search.valid">
+                        <option value="">全部</option>
+                        <option value="0">无效</option>
+                        <option value="1">生效</option>
+                    </select>
+                </p>
+            </div>
+            <div class="boxb-c" style="text-align:right">
+                <p>是否登录：
+                    <select class="chosen-select" style="width:120px;" tabindex="2" ng-model="search.loginStatus" id="searchLoginStatus"
+                            ng-change="searchPostionCheck()">
+                        <!-- <option value="2">全部</option> -->
+                        <option value="">全部</option>
+                        <option value="1">已登录</option>
+                        <option value="0">未登录</option>
+                    </select>
+                </p>
+                <p>上线时间：
+                    <input id="searchonTime" type="text" style="width:120px;" class="input-date" ng-model="search.onTime">
+                </p>
+            </div>
+            <div class="boxb-c">
+                <p>是否审核：
+                    <select class="chosen-select" style="width:120px;" tabindex="2" ng-model="search.auditStatus">
+                        <option value="">全部</option>
+                        <option value="0">待审核</option>
+                        <option value="1">审核通过</option>
+                        <option value="2">审核失败</option>
+                    </select>
+                </p>
+                <p>公告标题：
+                    <input type="text" style="width:120px;" ng-model="search.title" id='searchTitle'>
+                </p>
+            </div>
+            <div class="boxb-c">
+                <p>公告位置：
+                    <select class="chosen-select" style="width:120px;" tabindex="2" ng-model="search.position" id="searchpositions">
+                        <option value="">全部</option>
+                        <option ng-repeat="x in positionsList" value="{{x.value}}">{{x.label}}</option>
+                    </select>
+                </p>
+                <p>
+                    <a class="btn btn-success btn-rounded btn-blueW btn-blueWa" href="#" ng-click="querySplashConfigList(1)"><i class="fa fa-search"></i> <span>搜索</span></a>
+                    <a class="btn btn-success btn-rounded btn-blueW btn-blueWb" href="#" ng-click="reset()"><i class="fa fa-refresh"></i> <span>重置</span></a>
+                </p>
+            </div>
+            <!--
+            <div class="boxb-d">
+                <p>
+                 <a class="btn btn-success btn-rounded btn-blueW btn-blueWa" href="#" ng-click="querySplashConfigList(1)"><i class="fa fa-search"></i> <span>搜索</span></a>
+                 <a class="btn btn-success btn-rounded btn-blueW btn-blueWb" href="#" ng-click ="reset()"><i class="fa fa-refresh"></i> <span>重置</span></a>
+                 </p>
+             </div> -->
+        </div>
+        <!-- 第二部分 -->
+        <!-- 第三部分 -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins" style="margin-top:10px;">
+                    <div class="ibox-content">
+                        <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+                            <thead>
+                            <tr>
+                                <!-- <th></th> -->
+                                <th>序号</th>
+                                <th>渠道产品</th>
+                                <th>版本号</th>
+                                <th>公告位位置</th>
+                                <th>标题</th>
+                                <th>优先级</th>
+                                <th ng-show="search.productChannel!=1">跳转链接</th>
+                                <th>上线时间</th>
+                                <th>下线时间</th>
+                                <th>上线状态</th>
+                                <th>是否生效</th>
+                                <!-- <th>最后修改时间</th>
+                                <th>修改人</th> -->
+                                <th>审核状态</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="x in splashConfigList">
+                                <td>{{$index+1}}</td>
+                                <td>{{x.productChannel==0 && '悟空理财APP' || x.productChannel==1 && '玖富钱包APP' || x.productChannel==2 &&
+                                    '悟空理财微信端'||x.productChannel}}
+                                </td>
+                                <!-- <td>{{x.productChannel}}</td> -->
+                                <td>{{x.productVersion}}</td>
+                                <!--  <td>{{x.positions=='0' && '首页' || x.positions=='1' && '玖富宝' || x.positions=='2' && '出借页' || x.positions=='3' && '网贷页' || x.positions=='4' && '股票页' }}</td> -->
+                                <td>{{x.label}}</td>
+                                <td>{{x.title}}</td>
+                                <td>{{x.priority}}</td>
+                                <td ng-show="search.productChannel!=1"><p style="width:250px;line-height: 20px;margin-top: 20px;word-wrap: break-word;">
+                                    {{x.redirectUrl}}
+                                    <p></td>
+                                <td>{{x.onlineTime| date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                                <td>{{x.offlineTime| date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                                <td>{{x.status==0 && '已上线' || x.status==1 && '待上线' || x.status==2 && '已下线'}}</td>
+                                <td>{{x.valid=='0' && '未生效' || x.valid=='1' && '已生效'}}</td>
+                                <td>{{x.auditStatus==0 && '待审核' || x.auditStatus==1 && '审核通过' || x.auditStatus==2 && '审核失败'}}</td>
+                                <!--  <td>{{x.updateTime}}</td>
+                                 <td>{{x.operationPerson}}</td> -->
+                                <td>
+                                    <span class="look-start" ng-click="check(x)">查看</span>
+                                    <span class="modify-start" ng-click="update(x)">修改</span>
+                                    <span class="take-start" ng-click="preOperate(3,x)">{{x.valid=='0'?"生效":"失效"}}</span>
+                                    <a ng-if="x.auditStatus=='0' && loginName == x.auditNo" src="javaScript:void(0);" class="take-start"
+                                       ng-click="audit(x)">审核</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="bottom-page">
+                            <div class="bottom-pagea">
+                                <select style="width:58px;height:23px;" ng-model="search.pageSize" ng-change="querySplashConfigList(1)">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                </select>
+                            </div>
+                            <div class="bottom-pageb">
+                                <i class="fa fa-step-backward" ng-click="querySplashConfigList(1)"></i>
+                                <i style="font-size:16px;" class="fa fa-caret-left" ng-click="querySplashConfigList(search.pageNum-1)"></i>
+                                <p>第<span class="pageN">{{search.pageNum}}</span class="commonN">共<span>{{pages}}</span>页</p>
+                                <!-- <i style="margin-left:8px;" class="fa fa-angle-right"></i> -->
+                                <i style="font-size:16px;" class="fa fa-caret-right" ng-click="querySplashConfigList(search.pageNum+1)"></i>
+                                <i class="fa fa-step-forward" ng-click="querySplashConfigList(pages)"></i>
+                                <i class="fa fa-refresh" ng-click="querySplashConfigList(search.pageNum)"></i>
+                            </div>
+                            <div class="bottom-pagec">
+                                <p>显示<span>{{(search.pageNum-1)*search.pageSize+1}}</span>到{{search.pageNum*search.pageSize}}，共<span>{{total}}</span>记录</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 第三部分 -->
+    <!-- 添加公告 -->
+    <div class="add-start-bg" id="addShow">
+        <div class="add-start">
+            <h1 align="center">添加公告</h1>
+            <div class="start-a">
+                <p>渠道:</p>
+                <select ng-model="add.productChannel" id='addproductChannel' ng-change="getAddTypeVersionList(add.productChannel,2)">
+                    <!--	<option value="">--请选择--</option>
+                         <option ng-repeat="x in typeProductChannelList" value="{{x.value}}">{{x.label}}</option> -->
+                    <option value="0">悟空理财APP</option>
+                    <option value="1">玖富钱包APP</option>
+                    <option value="2">悟空理财微信端</option>
+                </select>
+                <h2>版本号：
+                    <span style="margin-left:10px;" ng-repeat="x in addTypeVersionList" ng-model="add.productVersion">
+            		<input type="checkbox" class="versionCheckbox checkAll" value="{{x.label}}" ng-click="addversionCheckbox()">{{x.label}}
+            </span>
+                </h2>
+            </div>
+            <div class="start-a">
+                <p>登录状态:</p>
+                <!-- <input type="radio" id="addLoginStatus0"  checked name="addLoginStatus" value='1'  class="checkAll" ng-click="addLoginStatus(1)"/> 已登录
+                <input type="radio" id="addLoginStatus1"  name="addLoginStatus" value='0' class="checkAll" style="margin-left:30px;" ng-click="addLoginStatus(0)"/>未登录 -->
+                <select ng-model="add.loginStatus" id='addLoginStatus' ng-change="addLoginStatus(add.loginStatus)">
+                    <option value="">--请选择--</option>
+                    <option value="2">全部</option>
+                    <option value="0">未登录</option>
+                    <option value="1"> 已登录</option>
+                </select>
+            </div>
+
+            <div class="start-b">
+                <p>公告位置:</p>
+                <span style="margin-left:10px;" ng-repeat="x in addPositionsList" ng-model="add.productPostion">
+            		<input type="checkbox" class="postionCheckbox checkAll" value="{{x.value}}">{{x.label}}
+                    <!-- {{($index+1)%2==0 &&  "<br>"}} -->
+            		</span>
+            </div>
+
+            <div class="start-d" style="margin-top: 0px">
+                <p>公告标题:</p>
+                <input style="width:368px;" type="text" maxlength="30" placeholder="必填，30字符以内" ng-model="add.title" id="addTitle">
+            </div>
+
+            <div class="start-d" id="addAnnouncementContent" ng-show="add.productChannel==1" style="position: relative;">
+                <p style="position: relative;bottom: 615px;">公告内容:</p>
+                <!--<input style="width:368px;" type="text" maxlength="30" placeholder="选填，30字符以内" ng-model="add.announcementDesc" id="addAnnouncementDesc">-->
+                <textarea id="addAnnouncementDesc" style="resize:none;width: 390px;height: 630px;overflow-y: scroll;" placeholder="玖富钱包公告配置请填写此栏，5000字以内"
+                          maxlength="5000" ng-model="add.announcementDesc"></textarea>
+
+                <a class="btn btn-danger btn-rounded btn-gradient btn-gradienta" style="position: absolute; top: 0; right: 20px;" href="#"
+                   onclick="previewPopup()">预览</a>
+                    <!--<input type="button" value="" ng-click="()" style="width: 200px">-->
+            </div>
+
+            <div class="start-e" id="addRedirectUrl" ng-show="add.productChannel!=1">
+                <p>跳转链接:</p>
+                <input style="width:368px;" type="text" ng-model="add.redirectUrl" placeholder="悟空理财公告配置，请填写此栏">
+            </div>
+            <div class="start-f">
+                <p>上线时间:</p>
+                <input type="text" id="queryOnlineTime" ng-model="add.onlineTime">
+                <p>下线时间:</p>
+                <input type="text" id="queryOfflineTime" ng-model="add.offlineTime">
+            </div>
+            <div class="start-g">
+                <p>是否生效:</p>
+                <select ng-model="add.valid">
+                    <option value="1">生效</option>
+                    <option value="0">失效</option>
+                </select>
+            </div>
+            <div class="start-h">
+                <p>展示人群：</p>
+                <input id="all" name="wb" type="checkbox" class="checkAll" value="0" checked="checked" ng-click="completeAll()">全部
+            </div>
+            <div class="start-g">
+                <p></p>
+                <input type="checkbox" id="white" name="wb" class="checkAll" value="1">白名单
+                <select ng-model="add.whiteId" style="width:286px;margin-left:10px;" id="selectaddwhiteId">
+                    <option value="">请选择</option>
+                    <!-- <option value="{{x.id}}" ng-repeat="x in whiteList" >{{x.listName}}</option> -->
+                    <option value="{{x.id}}" ng-repeat="x in whiteList_qb" ng-if="add.productChannel=='1'">{{x.listName}}</option>
+                    <option value="{{x.id}}" ng-repeat="x in whiteList_wk" ng-if="add.productChannel != '1'">{{x.listName}}</option>
+                </select>
+            </div>
+            <div class="start-j">
+                <p></p>
+                <input type="checkbox" id="black" name="wb" class="checkAll" value="2">黑名单
+                <select ng-model="add.blackId" id="selectaddblackId">
+                    <option value="">请选择</option>
+                    <!-- <option value="{{x.id}}" ng-repeat="x in blackList">{{x.listName}}</option> -->
+                    <option value="{{x.id}}" ng-repeat="x in blackList_qb" ng-if="add.productChannel=='1'">{{x.listName}}</option>
+                    <option value="{{x.id}}" ng-repeat="x in blackList_wk" ng-if="add.productChannel!='1'">{{x.listName}}</option>
+                </select>
+            </div>
+            <div class="start-f">
+                <p>审核人：</p>
+                <span style="margin-left: -5px;">
+	          <select class="interests" ng-model="add.auditPerson" ng-options="x.name for x in auditPersionList">
+	            <option value="">请选择</option>
+	          </select>
+	      	</span>
+                <p>提审说明：</p><span><input ng-model="add.requestAuditDescription" style="width:180px;" class="interests" type="text" maxlength="18"
+                                         placeholder="选填，18个汉字以内"></span>
+            </div>
+            <div class="bottom-btn">
+                <a class="btn btn-danger btn-rounded bottom-btna start-btna" id="screenTJ" href="#" ng-click="commitScreen()">确定</a>
+                <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#">取消</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 添加公告 -->
+<!-- 优先级排序 -->
+<div class="priority-ranking" id="showPriority">
+    <div class="priority-ranking-small">
+
+        <h1>公告优先级排序</h1>
+        <div class="ranking-small">
+            <div class="ranking-smalla">优先级排序
+                <i id="downMove" class="fa fa-caret-down " ng-click="move('X')"></i>
+                <i id="upMove" class="fa fa-caret-up" ng-click="move('S')"></i>
+                <!--   <i class="fa fa-times" ng-click="remove()"></i> -->
+                <p><span style="color:#ff2327;">*</span>编号越大，优先级越低</p>
+            </div>
+            <div class="ranking-smallb">
+                <!--  <table class="footable table table-stripped"  style="border-collapse: collapse;" data-page-size="8" data-filter=#filter> -->
+                <table class="footable">
+                    <thead>
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <td class="tdNumber">优先级编号</td>
+                        <td>公告标题</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="x in strotList" style="border-collapse: collapse;">
+                        <td><input type="checkbox" class="moveCheckbox iptCheck" value="{{$index+1}}"></td>
+                        <td class="tdNumber"><input type="hidden" ng-model="hehe.a">{{$index+1}}</td>
+                        <td><input type="hidden" ng-model="hehe.b">{{x.title}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="bottom-btn">
+            <a class="btn btn-danger btn-rounded bottom-btna" href="#" ng-click="moveCommit()">确定</a>
+            <a class="btn btn-danger btn-rounded bottom-btnb" href="#" ng-click="moveCancel()">取消</a>
+        </div>
+    </div>
+</div>
+
+<div class="add-start-bg" id="preview">
+    <div class="add-start" style="width: 800px; height: 1440px;">
+        <a class="btn" style="float: right;" href="#" onclick="$('#preview').hide();">关闭</a>
+        <h2 align="center" class="preview-title" style="width: 100%; margin-left: 0;color:black"></h2>
+        <h5 class="preview-time" style="text-align: center;"></h5>
+        <pre class="preview-desc" style="background: #fff;margin-left: 25px; width: 750px; white-space: pre-wrap; word-wrap: break-word; height: 1334px;"></pre>
+    </div>
+</div>
+<!-- 优先级排序 -->
+<!-- 查看公告详情 -->
+<div class="look-start-box" id="showPopupCheck">
+    <div class="add-look-start">
+        <h1 align="center">公告位详情</h1>
+        <div class="look-start-a">
+            <p>渠道：</p>
+            <span>{{showPopup.productChannel==0 && "悟空理财app" || showPopup.productChannel==1 && "玖富钱包app" || showPopup.productChannel==2 && "悟空理财微信端" || "其他"}}</span>
+            <p style="margin-left:90px;">版本号：</p>
+            <span>{{showPopup.productVersion}}</span>
+        </div>
+
+        <div class="look-start-c">
+            <p>登录状态：</p>
+            <span>{{showPopup.loginStatus==1 && "已登录" || showPopup.loginStatus==0 && "未登录"  || showPopup.loginStatus==2 && "全部"}}</span>
+            <!-- <p style="margin-left:40px;">公告位置：</p>
+            <span>{{showPopup.label}}</span> -->
+            <p style="margin-left:115px;">优先级排序：</p>
+            <span>{{showPopup.priority}}</span>
+        </div>
+        <div class="look-start-d">
+            <p>公告位置：</p>
+            <span>{{showPopup.label}}</span>
+        </div>
+        <div class="look-start-b">
+            <p style="margin-top: 20px">公告标题：</p>
+            <span style="margin-top: 20px">{{showPopup.title}}</span>
+        </div>
+        <div class="look-start-b" ng-show="showPopup.productChannel==1">
+            <p>公告内容：</p>
+            <span style="width: 340px;">{{showPopup.announcementDesc}}</span>
+        </div>
+        <!--<div class="look-start-c">
+            <p>优先级排序：</p>
+            <span>{{showPopup.priority}}</span>
+          </div> -->
+
+        <div class="look-start-e" ng-show="showPopup.productChannel!=1">
+            <p>跳转链接：</p>
+            <span style="width:385px;line-height: 20px;word-wrap: break-word;">{{showPopup.redirectUrl}}</span>
+        </div>
+
+        <div class="look-start-f">
+            <p style="margin-left:50px;">上线时间：</p>
+            <span>{{showPopup.onlineTime}}</span>
+
+            <p>下线时间：</p>
+            <span>{{showPopup.offlineTime}}</span>
+        </div>
+        <div class="look-start-g">
+            <p>是否生效：</p>
+            <!-- <span>{{showPopup.displayPeriod}}s</span>
+            <p style="margin-left:190px;">是否生效：</p> -->
+            <span>{{showPopup.valid==0 && "失效"||"生效"}}</span>
+        </div>
+        <div class="look-start-h">
+            <p>展示人群：</p>
+            <span>{{showPopup.showType==0 && "全部" || showPopup.showType==1 && "白名单" || showPopup.showType==2 && "黑名单"|| showPopup.showType==3 && "黑白名单" ||"其他"}}</span>
+        </div>
+        <div class="look-start-i">
+            <p>最后修改时间：</p>
+            <span>{{showPopup.updateTime}}</span>
+            <p>修改人：</p>
+            <span>{{showPopup.operationPerson}}</span>
+        </div>
+        <div class="look-start-i">
+            <!--  <p>提审人：</p>
+             <span>{{showPopup.requestAuditPersion}}</span> -->
+            <p>提审说明：</p>
+            <span>{{showPopup.requestAuditDescription}}</span>
+        </div>
+        <div class="look-start-i">
+            <p>审核结果：</p>
+            <span>{{showPopup.auditStatus==0 && '待审核' || showPopup.auditStatus==1 && '审核通过' || showPopup.auditStatus==2 && '审核失败'}}</span>
+        </div>
+        <div class="look-start-i">
+            <!--  <p>提审时间：</p>
+             <span>{{showPopup.requestAuditTime}}</span> -->
+            <p>审核人：</p>
+            <span>{{showPopup.auditPerson}}</span>
+        </div>
+        <div class="look-start-i">
+            <p>审核时间：</p>
+            <span>{{showPopup.auditTime}}</span>
+            <p>审核描述：</p>
+            <span>{{showPopup.auditDescription}}</span>
+        </div>
+        <div class="look-start-j">
+            <p>创建时间：</p>
+            <span>{{showPopup.createTime}}</span>
+            <p>创建人：</p>
+            <span>{{showPopup.createPerson}}</span>
+        </div>
+        <div class="bottom-btn">
+            <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="checkOKAndNO()">关闭</a>
+        </div>
+        <!-- <div class="bottom-btn">
+          <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="checkOKAndNO()">确定</a>
+          <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" ng-click="checkOKAndNO()">取消</a>
+        </div> -->
+    </div>
+</div>
+</div>
+<!-- 查看公告详情 -->
+<!-- 修改公告详情 -->
+<div class="modify-start-box" id="showUpdate">
+    <div class="add-start">
+        <h1 align="center">修改公告位</h1>
+        <div class="start-a">
+            <p>渠道:</p>
+            <span>{{updateScene.productChannel==0 && "悟空理财app" || updateScene.productChannel==1 && "玖富钱包app" || updateScene.productChannel==2 && "悟空理财微信端" || "其他"}}</span>
+            <h2>版本号：
+                <span>{{updateScene.productVersion}}</span>
+            </h2>
+        </div>
+        <div class="start-a">
+            <p>登录状态：</p>
+            <span>{{updateScene.loginStatus==1 && "已登录" || updateScene.loginStatus==0 && "未登录" || updateScene.loginStatus==2 && "全部"}}</span>
+            <h2>公告位置：
+                <span>{{updateScene.label}}</span>
+            </h2>
+        </div>
+        <div class="start-d" style="margin: 0;">
+            <p>公告标题:</p>
+            <input style="width:368px;" type="text" maxlength="30" placeholder="必填，30字符以内" ng-model="updateScene.title" id="updateTitle">
+        </div>
+        <div class="start-b" ng-show="updateScene.productChannel==1">
+            <p style="position: relative;bottom: 615px;">公告内容:</p>
+            <!--<input style="width:368px;" type="text" maxlength="30" placeholder="选填，30字符以内" ng-model="updateScene.announcementDesc">-->
+            <textarea id="updateAnnouncementDesc" style="resize:none;width: 390px;height: 630px;overflow-y: scroll;" placeholder="5000以内" maxlength="5000"
+                      ng-model="updateScene.announcementDesc">></textarea>
+        </div>
+
+        <div class="start-e" ng-show="updateScene.productChannel!=1">
+            <p>跳转链接</p>
+            <input style="width:368px;" type="text" ng-model="updateScene.redirectUrl">
+        </div>
+        <div class="start-f">
+            <p>上线时间</p>
+            <input type="text" id="updateOnlineTime" ng-model="updateScene.onlineTime">
+            <p>下线时间</p>
+            <input type="text" id="updateOfflineTime" ng-model="updateScene.offlineTime">
+        </div>
+        <div class="start-g">
+            <p>是否生效</p>
+            <!-- <input type="text" ng-model="updateScene.displayPeriod">
+            <span>是否生效</span> -->
+            <select id="" ng-model="updateScene.valid">
+                <option value="1">生效</option>
+                <option value="0">失效</option>
+            </select>
+        </div>
+        <div class="start-h">
+            <p>展示人群：</p>
+            <input type="checkbox" id="editall" class="updateCheckbox checkAll" value="0" checked="checked" ng-click="editAll()">全部
+        </div>
+        <div class="start-i">
+            <p></p>
+            <input type="checkbox" id="editwhite" class="updateCheckbox checkAll" value="1">白名单
+            <select ng-model="updateScene.whiteId" id="editselectaddwhiteId">
+                <option value="0">请选择</option>
+                <!--  <option value="{{x.id}}" ng-repeat="x in editwhiteList" >{{x.listName}}</option> -->
+                <option value="{{x.id}}" ng-repeat="x in editwhiteList_qb" ng-show="updateScene.productChannel=='1'">{{x.listName}}</option>
+                <option value="{{x.id}}" ng-repeat="x in editwhiteList_wk" ng-show="updateScene.productChannel != '1'">{{x.listName}}</option>
+            </select>
+        </div>
+        <div class="start-j">
+            <p></p>
+            <input type="checkbox" id="editblack" class="updateCheckbox checkAll" value="2">黑名单
+            <select ng-model="updateScene.blackId" id="editselectaddblackId">
+                <option value="0">请选择</option>
+                <!--  <option value="{{x.id}}" ng-repeat="x in editblackList">{{x.listName}}</option> -->
+                <option value="{{x.id}}" ng-repeat="x in editblackList_qb" ng-if="updateScene.productChannel=='1'">{{x.listName}}</option>
+                <option value="{{x.id}}" ng-repeat="x in editblackList_wk" ng-if="updateScene.productChannel!='1'">{{x.listName}}</option>
+
+            </select>
+        </div>
+        <div class="start-f">
+            <p>审核人：</p>
+            <span style="margin-left: -5px;">
+          <select class="interests" ng-model="updateScene.auditPerson" ng-options="x.name for x in auditPersionList">
+            <option value="">请选择</option>
+          </select>
+      	</span>
+            <p>提审说明：</p><span><input ng-model="updateScene.requestAuditDescription" style="width:180px;" class="interests" type="text" maxlength="18"
+                                     placeholder="选填，18个汉字以内"></span>
+        </div>
+        <div class="bottom-btn">
+            <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="confirmUpdate()">确定</a>
+            <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" ng-click="updateCancel()">取消</a>
+        </div>
+    </div>
+</div>
+</div>
+<!-- 修改公告详情 -->
+<!-- 失效公告详情 -->
+<!-- <div class="take-start-box" id="showStart">
+  <div class="take-start-small">
+    <p>您确定要{{start.startValid==0 && "生效" || start.startValid==1 && "失效"}}公告吗？</p>
+    <div class="bottom-btn">
+      <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="confirmStart(start.id,start.startValid)">确定</a>
+      <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" ng-click="cancelStart()">取消</a>
+    </div>
+  </div>
+</div> -->
+<!-- 失效公告位详情 -->
+<div class="take-start-box" id="showStart">
+    <div class="take-start-small">
+        <p>您确定要{{isValid==0 && "生效" || isValid==1 && "失效"}}该公告位吗？</p>
+        <div class="bottom-btn">
+            <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="start(id,isValid,SequenceId)">确定</a>
+            <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" ng-click="cancel()">取消</a>
+        </div>
+    </div>
+</div>
+
+<!--  审核 -->
+<div class="take-start-box" id="auditShow">
+    <div class="take-start-small newTakeEffect">
+        <h2>审核</h2>
+        <ul class="isEffect">
+            <li><p>审核结果：</p>
+                <select id="auditStatus" ng-model="auditStatus">
+                    <option value="1">审核通过</option>
+                    <option value="2">审核不通过</option>
+                </select>
+            </li>
+            <li class="PosiText"><p>审核描述：</p><textarea id="auditDescription" ng-model="auditDescription" maxlength="32" cols="25" rows="4"
+                                                       placeholder="选填，32字符以内"></textarea></li>
+        </ul>
+        <div class="bottom-btn">
+            <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="confirm()">确定</a>
+            <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" onclick="$('.take-start-box').hide();">取消</a>
+        </div>
+    </div>
+</div>
+
+<div class="take-start-box" id="takeEffect">
+    <div class="take-start-small newTakeEffect">
+        <h2>{{effectRecord.valid=='1' && '失效' || effectRecord.valid=='0' && '生效'}}提示</h2>
+        <ul class="isEffect">
+            <li><p>审核人</p>
+                <!--  <select id="validConfirmUser" ng-model="validConfirmUser">
+                     <option value="">请选择</option>
+                   <option value="{{x.no}}-{{x.email}}" ng-repeat="x in auditPersionList">{{x.name}}</option> -->
+                <select class="interests" ng-model="effectRecord.auditPerson" ng-options="x.name for x in auditPersionList">
+                    <option value="">请选择</option>
+                </select>
+            </li>
+            <li class="PosiText"><p>审核说明</p><textarea id="requestAuditDescription" ng-model="effectRecord.requestAuditDescription" cols="25" rows="4"
+                                                      placeholder="选填，30字符以内"></textarea></li>
+        </ul>
+        <div class="bottom-btn">
+            <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="validateRecord()">确定</a>
+            <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" onclick="$('.take-start-box').hide();">取消</a>
+        </div>
+    </div>
+</div>
+</div>
+
+
+<script src="${jsRoot}/angular/angular.min.js"></script>
+<script src="${jsRoot}/plugins/laydate/laydate.js"></script>
+<!-- Mainly scripts -->
+<script src="${jsRoot}/jquery-2.1.1.js"></script>
+<script src="${jsRoot}/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="${jsRoot}/bootstrap.min.js"></script>
+<script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="${jsRoot}/plugins/jeditable/jquery.jeditable.js"></script>
+
+<!-- Data Tables -->
+<script src="${jsRoot}/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.responsive.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.tableTools.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="${jsRoot}/inspinia.js"></script>
+<script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.iframe-transport.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.ui.widget.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-process.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-validate.js"></script>
+<script src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+<script src="${jsRoot}/oms/announcement.js?rand=${random}"></script>
+<script>
+    /*$(document).ready(function(){
+      function onMenuClick(){
+          $("#menus li").removeClass("active");
+            $("#announcement").addClass("active");
+      }
+      onMenuClick();
+    });*/
+    /*var navHight = $('.navbar-static-side').height()
+    $('.navbar-static-side').css('height', navHight - 60)
+    $('.content-box').css('height', navHight - 60)*/
+    // 添加公告
+    $('.btn-gradienta').click(function () {
+        /*$('.add-start-bg').show()
+       $('.start-btna').click(function(){
+        $('.add-start-bg').hide()
+      }) */
+        $('.start-btnb').click(function () {
+            $('.add-start-bg').hide()
+        })
+    })
+    // 优先级排序
+    $('.btn-gradientb').click(function () {
+        /* $('.priority-ranking').show()
+        $('.bottom-btna').click(function(){
+          $('.priority-ranking').hide()
+        }) */
+        $('.bottom-btnb').click(function () {
+            $('.priority-ranking').hide()
+        })
+    })
+    // 查看公告
+    $('.look-start').click(function () {
+        // $('.look-start-box').show()
+        $('.bottom-btna').click(function () {
+            $('.look-start-box').hide()
+        })
+        /* $('.bottom-btnb').click(function(){
+          $('.look-start-box').hide()
+        }) */
+    })
+    // 修改公告
+    $('.modify-start').click(function () {
+        $('.modify-start-box').show()
+        $('.bottom-btna').click(function () {
+            $('.modify-start-box').hide()
+        })
+        $('.bottom-btnb').click(function () {
+            $('.modify-start-box').hide()
+        })
+    })
+    // 失效公告
+    $('.take-start').click(function () {
+        $('.take-start-box').show()
+        $('.bottom-btna').click(function () {
+            $('.take-start-box').hide()
+        })
+        $('.bottom-btnb').click(function () {
+            $('.take-start-box').hide()
+        })
+    })
+
+    var searchonlineTime = laydate({
+        elem: '#searchonTime',
+        istime: true,
+        format: 'YYYY-mm-DD',
+        event: 'click'
+    })
+
+    var queryOnlineTime = laydate({
+        elem: '#queryOnlineTime',
+        istime: true,
+        format: 'YYYY-mm-DD hh:mm:ss',
+        event: 'click'
+    })
+
+    var queryOfflineTime = laydate({
+        elem: '#queryOfflineTime',
+        istime: true,
+        format: 'YYYY-mm-DD hh:mm:ss',
+        event:'click',
+        type:'datetime',
+        ready:function (date) {
+            if(!$.trim($("#queryOfflineTime").val())){
+                this.datetime.hour=23;
+                this.datetime.hour=59;
+                this.datetime.hour=59;
+
+            }
+
+        },
+        choose: function(dates){ //选择好日期的回调
+            var offlineTimes = dates.split(" ");
+            var time = offlineTimes[1].split(":");
+            if(time[0]==00&&time[1]==00&&time[2]==00){
+                var miniTime="23:59:59";
+                $("#queryOfflineTime").val(offlineTimes[0]+" "+miniTime);
+            }
+        }
+    })
+
+    var updateOnlineTime = laydate({
+        elem: '#updateOnlineTime',
+        istime: true,
+        format: 'YYYY-mm-DD hh:mm:ss',
+        event: 'click'
+    })
+
+    var updateOfflineTime = laydate({
+        elem: '#updateOfflineTime',
+        istime: true,
+        format: 'YYYY-mm-DD hh:mm:ss',
+        event: 'click'
+    })
+
+    var previewPopup = function () {
+        $('#preview').show();
+        $('.preview-desc').html($("#addAnnouncementDesc").val());
+        $('.preview-title').html($("#addTitle").val())
+        $('.preview-time').html($("#queryOnlineTime").val())
+    };
+
+</script>
+</body>
+</html>

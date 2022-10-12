@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:text-align="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>数据统计</title>
+    <link href="${cssRoot}/bootstrap.min.css" rel="stylesheet">
+    <link href="${cssRoot}/../font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <!-- FooTable -->
+    <link href="${cssRoot}/plugins/footable/footable.core.css" rel="stylesheet">
+
+    <link href="${cssRoot}/animate.css" rel="stylesheet">
+    <link href="${cssRoot}/style.css?rand=${random}" rel="stylesheet">
+    <link href="${cssRoot}/styleT.css?rand=${random}" rel="stylesheet">
+
+    <script>
+        var globalConfig = {
+            basePath: "${ctx}",
+            staticRoot: "${staticRoot}",
+            loginName: "${Session.sessionUser.name}",
+            loginId:"${Session.sessionUser.loginName}"
+        };
+    </script>
+</head>
+<body ng-app="data_statistics" ng-controller="data_statistics_controller">
+<div id="wrapper">
+    <div class="header-box">
+        <#include "/common/top.html" encoding="UTF-8" />
+    </div>
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse"  style="height: 675px;overflow-y: scroll;">
+            <#include "/common/left.html" encoding="UTF-8" />
+        </div>
+    </nav>
+</div>
+<div class="content-box">
+    <div class="small-content">
+        <!-- 第一部分 -->
+        <form id="conditionForm2">
+        <div class="small-boxa">
+            <a class="btn btn-danger btn-rounded btn-gradient btn-gradienta" href="${ctx}/smart_marketing/data/to_page" ><i
+                    class="fa fa-plus-square-o"></i> <span>查看全部数据分析</span></a>
+        <span>统计周期:</span>
+
+            <select class="chosen-select" name="statisticsType" style="width:120px;" tabindex="2" ng-model="search.statisticsType">
+                <!-- <option ng-repeat="x in typeProductChannelList" value="{{x.value}}">{{x.label}}</option> -->
+                <option value="D">天</option>
+                <option value="W">周</option>
+                <option value="Y">月</option>
+            </select>
+
+        </div>
+        <!-- 第二部分 -->
+        <div class="small-boxb col-md-12">
+
+            <div class="boxb-a">
+                <p style="margin-top:20px;">理财渠道:
+                    <select class="chosen-select" style="width:120px;" tabindex="2" ng-model="search.channelCode"
+                            id='searchproductChannel'>
+                        <!-- <option ng-repeat="x in typeProductChannelList" value="{{x.value}}">{{x.label}}</option> -->
+                        <option value="QB">玖富钱包</option>
+                        <option value="WK">悟空理财</option>
+                    </select>
+                </p>
+
+
+            </div>
+
+            <div class="boxb-c">
+                <p>时间筛选：
+                    <input type="text" id="startTime1" style="width: 160px;" autocomplete="off"
+                           ng-model="search.startTime"/> - <input type="text" id="endTime1"
+                                                                     style="width: 160px;" autocomplete="off"
+                                                                     ng-model="search.endTime"/>
+                </p>
+            </div>
+
+            <div class="boxb-d" style="margin-top: 18px">
+                <p>
+                    <a class="btn btn-success btn-rounded btn-blueW btn-blueWa" href="#" ng-click="queryDataList(1)"><i
+                            class="fa fa-search"></i> <span>搜索</span></a>
+                    <a class="btn btn-success btn-rounded btn-blueW btn-blueWb" href="#" ng-click="reset()"><i
+                            class="fa fa-refresh"></i> <span>重置</span></a>
+                    <a class="btn btn-success btn-rounded btn-blueW btn-blueWb" href="#" ng-click="exportOK()"><i
+                       id="liu"     class="fa fa-refresh"></i> <span>导出</span></a>
+                </p>
+            </div>
+            </form>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins" style="margin-top:10px;">
+                    <div class="ibox-content">
+                        <table class="footable table table-stripped" data-page-size="8" data-filter=#filter >
+                            <thead>
+                            <tr>
+                                <!-- <th></th> -->
+                                <th>统计时间</th>
+                                <th>理财渠道</th>
+                                <th>项目数量</th>
+                                <th>触达用户数</th>
+                                <th>触达后登陆人数</th>
+                                <th>激活用户数</th>
+                                <!--  <th>图片</th> -->
+                                <th>激活出借金额</th>
+                                <th>激活年化金额</th>
+                                <th>激活总成本</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="x in initiativeList">
+                                <td>{{x.timeStr}}</td>
+                                <td>{{x.channelName}}</td>
+                                <td>{{x.productCount}}</td>
+                                <td>{{x.touchMemberCount}}</td>
+                                <td>{{x.landNum}}</td>
+                                <td>{{x.activationMemberCount}}</td>
+                                <td>{{x.orderAmount}}</td>
+                                <td>{{x.annualized}}</td>
+                                <td>{{x.activationCost}}</td>
+                                <td>
+                                    <a href="${ctx}/smart_marketing/data/to_page?timeStr={{x.timeStr}}&dataChannelCode={{x.channelName}}"><span class="look-start">查看数据分析</span></a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="bottom-page">
+                            <div class="bottom-pagea">
+                                <select style="width:58px;height:23px;" ng-model="search.pageSize"  ng-change="queryDataList(1)">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                </select>
+                            </div>
+                            <div class="bottom-pageb">
+                                <i class="fa fa-step-backward" ng-click="queryDataList(1)"></i>
+                                <i style="font-size:16px;" class="fa fa-caret-left" ng-click="queryDataList(search.pageNo-1)"></i>
+                                <p>第<span class="pageN">{{search.pageNo}}</span >共<span>{{search.pageCount}}</span>页 </p>
+                                <i style="font-size:16px;" class="fa fa-caret-right" ng-click="queryDataList(search.pageNo+1)"></i>
+                                <i style="margin-left:8px;" class="fa fa-step-forward"  ng-click="queryDataList(search.pageCount)"></i>
+                                <p>显示<span>{{(search.pageNo-1)*search.pageSize+1}}</span>到{{search.pageNo*search.pageSize}}条，共<span>{{search.totalRowSize}}</span>记录
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="${jsRoot}/angular/angular.min.js"></script>
+<script src="${jsRoot}/plugins/laydate/laydate.js"></script>
+<!-- Mainly scripts -->
+<script src="${jsRoot}/jquery-2.1.1.js"></script>
+<script src="${jsRoot}/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="${jsRoot}/bootstrap.min.js"></script>
+<script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="${jsRoot}/plugins/jeditable/jquery.jeditable.js"></script>
+<script src="${jsRoot}/biz/smartmarketing/data_statistics.js"></script>
+<!-- Data Tables -->
+<script src="${jsRoot}/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.responsive.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.tableTools.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="${jsRoot}/inspinia.js"></script>
+<script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.iframe-transport.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.ui.widget.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-process.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-validate.js"></script>
+<script src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+<!--<script src="${jsRoot}/biz/offlineactivitymanage/auditOfflineActivity.js?rand=${random}"></script>-->
+<script type="text/javascript" src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+<script>
+
+
+    var navHight = $('.navbar-static-side').height()
+    $('.navbar-static-side').css('height', navHight - 60)
+    $('.content-box').css('height', navHight - 60)
+    $("#menus li").removeClass("active");
+    $("#smart-marketing-data").addClass("active");
+    // $("#activity_manager").addClass("collapse in");
+
+    // var queryOnlineTime = laydate({
+    //     elem: '#queryOnlineTime',
+    //     istime: true,
+    //     format: 'YYYY-mm-DD hh:mm:ss',
+    //     event: 'click'
+    // })
+    //
+    // var queryOfflineTime = laydate({
+    //     elem: '#queryOfflineTime',
+    //     istime: true,
+    //     format: 'YYYY-mm-DD hh:mm:ss',
+    //     event: 'click'
+    // })
+    //
+    var startTime = laydate({
+        elem: '#startTime1',
+        istime: true,
+        format: 'YYYY-mm-DD',
+        event: 'click'
+    });
+    var endTime = laydate({
+        elem: '#endTime1',
+        istime: true,
+        format: 'YYYY-mm-DD',
+        event: 'click'
+    });
+</script>
+</body>
+</html>

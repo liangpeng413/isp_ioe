@@ -1,0 +1,477 @@
+<div class="content-box">
+    <div class="wrap">
+        <a class="btn btn-blueW " href="javascript:void(0)" ng-click="return()" style="color: #668eff;">返回</a>
+        <div class="plan-bar">
+			<span class="s-step s-step0"> <b><b class="active">1</b></b>
+				<p class="active"></p> <em class="active">基础配置</em>
+			</span>
+
+            <span class="s-step s-step1"> <b><b>2</b></b>
+				<p></p> <em>场景配置</em>
+			</span>
+
+            <span class="s-step s-step2"> <b><b>3</b></b>
+				<p></p> <em>编辑版本</em>
+			</span>
+
+            <span class="s-step s-step3"> <b><b>4</b></b> <em>完成配置</em>
+			</span>
+        </div>
+
+        <div class="deploy basis-deploy-1" ng-show="updateShow==1">
+            <ul class="deploy-box">
+                <li class="deploy-item">理财渠道：
+                    <select class="chosen-select" style="width:160px;" tabindex="2" ng-model="update.channel" ng-change="channelChange()">
+                        <option value="WK">悟空理财</option>
+                        <option value="QB">玖富钱包</option>
+                    </select>
+                </li>
+                <li class="deploy-item">服务类型：
+                    <select class="chosen-select" style="width: 160px;" tabindex="2" ng-model="update.serviceTypeCode" ng-change="serviceTypeChange()">
+                        <option value="">全部</option>
+                        <option value="{{x.key}}" ng-repeat="x in update.serviceTypeCodeList">{{x.value}}</option>
+                    </select>
+                </li>
+                <li class="deploy-item">用户行为：
+                    <select class="chosen-select" style="width:160px;" tabindex="2" ng-model="update.userActionCode" ng-change="userActionChange()">
+                        <option value="">全部</option>
+                        <option value="{{x.key}}" ng-repeat="x in update.userActionCodeList">{{x.value}}</option>
+                    </select>
+                </li>
+                <li class="deploy-item">预期状态：
+                    <select id="expResultStatus2" name="strategyResult" ng-model="update.strategyResult">
+                        <option value="">全部</option>
+                        <option value="{{x.key}}" ng-repeat="x in update.expectStatusList">{{x.value}}</option>
+                    </select>
+                </li>
+                <!--预期结果银行修改-->
+                <li ng-if=" update.strategyResult == 'BANK_OPEN_SUCCESS' ||update.strategyResult == 'BANK_OPEN_SUCCESS'
+                            ||update.strategyResult == 'BANK_PAY_SUCCESS'  ||update.strategyResult == 'BANK_PAY_SUCCESS'">
+                    <div><input type = "checkbox" ng-click="addupdAll(4)" id="updyqAllchecked">全部</div>
+                    <div class="look-pageb" ng-repeat="x in checkboxParamList" >
+                        <span style="width: 200px;height: 60px;float: left"><input type = "checkbox" class="updyqBankCode" ng-click="addupdChangeBank(4)" name="updyqbanks"  value = "{{x.bankCode}}">{{x.bankName}}</span>
+                    </div>
+                </li>
+                <li class="deploy-item">
+                    <label>执行触达后</label>
+                    <input type="number" min="1" max="7" required="required" placeholder="1-7" style="width: 80px; margin: 0px 15px;" ng-model="update.strategyCycle">
+                    <label>自然日内有效</label>
+                </li>
+                <li class="deploy-item">名单类型：
+                    <select class="selected-nav" ng-model="update.memberListName" ng-change="changeFindChannelGroups()">
+                        <option value="{{x.key}}" ng-repeat="x in update.strategyList">{{x.value}}</option>
+                    </select>
+                </li>
+                <li class="deploy-item-filter" id="userNameLikeSearch">
+                    模糊搜索：
+                    <select class="mySelect" class="filter-select" style="width: 260px;height: 40px;border-radius: 8px;" ng-model="update.memberListId" ng-change="queryMemberCount()" id="memberGroup2">
+                        <option value="{{x.rosterId}}" ng-repeat="x in update.strChannelGroups">{{x.rosterName}}</option>
+                    </select>
+                    <label id="不能删用于模糊搜索占位"></label>
+                </li>
+                <li class="deploy-item" ng-if="update.memberCount!=null">用户数量：&nbsp {{update.memberCount}}</li>
+                <li class="deploy-item">
+                    <label>限制配置：<input placeholder='1-30' min='1' max='30' type='number' style='margin-left: 15px; width:80px' ng-model="update.touchTimeCount"/>个自然日内最多触发</label>
+                    <input placeholder='1-10' min='1' max='10' type='number' style='margin-left: 15px; width:80px' ng-model="update.touchCount"/>次
+            </ul>
+            <button class="next-btn next-btn0" ng-click="goTable(2)" >下一步</button>
+        </div>
+
+        <div class="deploy scene-deploy-2" ng-show="updateShow==2">
+            <ul class="deploy-box scene-box">
+
+                <li class="deploy-item"><span>服务类型：</span> <label id="showService">{{update.serviceCodeName}}</label></li>
+
+                <li class="deploy-item"><span>用户行为：</span> <label id="showUserAction">{{update.userCodeName}}</label></li>
+
+                <li class="deploy-item"  ng-if ="update.userActionCode !='WK_USER_DEFINED_SCENE' && update.userActionCode !='QB_USER_DEFINED_SCENE'"><span>触发节点：</span>
+                    <select ng-model="update.touchCode"  ng-change="queryOkDeploy()">
+                        <option value="{{x.key}}" ng-repeat="x in update.touchCodeList">{{x.value}}</option>
+                        <option value="{{x.key}}" ng-repeat="x in update.touchCodeList">{{x.value}}</option>
+                    </select>
+                </li>
+                <li>
+                <li class="deploy-item" ng-if="update.serviceTypeCode == 'WK_USER_DEFINED' || update.serviceTypeCode == 'QB_USER_DEFINED' "><span>触发节点：</span>
+                    <select id="updtagSelectListid" ng-model="abc" ng-change="tagSelectListChange()">
+                        <option  ng-repeat="x in tagSelectList" value={{x.english}} ng-selected="x.english == updshowrealtimeTag">{{x.chinese}}</option>
+                    </select>
+                </li>
+                <li class="deploy-item radio-flex">
+                    <span>是否配触发策略：</span>
+                    <p class="radio"><input id="xzInputConfig" type="radio" name="IS_EFFECT" ng-click="isEffectBtn(1)"><label for="xzInputConfig" class="lable">是</label></p>
+                    <p class="radio" id="radio-css"><input id="noxzConfig" type="radio" ng-value="0" name="IS_EFFECT" ng-click="isEffectBtn(0)" checked="true"><label for="noxzConfig" class="label-no">否</label></p>
+                </li>
+
+                <li class="deploy-item">
+                    <label id="triggerStrategy">触发策略：</label>
+                    <div id="triggerStrategyContext">
+                        <!--number-->
+                        <div class="deploy-item"  ng-repeat="x in update.numberParamList">
+                            <label style="width: 200px; text-align: right;">{{x.param.remarks}}：</label>
+                            <div>
+                                <div class="deploy-item" style="margin-bottom:15px;" ng-repeat="y in x.list">
+                                    <label style="width: 300px; text-align: right">{{y.remarks}}：</label>
+                                    <input placeholder="{{y.description}}" type="number" style="margin-left: 15px" id="{{y.key}}" name="{{y.key}}" value="{{y.value}}" required="required">
+                                </div>
+                            </div>
+                        </div>
+                        <!--银行信息修改-->
+                        <div class='deploy-item' style='display: flex; flex-wrap: wrap; margin-bottom:15px;'ng-show="(update.IS_EFFECT == 1 && update.serviceTypeCode == 'WK_BANK_FLOW' )|| (update.IS_EFFECT == 1 && update.serviceTypeCode == 'QB_BANK_FLOW') ">
+                            <div style="width: 100%"><input type = "checkbox" ng-click="addupdAll(3)"   id="updAllchecked">全部</div>
+                            <div style="width: 30%; flex-shrink: 0; flex-grow: 0;"class="look-pageb" ng-model="bankschecked" ng-repeat="x in checkboxParamList" >
+                                <span style="text-align: left; display: flex; align-items: center;"><input type = "checkbox" class="updBankCode" ng-click="addupdChangeBank(3)" name="updbanks" value = "{{x.bankCode}}">{{x.bankName}}</span>
+                            </div>
+                        </div>
+                        <!--实时标签修改-->
+                        <div class="look-pageb"  ng-show="(update.IS_EFFECT == 1 && update.serviceTypeCode == 'WK_USER_DEFINED') || (update.IS_EFFECT == 1 && update.serviceTypeCode == 'QB_USER_DEFINED') ">
+                            <div class="query-updwrap">
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <div class="btn-flex">
+                <button class="back-btn1 flex-btn" ng-click="goTable(1)">上一步</button>
+                <button class="next-btn1 flex-btn" ng-click = "goTable(3)">下一步</button>
+            </div>
+        </div>
+
+        <div class="deploy compile-deploy-3" ng-show="updateShow==3">
+            <ul class="deploy-box compile-box">
+                <li class="deploy-item">原始版本：
+                    <button class="deploy-btn" ng-click="ysVersionConfig('addYS')" ng-if="showVersion==0">
+                        <label>配置</label>
+                    </button>
+                    <button class="deploy-btn" ng-click="updateVersionConfig(0,null)" ng-if="showVersion!=0">
+                        <label>修改配置</label>
+                    </button>
+                </li>
+                <li class="deploy-item">添加变量：<label id="showVariableConfig">{{tests}}</label> <b class="add" id="openVarConfig" ng-click="variable()">+</b>
+                </li>
+                <li class="deploy-item table-item">
+                    <p style="white-space: nowrap">添加版本：</p>
+                    <table class="table" id="versionTable">
+                        <thead>
+                        <tr>
+                            <th style="width: 30%;">版本名称</th>
+                            <th style="width: 30%;">版本描述</th>
+                            <th style="width: 40%;">操作</th>
+                        </tr>
+                        <tr style='background:white;' ng-repeat="x in otherVersions">
+                            <td>{{x.verName}}</td>
+                            <td>{{x.verDesc}}</td>
+                            <td>
+                                <input type='button' value='修改' style='width:50px' ng-click="updateVersionConfig(1,x)"/>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input type='button' value='删除' style='width:60px' ng-click="delOtherVersion(x)"/>
+                            </td>
+                        </tr>
+                        </thead>
+                    </table>
+                </li>
+                <button class="add-btn" id="addChuDaBtn" ng-click ="ysVersionConfig('other')" >添加</button>
+            </ul>
+            <div class="btn-flex">
+                <button class="back-btn2 flex-btn" ng-click="goTable(4)">上一步</button>
+                <button class="next-btn2 flex-btn" ng-click="goTable(5)">下一步</button>
+            </div>
+        </div>
+
+        <div class="deploy finish-deploy-4" ng-show="updateShow==4">
+            <ul class="deploy-box finish-box">
+                <li class="deploy-item"><span>理财渠道：</span> <label>{{update.channele=='QB' && '玖富钱包' || '悟空理财'}}</label></span></li>
+                <li class="deploy-item"><span>服务类型：</span><label >{{update.serviceCodeName}}</label></li>
+                <li class="deploy-item"><span>用户行为：</span><label >{{update.userCodeName}}</label></li>
+                <li class="deploy-item"><span>预期状态：</span><label >{{update.showExpResultStatusName}}</label></li>
+                <li class="deploy-item"><span>用户分组：</span><label ></label>{{update.showMemberGroup}}</li>
+                <li class="deploy-item"><span>版本数量：</span><label >{{otherVersions.length}}</label></li>
+                <li class="deploy-item"><span>实验名称：</span>
+                    <input type="text" id="testName" name="testName" ng-model="update.testName" maxlength="15"/>
+                </li>
+                <li class="deploy-item"><span>审核人：</span>
+                    <select style="width: 200px;" id="approverId" name="approverId" ng-model="update.approverId">
+                        <option value='{{x.key}}' ng-repeat="x in update.auditors">{{x.value}}</option>
+                    </select>
+                </li>
+            </ul>
+            <div class="btn-flex">
+                <button class="back-btn3 flex-btn" ng-click="goTable(6)">上一步</button>
+                <button id="saveTestBtn" class="flex-btn save-btn" ng-click="commitUpdateAdd()" ng-if="isUpdate==0">保存</button>
+                <button id="updateSaveBtn" class="flex-btn save-btn" ng-click="updateSaveBtn()" ng-if="isUpdate==1">修改</button>
+            </div>
+        </div>
+    </div>
+
+    <!--添加原始版本弹窗-->
+    <div id="versionConfig" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 style="margin:0 auto;"><span id='headVerName'>{{version.headVerName}}</span></h2>
+                <span id="closeChuDaBtn2" class="close" ng-click="closeVersionCongif()"><b>×</b></span>
+            </div>
+            <form id="verForm">
+                <div class="modal-body">
+                    <li class="deploy-item">
+                        <label>版本名称：</label>
+                        <input id="verName" name="verName" type="text" ng-model="version.verName"/>
+                    </li>
+
+                    <li class="deploy-item">
+                        <label>版本描述：</label>
+                        <input id="verDesc2" name="verDesc" type="text" ng-model="version.verDesc"/>
+                    </li>
+
+                    <li class="deploy-item">
+                        <label>触达类型：</label>
+                        <select id="strategyType2" name="strategyType" ng-model="version.strategyType" ng-change="strategyTypeChange(version.strategyType)">
+                            <option value="USER_DEFINED">自定义</option>
+                            <option value="CUSTOMER_SERVICE">在线客服</option>
+                            <option value="PHONE">电话客服</option>
+                            <option value="AWARD">奖励</option>
+                        </select>
+                    </li>
+                    <li ng-if="version.strategyType=='USER_DEFINED' || version.strategyType=='AWARD'" class="deploy-item" id="strategyWay" name="strategyWay">
+                        <label>触达方式：</label>
+                        <select id='touchWay2' name='touchWay' ng-model="version.touchWay">
+                            <option value="MESSAGE">短信</option>
+                            <option value="PUSH">推送</option>
+                            <option value="PUSH_MAIL">站内信</option>
+                            <option value="BANNER">专属banner(悟空暂不支持)</option>
+                            <option value="NO_TOUCH">无触达</option>
+                        </select>
+                    </li>
+                    <li ng-if="version.strategyType=='CUSTOMER_SERVICE' || version.strategyType=='PHONE'" class="deploy-item" id="strategyWay" name="strategyWay">
+                        <label>触达方式：</label>
+                        <select id='touchWay2' name='touchWay' ng-model="version.touchWay">
+                            <option value="BANNER">专属banner(悟空暂不支持)</option>
+                            <option value="NO_TOUCH">无触达</option>
+                        </select>
+                    </li>
+                    <!--在线/电话客服-->
+                    <div ng-if="version.strategyType=='CUSTOMER_SERVICE' || version.strategyType=='PHONE'">
+                        <li ng-if="version.touchWay != 'NO_TOUCH'">
+                            <label>触达时间：</label>
+                            <select id='strategyTime' name='strategyTime' ng-model="version.strategyTime">
+                                <option value="THIS">当次</option>
+                            </select>
+                        </li>
+                    </div>
+
+                    <!--奖励或者自定义-->
+                    <div ng-if="'AWARD'==version.strategyType || 'USER_DEFINED'==version.strategyType">
+                        <!--多奖励-->
+                        <div ng-if="'AWARD'==version.strategyType">
+                            <span class="single_color tian" ng-click="addRewardAction()" style="color: #0a6aa1;">添加奖励</span>
+                            <div class="news_over" style="width: 500px;height:180px;border: 1px solid #DED">
+                                <div class="news_single">
+                                    <div class="news_right" style="margin-left: 30px;">
+                                        <span class="news_txt" ng-repeat="x in version.awardContentDto">{{x.awardDesc}}
+                                            <span class="news_del" ng-click="deleteReward(x)" style="color: #0a6aa1;">删除</span>
+                                            <br/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--短信-->
+                        <div ng-if="'MESSAGE'==version.touchWay">
+                            <li>
+                                <label>短信内容：</label><br>
+                                <textarea maxlength='100' rows='5' cols='10' placeholder='不超过100个字' style='margin-left: 15px;resize:none;height: 160px;width: 300px' id='MESSAGE_CONTENT' name='MESSAGE_CONTENT' required='required' ng-model="version.MESSAGE_CONTENT"></textarea>
+                            </li>
+                            <li>
+                                <label>触达时间：</label>
+                                <select id='strategyTime' name='strategyTime' ng-model="version.strategyTime">
+                                    <option value="THIS">当次</option>
+                                    <option value="SMARTTOUCH">智能触达</option>
+                                </select>
+                            </li>
+                            <li ng-if="'SMARTTOUCH'==version.strategyTime">
+                                <label>时间配置：</label>
+                                <input placeholder='5-1440' min='5' max='1440' type='number' style='margin-left: 15px; width:80px' id='muchTime' name='muchTime' ng-model="version.muchTime"/>分钟内未达到预期结果
+                            </li>
+                        </div>
+                        <!--站内信-->
+                        <div ng-if="'PUSH_MAIL'==version.touchWay">
+                            <li><label>站内信标题：</label><br><textarea maxlength='15' rows='2' cols='10' placeholder='不超过15个字' style='margin-left: 15px;resize:none;height: 50px;width: 300px' id='TOUCH_PUSH_TITLE' name='TOUCH_PUSH_TITLE' required='required' ng-model="version.TOUCH_PUSH_TITLE"></textarea></li>
+                            <li><label>站内信内容：</label><br><textarea maxlength='100' rows='5' cols='10' placeholder='不超过100个字' style='margin-left: 15px;resize:none;height: 160px;width: 300px' id='TOUCH_PUSH_CONTENT' name='TOUCH_PUSH_CONTENT' required='required' ng-model="version.TOUCH_PUSH_CONTENT"></textarea></li>
+                            <li>
+                                <label>触达时间：</label>
+                                <select id='strategyTime' name='strategyTime' ng-model="version.strategyTime">
+                                    <option value="THIS">当次</option>
+                                    <option value="SMARTTOUCH">智能触达</option>
+                                </select>
+                            </li>
+                            <li ng-if="'SMARTTOUCH'==version.strategyTime">
+                                <label>时间配置：</label>
+                                <input placeholder='5-1440' min='5' max='1440' type='number' style='margin-left: 15px; width:80px' id='muchTime' name='muchTime' ng-model="version.muchTime"/>分钟内未达到预期结果
+                            </li>
+                        </div>
+                        <!--推送-->
+                        <div ng-if="version.touchWay=='PUSH'">
+                            <li>
+                                <label>跳转类型：</label>
+                                <select id='skipType' name='skipType' ng-model="version.skipType" ng-change="querySkipType()">
+                                    <option value="URL">链接跳转</option>
+                                    <option value="PRIMORDIAL">原生跳转</option>
+                                    <option value="NO_SKIP">无跳转</option>
+                                </select>
+                            </li>
+                            <li class='LI_SKIP_URL' ng-if="version.skipType=='URL'">
+                                <label>链接地址：</label>
+                                <input placeholder='' type='text' style='margin-left: 15px' id='SKIP_URL' name='SKIP_URL' required='required' ng-model="version.SKIP_URL"/>
+                            </li>
+                            <li class='LI_PAGE_TYPE' ng-if="version.skipType=='PRIMORDIAL'">
+                                <label>页面类型：</label>
+                                <select id='PAGE_TYPE' name='PAGE_TYPE' ng-change="queryPageType()" ng-model="version.PAGE_TYPE">
+                                    <option value='{{x.key}}' ng-repeat="x in version.PAGE_TYPEList">{{x.value}}</option>
+                                </select>
+                            </li>
+                            <li class='LI_PRIMORDIAL_PAGE' ng-if="version.skipType=='PRIMORDIAL'">
+                                <label>跳转页面：</label>
+                                <select id='PRIMORDIAL_PAGE' name='PRIMORDIAL_PAGE' ng-model = "version.PRIMORDIAL_PAGE">
+                                    <option value='{{x.key}}' ng-repeat="x in version.PRIMORDIAL_PAGEList">{{x.value}}</option>
+                                </select>
+                            </li>
+                            <li><label>标题内容：</label><br><textarea maxlength='15' rows='2' cols='10' placeholder='不超过15个字' style='margin-left: 15px;resize:none;height: 50px;width: 150px' id='TOUCH_PUSH_TITLE' name='TOUCH_PUSH_TITLE' required='required' ng-model="version.TOUCH_PUSH_TITLE"></textarea></li>
+                            <li><label>推送内容：</label><br><textarea maxlength='30' rows='2' cols='10' placeholder='不超过30个字' style='margin-left: 15px;resize:none;height: 50px;width: 150px' id='TOUCH_PUSH_CONTENT' name='TOUCH_PUSH_CONTENT' required='required' ng-model="version.TOUCH_PUSH_CONTENT"></textarea></li>
+                            <li>
+                                <label>触达时间：</label>
+                                <select id='strategyTime' name='strategyTime' ng-model="version.strategyTime">
+                                    <option value="THIS">当次</option>
+                                    <option value="SMARTTOUCH">智能触达</option>
+                                </select>
+                            </li>
+                            <li ng-if="'SMARTTOUCH'==version.strategyTime">
+                                <label>时间配置：</label>
+                                <input placeholder='5-1440' min='5' max='1440' type='number' style='margin-left: 15px; width:80px' id='muchTime' name='muchTime' ng-model="version.muchTime"/>分钟内未达到预期结果
+                            </li>
+                        </div>
+
+                        <!--自定义+banner-->
+                        <div ng-if="'USER_DEFINED'==version.strategyType && 'BANNER'==version.touchWay">
+                            <li><label>banner内容：</label><br><textarea maxlength='20' rows='2' cols='10' placeholder='不超过20个字' style='margin-left: 15px;resize:none;height: 50px;width: 150px' id='BANNER_CONTENT' name='BANNER_CONTENT' required='required' ng-model="version.BANNER_CONTENT"></textarea></li>
+                            <li><label>按钮文案：</label><input placeholder='不超过4个字' maxlength='4' type='text' style='margin-left: 15px' id='BANNER_BTN_CONTENT' name='BANNER_BTN_CONTENT' required='required' ng-model="version.BANNER_BTN_CONTENT"/></li>
+                            <li><label>跳转类型：</label>
+                                <select id='skipType' name='skipType' ng-model="version.skipType" ng-change="querySkipType()">
+                                    <option value="URL">链接跳转</option>
+                                    <option value="PRIMORDIAL">原生跳转</option>
+                                    <option value="NO_SKIP">无跳转</option>
+                                </select>
+                            </li>
+                            <li class='LI_SKIP_URL' ng-if="version.skipType=='URL'">
+                                <label>链接地址：</label>
+                                <input placeholder='' type='text' style='margin-left: 15px' id='BANNER_BTN_URL' name='BANNER_BTN_URL' required='required' ng-model="version.SKIP_URL"/>
+                            </li>
+                            <li class='LI_PAGE_TYPE' ng-if="version.skipType=='PRIMORDIAL'">
+                                <label>页面类型：</label>
+                                <select id='PAGE_TYPE' name='PAGE_TYPE'  ng-model="version.PAGE_TYPE" ng-change="queryPageType()">
+                                    <option value='{{x.key}}' ng-repeat="x in version.PAGE_TYPEList">{{x.value}}</option>
+                                </select>
+                            </li>
+                            <li class='LI_PRIMORDIAL_PAGE' ng-if="version.skipType=='PRIMORDIAL'">
+                                <label>跳转页面：</label>
+                                <select id='PRIMORDIAL_PAGE' name='PRIMORDIAL_PAGE' ng-model = "version.PRIMORDIAL_PAGE">
+                                    <option value='{{x.key}}' ng-repeat="x in version.PRIMORDIAL_PAGEList">{{x.value}}</option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>触达时间：</label>
+                                <select id='strategyTime' name='strategyTime' ng-model="version.strategyTime">
+                                    <option value="THIS">当次</option>
+                                </select>
+                            </li>
+                            <li ng-if="'SMARTTOUCH'==version.strategyTime"><label>时间配置：</label><input placeholder='5-1440' min='5' max='1440' type='number' style='margin-left: 15px; width:80px' id='muchTime' name='muchTime' ng-model="version.muchTime"/>分钟内未达到预期结果</li>
+
+                        </div>
+                        <!--奖励+banner-->
+                        <div ng-if="'AWARD'==version.strategyType && 'BANNER'==version.touchWay">
+                            <li>
+                                <label>banner内容：</label>
+                                <br>
+                                <textarea maxlength='20' rows='2' cols='10' placeholder='不超过20个字' style='margin-left: 15px;resize:none;height: 50px;width: 150px' id='BANNER_CONTENT' name='BANNER_CONTENT' required='required' ng-model="version.BANNER_CONTENT"></textarea>
+                            </li>
+                            <li>
+                                <label>触达时间：</label>
+                                <select id='strategyTime' name='strategyTime' ng-model="version.strategyTime">
+                                    <option value="THIS">当次</option>
+                                </select>
+                            </li>
+                            <li ng-if="'SMARTTOUCH'==version.strategyTime"><label>时间配置：</label><input placeholder='5-1440' min='5' max='1440' type='number' style='margin-left: 15px; width:80px' id='muchTime' name='muchTime' ng-model="version.muchTime"/>分钟内未达到预期结果</li>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button class='add-btn' id="closeChuDaBtn" ng-click="closeVersionCongif()">关闭</button>
+                <button class='add-btn' ng-click="versionStore(0)" ng-if="versionConfig=='rootVersion'">保存</button>
+                <button class='add-btn' ng-click="versionStore(1)" ng-if="versionConfig=='otherVersion'">保存</button>
+                <!--其他版本确认修改-->
+                <button class='add-btn' ng-click="versionStore(2)" ng-if="versionConfig=='updateOtherVersion'">确认修改</button>
+                <button class='add-btn' ng-click="versionStore(3)" ng-if="versionConfig=='updateRootVersion'">确认修改</button>
+
+            </div>
+        </div>
+    </div>
+
+    <!--奖励弹窗-->
+    <div class="modal" id="rewardShow">
+        <div class="modal-content" style="width: 600px; align-items: center">
+            <h5 class="title">添加奖励</h5>
+            <ul class="form-layer">
+                <li class='award'>
+                    <label>奖励类型：</label>
+                    <select id='awardType' name='awardType' ng-model="addJiangliParam.awardType">
+                        <option value='CARD'>卡券</option>
+                        <option value='JIFEN'>积分</option>
+                        <option value="newCoupon">新卡券</option>
+                        <option value="mallCoupon">商城卡券</option>
+                    </select>
+                </li>
+                <li class='award' ng-if="'CARD'==addJiangliParam.awardType || 'newCoupon'==addJiangliParam.awardType || 'mallCoupon'==addJiangliParam.awardType">
+                    <label>卡券ID：</label>
+                    <input placeholder='' type='number' style='margin-left: 15px' ng-model="addJiangliParam.cardId"/>
+                    <span style='color:red'></span>
+                </li>
+                <li class='award' ng-if="'JIFEN'==addJiangliParam.awardType">
+                    <label>积分规则ID：</label>
+                    <input placeholder='' type='text' style='margin-left: 15px' required='required' ng-model="addJiangliParam.jfRuleId"/>
+                </li>
+                <li class='award' ng-if="'JIFEN'==addJiangliParam.awardType">
+                    <label>积分：</label>
+                    <input placeholder='1-99999' type='number' style='margin-left: 15px' ng-model="addJiangliParam.jifenValue" required='required'/>
+                </li>
+                <li class='award' ng-if="'JIFEN'==addJiangliParam.awardType">
+                    <label>积分描述：</label>
+                    <input placeholder='' type='text' style='margin-left: 15px' required='required' ng-model="addJiangliParam.jifenDesc"/>
+                </li>
+
+            </ul>
+            <div class="button-flex">
+                <button class="btn" ng-click="addReward()">添加</button>
+                <button class="btn" ng-click="closeReward()">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!--添加变量-->
+    <div id="addVariableShow" class="modal">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p>添加变量</p>
+                <span>是否修改触达方式：</span>
+                <p>
+                    <input id="yesSetCdfsRadio" type="radio" value="1" checked="checked" name="IS_SET_CDFS" ng-click="varableChedked(1)">是
+                    <input id="noSetCdfsRadio" type="radio" value="2" name="IS_SET_CDFS" ng-click="varableChedked(2)">否
+                </p>
+                <div id="variableDiv" ng-show="isConfigValable==2">
+                    <p ng-repeat="x in varableList"><input style='vertical-align:middle;' type='checkbox' class="checkbox {{x.key}}" id="{{x.key}}" value="{{x.key}}"/> &nbsp;&nbsp;<sapn style='vertical-align:middle;'>{{x.value}}</sapn></p>
+                </div>
+                <div class="modal-footer">
+                    <button class='add-btn'  ng-click = "closeVariable()">关闭</button>
+                    <button class='add-btn'  ng-click = "saveVariable()">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

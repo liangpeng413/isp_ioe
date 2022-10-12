@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>续期配置</title>
+ <link href="${cssRoot}/bootstrap.min.css" rel="stylesheet">
+  <link href="${cssRoot}/../font-awesome/css/font-awesome.css" rel="stylesheet">
+
+  <!-- FooTable -->
+  <link href="${cssRoot}/plugins/footable/footable.core.css" rel="stylesheet">
+
+  <link href="${cssRoot}/animate.css" rel="stylesheet">
+  <link href="${cssRoot}/style.css" rel="stylesheet">
+  <link href="${cssRoot}/styleT.css" rel="stylesheet">
+  <script>
+  var globalConfig = {
+          basePath: "${ctx}",
+          staticRoot: "${staticRoot}",
+          loginName:"${Session.sessionUser.loginName}"
+      };
+  function swalMsg(msg) {
+      swal({
+          title:"",
+          text:msg,
+          confirmButtonColor: "#1ab394",
+          confirmButtonText:"确定"
+      });
+  }
+  </script>
+
+   <style>
+/* 	.checkbox {
+	 background-Color:e-xpression(this.checked?'yellow':'buttonface');
+	} */
+/* 	element.style{
+		margin-left: -5px;
+	} */
+</style>
+</head>
+<body ng-app="xvtouApp" ng-controller="xvtouController">
+<div id="wrapper">
+    <div class="header-box">
+        <#include "/common/top.html" encoding="UTF-8" />
+    </div>
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse"  style="height: 675px;overflow-y: scroll;">
+            <#include "/common/left.html" encoding="UTF-8" />
+        </div>
+    </nav>
+</div>
+<div class="content-box"  ng-show="operationType==0">
+  <div class="small-content">
+     <!-- 第一部分 -->
+    <div class="small-boxa">
+      <a class="btn btn-danger btn-rounded btn-gradient btn-gradienta"  href="javascript:void(0) " ng-click="addXvtou()"><i class="fa fa-plus-square-o"></i> <span>添加</span></a>
+    </div>
+    <!-- 第二部分 -->
+    <div class="small-boxb col-md-12">
+      <div class="boxb-a">
+        <p style="margin-top:20px;">渠道产品：
+          <select class="chosen-select" style="width:120px;" tabindex="1" ng-model="search.channelCode" id='searchproductChannel' ng-change="getTypeVersionList(search.productChannel,1)">
+            	<option value="0">悟空理财</option>
+             <option value="1">玖富钱包</option>
+          </select>
+        </p>
+        <p>上线状态：
+	         <select class="chosen-select"  ng-model="search.status" style="width:120px;" tabindex="2">
+	          	<option value="">全部</option>
+	            <option value="0">已上线</option>
+	            <option value="1">待上线</option>
+	            <option value="2">已下线</option>
+	         </select>
+        </p>
+      </div>
+      <div class="boxb-b">
+        <p>续期类型：
+          <select class="chosen-select" ng-model="search.continuationType"  style="width:150px;" tabindex="2">
+            <option value="0">按新手产品</option>
+            <option value="1">按会员等级</option>
+          </select>
+        </p>
+        <p>审核状态：
+          <select class="chosen-select"  ng-model="search.auditStatus"   style="width:150px;" tabindex="2">
+          	<option value="">全部</option>
+            <option value="0">待审核</option>
+            <option value="1">审核通过</option>
+            <option value="2">审核失败</option>
+          </select>
+        </p>
+      </div>
+      <div class="boxb-d">
+        <p>
+          <button style="outline:none;" class="btn btn-success btn-rounded btn-blueW btn-blueWa" href="#" ng-click="querySplashConfigList(1)"><i class="fa fa-search"></i> <span>搜索</span></button>
+          <button style="outline:none;" class="btn btn-success btn-rounded btn-blueW btn-blueWb" href="#" ng-click ="reset()"><i class="fa fa-refresh"></i> <span>重置</span></button>
+        </p>
+      </div>
+    </div>
+    <!-- 第二部分 -->
+    <!-- 第三部分 -->
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="ibox float-e-margins" style="margin-top:10px;">
+          <div class="ibox-content">
+            <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+              <thead>
+                <tr>
+                 <!-- <th></th> -->
+                  <th>序号</th>
+                  <th>理财渠道</th>
+                  <th>续期类型</th>
+                  <th>推荐产品</th>
+                  <th>推荐标签</th>
+                  <th>续期描述</th>
+                  <th>上线时间</th>
+                  <th>下线时间</th>
+                  <th>待审核上线时间</th>
+                  <th>待审核下线时间</th>
+                  <th>上线状态</th>
+                  <th>审核状态</th>
+                  <th>推送状态</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="x in splashConfigList">
+                  <!-- <td class="actived"><input type="checkbox" class="listChecked checkAll" value="{{x.id}}"></td> -->
+                  <td>{{$index+1}}</td>
+                  <td>{{x.channelCode==0 && '悟空理财' || x.channelCode==1 && '玖富钱包'}}</td>
+                  <td>{{x.continuationType==0 && '按新手产品' || x.continuationType==1 && '按会员等级'}}</td>
+                  <td>{{getRecommendProduct(x.productsList)}}</td>
+                  <td>{{x.recommendMarkingText}}</td>
+                  <td>{{x.desc}}</td>
+                  <td>{{x.onlineTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                  <td>{{x.offlineTime| date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                  <td>{{getTime(x.auditStatus,x.onlineTimeTmp)}}</td>
+                  <td>{{getTime(x.auditStatus,x.offlineTimeTmp)}}</td>
+                  <td>{{x.status==0 && '已上线' || x.status==1 && '待上线' || x.status==2 && '已下线'}}</td>
+                  <td>{{x.auditStatus==0 && '待审核' || x.auditStatus==1 && '审核通过' || x.auditStatus==2 && '审核失败'}}</td>
+                  <td>{{x.isPush=='F' && '未推送' || x.isPush=='T' && '推送成功' || x.isPush=='0' && '未推送'}}</td>
+                  <td>
+                    <a src="javaScript:;" class="look-start" ng-click="detailShowNew(x)">查看</a>
+                    <a  class="modify-start" ng-click="update(x)">修改</a>
+                    <!--<@shiro.hasRole name="shenghe_role">-->
+                    <a  ng-if="x.auditStatus=='0' && loginName == x.auditNo" src="javaScript:;" class="take-start" ng-click="audit(x)" >审核</a>
+                    <!--</@shiro.hasRole>-->
+
+                  <a ng-if="x.status==0 && x.auditStatus!=0" src="javaScript:;" class="fast-downline" ng-click="offline(x)">快速下线</a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="bottom-page">
+              <div class="bottom-pagea">
+                <select style="width:58px;height:23px;" ng-model="search.pageSize" ng-change="querySplashConfigList(1)">
+                  <option value="5">5</option>
+                  <option value="10">10</option>
+                  <option value="15">15</option>
+                </select>
+              </div>
+               <div class="bottom-pageb">
+                  <i class="fa fa-step-backward" ng-click="querySplashConfigList(1)"></i>
+                  <i style="font-size:16px;" class="fa fa-caret-left" ng-click="querySplashConfigList(search.pageNo-1)"></i>
+                  <p>第<span class="pageN">{{search.pageNo}}</span ><span class="commonN">共<span>{{search.pageCount}}</span>页</p>
+                  <i style="font-size:16px;" class="fa fa-caret-right" ng-click="querySplashConfigList(search.pageNo+1)"></i>
+                  <i style="margin-left:8px;" class="fa fa-step-forward" ng-click="querySplashConfigList(search.pageCount)"></i>
+                  <i class="fa fa-refresh" ng-click="querySplashConfigList(search.pageNo)"></i>
+              </div>
+
+              <div class="bottom-pagec">
+                <p>显示<span>{{(search.pageNo-1)*search.pageSize+1}}</span>到{{search.pageNo*search.pageSize}}条，共<span>{{search.totalRowSize}}</span>记录</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- 第二部分-Start-->
+  <link ng-if="operationType==1" href="${cssRoot}/oms/xvtou/modify-page.css" rel="stylesheet" />
+ <!--   <link ng-if="operationType==1" href="${jsRoot}/biz/tools/xvtouPlugins/multiple-select.css" rel="stylesheet" /> -->
+  <div class="content-box" ng-show="operationType==1" >
+  <div class="look-pagea">
+    <button ng-click="upBanck()"><i class="fa fa-chevron-left"></i><a href="javascrit:void(0)" >返回</a></button>
+  </div>
+  <div class="look-pageb">
+    <ul class="leftList">
+      <li>
+      	<p>渠道产品<b style="color:red;">*</b>：</p>
+      	<span>
+      		<select class="interests" id="addChannelCode" ng-model="add.channelCode" ng-change="pullXvtouchannelCode(add.channelCode)"  >
+      			<option value="0">悟空理财</option>
+             	<option value="1">玖富钱包</option>
+      		</select>
+      	</span>
+      </li>
+      <li>
+      	<p>续期类型<b style="color:red;">*</b>：</p>
+      	<span>
+      		<select class="interests" id='continuationType' ng-model='add.continuationType' ng-change="pullXvtouTye(add.continuationType)" ><!-- ng-change='pullXvtouTye()' -->
+      			<option value="x">请选择</option>
+      			<option value="0">按新手产品</option>
+            		<option value="1">按会员等级</option>
+      		</select>
+      	</span>
+      	</li>
+      	<li>
+      		<p ng-show="add.continuationType==0">新手详情 <b style="color:red;">*</b>：</p>
+      		<p ng-show="add.continuationType==1">会员详情 <b style="color:red;">*</b>：</p><!-- ng-show="add.channelCode==1" -->
+      		 <span style="margin-left:10px;" ng-repeat="x in typeleve" ng-model="add.continuationTypeInfo">
+      		 <label><input type="checkbox" ng-click="getContinuationTypeInfo()"  ng-checked="addIsSelected(x.code)" 
+      		 style="height:12px;margin:auto" class="continuationTypeInfoBox checkAll"  id="{{x.code}}" value="{{x.code}}">{{x.name}}</label></span>
+      	</li>
+      	<!-- 续投产品 -->
+      <li>
+        <p>续期产品<b style="color:red;">*</b>：</p>
+        <p style="width:285px;">可选择续期产品列表<b style="color:red;">*</b></p>
+        <p class="upDownArrow" style="width:300px;">已选择续期产品列表及排序<b style="color:red;">*</b><i class="fa fa-caret-down smalla-red" ng-click="move('X')"></i><i class="fa fa-caret-up" ng-click="move('S')"></i></p>
+      </li>
+      <li style="height:200px;">
+        <p style="visibility:hidden;width: 150px;">续期产品<b style="color:red;">*</b>：</p>
+        <div class="twoLista twoList">
+          <ul>
+            <li ng-repeat="x in productList" ><label><input  onClick="chaCloor(this)" type="checkbox" style='height:13px;margin：auto;visibility:hidden;' class="productListLeft checkAll"  value="{{x.code}}"><span>{{x.name}}</span></label></li>
+          </ul>
+        </div>
+        <div class="twoListc">
+          <i class="fa fa-angle-double-right" ng-click='addRight(1)'></i><br>
+          <i class="fa fa-angle-right" ng-click='addRight(0)'></i><br>
+          <i class="fa fa-angle-left" ng-click='delLeft(0)'></i><br>
+          <i class="fa fa-angle-double-left" ng-click='delLeft(1)'></i>
+        </div>
+        <div class="twoListb twoList">
+          <ul>
+            <li ng-repeat="x in productListRight" ><label><input  onClick="chaCloor(this)"  type="checkbox" style="height:13px;visibility:hidden;" class="productListRight checkAll" value="{{$index+1}}_{{x.code}}"><span>{{x.name}}</span></label></li>
+
+
+          </ul>
+        </div>
+        <div style="margin:-46px 0 0 10px;">
+          <b style="color:red;">*</b>此产品为推荐产品
+        </div>
+      </li>
+      
+      <!-- 用户来源 -->
+      <li ng-if="add.channelCode==1">
+        <p>用户来源<b style="color:red;">*</b>：</p>
+        <p style="width:285px;">可选择用户来源列表<b style="color:red;">*</b></p>
+        <p class="upDownArrow" style="width:300px;">已选择用户来源列表<b style="color:red;">*</b></p>
+      </li >
+      <li ng-if="add.channelCode==1" style="height:200px;">
+        <p style="visibility:hidden;width: 150px;">用户来源<b style="color:red;">*</b>：</p>
+        <div class="twoLista twoList">
+          <ul>
+            <li ng-repeat="x in sourceUserList" ><label><input  onClick="chaCloor(this)" type="checkbox" style='height:13px;margin：auto;visibility:hidden;' class="sourceUserListLeft checkAll"  value="{{x.sourceCode}}"><span>{{x.sourceName}}</span></label></li>
+          </ul>
+        </div>
+        <div class="twoListc">
+          <i class="fa fa-angle-double-right" ng-click='addSuerRight(1)'></i><br>
+          <i class="fa fa-angle-right" ng-click='addSuerRight(0)'></i><br>
+          <i class="fa fa-angle-left" ng-click='delSureLeft(0)'></i><br>
+          <i class="fa fa-angle-double-left" ng-click='delSureLeft(1)'></i>
+        </div>
+        <div class="twoListb twoList">
+          <ul>
+            <li ng-repeat="x in sourceUserListRight" ><label><input  onClick="chaCloor(this)"  type="checkbox" style="height:13px;visibility:hidden;" class="sourceUserListRight checkAll" value="{{$index+1}}_{{x.sourceCode}}"><span>{{x.sourceName}}</span></label></li>
+          </ul>
+        </div>
+        
+      </li>
+      
+      <li  ng-if="sourceUserListRight!='' && add.channelCode==1"><p>利率配置<b style="color:red;">*</b>：</p>
+      <span ng-repeat="z in sourceUserListRight" >
+         <a href="javaScript:void(0);" ng-click="showdDeploy(z)">{{z.sourceName}}</a>
+      </span>&nbsp;&nbsp;&nbsp;</li>
+      
+      
+       <li ng-if="add.channelCode==0"><p>推荐标签<b style="color:red;">*</b>：</p><span><input class="interests" type="text" ng-model="add.recommendMarkingText"  maxlength="18" placeholder="18个汉字以内"></span></li>
+     
+      <li ng-if="add.channelCode==0" ng-repeat="x in productListRight">
+        <p>{{$index==0 && '续期加息:'|| $index>0 &&  '' }}</p>
+        <p style="width:100px;">{{x.name}}：</p>
+        <p style="width:180px;" ng-repeat="y in typeleveList">{{y.name}} ：
+        	<input id="{{x.code}}{{y.code}}" class="add-interest" type="text"  placeholder="{{add.channelCode==0 && '-1' || ''}}">%
+        </p><br>
+
+
+        <!--  <p style="width:180px;" ng-repeat="y in typeleveList"  ng-show="{{$index<=3}}" >{{y.name}} ：
+        	<input id="{{x.code}}{{y.code}}" class="add-interest" type="text">%
+        </p><br>
+         <p style="width:180px;margin-left:200px;" ng-repeat="y in typeleveList"  ng-show="{{$index==4}}" >{{y.name}} ：
+        		<input id="{{x.code}}{{y.code}}"   class="add-interest" type="text">%
+        </p>
+        <p style="width:180px;" ng-repeat="y in typeleveList"  ng-show="{{$index>=5}}" >{{y.name}} ：
+        <input id="{{x.code}}{{y.code}}"   class="add-interest" type="text">%
+        </p> -->
+      </li>
+
+      <li><p>上线时间<b style="color:red;">*</b>：</p><span><input class="interests" type="text" id="addOnlineTime" ng-model="add.onlineTime"></span></li>
+      <li><p>下线时间<b style="color:red;">*</b>：</p><span><input class="interests" type="text" id="addOfflineTime" ng-model="add.offlineTime"></span></li>
+      <li><p>续期描述<b style="color:red;">*</b>：</p><span><input style="width:600px" class="interests" type="text" ng-model="add.desc"  maxlength="32" placeholder="32个汉字以内"></span></li>
+      <li>
+      	<p >审核人<b style="color:red;">*</b>：</p>
+      	<span style="margin-left: -5px;">
+          <select class="interests" ng-model="add.auditPerson" ng-options="x.name for x in auditPersionList">
+            <option value="">请选择</option>
+          </select>
+      	</span>
+      </li>
+      <li><p>提审说明：</p><span><input ng-model="add.requestAuditDescription" style="width:600px;" class="interests" type="text"  maxlength="32" placeholder="选填，32个汉字以内"></span></li>
+    </ul>
+  </div>
+  <div class="look-pagea" style="margin-top:8px;">
+    <button class="JianBian" ng-click="commitXvTou()"><i class="fa fa-check-square-o"></i><span ng-show="add.id">提交审核</span><span ng-show="add.id==null">提交</span></button>
+  </div>
+
+</div>
+  <!-- 添加续投-END -->
+  <!-- 第三部分 -->
+  <!-- 失效金融产品配置 -->
+  <div class="take-start-box">
+    <div class="take-start-small newTakeEffect">
+      <h2>审核</h2>
+      <ul class="isEffect">
+        <li><p>审核结果：</p>
+          <select id="auditStatus" ng-model="auditStatus">
+            <option value="1">审核通过</option>
+            <option value="2">审核不通过</option>
+          </select>
+        </li>
+        <li class="PosiText"><p>审核描述：</p><textarea id="auditDescription" ng-model="auditDescription" maxlength="32" cols="25" rows="4" placeholder="选填，32字符以内"></textarea></li>
+      </ul>
+      <div class="bottom-btn">
+        <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="confirm()" >确定</a>
+        <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" onclick="$('.take-start-box').hide();">取消</a>
+      </div>
+    </div>
+  </div>
+  <!-- 失效金融产品配置 -->
+  <!-- 审核金融产品配置 -->
+  <div class="examine-box">
+    <div class="take-start-small newTakeEffect">
+      <h2>快速下线提示</h2>
+      <ul class="isEffect">
+        <li><p>审核人：</p>
+          <select id="validConfirmUser" ng-model="validConfirmUser">
+          	<option value="">请选择</option>
+            <option value="{{x.no}}-{{x.email}}" ng-repeat="x in userList">{{x.name}}</option>
+          </select>
+        </li>
+        <li class="PosiText"><p>提审说明</p><textarea  id="requestAuditDescription" ng-model="requestAuditDescription"  maxlength="32" cols="25" rows="4" placeholder="选填，32字符以内"></textarea></li>
+      </ul>
+      <div class="bottom-btn">
+        <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="offlineRecord()">确定</a>
+        <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#" onclick="$('.examine-box').hide();">取消</a>
+      </div>
+    </div>
+  </div>
+
+<!-- 查看详情 -->
+<link ng-if="operationType==2" href="${cssRoot}/oms/xvtou/look-page.css" rel="stylesheet" />
+<div ng-show="operationType==2" class="content-box">
+  <div class="look-pagea">
+    <button><i class="fa fa-chevron-left"></i><a ng-click="operationType=0">返回</a></button>
+  </div>
+  <div class="look-pageb">
+    <ul class="leftList">
+      <li><p>渠道产品<b style="color:red;">*</b>：</p><span>{{detail.channelCode==0 && '悟空理财' || detail.channelCode==1 && '玖富钱包'}}</span></li>
+      <li><p>续期类型<b style="color:red;">*</b>：</p><span ng-show="detail.continuationType==0" ng-repeat="x in vipList" >新手-{{x}}&nbsp&nbsp&nbsp</span><span ng-show="detail.continuationType==1" ng-repeat="x in vipList" >会员等级-{{x}}&nbsp&nbsp&nbsp</span></li>
+      <li>
+        <p>续期产品<b style="color:red;">*</b>：</p>
+        <p  ng-repeat="x in detail.productsList" style="margin-left:0" class="keepOnType">{{$index+1}}、{{x.productName}}</p><br>
+      </li>
+      <li><p>推荐产品<b style="color:red;">*</b>：</p><span>{{detail.productsList[0].productName}}</span></li>
+      <li><p>推荐标签<b style="color:red;">*</b>：</p><span>{{detail.recommendMarkingText}}</span></li>
+      <li ng-repeat="x in detail.productsList">
+        <p>{{$index==0 && '续期加息'|| $index>0 &&  '' }}<b ng-show="$index==0" style="color:red;">*</b>{{$index==0 && '：'|| $index>0 &&  '' }}<span ng-bind="tableMark=$index" style="visibility:hidden;"></span></p>
+        <p  style="width:100px;">{{x.productName}}：</p>
+        <p style="width:200px;" ng-repeat="y in vipList" ng-show="{{infoAarry[tableMark][$index]>=0}}" >{{y}}：<span ng-show="{{infoAarry[tableMark][$index]>=0}}" >{{infoAarry[tableMark][$index]}}</span>%</p>
+      </li>
+
+      <li><p>上线时间<b style="color:red;">*</b>：</p><span>{{detail.onlineTime}}</span></li>
+      <li><p>下线时间<b style="color:red;">*</b>：</p><span>{{detail.offlineTime}}</span></li>
+      <li><p>续期描述<b style="color:red;">*</b>：</p><span>{{detail.desc}}</span></li>
+      <li><p>审核人<b style="color:red;">*</b>：</p><span>{{detail.auditPerson}}</span></li>
+      <li><p>提审说明：</p><span>{{detail.requestAuditDescription}}</span></li>
+      <li><p>审核时间：</p><span>{{detail.auditTime}}</span></li>
+      <li><p>审核说明：</p><span>{{detail.auditDescription}}</span></li>
+      <li><p>修改人：</p><span>{{detail.updatePerson}}</span></li>
+      <li><p>修改时间：</p><span>{{detail.updateTime}}</span></li>
+      <li><p>创建人：</p><span>{{detail.createPerson}}</span></li>
+      <li><p>创建时间：</p><span>{{detail.createTime}}</span></li>
+    </ul>
+  </div>
+<!--   <div class="look-pagea" style="margin-top:8px;">
+    <button class="JianBian"><i class="fa fa-check-square-o"></i><span>提交</span></button>
+  </div> -->
+</div>
+  <!-- 查看页面 -Start-->
+  <link ng-if="operationType==6" href="${cssRoot}/oms/xvtou/modify-page.css" rel="stylesheet" />
+ <!--   <link ng-if="operationType==1" href="${jsRoot}/biz/tools/xvtouPlugins/multiple-select.css" rel="stylesheet" /> -->
+  <div class="content-box" ng-show="operationType==6" >
+  <div class="look-pagea">
+    <button ng-click="upBanck()"><i class="fa fa-chevron-left"></i><a href="javascrit:void(0)" >返回</a></button>
+  </div>
+  <div class="look-pageb">
+    <ul class="leftList">
+      <li>
+      	<p>渠道产品 ：</p>
+      	<span>{{edit.channelCode==0 && '悟空理财' || edit.channelCode==1 && '玖富钱包'}}</span>
+      </li>
+      <li>
+      	<p>续期类型 ：</p>
+      	<span>{{edit.continuationType==0 && '按新手产品' || edit.continuationType==1 && '按会员等级'}}</span>
+      	</li>
+      	<li>
+      		<p ng-show="edit.continuationType==0">新手详情  ：</p>
+      		<p ng-show="edit.continuationType==1">会员详情  ：</p>
+      		 <span style="margin-left:0px;" ng-repeat="x in typeleve" ng-model="edit.continuationTypeInfo"><label  ng-show="isSelected(x.code)" >{{x.name}}</label>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      	</li>
+      <li>
+        <p>续期产品 ：</p>
+        <span style="margin-left:0px;" ng-repeat="x in productListRight">{{x.name}} &nbsp;&nbsp;&nbsp;</span>
+      </li>
+
+      <li ng-if="edit.channelCode==0"><p>推荐标签 ：</p><span>{{edit.recommendMarkingText}}</span></li>
+    
+    
+      <li ng-if="edit.channelCode==0" ng-repeat="x in productListRight">
+        <p>{{$index==0 && '续期加息:'|| $index>0 &&  '' }}</p>
+        <p style="width:100px;">{{x.name}}：</p>
+        <p style="width:180px;" ng-repeat="y in typeleveList">{{y.name}} ：
+        	<input id="edit{{x.code}}{{y.code}}" class="add-interest" disabled="disabled" style="width:30px;background-color:transparent;border: 0px;" type="text">%
+        </p><br>
+
+      </li>
+
+  <li  ng-if="sourceUserListRight!='' && edit.channelCode==1"><p>续期加息<b style="color:red;">*</b>：</p>
+      <span ng-repeat="z in sourceUserListRight" >
+         <a href="javaScript:void(0);" ng-click="showdDeploy(z)">{{z.sourceName}}</a>
+      </span>&nbsp;&nbsp;&nbsp;</li>
+
+      <li><p>上线时间 ：</p><span>{{edit.onlineTime}}</span></li>
+      <li><p>下线时间 ：</p><span>{{edit.offlineTime}}</span></li>
+      <li><p>续期描述 ：</p><span>{{edit.desc}}</span></li>
+      <li>
+      	<p >审核人 ：</p>
+      	<span>{{edit.auditPerson}}</span>
+
+      </li>
+      <li><p>提审说明：</p><span>{{edit.requestAuditDescription==null && '无' || edit.requestAuditDescription=='' && '无' || edit.requestAuditDescription}}</span></li>
+      <li><p>审核时间：</p><span>{{edit.auditTime}}</span></li>
+      <li><p>审核说明：</p><span>{{edit.auditDescription==null && '无' || edit.auditDescription=='' && '无' || edit.auditDescription}}</span></li>
+      <li><p>修改人：</p><span>{{edit.updatePerson}}</span></li>
+      <li><p>修改时间：</p><span>{{edit.updateTime}}</span></li>
+      <li><p>创建人：</p><span>{{edit.createPerson}}</span></li>
+      <li><p>创建时间：</p><span>{{edit.createTime}}</span></li>
+
+    </ul>
+  </div>
+</div>
+<!-- 配置利率 -->
+  <div class="look-start-box" id="detailLog" >
+    <div class="look-pageb" style="width: 1270px; height: 700px;">
+        <div >
+        <ul class="leftList">
+        <li>
+        <h1 style="margin-left:500px;">{{title}}利率配置</h1>
+        </li>
+        <li>
+        <p>推荐标签<b style="color:red;">*</b>：</p><span><input class="interests" type="text" ng-model="add.qbRecommendMarkingText"  maxlength="18" placeholder="18个汉字以内"></span></li>
+        <br/>
+        <li ng-repeat="x in productListRight" >
+        <p>{{$index==0 && '续期加息:'|| $index>0 &&  '' }}</p>
+        <p style="width:95px;">{{x.name}}：</p>
+        <p style="width:170px;" ng-repeat="y in typeleveList">{{y.name}} ：
+        	<input id="{{x.code}}{{y.code}}" class="add-interest" type="text"  >%
+        </p><br>
+      </li>
+       
+      </ul>
+        </div>
+        <div class="bottom-btn" style="margin-top: 20px;" >
+         <a ng-if="deShow!=1" class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" ng-click="qbRateDeploy()">确定</a>
+          <a style="margin-left: 70px;" class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" onclick="$('#detailLog').hide()">取消</a>
+        </div>
+      </div>
+    </div>
+<script src="${jsRoot}/angular/angular.min.js"></script>
+<script src="${jsRoot}/plugins/laydate/laydate.js"></script>
+    <!-- Mainly scripts -->
+<script src="${jsRoot}/jquery-2.1.1.js"></script>
+<script src="${jsRoot}/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="${jsRoot}/bootstrap.min.js"></script>
+<script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="${jsRoot}/plugins/jeditable/jquery.jeditable.js"></script>
+
+<!-- Data Tables -->
+<script src="${jsRoot}/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.responsive.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.tableTools.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="${jsRoot}/inspinia.js"></script>
+<script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.iframe-transport.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.ui.widget.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-process.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-validate.js"></script>
+<script src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+<script src="${jsRoot}/biz/tools/xvtou.js?rand=${random}"></script>
+<!-- <script src="${jsRoot}/biz/tools/xvtouPlugins/multiple-select.js?rand=${random}"></script> -->
+<script>
+  var navHight = $('.navbar-static-side').height()
+  $('.navbar-static-side').css('height', navHight - 60)
+  $('.content-box').css('height', navHight - 60)
+  // 优先级排序
+  $('.btn-gradientb').click(function(){
+    $('.bottom-btnb').click(function(){
+      $('.priority-ranking').hide()
+    })
+  })
+  // 查看弹框
+  $('.look-start').click(function(){
+   // $('.look-start-box').show()
+    $('.bottom-btna').click(function(){
+      $('.look-start-box').hide()
+    })
+  })
+  var addOnlineTime = laydate({
+      elem:'#addOnlineTime',
+      istime: true,
+      format: 'YYYY-mm-DD hh:mm:ss',
+      event:'click'
+  })
+  var addOfflineTime = laydate({
+     elem:'#addOfflineTime',
+     istime: true,
+     format: 'YYYY-mm-DD hh:mm:ss',
+     event:'click'
+ })
+
+ // 选中更改颜色
+function chaCloor(field){
+	var pig = field.checked;
+	pig?field.nextSibling.style.backgroundColor="skyblue":field.nextSibling.style.backgroundColor="white";
+}
+
+</script>
+</body>
+</html>

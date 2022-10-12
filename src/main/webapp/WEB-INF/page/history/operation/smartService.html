@@ -1,0 +1,2867 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>智能服务管理</title>
+    <link href="${cssRoot}/bootstrap.min.css" rel="stylesheet">
+    <link href="${staticRoot}/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="${cssRoot}/oms/abtest/infor-statistics.css" rel="stylesheet">
+    <link href="${cssRoot}/oms/ruleconfig/jquery.searchableSelect.css" rel="stylesheet" type="text/css">
+
+    <link href="${staticRoot}/css/oms/ruleconfig/myStyle.css" rel="stylesheet"> <!-- 1 -->
+    <!--基本样式-->
+    <link rel="stylesheet" href="${cssRoot}/oms/smartmarketing/index.css"> <!-- 1 -->
+    <link href="${staticRoot}/css/oms/ruleconfig/select-mania.css" rel="stylesheet" type="text/css"> <!-- 1 -->
+    <!--自定义样式-->
+    <link href="${staticRoot}/css/oms/ruleconfig/select-mania-theme-darkblue.css" rel="stylesheet" type="text/css">
+    <!-- 1 -->
+    <link href=".${staticRoot}/css/oms/ruleconfig/select-mania-theme-green.css" rel="stylesheet" type="text/css">
+    <!-- 1 -->
+    <link href="${staticRoot}/css/oms/ruleconfig/select-mania-theme-orange.css" rel="stylesheet" type="text/css">
+    <!-- 1 -->
+    <link href="${staticRoot}/css/oms/ruleconfig/select-mania-theme-red.css" rel="stylesheet" type="text/css"><!-- 1 -->
+    <link href="${staticRoot}/css/oms/ruleconfig/select-mania-theme-square.css" rel="stylesheet" type="text/css">
+    <!-- 1 -->    <!--下拉选择-->
+    <link href="${cssRoot}/../font-awesome/css/select2.min.css" rel="stylesheet">
+    <!-- FooTable -->
+    <link href="${cssRoot}/plugins/footable/footable.core.css" rel="stylesheet">
+    <link href="${cssRoot}/styleT2.css?rand=${random}" rel="stylesheet">
+    <link href="${cssRoot}/animate.css" rel="stylesheet">
+    <link href="${cssRoot}/style.css?rand=${random}" rel="stylesheet">
+    <link href="${cssRoot}/styleT.css?rand=${random}" rel="stylesheet">
+    <link href="${staticRoot}/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <link href="${cssRoot}/oms/ruleconfig/jquery.searchableSelect2.css" rel="stylesheet" type="text/css">
+    <link href="${staticRoot}/css/oms/ruleconfig/select-mania.css" rel="stylesheet" type="text/css">
+
+    <!--自定义样式-->
+    <link href="${staticRoot}/css/oms/ruleconfig/select-mania-theme-darkblue.css" rel="stylesheet" type="text/css">
+    <link href=".${staticRoot}/css/oms/ruleconfig/select-mania-theme-green.css" rel="stylesheet" type="text/css">
+    <link href="${staticRoot}/css/oms/ruleconfig/select-mania-theme-orange.css" rel="stylesheet" type="text/css">
+    <link href="${staticRoot}/css/oms/ruleconfig/select-mania-theme-red.css" rel="stylesheet" type="text/css">
+    <link href="${staticRoot}/css/oms/ruleconfig/select-mania-theme-square.css" rel="stylesheet" type="text/css">
+    <script>
+        var globalConfig = {
+            basePath: "${ctx}",
+            staticRoot: "${staticRoot}",
+            loginName: "${Session.sessionUser.loginName}",
+            userName: "${Session.sessionUser.name}",
+        };
+
+        function swalMsg(msg) {
+            swal({
+                title: "",
+                text: msg,
+                confirmButtonColor: "#1ab394",
+                confirmButtonText: "确定"
+            });
+        }
+
+    </script>
+    <style>
+        .biaoti {
+            color: black;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 20px
+        }
+
+        #yesInputConfig, #noConfig {
+            height: 12px;
+        }
+        .boxb-a select, .boxb-a input[type='text'] {
+            width: 150px;
+            margin-left: 15px;
+        }
+        .boxb-a ul {
+            float: left;
+            width: 33.3%;
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .boxb-a ul li {
+            margin-top: 20px;
+        }
+
+        #auditing {
+            float: none;
+            margin-left: 0px;
+        }
+
+        #auditing div {
+            float: none;
+        }
+
+        #auditing input {
+            width: 200px;
+            margin-left: 30px;
+            margin-right: 50px;
+        }
+        #auditing2 {
+            float: none;
+            margin-left: 0px;
+        }
+
+        #auditing2 div {
+            float: none;
+        }
+
+        #auditing2 input {
+            width: 200px;
+            margin-left: 30px;
+            margin-right: 50px
+        }
+        #auditing3 {
+            float: none;
+            margin-left: 0px;
+        }
+
+        #auditing3 div {
+            float: none;
+        }
+
+        #auditing3 input {
+            width: 200px;
+            margin-left: 30px;
+            margin-right: 50px
+        }
+        .boxb-a div, #saveButton {
+            float: none;
+        }
+
+        #saveButton {
+            margin-left: 0px;
+        }
+
+        .boxb-a select, .boxb-a[type='text']{
+            width: 150px;
+            margin-left: 15px;
+        }
+        .noneConfig {
+            font-weight: 600;
+            font-style: normal;
+            color: #999999;
+            font-size: 18px;
+            text-align: left;
+            line-height: normal;
+        }
+
+        #triggerStrategyContext {
+            margin-left: 0px;
+        }
+        .boxb-a > div {
+            margin: 20px 0;
+        }
+
+        #addPage .small-boxb div {
+            float: none
+        }
+
+        #addPage .small-boxb div label {
+            vertical-align: top;
+            margin-right: 10px;
+        }
+
+        #add-task-rule > div {
+            margin: 10px 0;
+        }
+
+        .addShowType div {
+            display: flex;
+            margin-left: 0;
+            align-items: center;
+        }
+
+        .addShowType div select {
+            margin-top: 10px;
+        }
+
+        .addShowType div span {
+            margin: 5px 0 0 15px;
+        }
+
+        .addShowType div input {
+            margin-top: 7px;
+        }
+
+        .addShowType div p {
+            margin: 0;
+        }
+        .small-content{
+
+        }
+        .content-box{
+            /*         	width:150% */
+            overflow-x:scroll;
+        }
+        tr span:not(:last-child){
+            color:#000;
+        }
+        .bottom-pageb i{
+            cursor:pointer;
+        }
+        .clearMarLeft div {
+            margin-left: 0;
+        }
+        .clearMarLeftupd div {
+            margin-left: 0;
+        }
+        .clearMarLeftsele div {
+            margin-left: 0;
+        }
+    </style>
+</head>
+<body ng-app="smart_service" ng-controller="smart_service_controller">
+<div id="wrapper">
+    <div class="header-box">
+        <#include "/common/top.html" encoding="UTF-8" />
+    </div>
+    <nav class="navbar-default navbar-static-side nav-boxa" role="navigation">
+        <div class="sidebar-collapse"  style="height: 675px;overflow-y: scroll;">
+            <#include "/common/left.html" encoding="UTF-8" />
+        </div>
+    </nav>
+</div>
+<div class="content-box">
+    <div class="small-content" ng-show="viewPage=='serviceList'">
+        <!-- 第二部分 -->
+        <div class="small-boxb col-md-12">
+            <div class="boxb-a">
+                <p style="margin-top:20px;">渠道：
+                    <select class="chosen-select" ng-model="search.channelCode" ng-change="serviceSelectCreate()" style="width:160px;" tabindex="2"
+                            id="channel">
+                        <option value="WK">悟空理财</option>
+                        <option value="QB">玖富钱包</option>
+                    </select>
+                </p>
+            </div>
+            <div class="boxb-b">
+                <p>服务类型：
+                    <select class="chosen-select" ng-model="search.serviceCode" ng-change="userSelectCreate()"
+                            style="width:160px;" tabindex="2" id="service">
+                        <option value="">全部</option>
+                        <option ng-repeat="x in selectService" value={{x.key}}>{{x.value}}</option>
+
+                    </select>
+                </p>
+            </div>
+            <div class="boxb-c">
+                <p style="margin-top:20px;">用户行为：
+                    <select class="chosen-select" ng-model="search.userCode" style="width:160px;" tabindex="2"
+                            id="user">
+                        <option value="">全部</option>
+                        <option ng-repeat="x in selectAction" value={{x.key}}>{{x.value}}</option>
+                    </select>
+                </p>
+            </div>
+            <div class="boxb-a">
+                <p style="margin-top: 20px;">
+                    <a class="btn btn-success btn-rounded btn-blueW btn-blueWa" href="#"
+                       ng-click="SmartServiceList()"><i
+                            class="fa fa-search"></i> <span>搜索</span></a>
+                    <a class="btn btn-success btn-rounded btn-blueW btn-blueWb" href="#" ng-click="reset()"><i
+                            class="fa fa-refresh"></i> <span>重置</span></a>
+                </p>
+            </div>
+        </div>
+        <!-- 第二部分 -->
+        <!-- 第三部分 -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins" style="margin-top:10px;">
+                    <div class="ibox-content">
+                        <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+                            <thead>
+                            <tr>
+                                <th>服务ID</th>
+                                <th>渠道</th>
+                                <th>服务类型</th>
+                                <th>用户行为</th>
+                                <th>生效策略数</th>
+                                <th>总策略数</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="x in serviceList">
+                                <td>{{x.id}}</td>
+                                <td>{{x.channelName}}</td>
+                                <td>{{x.serviceName}}</td>
+                                <td>{{x.userActionName}}</td>
+                                <td>{{x.vaildStrategy}}</td>
+                                <td>{{x.totalStrategy}}</td>
+                                <td>
+                                    <a href="#" class="look-start magService" ng-click="manageService(1,x)">管理服务</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="bottom-page">
+                            <div class="bottom-pagea">
+                                <select style="width:58px;height:23px;" ng-model="search.pageSize"
+                                        ng-change="SmartServiceList()">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                </select>
+                            </div>
+                            <div class="bottom-pageb">
+                                <i class="fa fa-step-backward" ng-click="SmartServiceList()"></i>
+                                <i style="font-size:16px;" class="fa fa-caret-left"
+                                   ng-click="SmartServiceList(search.currentPage-1)"></i>
+                                <p>第<span class="pageN" ng-model="search.currentPage">{{search.currentPage}}</span>共<span>{{search.pageCount}}</span>页
+                                </p>
+                                <i style="font-size:16px;" class="fa fa-caret-right"
+                                   ng-click="SmartServiceList(search.currentPage+1)"></i>
+                                <i style="margin-left:8px;" class="fa fa-step-forward"
+                                   ng-click="SmartServiceList(search.pageCount)"></i>
+                                <i class="fa fa-refresh" ng-click="SmartServiceList(search.currentPage)"></i>
+                            </div>
+
+                            <div class="bottom-pagec">
+                                <p>显示<span>{{(search.currentPage-1)*search.pageSize+1}}</span>到{{search.currentPage*search.pageSize
+                                    >= search.totalRowSize && search.totalRowSize ||
+                                    search.currentPage*search.pageSize < search.totalRowSize &&
+                                    search.currentPage*search.pageSize || search.totalRowSize < 1&& 0 }}条，共<span>{{search.totalRowSize}}</span>记录
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="small-content" ng-show="viewPage=='pageTwo'">
+        <div class="small-boxb col-md-12" style="height: 80px; line-height: 80px;">
+            <a class="btn btn-success btn-blueW btn-blueWb" href="javascript:history.go(-1)"
+               style="margin-right: 15px" id="returnBack" ng-click="viewPage='serviceList'">返回</a>
+            <a class="btn btn-success btn-blueW btn-blueWa" style="margin-right: 15px" ng-click="exportPageTwo()"
+               id="excel">导出列表</a>
+            <a class="btn btn-success btn-blueW btn-blueWa" ng-click="addStrategy()"
+               style="margin-right: 15px">新增策略</a>
+            <span style="font-size: 20px;" id="spilt"></span>
+            <span style="font-size: 20px;"></span>
+        </div>
+        <div class="small-boxb col-md-12">
+            <form id="exportPage2">
+                <div class="boxb-a">
+                    <p style="margin-top:20px;">策略id:<input type="text" name="strategyId"
+                                                            ng-model="manage.strategyId" id="strategyId"></p>
+                    <p style="margin-top:20px;">策略状态:
+                        <select class="chosen-select" name="strategyStatus" style="width:160px;"
+                                ng-model="manage.strategyStatus" tabindex="2"
+                                id="strategyStatus">
+                            <option value="">全部</option>
+                            <option value="1">生效</option>
+                            <option value="2">失效</option>
+                            <option value="0">待审批</option>
+                            <option value="3">审核不通过</option>
+                        </select>
+                    </p>
+                </div>
+                <div class="boxb-b">
+                    <p>执行时间：<input id="startTime"  ng-model="manage.startTime" type="text"
+                                   style="width: 200px;">
+                        &nbsp;-&nbsp;
+                        <input id="endTime"  ng-model="manage.endTime" type="text"
+                               style="width: 200px;">
+                    </p>
+                    <p>预期结果状态:
+                        <select class="chosen-select" name="strategyResult" style="width:160px;"
+                                ng-model="manage.strategyResult" tabindex="2"
+                                id="strategyResult">
+                            <option value="">全部</option>
+                            <option ng-repeat="x in selectExpectedStatus" value={{x.key}}>{{x.value}}</option>
+
+                        </select>
+                        &nbsp;&nbsp;&nbsp;
+                        触达类型: <select class="chosen-select" name="resultType" ng-model="manage.resultType"
+                                    style="width:160px;" tabindex="2"
+                                    id="resultType">
+                                <option value="">全部</option>
+                                <option ng-repeat="x in selectResultType" value={{x.key}}>{{x.value}}</option>
+                            </select>
+                    </p>
+                </div>
+                <div class="boxb-c">
+                    <p style="margin-top:20px;">触发节点:
+                        <select class="chosen-select" name="nodeCode" ng-model="manage.nodeCode"
+                                style="width:160px;" tabindex="2"
+                                id="nodeCode">
+                            <option value="">全部</option>
+                            <option ng-repeat="x in selectNodeCode" value={{x.key}}>{{x.value}}</option>
+                        </select>
+                    </p>
+                </div>
+
+                <div class="boxb-c">
+                    <p style="margin-top:20px;">
+                        <a class="btn btn-success btn-rounded btn-blueW btn-blueWa" href="#"
+                           ng-click="manageService()"><i
+                                class="fa fa-search"></i> <span>搜索</span></a>
+                        <a class="btn btn-success btn-rounded btn-blueW btn-blueWb" href="#" ng-click="reset2()"><i
+                                class="fa fa-refresh"></i> <span>重置</span></a>
+                    </p>
+                </div>
+                <input type="text" name="currentPage" ng-model="manage.currentPage" style="display: none;">
+                <input type="text" name="pageSize" value="{{manage.currentPage}}" ng-model="manage.pageSize"
+                       style="display: none;">
+                <input type="text" name="channelCode" ng-model="showText.channelCode" style="display: none;">
+                <input type="text" name="userActionCode" ng-model="showText.userActionCode" style="display: none;">
+            </form>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins" style="margin-top:10px;">
+                    <div class="ibox-content">
+                        <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+                            <thead>
+                            <tr>
+                                <th>策略ID</th>
+                                <th>触发节点</th>
+                                <th>触发策略</th>
+                                <th>用户策略</th>
+                                <th>触达类型</th>
+                                <th>触达方式</th>
+                                <th>触达时间</th>
+                                <th>触发页面</th>
+                                <th>预期结果状态</th>
+                                <th>上线时间</th>
+                                <th>下线时间</th>
+                                <th>策略成功数</th>
+                                <th>总策略触发数</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="x in manageList">
+                                <td>{{x.strategyId}}</td>
+                                <td ng-if="showText.serviceCode == 'WK_USER_DEFINED' ||showText.serviceCode == 'QB_USER_DEFINED'">{{x.nodeCode|realtimeTagListFilter}}</td>
+                                <td ng-if="showText.serviceCode != 'WK_USER_DEFINED' && showText.serviceCode != 'QB_USER_DEFINED'">{{x.nodeCode}}</td>
+                                <td>{{x.touchStrategy}}</td>
+                                <td>{{x.userTagType}}</td>
+                                <td>{{x.resultType}}</td>
+                                <td>{{x.touchType}}</td>
+                                <td>{{x.touchTime}}</td>
+                                <td>{{x.touchPage}}</td>
+                                <td>{{x.strategyResult}}</td>
+                                <td>{{x.validTime}}</td>
+                                <td>{{x.invalidTime}}</td>
+                                <td>{{x.strategySuccessNum}}</td>
+                                <td>{{x.strategySumNum}}</td>
+                                <td>{{x.strategyStatus == 0 && '待审核'||x.strategyStatus == 1 && '生效'||x.strategyStatus == 2 && '失效'||x.strategyStatus == 3 && '审核不通过'}}</td>
+                                <td>
+                                    <a ng-show="x.strategyStatus=='0'" href="#" ng-click="shenpi(x.strategyId)"
+                                       class="look-start">审批</a>&nbsp;
+                                    <a ng-show="x.strategyStatus=='1'" ng-click="shixiao(x.strategyId)"
+                                       class="look-start">失效</a>&nbsp;
+                                    <a ng-show="x.strategyStatus=='2'" ng-click="shengxiao(x.strategyId)"
+                                       href="#" class="look-start">生效</a>&nbsp;
+                                    <a ng-click="updateService(x.strategyId)"
+                                       class="look-start">修改</a>&nbsp;
+                                    <a href="#" ng-click="checkStrategy(x.strategyId)" class="look-start">查看</a>
+                                    <a href="#" ng-click="xiaoguo(x)" class="look-start">效果分析</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="bottom-page">
+                            <div class="bottom-pagea">
+                                <select style="width:58px;height:23px;" name="pageSize" ng-model="manage.pageSize"
+                                        ng-change="querySmartList()">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                </select>
+                            </div>
+                            <div class="bottom-pageb">
+                                <i class="fa fa-step-backward" ng-click="manageService()"></i>
+                                <i style="font-size:16px;" class="fa fa-caret-left"
+                                   ng-click="manageService(manage.currentPage-1)"></i>
+                                <p>第<span class="pageN" name="currentPage" ng-model="manage.currentPage">{{manage.currentPage}}</span>共<span>{{manage.pageCount}}</span>页
+                                </p>
+                                <i style="font-size:16px;" class="fa fa-caret-right"
+                                   ng-click="manageService(manage.currentPage+1)"></i>
+                                <i style="margin-left:8px;" class="fa fa-step-forward"
+                                   ng-click="manageService(manage.pageCount)"></i>
+                                <i class="fa fa-refresh" ng-click="manageService(manage.currentPage)"></i>
+                            </div>
+
+                            <div class="bottom-pagec">
+                                <p>显示<span>{{(manage.currentPage-1)*manage.pageSize+1}}</span>到{{manage.currentPage*manage.pageSize
+                                    >= manage.totalRowSize && manage.totalRowSize ||
+                                    manage.currentPage*manage.pageSize < manage.totalRowSize &&
+                                    manage.currentPage*manage.pageSize || manage.totalRowSize < 1&& 0 }}条，共<span>{{manage.totalRowSize}}</span>记录
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="take-start-box" id="auditShow">
+        <div class="take-start-small newTakeEffect">
+            <h2>审核</h2>
+            <ul class="isEffect">
+                <li><p>审核结果：</p>
+                    <select id="auditStatus" ng-model="shenheresult">
+                        <option value="1">审核通过</option>
+                        <option value="3">审核不通过</option>
+                    </select>
+                </li>
+            </ul>
+            <div class="bottom-btn">
+                <input type="hidden" id='strId'>
+                <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#"
+                   ng-click="auditConfirm()">确定</a>
+                <a class="btn btn-danger btn-rounded bottom-btnb start-btnb" href="#"
+                   onclick="$('.take-start-box').hide();">取消</a>
+            </div>
+        </div>
+    </div>
+    <div class="small-content" ng-show="viewPage == 'add'">
+        <div style="height: 60px; line-height: 60px;">
+            <a class="btn btn-blueW " ng-click="viewPage='pageTwo'">返回</a>
+            <span style="font-size: 20px; margin-left: 20px" id="addtext"></span>
+        </div>
+        <div class="small-boxb col-md-12">
+            <!-- <div> -->
+
+
+            <div class="boxb-a" style="width: 100%">
+                <ul id="addStrategy-left">
+                    <li class="biaoti">行为策略配置</li>
+                    <li><label id="leixing">服务类型：</label></li>
+                    <li><label id="xingwei">用户行为：</label></li>
+                    <li ng-show="showText.userActionCode!='WK_USER_DEFINED_SCENE' && showText.userActionCode!='QB_USER_DEFINED_SCENE'"><label>触发节点：<b style="color: red;">*</b></label> <select ng-change="queryStrategyCondition()"
+                                                                                                                                                                                                id="triggerNode" name="touchCode" ng-model="add.aioActionStrategyDtoPara.touchCode">
+                        <option ng-repeat="x in selectNodeCode" value={{x.key}}>{{x.value}}</option>
+                    </select></li>
+                    <!--ng-model="tagSelectList"-->
+                    <li ng-show="showText.userActionCode=='WK_USER_DEFINED_SCENE'||showText.userActionCode=='QB_USER_DEFINED_SCENE'"><label>触发节点：<b style="color: red;">*</b></label>
+                        <select id="tagSelectListid" ng-model="abc" ng-change="tagSelectListChange()" >
+                            <option  ng-repeat="x in tagSelectList" value={{x.english}}>{{x.chinese}}</option>
+                        </select></li>
+
+                    <li class="deploy-item radio-flex">
+                        <span>是否配触发策略：</span>
+                        <p class="radio"><input id="yesInputConfig" type="radio" name="IS_EFFECT"
+                                                ng-click="radioChange(1)"><label for="yesInputConfig" id="ccc" class="lable">是</label>
+                        </p>
+                        <p class="radio" id="radio-css"><input id="noConfig" type="radio" ng-value="0"
+                                                               name="IS_EFFECT" ng-click="radioChange(0)"
+                                                               checked="true"><label for="noConfig"
+                                                                                     class="label-no">否</label></p>
+                    </li>
+                    <li class="deploy-item fold">
+                        <label id="triggerStrategy">触发策略：</label>
+                        <div id="triggerStrategyContext">
+                            <!--number-->
+                            <div class="deploy-item" style="margin-bottom:15px"
+                                 ng-repeat="x in add.tabel1.numberParamList">
+                                <label>{{x.param.remarks}}：</label>
+                                <div>
+                                    <div class="deploy-item" style="margin-bottom:15px;"
+                                         ng-repeat="y in x.list">
+                                        <label>{{y.remarks}}：</label>
+                                        <input placeholder="{{y.description}}" type="number"
+                                               style="margin-left: 15px" id="{{y.key}}" name="{{y.key}}"
+                                               required="required">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--select-->
+                            <div class='deploy-item' style='margin-bottom:15px;text-align:right;'
+                                 ng-repeat="x in add.tabel1.selectParamList">
+                                <label>{{x.param.remarks}}：</label>
+                                <select ng-repeat="y in x.list" id="{{x.ownCode}}" name="x.ownCode">
+                                    <option value='{{y.key}}'>{{y.description}}</option>
+                                </select>
+                            </div>
+                            <!--text-->
+                            <div class='deploy-item' style='margin-bottom:15px;text-align:right;'
+                                 ng-repeat="x in add.tabel1.textParamList">
+                                <label>{{x.param.remarks}}：</label>
+                                <input placeholder='{{y.description}}' type='text' style='margin-left: 15px'
+                                       required='required' id="{{x.key}}" name="{{x.key}}" ng-repeat="y in x.list"/>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <!--实时标签新增-->
+                        <div class="clearMarLeft" ng-show="add.tabel1.IS_EFFECT == 1">
+                            <!-- 动态效果 -->
+                            <div class="query-wrap" ng-show="showText.serviceCode == 'QB_USER_DEFINED' ||showText.serviceCode == 'WK_USER_DEFINED' ">
+                            </div>
+                        </div>
+                        <!--银行新增-->
+                        <span class="deploy-item" id ="bankallid" ng-show=" (add.tabel1.IS_EFFECT == 1 && showText.serviceCode == 'WK_BANK_FLOW') ||(add.tabel1.IS_EFFECT == 1 && showText.serviceCode == 'QB_BANK_FLOW') ">
+                            <div><input type = "checkbox" ng-click="addupdAll(1)"   id="addAllchecked">全部</div>
+                            <div ng-repeat="x in add.tabel1.checkboxParamList">
+                                <span style="width:100px; height:40px;float:left"><input type = "checkbox" class="addBankCode" ng-click="addupdChangeBank(1)" name="addbanks" value ="{{x.bankCode}}">{{x.bankName}}</span>
+                            </div>
+                        </span>
+                    </li>
+                </ul>
+                <ul id="addStrategy-center">
+                    <li class="biaoti">服务策略策略配置</li>
+                    <li><label>名单类型：</label> <select id="userStratefy"
+                                                     name="userTagType" ng-change="selectChannelGroup()"
+                                                     ng-model="add.aioActionStrategyDtoPara.userTagType">
+                        <option ng-repeat="x in strategyList" value={{x.key}}>{{x.value}}</option>
+                    </select></li>
+
+                    <div class="start-b deploy-item-filter select1" id="userNameLikeSearch" >
+                        <li style="margin-left: -30px;"><label>模糊搜索：</label>
+                            <select class="mySelect" id="memberId" class="filter-select"
+                                    ng-model="add.aioActionStrategyDtoPara.userTag">
+                                <option value="{{x.rosterId}}" ng-repeat="x in strChannelGroups">{{x.rosterName}}
+                                </option>
+                            </select>
+                        </li>
+                    </div>
+
+                    <!-- <li><label>用户名单：</label> <select id="userNames"
+                        name="userTag">
+                            <option value=""></option>
+                    </select></li> -->
+
+
+                    <li><label>触达类型：</label> <select id="strategyType"
+                                                     name="touchType"
+                                                     ng-model="add.aioActionStrategyDtoPara.touchType">
+                        <option ng-repeat="x in selectResultType" value={{x.key}}>{{x.value}}</option>
+                    </select></li>
+
+                    <ui ng-show="add.aioActionStrategyDtoPara.touchType == 'QA'">
+                        <li id="strategyWay"><label>触达方式：</label><span
+                                class="noneConfig">无配置</span></li>
+                        <li id="strategyTime"><label>触达时间：</label><span
+                                class="noneConfig">无配置</span></li>
+                        <li id="strategyPage"><label>触达页面：</label><span
+                                class="noneConfig">无配置</span></li>
+                        <li id="strategyConfig"><label>触达配置：</label><span
+                                class="noneConfig">无配置</span></li>
+                    </ui>
+
+
+                    <ui ng-show="add.aioActionStrategyDtoPara.touchType == 'CUSTOMER_SERVICE' || add.aioActionStrategyDtoPara.touchType == 'PHONE'">
+                        <li>
+                            触达方式:
+                            <select ng-model="add.aioTouchWayDtoPara.touchWay">
+                                <!--<option value="SOFT_POPUP">软弹窗</option>-->
+                                <option value="BANNER">专属banner</option>
+                            </select>
+
+                        </li>
+                        <!--<li ng-show="add.aioTouchWayDtoPara.touchWay=='SOFT_POPUP'">-->
+                        <!--<ui>-->
+                        <!--<p>跳转类型:</p>-->
+                        <!--<select ng-model="add.aioTouchWayDtoPara.parentContentDto.softPopupContentDto.skipType"-->
+                        <!--ng-change="selectPageOne()">-->
+                        <!--<option value="URL">链接跳转</option>-->
+                        <!--<option value="PRIMORDIAL">原生跳转</option>-->
+                        <!--</select>-->
+                        <!--</ui>-->
+                        <!--<ui ng-show="add.aioTouchWayDtoPara.parentContentDto.softPopupContentDto.skipType == 'URL'">-->
+                        <!--<p>链接地址<b style="color: red;">*</b></p>-->
+                        <!--<input style="width:368px;" id="jumpTypeAddress3" type="text"-->
+                        <!--ng-model="add.aioTouchWayDtoPara.parentContentDto.softPopupContentDto.skipUrl">-->
+                        <!--</ui>-->
+                        <!--<ui ng-show="add.aioTouchWayDtoPara.parentContentDto.softPopupContentDto.skipType == 'PRIMORDIAL'">-->
+                        <!--<p>页面类型：<b style="color: red;">*</b></p>-->
+                        <!--<select ng-model="add.pageType"-->
+                        <!--ng-options="x.key as x.value for x in rDictList2"-->
+                        <!--ng-change="selectPageTwo(add.pageType)">-->
+                        <!--<option>{{x.label}}</option>-->
+                        <!--</select>-->
+                        <!--<p>跳转页面</p>-->
+                        <!--<select style="width: 188px;" class="interests"-->
+                        <!--ng-model="add.jumpPage">-->
+                        <!--<option ng-repeat="pageTwo in rPositionDictList" value="{{pageTwo.key}}">-->
+                        <!--{{pageTwo.value}}-->
+                        <!--</option>-->
+                        <!--</select>-->
+                        <!--</ui>-->
+                        <!--<p>弹窗内容:</p>-->
+                        <!--<textarea style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"-->
+                        <!--placeholder="不超过20个字"-->
+                        <!--maxlength="20"-->
+                        <!--ng-model="add.aioTouchWayDtoPara.parentContentDto.softPopupContentDto.popPageContent"></textarea>-->
+                        <!--</li>-->
+
+                        <!--</ui>-->
+                        <!--<ui ng-show="add.aioTouchWayDtoPara.touchWay == 'SOFT_POPUP'">-->
+                        <!--<p>按钮文案:</p>-->
+                        <!--<input type="text" placeholder="不超过4个字"-->
+                        <!--ng-model="add.aioTouchWayDtoPara.parentContentDto.softPopupContentDto.btnContent">-->
+                        <!--</ui>-->
+                        <!--</li>-->
+                    </ui>
+                    <ui ng-show="add.aioActionStrategyDtoPara.touchType=='AWARD'">
+                        <span class="single_color tian" ng-click="addAction()">添加奖励</span>
+                        <div class="news_over" style="width: 500px;height:180px;">
+                            <div class="news_single">
+
+                                <div class="news_right" style="margin-left: 30px;">
+                                        <span class="news_txt"
+                                              ng-repeat="action in add.aioTouchWayDtoPara.parentContentDto.awardContentDto"><span style="color:#0e0e0e;">{{action.awardDesc}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span
+                                                class="news_del" ng-click="deleteAction(action)">删除</span><br/></span>
+                                </div>
+                            </div>
+                            <!-- news_single -->
+                        </div>
+                        <!-- news_single -->
+
+                        <li>触达方式:
+                            <select ng-model="add.aioTouchWayDtoPara.touchWay">
+                                <!--<option value="SOFT_POPUP">软弹窗</option>-->
+                                <option value="BANNER">专属banner</option>
+                                <!--<option value="POPUP">弹窗</option>-->
+                                <option value="MESSAGE">短信</option>
+                                <option value="PUSH">推送</option>
+                                <option value="PUSH_MAIL">站内信</option>
+                            </select>
+                        </li>
+                        <li ng-show="add.aioTouchWayDtoPara.touchWay=='SOFT_POPUP'"><p>弹窗内容:</p>
+                            <textarea style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"
+                                      placeholder="不超过20个字"
+                                      maxlength="20"
+                                      ng-model="add.aioTouchWayDtoPara.parentContentDto.softPopupContentDto.popPageContent"></textarea>
+                        </li>
+                        <li ng-show="add.aioTouchWayDtoPara.touchWay=='POPUP'">
+                            <p>弹窗内容:</p>
+                            <textarea
+                                    style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"
+                                    placeholder="不超过20个字"
+                                    maxlength="20"
+                                    ng-model="add.aioTouchWayDtoPara.parentContentDto.popupContentDto.popPageContent"></textarea>
+                            <ui>
+                                <p>跳转类型:</p>
+                                <select ng-model="add.aioTouchWayDtoPara.parentContentDto.popupContentDto.skipType"
+                                        ng-change="selectPageOne()">
+                                    <option value="URL">链接跳转</option>
+                                </select>
+                            </ui>
+                            <ui ng-show="add.aioTouchWayDtoPara.parentContentDto.popupContentDto.skipType == 'URL'">
+                                <p>链接地址<b style="color: red;">*</b></p>
+                                <input style="width:368px;" type="text"
+                                       ng-model="add.aioTouchWayDtoPara.parentContentDto.popupContentDto.skipUrl">
+                            </ui>
+                        <li ng-show="add.aioTouchWayDtoPara.touchWay == 'POPUP'">
+                            <img id='headPic1' src='${staticRoot}/img/9f_logo.png' width='50px' height='50px'
+                                 style='padding: 5px'>
+                            <span id='uploadPhoto1' class='btn btn-info btn-rounded btn-gradient btn-gradienta'
+                                  ng-click="uploadPicture()">上传图片</span>
+                            <input id='upload1' type='file' name='file' style='display: none'
+                                   accept='image/!*'><input id='fileUrl1'
+                                                            ng-model="add.aioTouchWayDtoPara.parentContentDto.popupContentDto.popPageImg"
+                                                            type='hidden' name='POP_PAGE_IMG'
+                                                            required='required'>
+                        </li>
+                        </li>
+                        </li>
+                        <li ng-show="add.aioTouchWayDtoPara.touchWay == 'MESSAGE'">
+                            <p>短信内容:</p>
+                            <textarea style="resize:none;width: 300px;height: 200px;overflow-y: scroll;"
+                                      placeholder="不超过140个字"
+                                      maxlength="140"
+                                      ng-model="add.aioTouchWayDtoPara.parentContentDto.messageContentDto.messageContent"></textarea>
+                        </li>
+                        <li ng-show="add.aioTouchWayDtoPara.touchWay == 'PUSH'">
+                            <ui ng-show="add.aioTouchWayDtoPara.touchWay== 'PUSH' && add.aioActionStrategyDtoPara.touchType=='AWARD'">
+                                <p>跳转类型:</p>
+                                <select ng-model="add.aioTouchWayDtoPara.parentContentDto.pushContentDto.skipType"
+                                        ng-change="selectPageOne()">
+                                    <option value="URL">链接跳转</option>
+                                    <option value="PRIMORDIAL">原生跳转</option>
+
+                                </select>
+                            </ui>
+                            <ui ng-show="add.aioTouchWayDtoPara.parentContentDto.pushContentDto.skipType == 'URL' && add.aioTouchWayDtoPara.touchWay == 'PUSH'">
+                                <p>链接地址<b style="color: red;">*</b></p>
+                                <input style="width:368px;" type="text" ng-model="add.aioTouchWayDtoPara.parentContentDto.pushContentDto.skipUrl">
+                            </ui>
+                            <ui ng-show="add.aioTouchWayDtoPara.parentContentDto.pushContentDto.skipType == 'PRIMORDIAL' && add.aioTouchWayDtoPara.touchWay == 'PUSH'">
+                                <p>页面类型:<b style="color: red;">*</b></p>
+                                <select ng-model="add.pageType"
+                                        ng-options="x.key as x.value for x in rDictList2"
+                                        ng-change="selectPageTwo(add.pageType)">
+                                    <option>{{x.value}}</option>
+                                </select>
+                                <p>跳转页面:</p>
+                                <select style="width: 188px;" class="interests"
+                                        ng-model="add.jumpPage">
+                                    <option ng-repeat="pageTwo in rPositionDictList" value="{{pageTwo.key}}">
+                                        {{pageTwo.value}}
+                                    </option>
+                                </select>
+                            </ui>
+                            <ui>
+                                <p>标题内容:</p>
+                                <textarea style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"
+                                          placeholder="不超过20个字"
+                                          maxlength="20"
+                                          ng-model="add.aioTouchWayDtoPara.parentContentDto.pushContentDto.touchPushTitle"></textarea>
+                            </ui>
+                            <ui>
+                                <p>推送内容:</p>
+                                <textarea style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"
+                                          placeholder="不超过50个字"
+                                          maxlength="50"
+                                          ng-model="add.aioTouchWayDtoPara.parentContentDto.pushContentDto.touchPushContent"></textarea>
+                            </ui>
+                        </li>
+                        <li ng-show="add.aioTouchWayDtoPara.touchWay == 'PUSH_MAIL'">
+                            <p>站内信标题:</p>
+                            <textarea style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"
+                                      placeholder="不超过30个字"
+                                      maxlength="30"
+                                      ng-model="add.aioTouchWayDtoPara.parentContentDto.pushMailContentDto.touchPushTitle"></textarea>
+                            <p>站内信内容:</p>
+                            <textarea style="resize:none;width: 420px;height: 180px;overflow-y: scroll;"
+                                      placeholder="不超过100个字"
+                                      maxlength="100"
+                                      ng-model="add.aioTouchWayDtoPara.parentContentDto.pushMailContentDto.touchPushContent"></textarea>
+                        </li>
+                        <li ng-show="add.aioTouchWayDtoPara.touchWay == 'BANNER'">
+                            <ui ng-show="add.aioTouchWayDtoPara.touchWay== 'BANNER'">
+                                <p>banner内容:</p>
+                                <textarea
+                                        style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"
+                                        placeholder="不超过20字以内"
+                                        maxlength="20"
+                                        ng-model="add.aioTouchWayDtoPara.parentContentDto.bannerContentDto.bannerContent"></textarea>
+                            </ui>
+
+                            <ui ng-show="add.aioTouchWayDtoPara.touchWay== 'BANNER'&& add.aioActionStrategyDtoPara.touchType=='AWARD'">
+                        <li ng-show="add.aioTouchWayDtoPara.touchWay== 'BANNER'&& add.aioActionStrategyDtoPara.touchType=='AWARD'">按钮文案:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="text" maxlength="4" placeholder="不超过4个字"
+                                   ng-model="add.aioTouchWayDtoPara.parentContentDto.bannerContentDto.bannerBtnContent">
+                        </li>
+
+                    </ui>
+                    <ui ng-show="add.aioTouchWayDtoPara.touchWay== 'BANNER' && add.aioActionStrategyDtoPara.touchType=='AWARD'">
+                        <li ng-show="add.aioTouchWayDtoPara.touchWay== 'BANNER' && add.aioActionStrategyDtoPara.touchType=='AWARD'">跳转类型:&nbsp;&nbsp;&nbsp;&nbsp;
+                            <select ng-model="add.aioTouchWayDtoPara.parentContentDto.bannerContentDto.bannerBtnUrlType"
+                                    ng-change="selectPageOne()">
+                                <option value="URL">链接跳转</option>
+                                <option value="PRIMORDIAL">原生跳转</option>
+
+                            </select>
+                        </li>
+                    </ui>
+                    <ui ng-show="add.aioTouchWayDtoPara.parentContentDto.bannerContentDto.bannerBtnUrlType == 'URL' && add.aioActionStrategyDtoPara.touchType=='AWARD'">
+                        <li ng-show="add.aioTouchWayDtoPara.touchWay=='BANNER' && add.aioActionStrategyDtoPara.touchType=='AWARD'">链接地址:&nbsp;&nbsp;&nbsp;<b style="color: red;">*</b>
+                            <input style="width:368px;" type="text"
+                                   ng-model="add.aioTouchWayDtoPara.parentContentDto.bannerContentDto.bannerBtnUrl">
+                        </li>
+                    </ui>
+                    <ui ng-show="add.aioTouchWayDtoPara.parentContentDto.bannerContentDto.bannerBtnUrlType == 'PRIMORDIAL' && add.aioActionStrategyDtoPara.touchType=='AWARD'">
+                        <li ng-show="add.aioTouchWayDtoPara.touchWay=='BANNER' && add.aioActionStrategyDtoPara.touchType=='AWARD'">页面类型：<b style="color: red;">*</b>
+                            <select ng-model="add.pageType"
+                                    ng-options="x.key as x.value for x in rDictList2"
+                                    ng-change="selectPageTwo(add.pageType)">
+                                <option>{{x.label}}</option>
+                            </select></li>
+                        <li ng-show="add.aioTouchWayDtoPara.touchWay=='BANNER' && add.aioActionStrategyDtoPara.touchType=='AWARD'">跳转页面
+                            <select style="width: 188px;" class="interests"
+                                    ng-model="add.jumpPage">
+                                <option ng-repeat="pageTwo in rPositionDictList" value="{{pageTwo.key}}">
+                                    {{pageTwo.value}}
+                                </option>
+                            </select>
+                        </li>
+                    </ui>
+                    </li>
+                    </ui>
+
+                    <ui ng-show="add.aioActionStrategyDtoPara.touchType == 'USER_DEFINED'">
+
+                        <li>触达方式:&nbsp;&nbsp;&nbsp;
+                            <select ng-model="add.aioTouchWayDtoPara.touchWay">
+                                <!--<option value="SOFT_POPUP">软弹窗</option>-->
+                                <option value="BANNER">专属banner</option>
+                                <!--<option value="POPUP">弹窗</option>-->
+                                <option value="MESSAGE">短信</option>
+                                <option value="PUSH">推送</option>
+                                <option value="PUSH_MAIL">站内信</option>
+                            </select></li>
+                        <ui ng-show="add.aioTouchWayDtoPara.touchWay== 'BANNER'">
+                            <ui ng-show="add.aioTouchWayDtoPara.touchWay== 'BANNER'">
+                                <p>banner内容:</p>
+                                <textarea id="bannerContent"
+                                          style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"
+                                          placeholder="不超过20个字"
+                                          maxlength="20"
+                                          ng-model="add.aioTouchWayDtoPara.parentContentDto.bannerContentDto.bannerContent"></textarea>
+                            </ui>
+
+                            <ui ng-show="add.aioTouchWayDtoPara.touchWay== 'BANNER'">
+                                <li>按钮文案:&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input  type="text" maxlength="4" placeholder="不超过4个字"
+                                            ng-model="add.aioTouchWayDtoPara.parentContentDto.bannerContentDto.bannerBtnContent"></li>
+                            </ui>
+                            <ui ng-show="add.aioTouchWayDtoPara.touchWay== 'BANNER'">
+                                <li ng-show="add.aioTouchWayDtoPara.touchWay== 'BANNER' && add.aioActionStrategyDtoPara.touchType == 'USER_DEFINED'">跳转类型:
+                                    <select ng-model="add.aioTouchWayDtoPara.parentContentDto.bannerContentDto.bannerBtnUrlType"
+                                            ng-change="selectPageOne()">
+                                        <option value="URL">链接跳转</option>
+                                        <option value="PRIMORDIAL">原生跳转</option>
+                                        <option value="NO_SKIP">无跳转</option>
+                                    </select></li>
+                            </ui>
+                            <ui ng-show="add.aioTouchWayDtoPara.parentContentDto.bannerContentDto.bannerBtnUrlType == 'URL' && add.aioActionStrategyDtoPara.touchType == 'USER_DEFINED'">
+                                <li ng-show="add.aioTouchWayDtoPara.parentContentDto.bannerContentDto.bannerBtnUrlType == 'URL' && add.aioActionStrategyDtoPara.touchType == 'USER_DEFINED'">链接地址:<b style="color: red;">*</b>
+                                    <input style="width:368px;" type="text"
+                                           ng-model="add.aioTouchWayDtoPara.parentContentDto.bannerContentDto.bannerBtnUrl">
+                                </li>
+                            </ui>
+                            <ui ng-show="add.aioTouchWayDtoPara.parentContentDto.bannerContentDto.bannerBtnUrlType == 'PRIMORDIAL' && add.aioActionStrategyDtoPara.touchType == 'USER_DEFINED'">
+                                <p>页面类型:<b style="color: red;">*</b></p>
+                                <select ng-model="add.pageType"
+                                        ng-options="x.key as x.value for x in rDictList2"
+                                        ng-change="selectPageTwo(add.pageType)">
+                                    <option>{{x.label}}</option>
+                                </select>
+                                <p>跳转页面:</p>
+                                <select style="width: 188px;" class="interests"
+                                        ng-model="add.jumpPage">
+                                    <option ng-repeat="pageTwo in rPositionDictList" value="{{pageTwo.key}}">
+                                        {{pageTwo.value}}
+                                    </option>
+                                </select>
+                            </ui>
+
+                        </ui>
+                        <ui ng-show="add.aioTouchWayDtoPara.touchWay=='MESSAGE'">
+                            <p>短信内容:</p>
+                            <textarea style="resize:none;width: 300px;height: 200px;overflow-y: scroll;"
+                                      placeholder="不超过140个字"
+                                      maxlength="140"
+                                      ng-model="add.aioTouchWayDtoPara.parentContentDto.messageContentDto.messageContent"></textarea>
+                        </ui>
+                        <ui ng-show="add.aioTouchWayDtoPara.touchWay=='PUSH'">
+                            <ui ng-show="add.aioTouchWayDtoPara.touchWay=='PUSH' && add.aioActionStrategyDtoPara.touchType == 'USER_DEFINED'">
+                                <p>跳转类型:</p>
+                                <select ng-model="add.aioTouchWayDtoPara.parentContentDto.pushContentDto.skipType"
+                                        ng-change="selectPageOne()">
+                                    <option value="URL">链接跳转</option>
+                                    <option value="PRIMORDIAL">原生跳转</option>
+                                    <option value="NO_SKIP">无跳转</option>
+                                </select>
+                            </ui>
+                            <ui ng-show="add.aioTouchWayDtoPara.parentContentDto.pushContentDto.skipType == 'URL' && add.aioActionStrategyDtoPara.touchType == 'USER_DEFINED'">
+                                <p>链接地址:<b style="color: red;">*</b></p>
+                                <input style="width:368px;" type="text"
+                                       ng-model="add.aioTouchWayDtoPara.parentContentDto.pushContentDto.skipUrl">
+                            </ui>
+                            <ui ng-show="add.aioTouchWayDtoPara.parentContentDto.pushContentDto.skipType == 'PRIMORDIAL' && add.aioActionStrategyDtoPara.touchType == 'USER_DEFINED'">
+                                <p>页面类型：<b style="color: red;">*</b></p>
+                                <select ng-model="add.pageType"
+                                        ng-options="x.key as x.value for x in rDictList2"
+                                        ng-change="selectPageTwo(add.pageType)">
+                                    <option>{{x.label}}</option>
+                                </select>
+                                <p>跳转页面:</p>
+                                <select style="width: 188px;" class="interests"
+                                        ng-model="add.jumpPage">
+                                    <option ng-repeat="pageTwo in rPositionDictList" value="{{pageTwo.key}}">
+                                        {{pageTwo.value}}
+                                    </option>
+                                </select>
+                            </ui>
+                            <ui>
+                                <p>标题内容:</p>
+                                <textarea style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"
+                                          placeholder="不超过20个字"
+                                          maxlength="20"
+                                          ng-model="add.aioTouchWayDtoPara.parentContentDto.pushContentDto.touchPushTitle"></textarea>
+                            </ui>
+                            <ui>
+                                <p>推送内容:</p>
+                                <textarea style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"
+                                          placeholder="不超过50个字"
+                                          maxlength="50"
+                                          ng-model="add.aioTouchWayDtoPara.parentContentDto.pushContentDto.touchPushContent"></textarea>
+                            </ui>
+                        </ui>
+                        <ui ng-show="add.aioTouchWayDtoPara.touchWay=='PUSH_MAIL'">
+                            <p>站内信标题:</p>
+                            <textarea style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"
+                                      placeholder="不超过30个字"
+                                      maxlength="30"
+                                      ng-model="add.aioTouchWayDtoPara.parentContentDto.pushMailContentDto.touchPushTitle"></textarea>
+                            <p>站内信内容:</p>
+                            <textarea style="resize:none;width: 420px;height: 180px;overflow-y: scroll;"
+                                      placeholder="不超过100个字"
+                                      maxlength="100"
+                                      ng-model="add.aioTouchWayDtoPara.parentContentDto.pushMailContentDto.touchPushContent"></textarea>
+                        </ui>
+                        <ui ng-show="add.aioTouchWayDtoPara.touchWay == 'POPUP'">
+                            <ui>
+                                <p>跳转类型:</p>
+                                <select ng-model="add.aioTouchWayDtoPara.parentContentDto.popupContentDto.skipType"
+                                        ng-change="selectPageOne()">
+                                    <option value="URL">链接跳转</option>
+                                    <option value="PRIMORDIAL">原生跳转</option>
+                                    <option value="NO_SKIP">无跳转</option>
+                                </select>
+                            </ui>
+                            <ui ng-show="add.aioTouchWayDtoPara.parentContentDto.popupContentDto.skipType == 'URL'">
+                                <p>链接地址<b style="color: red;">*</b></p>
+                                <input style="width:368px;" type="text"
+                                       ng-model="add.aioTouchWayDtoPara.parentContentDto.popupContentDto.skipUrl">
+                            </ui>
+                            <li>
+                                <img id='headPic' src='${staticRoot}/img/9f_logo.png' width='50px' height='50px'
+                                     style='padding: 5px'>
+                                <span id='uploadPhoto' class='btn btn-info btn-rounded btn-gradient btn-gradienta'
+                                      ng-click="uploadPicture()">上传图片</span>
+                                <input id='upload' type='file' name='file' style='display: none'
+                                       accept='image/!*'><input id='fileUrl' type='hidden' name='POP_PAGE_IMG'
+                                                                ng-model="add.aioTouchWayDtoPara.parentContentDto.popupContentDto.popPageImg"
+                                                                required='required'>
+                            </li>
+                            <li>
+                                <p>弹窗内容:</p>
+                                <textarea
+                                        style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"
+                                        placeholder="不超过20个字"
+                                        maxlength="20"
+                                        ng-model="add.aioTouchWayDtoPara.parentContentDto.popupContentDto.popPageContent">
+                                </textarea>
+                            </li>
+                            <li>
+                                <p>按钮文案:</p>
+                                <input type="text" maxlength="4" placeholder="不超过4个字"
+                                       ng-model="add.aioTouchWayDtoPara.parentContentDto.popupContentDto.btnContent">
+                            </li>
+                            <ui ng-show="add.aioTouchWayDtoPara.parentContentDto.popupContentDto.skipType == 'PRIMORDIAL'">
+                                <p>页面类型：<b style="color: red;">*</b></p>
+                                <select ng-model="add.pageType"
+                                        ng-options="x.key as x.value for x in rDictList2"
+                                        ng-change="selectPageTwo(add.pageType)">
+                                    <option>{{x.label}}</option>
+                                </select>
+                                <p>跳转页面</p>
+                                <select style="width: 188px;" class="interests"
+                                        ng-model="add.jumpPage">
+                                    <option ng-repeat="pageTwo in rPositionDictList" value="{{pageTwo.key}}">
+                                        {{pageTwo.value}}
+                                    </option>
+                                </select>
+                            </ui>
+                        </ui>
+                        <ui ng-show="add.aioTouchWayDtoPara.touchWay == 'SOFT_POPUP'">
+                            <ui>
+                                <p>跳转类型:</p>
+                                <select ng-model="add.aioTouchWayDtoPara.parentContentDto.softPopupContentDto.skipType"
+                                        ng-change="selectPageOne()">
+                                    <option value="URL">链接跳转</option>
+                                    <option value="PRIMORDIAL">原生跳转</option>
+                                    <option value="NO_SKIP">无跳转</option>
+                                </select>
+                            </ui>
+                            <ui ng-show="add.aioTouchWayDtoPara.parentContentDto.softPopupContentDto.skipType == 'URL'">
+                                <p>链接地址:<b style="color: red;">*</b></p>
+                                <input style="width:368px;" type="text"
+                                       ng-model="add.aioTouchWayDtoPara.parentContentDto.softPopupContentDto.skipUrl">
+                            </ui>
+                            <ui ng-show="add.aioTouchWayDtoPara.parentContentDto.softPopupContentDto.skipType == 'PRIMORDIAL'">
+                                <p>页面类型：<b style="color: red;">*</b></p>
+                                <select ng-model="add.pageType"
+                                        ng-options="x.key as x.value for x in rDictList2"
+                                        ng-change="selectPageTwo(add.pageType)">
+                                    <option>{{x.label}}</option>
+                                </select>
+                                <p>跳转页面:</p>
+                                <select style="width: 188px;" class="interests"
+                                        ng-model="add.jumpPage">
+                                    <option ng-repeat="pageTwo in rPositionDictList" value="{{pageTwo.key}}">
+                                        {{pageTwo.value}}
+                                    </option>
+                                </select>
+                            </ui>
+                        </ui>
+                        <ui class="start-a" ng-show="add.aioTouchWayDtoPara.touchWay == 'SOFT_POPUP'">
+                            <p>弹窗内容:</p>
+                            <textarea id="messageContent"
+                                      style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"
+                                      placeholder="不超过20个字"
+                                      maxlength="20"
+                                      ng-model="add.aioTouchWayDtoPara.parentContentDto.softPopupContentDto.popPageContent"></textarea>
+                        </ui>
+                        <ui ng-show="add.aioTouchWayDtoPara.touchWay == 'SOFT_POPUP'">
+                            <p>按钮文案:</p>
+                            <input type="text" placeholder="不超过4个字"
+                                   ng-model="add.aioTouchWayDtoPara.parentContentDto.softPopupContentDto.btnContent">
+                        </ui>
+                    </ui>
+
+                    <li><label>触达时间:</label>
+                        <select name="touchTimeType" ng-model="add.aioTouchWayDtoPara.touchTimeType">
+                            <option value="THIS">当次</option>
+                            <option value="SMARTTOUCH">智能触达</option>
+                        </select></li>
+                    <li ng-show="add.aioTouchWayDtoPara.touchTimeType == 'SMARTTOUCH'">
+                        时间配置:&nbsp;&nbsp;&nbsp;<input type="number" min="5" max="1440" placeholder="5-1440" style='margin-left: 15px; width:80px'
+                                                      ng-model="add.aioTouchWayDtoPara.muchTime">分钟内未达到预期结果
+                    </li>
+                    <li id='restrictConfig'><label>限制配置：<input placeholder='1-30' min='1' max='30' type='number'
+                                                               ng-model="add.aioActionStrategyDtoPara.touchTimeCount"
+                                                               style='margin-left: 15px; width:80px'
+                                                               name='touchTimeCount'/>个自然日内最多触发</label><input
+                            placeholder='1-10' ng-model="add.aioActionStrategyDtoPara.touchCount" min='1' max='10'
+                            type='number'
+                            style='margin-left: 15px; width:80px' name='touchCount'/>次 <input type='hidden'
+                                                                                              name='touchCountType'
+                                                                                              value='DAY'></li>
+
+                </ul>
+                <ul id="addStrategy-right">
+
+                    <li class="biaoti">监控配置</li>
+                    <li><label>预期结果状态：</label>
+                        <select id="expResultStatus" ng-model="add.aioActionStrategyDtoPara.strategyResult"
+                                name="strategyResult">
+                            <option ng-repeat="x in selectExpectedStatus" value={{x.key}}>{{x.value}}</option>
+                        </select>
+                    </li>
+                    <!--预期结果银行新增"-->
+                    <li>
+                        <div ng-if=" add.aioActionStrategyDtoPara.strategyResult == 'BANK_OPEN_SUCCESS'||add.aioActionStrategyDtoPara.strategyResult == 'BANK_PAY_SUCCESS'">
+                            <div><input type = "checkbox"  ng-click="addupdAll(2)" id="addyqAllchecked">全部</div>
+                            <div class="look-pageb" ng-repeat="x in add.tabel1.checkboxParamList" >
+                                <span style="width:100px; height:50px;float:left"><input type = "checkbox" class="addyqBankCode" ng-click="addupdChangeBank(2)" name="addyqbanks"  value = "{{x.bankCode}}">{{x.bankName}}</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li><label>执行触达后</label><input type="number" min="1" max="7"
+                                                    required="required"
+                                                    ng-model="add.aioActionStrategyDtoPara.strategyCycle"yu'q
+                                                    placeholder="1-7"
+                                                    style="width: 80px; margin: 0px 15px;" name="strategyCycle">
+                        <label>自然日内有效</label></li>
+                </ul>
+
+            </div>
+            <div id="auditing">
+                <div>
+
+                    <label>上线时间：</label><input id="upTime" type="text"
+                                               ng-model="add.aioActionStrategyDtoPara.validTime"
+                                               style="width: 200px;" name="validTime" required="required">
+                    <label>下线时间：</label><input id="downTime" type="text"
+                                               ng-model="add.aioActionStrategyDtoPara.invalidTime"
+                                               style="width: 200px;" name="invalidTime" required="required">
+                </div>
+                <div style="margin-top: 20px; float: none;">
+                    <label>审核人：</label> <select
+                        style="width: 200px; margin-left: 39px; margin-right: 50px"
+                        name="approverId" ng-model="add.approverId" id="auditor">
+                    <option ng-repeat="x in shenheList" value={{x.key}}>{{x.value}}</option>
+                </select> <label>审核留言：</label><input ng-model="add.approverNote" type="text"
+                                                     name="approverNote" id="approverNote"/>
+                </div>
+            </div>
+            <div style="text-align: center; float: none;">
+                <a class="btn btn-danger btn-rounded bottom-btna start-btna" id="screenTJ" href="#"
+                   ng-click="commitAddStrategy()">添加</a>
+            </div>
+            <br> <br>
+        </div>
+    </div>
+    <div class="small-content" ng-show="viewPage == 'update'">
+        <div style="height: 60px; line-height: 60px;">
+            <a class="btn btn-blueW " ng-click="viewPage='pageTwo'">返回</a>
+            <span style="font-size: 20px; margin-left: 20px" ></span>
+        </div>
+        <div class="small-boxb col-md-12">
+            <!-- <div> -->
+
+
+            <div class="boxb-a" style="width: 100%">
+                <ul >
+                    <li class="biaoti">行为策略配置</li>
+                    <li><label id="leixing1">服务类型：{{showText.serviceType}}</label></li>
+                    <li><label id="xingwei1">用户行为：{{showText.userActionName}}</label></li>
+                    <li>
+                        <div ng-show ="showText.serviceCode !='QB_USER_DEFINED' && showText.serviceCode !='WK_USER_DEFINED'">
+                            <label>触发节点：<b style="color: red;">*</b></label>
+                            <select ng-change="queryStrategyCondition(1)" id="triggerNode1" name="touchCode" ng-model="toUpdate.aioActionStrategyDtoPara.touchCode">
+                                <option ng-repeat="x in selectNodeCode" value="{{x.key}}">{{x.value}}</option>
+                            </select></div></li>
+                    <li ng-if ="showText.serviceCode =='QB_USER_DEFINED'||showText.serviceCode =='WK_USER_DEFINED'">
+                        <label>触发节点：<b style="color: red;">*</b></label>
+                        <select id="updtagSelectListid" ng-model="abc"  ng-change="updtagSelectListChange()">
+                            <option  ng-repeat="x in tagSelectList" value={{x.english}} ng-selected="x.english===updtouchCode">{{x.chinese}}</option>
+                        </select>
+                    </li>
+                    <li class="deploy-item radio-flex">
+                        <span>是否配触发策略：</span>
+                        <label  class="lable" ng-show="add.tabel1.IS_EFFECT =='1'" >是</label>
+                        <label ng-show="add.tabel1.IS_EFFECT == '0'"
+                               class="label-no">否</label></p>
+                    </li>
+                    <li class="deploy-item fold">
+                        <label id="triggerStrategy1">触发策略：</label>
+                        <div id="triggerStrategyContext1">
+                            <!--number-->
+                            <div class="deploy-item" style="margin-bottom:15px"
+                                 ng-repeat="x in add.tabel1.numberParamList">
+                                <label>{{x.param.remarks}}：</label>
+                                <div>
+                                    <div class="deploy-item" style="margin-bottom:15px;"
+                                         ng-repeat="y in x.list">
+                                        <label>{{y.remarks}}：</label>
+                                        <input placeholder="{{y.description}}" type="number"
+                                               style="margin-left: 15px" value="{{y.value}}" id="up{{y.key}}" name="{{y.key}}"
+                                               required="required">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--select-->
+                            <div class='deploy-item' style='margin-bottom:15px;text-align:right;'
+                                 ng-repeat="x in add.tabel1.selectParamList">
+                                <label>{{x.param.remarks}}：</label>
+                                <select ng-repeat="y in x.list" id="{{x.ownCode}}1" name="x.ownCode">
+                                    <option value='{{y.key}}'>{{y.description}}</option>
+                                </select>
+                            </div>
+                            <!--text-->
+                            <div class='deploy-item' style='margin-bottom:15px;text-align:right;'
+                                 ng-repeat="x in add.tabel1.textParamList">
+                                <label>{{x.param.remarks}}：</label>
+                                <input placeholder='{{y.description}}' type='text' style='margin-left: 15px'
+                                       required='required' id="{{x.key}}1" name="{{x.key}}" ng-repeat="y in x.list"/>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <!--实时标签修改-->
+                        <!--ng-show="(IS_EFFECT == 1 && showText.serviceCode == 'QB_USER_DEFINED')||(add.tabel1.IS_EFFECT == 1 && showText.serviceCode == 'WK_USER_DEFINED')"-->
+                        <div class="clearMarLeftupd" ng-show="(updIS_EFFECT ==1 && updserviceTypeCode == 'QB_USER_DEFINED') || (updIS_EFFECT == 1 && updserviceTypeCode == 'WK_USER_DEFINED') ">
+                            <div class="query-updwrap">
+                            </div>
+                        </div>
+                        <!--银行修改-->
+                        <span  class="look-pageb" ng-show="(updIS_EFFECT ==1 && updserviceTypeCode == 'WK_BANK_FLOW') || (updIS_EFFECT == 1 && updserviceTypeCode == 'QB_BANK_FLOW') ">
+                            <div><input type = "checkbox" ng-click="addupdAll(3)"   id="updAllchecked">全部</div>
+                            <div class="look-pageb" ng-model="bankschecked" ng-repeat="x in add.tabel1.checkboxParamList" >
+                                <span style="width:100px; height:40px;float: left"><input type = "checkbox" class="updBankCode" ng-click="addupdChangeBank(3)" name="updbanks" value = "{{x.bankCode}}">{{x.bankName}}</span>
+                            </div>
+                        </span>
+                    </li>
+                    </li>
+                </ul>
+                <ul id="addStrategy-center1">
+                    <li class="biaoti">服务策略策略配置</li>
+                    <li><label>名单类型：</label> <select id="userStratefy1"
+                                                     name="userTagType" ng-change="selectChannelGroup(1)"
+                                                     ng-model="toUpdate.aioActionStrategyDtoPara.userTagType">
+                        <option ng-repeat="x in strategyList" value={{x.key}}>{{x.value}}</option>
+                    </select></li>
+
+                    <div ng-show="toUpdate.aioActionStrategyDtoPara.userTagType != 'NO_RULE'" class="start-b deploy-item-filter select1" id="userNameLikeSearch1">
+                        <li style="margin-left: -30px;"><label>模糊搜索：</label>
+                            <select class="mySelect" id="memberId1" class="filter-select"
+                                    ng-model="toUpdate.aioActionStrategyDtoPara.userTag">
+                                <option value="{{x.rosterId}}" ng-repeat="x in strChannelGroups">{{x.rosterName}}
+                                </option>
+                            </select>
+                        </li>
+                    </div>
+
+                    <!-- <li><label>用户名单：</label> <select id="userNames"
+                        name="userTag">
+                            <option value=""></option>
+                    </select></li> -->
+
+
+                    <li><label>触达类型：</label> <select
+                            name="touchType"
+                            ng-model="toUpdate.aioActionStrategyDtoPara.touchType">
+                        <option ng-repeat="x in selectResultType" value={{x.key}}>{{x.value}}</option>
+                    </select></li>
+
+                    <!--<ui ng-show="toUpdate.aioActionStrategyDtoPara.touchType == 'QA'">-->
+                    <!--<li ><label>触达方式：</label><span-->
+                    <!--class="noneConfig">无配置</span></li>-->
+                    <!--<li ><label>触达时间：</label><span-->
+                    <!--class="noneConfig">无配置</span></li>-->
+                    <!--<li ><label>触达页面：</label><span-->
+                    <!--class="noneConfig">无配置</span></li>-->
+                    <!--<li ><label>触达配置：</label><span-->
+                    <!--class="noneConfig">无配置</span></li>-->
+                    <!--</ui>-->
+
+
+                    <ui ng-if="toUpdate.aioActionStrategyDtoPara.touchType == 'CUSTOMER_SERVICE' || toUpdate.aioActionStrategyDtoPara.touchType == 'PHONE'">
+                        <li style="margin-left: 10px;">
+                            触达方式:
+                            <select ng-model="toUpdate.aioTouchWayDtoPara.touchWay">
+                                <!--<option value="SOFT_POPUP">软弹窗</option>-->
+                                <option value="BANNER">专属banner</option>
+                            </select>
+
+                        </li>
+
+                    </ui>
+                    <ui ng-if="toUpdate.aioActionStrategyDtoPara.touchType=='AWARD'">
+                        <span class="single_color tian" ng-click="addAction()">添加奖励</span>
+                        <div class="news_over" style="width: 500px;height:180px;">
+                            <div class="news_single">
+
+                                <div class="news_right" style="margin-left: 30px;">
+                                        <span class="news_txt"
+                                              ng-repeat="action in toUpdate.aioTouchWayDtoPara.parentContentDTO.awardContentDto"><span style="color: #0e0e0e;">{{action.awardDesc}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span
+                                                class="news_del" ng-click="deleteAction(action,1)">删除</span><br/></span>
+                                </div>
+                            </div>
+                            <!-- news_single -->
+                        </div>
+                        <!-- news_single -->
+
+                        <li>触达方式:
+                            <select ng-model="toUpdate.aioTouchWayDtoPara.touchWay">
+                                <!--<option value="SOFT_POPUP">软弹窗</option>-->
+                                <option value="BANNER">专属banner</option>
+                                <!--<option value="POPUP">弹窗</option>-->
+                                <option value="MESSAGE">短信</option>
+                                <option value="PUSH">推送</option>
+                                <option value="PUSH_MAIL">站内信</option>
+                            </select>
+                        </li>
+                        <!--<li ng-show="toUpdate.aioTouchWayDtoPara.touchWay=='SOFT_POPUP'"><p>弹窗内容:</p>-->
+                        <!--<textarea style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"-->
+                        <!--placeholder="不超过20个字"-->
+                        <!--maxlength="20"-->
+                        <!--ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.softPopupContentDto.popPageContent"></textarea>-->
+                        <!--</li>-->
+                        <!--<li ng-show="toUpdate.aioTouchWayDtoPara.touchWay=='POPUP'">-->
+                        <!--<p>弹窗内容:</p>-->
+                        <!--<textarea-->
+                        <!--style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"-->
+                        <!--placeholder="不超过20个字"-->
+                        <!--maxlength="20"-->
+                        <!--ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.popupContentDto.popPageContent"></textarea>-->
+                        <!--<ui>-->
+                        <!--<p>跳转类型:</p>-->
+                        <!--<select ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.popupContentDto.skipType"-->
+                        <!--ng-change="selectPageOne()">-->
+                        <!--<option value="URL">链接跳转</option>-->
+                        <!--</select>-->
+                        <!--</ui>-->
+                        <!--<ui ng-show="toUpdate.aioTouchWayDtoPara.parentContentDTO.popupContentDto.skipType == 'URL'">-->
+                        <!--<p>链接地址<b style="color: red;">*</b></p>-->
+                        <!--<input style="width:368px;" type="text"-->
+                        <!--ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.popupContentDto.skipUrl">-->
+                        <!--</ui>-->
+                        <!--<li ng-show="toUpdate.aioTouchWayDtoPara.touchWay == 'POPUP'">-->
+                        <!--<img id='headPic2' src='${staticRoot}/img/9f_logo.png' width='50px' height='50px'-->
+                        <!--style='padding: 5px'>-->
+                        <!--<span id='uploadPhoto2' class='btn btn-info btn-rounded btn-gradient btn-gradienta'-->
+                        <!--ng-click="uploadPicture()">上传图片</span>-->
+                        <!--<input id='upload2' type='file' name='file' style='display: none'-->
+                        <!--accept='image/!*'><input id='fileUrl2'-->
+                        <!--ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.popupContentDto.popPageImg"-->
+                        <!--type='hidden' name='POP_PAGE_IMG'-->
+                        <!--required='required'>-->
+                        <!--</li>-->
+                        <!--</li>-->
+                        <!--</li>-->
+                        <li ng-if="toUpdate.aioTouchWayDtoPara.touchWay == 'MESSAGE'">
+                            <p>短信内容:</p>
+                            <textarea style="resize:none;width: 300px;height: 200px;overflow-y: scroll;"
+                                      placeholder="不超过140个字"
+                                      maxlength="140"
+                                      ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.messageContentDto.messageContent"></textarea>
+                        </li>
+                        <li ng-if="toUpdate.aioTouchWayDtoPara.touchWay == 'PUSH'">
+                        <li ng-if="toUpdate.aioTouchWayDtoPara.touchWay == 'PUSH' && toUpdate.aioActionStrategyDtoPara.touchType=='AWARD'" >跳转类型:
+                            <select ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.pushContentDto.skipType"
+                                    ng-change="selectPageOne()">
+                                <option value="URL">链接跳转</option>
+                                <option value="PRIMORDIAL">原生跳转</option>
+                                <option value="NO_SKIP">无跳转</option>
+                            </select>
+                        </li>
+                        <ui ng-if="toUpdate.aioTouchWayDtoPara.parentContentDTO.pushContentDto.skipType == 'URL' && toUpdate.aioTouchWayDtoPara.touchWay == 'PUSH' && toUpdate.aioActionStrategyDtoPara.touchType=='AWARD'">
+                            <li>链接地址:<b style="color: red;">*</b>
+                                <input style="width:368px;" type="text" ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.pushContentDto.skipUrl">
+                            </li>
+                        </ui>
+                        <ui ng-if="toUpdate.aioTouchWayDtoPara.parentContentDTO.pushContentDto.skipType == 'PRIMORDIAL' && toUpdate.aioTouchWayDtoPara.touchWay == 'PUSH' && toUpdate.aioActionStrategyDtoPara.touchType=='AWARD'">
+                            <li>页面类型:
+                                <select ng-model="add.pageType"
+                                        ng-options="x.key as x.value for x in rDictList2"
+                                        ng-change="selectPageTwo(add.pageType)">
+                                    <option>{{x.value}}</option>
+                                </select>
+                            </li>
+                            <li ng-if="toUpdate.aioTouchWayDtoPara.touchWay=='PUSH' && toUpdate.aioActionStrategyDtoPara.touchType == 'AWARD' && toUpdate.aioTouchWayDtoPara.parentContentDTO.pushContentDto.skipType == 'PRIMORDIAL'">跳转页面
+                                <select style="width: 188px;" class="interests"
+                                        ng-model="add.jumpPage">
+                                    <option ng-repeat="pageTwo in rPositionDictList" value="{{pageTwo.key}}">
+                                        {{pageTwo.value}}
+                                    </option>
+                                </select>
+                            </li>
+                        </ui>
+                        <ui ng-if="toUpdate.aioTouchWayDtoPara.touchWay=='PUSH' && toUpdate.aioActionStrategyDtoPara.touchType == 'AWARD'">
+                            <p>标题内容:</p>
+                            <textarea style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"
+                                      placeholder="不超过20个字"
+                                      maxlength="20"
+                                      ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.pushContentDto.touchPushTitle"></textarea>
+                        </ui>
+                        <ui ng-if="toUpdate.aioTouchWayDtoPara.touchWay=='PUSH' && toUpdate.aioActionStrategyDtoPara.touchType == 'AWARD'">
+                            <p>推送内容:</p>
+                            <textarea style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"
+                                      placeholder="不超过50个字"
+                                      maxlength="50"
+                                      ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.pushContentDto.touchPushContent"></textarea>
+                        </ui>
+                        </li>
+                        <li ng-if="toUpdate.aioTouchWayDtoPara.touchWay == 'PUSH_MAIL'">
+                            <p>站内信标题:</p>
+                            <textarea style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"
+                                      placeholder="不超过30个字"
+                                      maxlength="30"
+                                      ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.pushMailContentDto.touchPushTitle"></textarea>
+                            <p>站内信内容:</p>
+                            <textarea style="resize:none;width: 420px;height: 180px;overflow-y: scroll;"
+                                      placeholder="不超过100个字"
+                                      maxlength="100"
+                                      ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.pushMailContentDto.touchPushContent"></textarea>
+                        </li>
+                        <li ng-if="toUpdate.aioTouchWayDtoPara.touchWay == 'BANNER' && toUpdate.aioActionStrategyDtoPara.touchType=='AWARD'">
+                            <ui >
+                                <p>banner内容:</p>
+                                <textarea
+                                        style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"
+                                        placeholder="不超过20字以内"
+                                        maxlength="20"
+                                        ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.bannerContentDto.bannerContent"></textarea>
+                            </ui>
+                            <!--</li>-->
+                            <!--&lt;!&ndash;<li ng-show="toUpdate.aioTouchWayDtoPara.touchWay=='SOFT_POPUP'"><p>弹窗内容:</p>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<textarea style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"&ndash;&gt;-->
+                            <!--&lt;!&ndash;placeholder="不超过20个字"&ndash;&gt;-->
+                            <!--&lt;!&ndash;maxlength="20"&ndash;&gt;-->
+                            <!--&lt;!&ndash;ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.softPopupContentDto.popPageContent"></textarea>&ndash;&gt;-->
+                            <!--&lt;!&ndash;</li>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<li ng-show="toUpdate.aioTouchWayDtoPara.touchWay=='POPUP'">&ndash;&gt;-->
+                            <!--&lt;!&ndash;<p>弹窗内容:</p>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<textarea&ndash;&gt;-->
+                            <!--&lt;!&ndash;style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"&ndash;&gt;-->
+                            <!--&lt;!&ndash;placeholder="不超过20个字"&ndash;&gt;-->
+                            <!--&lt;!&ndash;maxlength="20"&ndash;&gt;-->
+                            <!--&lt;!&ndash;ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.popupContentDto.popPageContent"></textarea>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<ui>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<p>跳转类型:</p>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<select ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.popupContentDto.skipType"&ndash;&gt;-->
+                            <!--&lt;!&ndash;ng-change="selectPageOne()">&ndash;&gt;-->
+                            <!--&lt;!&ndash;<option value="URL">链接跳转</option>&ndash;&gt;-->
+                            <!--&lt;!&ndash;</select>&ndash;&gt;-->
+                            <!--&lt;!&ndash;</ui>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<ui ng-show="toUpdate.aioTouchWayDtoPara.parentContentDTO.popupContentDto.skipType == 'URL'">&ndash;&gt;-->
+                            <!--&lt;!&ndash;<p>链接地址<b style="color: red;">*</b></p>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<input style="width:368px;" type="text"&ndash;&gt;-->
+                            <!--&lt;!&ndash;ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.popupContentDto.skipUrl">&ndash;&gt;-->
+                            <!--&lt;!&ndash;</ui>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<li ng-show="toUpdate.aioTouchWayDtoPara.touchWay == 'POPUP'">&ndash;&gt;-->
+                            <!--&lt;!&ndash;<img id='headPic2' src='${staticRoot}/img/9f_logo.png' width='50px' height='50px'&ndash;&gt;-->
+                            <!--&lt;!&ndash;style='padding: 5px'>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<span id='uploadPhoto2' class='btn btn-info btn-rounded btn-gradient btn-gradienta'&ndash;&gt;-->
+                            <!--&lt;!&ndash;ng-click="uploadPicture()">上传图片</span>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<input id='upload2' type='file' name='file' style='display: none'&ndash;&gt;-->
+                            <!--&lt;!&ndash;accept='image/!*'><input id='fileUrl2'&ndash;&gt;-->
+                            <!--&lt;!&ndash;ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.popupContentDto.popPageImg"&ndash;&gt;-->
+                            <!--&lt;!&ndash;type='hidden' name='POP_PAGE_IMG'&ndash;&gt;-->
+                            <!--&lt;!&ndash;required='required'>&ndash;&gt;-->
+                            <!--&lt;!&ndash;</li>&ndash;&gt;-->
+                            <!--&lt;!&ndash;</li>&ndash;&gt;-->
+                            <!--&lt;!&ndash;</li>&ndash;&gt;-->
+                            <!--<li ng-show="toUpdate.aioTouchWayDtoPara.touchWay == 'MESSAGE'">-->
+                            <!--<p>短信内容:</p>-->
+                            <!--<textarea style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"-->
+                            <!--placeholder="不超过20个字"-->
+                            <!--maxlength="20"-->
+                            <!--ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.messageContentDto.messageContent"></textarea>-->
+                            <!--</li>-->
+                            <!--<li ng-show="toUpdate.aioTouchWayDtoPara.touchWay == 'PUSH'">-->
+                            <!--<ui>-->
+                            <!--<li>跳转类型:-->
+                            <!--<select ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.pushContentDto.skipType"-->
+                            <!--ng-change="selectPageOne()">-->
+                            <!--<option value="URL">链接跳转</option>-->
+                            <!--<option value="PRIMORDIAL">原生跳转</option>-->
+
+                            <!--</select>-->
+                            <!--</li>-->
+                            <!--</ui>-->
+                            <!--<ui ng-show="toUpdate.aioTouchWayDtoPara.parentContentDTO.pushContentDto.skipType == 'URL'">-->
+                            <!--<li>链接地址:<b style="color: red;">*</b>-->
+                            <!--<input style="width:368px;" type="text" ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.pushContentDto.skipUrl">-->
+                            <!--</li>-->
+                            <!--</ui>-->
+                            <!--<ui ng-show="toUpdate.aioTouchWayDtoPara.parentContentDTO.pushContentDto.skipType == 'PRIMORDIAL'">-->
+                            <!--<li ng-show="toUpdate.aioTouchWayDtoPara.touchWay=='PUSH' && toUpdate.aioActionStrategyDtoPara.touchType == 'AWARD'">页面类型:-->
+                            <!--<select ng-model="add.pageType"-->
+                            <!--ng-options="x.key as x.value for x in rDictList2"-->
+                            <!--ng-change="selectPageTwo(add.pageType)">-->
+                            <!--<option>{{x.value}}</option>-->
+                            <!--</select>-->
+                            <!--</li>-->
+                            <!--<li ng-show="toUpdate.aioTouchWayDtoPara.touchWay=='PUSH' && toUpdate.aioActionStrategyDtoPara.touchType == 'AWARD'">跳转页面-->
+                            <!--<select style="width: 188px;" class="interests"-->
+                            <!--ng-model="add.jumpPage">-->
+                            <!--<option ng-repeat="pageTwo in rPositionDictList" value="{{pageTwo.key}}">-->
+                            <!--{{pageTwo.value}}-->
+                            <!--</option>-->
+                            <!--</select>-->
+                            <!--</li>-->
+                            <!--</ui>-->
+                            <!--<ui>-->
+                            <!--<p>标题内容:</p>-->
+                            <!--<textarea style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"-->
+                            <!--placeholder="不超过20个字"-->
+                            <!--maxlength="20"-->
+                            <!--ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.pushContentDto.touchPushTitle"></textarea>-->
+                            <!--</ui>-->
+                            <!--<ui>-->
+                            <!--<p>推送内容:</p>-->
+                            <!--<textarea style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"-->
+                            <!--placeholder="不超过50个字"-->
+                            <!--maxlength="50"-->
+                            <!--ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.pushContentDto.touchPushContent"></textarea>-->
+                            <!--</ui>-->
+                            <!--</li>-->
+                            <!--<li ng-show="toUpdate.aioTouchWayDtoPara.touchWay == 'PUSH_MAIL'">-->
+                            <!--<p>站内信标题:</p>-->
+                            <!--<textarea style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"-->
+                            <!--placeholder="不超过30个字"-->
+                            <!--maxlength="30"-->
+                            <!--ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.pushMailContentDto.touchPushTitle"></textarea>-->
+                            <!--<p>站内信内容:</p>-->
+                            <!--<textarea style="resize:none;width: 420px;height: 180px;overflow-y: scroll;"-->
+                            <!--placeholder="不超过100个字"-->
+                            <!--maxlength="100"-->
+                            <!--ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.pushMailContentDto.touchPushContent"></textarea>-->
+                            <!--</li>-->
+                            <!--<li ng-show="toUpdate.aioTouchWayDtoPara.touchWay == 'BANNER' && toUpdate.aioActionStrategyDtoPara.touchType=='AWARD'">-->
+                            <!--<ui >-->
+                            <!--<p>banner内容:</p>-->
+                            <!--<textarea-->
+                            <!--style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"-->
+                            <!--placeholder="不超过20字以内"-->
+                            <!--maxlength="20"-->
+                            <!--ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.bannerContentDto.bannerContent"></textarea>-->
+                            <!--</ui>-->
+
+                            <ui ng-show="toUpdate.aioTouchWayDtoPara.touchWay == 'BANNER' && toUpdate.aioActionStrategyDtoPara.touchType=='AWARD'">
+                        <li ng-show="toUpdate.aioTouchWayDtoPara.touchWay == 'BANNER' && toUpdate.aioActionStrategyDtoPara.touchType=='AWARD'">按钮文案:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="text" maxlength="4" placeholder="不超过4个字"
+                                   ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.bannerContentDto.bannerBtnContent"></li>
+                    </ui>
+                    <ui >
+                        <li ng-show="toUpdate.aioTouchWayDtoPara.touchWay == 'BANNER' && toUpdate.aioActionStrategyDtoPara.touchType=='AWARD'">跳转类型:
+                            <select ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.bannerContentDto.bannerBtnUrlType"
+                                    ng-change="selectPageOne()">
+                                <option value="URL">链接跳转</option>
+                                <option value="PRIMORDIAL">原生跳转</option>
+                                <option value="NO_SKIP">无跳转</option>
+                            </select>
+                        </li>
+                    </ui>
+                    <ui ng-show="toUpdate.aioTouchWayDtoPara.touchWay=='BANNER' && toUpdate.aioActionStrategyDtoPara.touchType=='AWARD' && toUpdate.aioTouchWayDtoPara.parentContentDTO.bannerContentDto.bannerBtnUrlType == 'URL'">
+                        <li ng-show="toUpdate.aioTouchWayDtoPara.touchWay=='BANNER' && toUpdate.aioActionStrategyDtoPara.touchType=='AWARD' && toUpdate.aioTouchWayDtoPara.parentContentDTO.bannerContentDto.bannerBtnUrlType == 'URL'">链接地址<b style="color: red;">*</b>
+                            <input style="width:368px;" type="text"
+                                   ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.bannerContentDto.bannerBtnUrl"></li>
+                    </ui>
+                    <ui ng-if="toUpdate.aioTouchWayDtoPara.parentContentDTO.bannerContentDto.bannerBtnUrlType == 'PRIMORDIAL' && toUpdate.aioTouchWayDtoPara.touchWay=='BANNER' && toUpdate.aioActionStrategyDtoPara.touchType=='AWARD'">
+                        <li>页面类型：<b style="color: red;">*</b></p>
+                            <select ng-model="add.pageType"
+                                    ng-options="x.key as x.value for x in rDictList2"
+                                    ng-change="selectPageTwo(add.pageType)">
+                                <option>{{x.label}}</option>
+                            </select>
+                        </li>
+                        <li>跳转页面</p>
+                            <select style="width: 188px;" class="interests"
+                                    ng-model="add.jumpPage">
+                                <option ng-repeat="pageTwo in rPositionDictList" value="{{pageTwo.key}}">
+                                    {{pageTwo.value}}
+                                </option>
+                            </select>
+                        </li>
+                    </ui>
+                    </li>
+                    </ui>
+
+                    <ui ng-if="toUpdate.aioActionStrategyDtoPara.touchType == 'USER_DEFINED'">
+
+                        <li style="margin-left:10px;">触达方式:
+                            <select ng-model="toUpdate.aioTouchWayDtoPara.touchWay">
+                                <!--<option value="SOFT_POPUP">软弹窗</option>-->
+                                <option value="BANNER">专属banner</option>
+                                <!--<option value="POPUP">弹窗</option>-->
+                                <option value="MESSAGE">短信</option>
+                                <option value="PUSH">推送</option>
+                                <option value="PUSH_MAIL">站内信</option>
+                            </select>
+                        </li>
+                        <ui ng-if="toUpdate.aioTouchWayDtoPara.touchWay== 'BANNER' && toUpdate.aioActionStrategyDtoPara.touchType == 'USER_DEFINED' ">
+                            <ui>
+                                <p>banner内容:</p>
+                                <textarea
+                                        style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"
+                                        placeholder="不超过20字以内"
+                                        maxlength="20"
+                                        ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.bannerContentDto.bannerContent"></textarea>
+                            </ui>
+
+                            <ui >
+                                <li>按钮文案:&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input id="anniu" type="text" maxlength="4" placeholder="不超过4个字"
+                                           ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.bannerContentDto.bannerBtnContent"></li>
+                            </ui>
+                            <ui ng-if="toUpdate.aioTouchWayDtoPara.touchWay== 'BANNER' && toUpdate.aioActionStrategyDtoPara.touchType=='USER_DEFINED'">
+                                <li ng-if="toUpdate.aioTouchWayDtoPara.touchWay== 'BANNER' && toUpdate.aioActionStrategyDtoPara.touchType=='USER_DEFINED'">跳转类型:
+                                    <select ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.bannerContentDto.bannerBtnUrlType"
+                                            ng-change="selectPageOne()">
+                                        <option value="URL">链接跳转</option>
+                                        <option value="PRIMORDIAL">原生跳转</option>
+                                        <option value="NO_SKIP">无跳转</option>
+                                    </select>
+                                </li>
+                            </ui>
+                            <ui ng-if="toUpdate.aioTouchWayDtoPara.touchWay=='BANNER' && toUpdate.aioActionStrategyDtoPara.touchType=='USER_DEFINED' && toUpdate.aioTouchWayDtoPara.parentContentDTO.bannerContentDto.bannerBtnUrlType == 'URL'">
+                                <li ng-if="toUpdate.aioTouchWayDtoPara.touchWay=='BANNER' && toUpdate.aioActionStrategyDtoPara.touchType=='USER_DEFINED' && toUpdate.aioTouchWayDtoPara.parentContentDTO.bannerContentDto.bannerBtnUrlType == 'URL'">链接地址<b style="color: red;">*</b>
+                                    <input style="width:368px;" type="text"
+                                           ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.bannerContentDto.bannerBtnUrl">
+                                </li>
+                            </ui>
+                            <ui ng-if="toUpdate.aioTouchWayDtoPara.parentContentDTO.bannerContentDto.bannerBtnUrlType == 'PRIMORDIAL' && toUpdate.aioActionStrategyDtoPara.touchType=='USER_DEFINED' && toUpdate.aioTouchWayDtoPara.touchWay=='BANNER'">
+                                <li>页面类型:</b>
+                                    <select ng-model="add.pageType"
+                                            ng-options="x.key as x.value for x in rDictList2"
+                                            ng-change="selectPageTwo(add.pageType)">
+                                        <option>{{x.label}}</option>
+                                    </select>
+                                </li>
+                                <li>跳转页面:
+                                    <select style="width: 188px;" class="interests"
+                                            ng-model="add.jumpPage">
+                                        <option ng-repeat="pageTwo in rPositionDictList" value="{{pageTwo.key}}">
+                                            {{pageTwo.value}}
+                                        </option>
+                                    </select>
+                                </li>
+                            </ui>
+
+                        </ui>
+                        <ui ng-if="toUpdate.aioTouchWayDtoPara.touchWay=='MESSAGE'">
+                            <li>短信内容:
+                                <textarea style="resize:none;width: 300px;height: 200px;overflow-y: scroll;"
+                                          placeholder="不超过140个字"
+                                          maxlength="140"
+                                          ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.messageContentDto.messageContent"></textarea>
+                            </li>
+                        </ui>
+                        <ui ng-if="toUpdate.aioTouchWayDtoPara.touchWay=='PUSH'">
+                            <li ng-if="toUpdate.aioTouchWayDtoPara.touchWay=='PUSH' && toUpdate.aioActionStrategyDtoPara.touchType == 'USER_DEFINED'">跳转类型:
+                                <select ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.pushContentDto.skipType"
+                                        ng-change="selectPageOne()">
+                                    <option value="URL">链接跳转</option>
+                                    <option value="PRIMORDIAL">原生跳转</option>
+                                    <option value="NO_SKIP">无跳转</option>
+                                </select>
+                            </li>
+                            <ui ng-if="toUpdate.aioTouchWayDtoPara.parentContentDTO.pushContentDto.skipType == 'URL' && toUpdate.aioTouchWayDtoPara.touchWay=='PUSH' && toUpdate.aioActionStrategyDtoPara.touchType == 'USER_DEFINED'">
+                                <li>链接地址<b style="color: red;">*</b>
+                                    <input style="width:368px;" type="text"
+                                           ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.pushContentDto.skipUrl">
+                                </li>
+                            </ui>
+                            <ui ng-if="toUpdate.aioTouchWayDtoPara.parentContentDTO.pushContentDto.skipType == 'PRIMORDIAL' && toUpdate.aioTouchWayDtoPara.touchWay=='PUSH' && toUpdate.aioActionStrategyDtoPara.touchType == 'USER_DEFINED'">
+                                <li>页面类型：<b style="color: red;">*</b>
+                                    <select ng-model="add.pageType"
+                                            ng-options="x.key as x.value for x in rDictList2"
+                                            ng-change="selectPageTwo(add.pageType)">
+                                        <option>{{x.label}}</option>
+                                    </select>
+                                </li>
+                                <li>跳转页面:
+                                    <select style="width: 188px;" class="interests"
+                                            ng-model="add.jumpPage">
+                                        <option ng-repeat="pageTwo in rPositionDictList" value="{{pageTwo.key}}">
+                                            {{pageTwo.value}}
+                                        </option>
+                                    </select>
+                                </li>
+                            </ui>
+                            <ui ng-show="toUpdate.aioTouchWayDtoPara.touchWay=='PUSH' && toUpdate.aioActionStrategyDtoPara.touchType == 'USER_DEFINED'">
+                                <p>标题内容:</p>
+                                <textarea style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"
+                                          placeholder="不超过20个字"
+                                          maxlength="20"
+                                          ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.pushContentDto.touchPushTitle"></textarea>
+                            </ui>
+                            <ui ng-show="toUpdate.aioTouchWayDtoPara.touchWay=='PUSH' && toUpdate.aioActionStrategyDtoPara.touchType == 'USER_DEFINED'">
+                                <p>推送内容:</p>
+                                <textarea style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"
+                                          placeholder="不超过50个字"
+                                          maxlength="50"
+                                          ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.pushContentDto.touchPushContent"></textarea>
+                            </ui>
+                        </ui>
+                        <ui ng-show="toUpdate.aioTouchWayDtoPara.touchWay=='PUSH_MAIL'">
+                            <p>站内信标题:</p>
+                            <textarea style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"
+                                      placeholder="不超过30个字"
+                                      maxlength="30"
+                                      ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.pushMailContentDto.touchPushTitle"></textarea>
+                            <p>站内信内容:</p>
+                            <textarea style="resize:none;width: 420px;height: 180px;overflow-y: scroll;"
+                                      placeholder="不超过100个字"
+                                      maxlength="100"
+                                      ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.pushMailContentDto.touchPushContent"></textarea>
+                        </ui>
+                        <ui ng-show="toUpdate.aioTouchWayDtoPara.touchWay == 'POPUP'">
+                            <ui>
+                                <li>跳转类型:
+                                    <select ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.popupContentDto.skipType"
+                                            ng-change="selectPageOne()">
+                                        <option value="URL">链接跳转</option>
+                                        <option value="PRIMORDIAL">原生跳转</option>
+                                        <option value="NO_SKIP">无跳转</option>
+                                    </select>
+                                </li>
+                            </ui>
+                            <ui ng-show="toUpdate.aioTouchWayDtoPara.parentContentDTO.popupContentDto.skipType == 'URL'">
+                                <li>链接地址<b style="color: red;">*</b>
+                                    <input style="width:368px;" type="text"
+                                           ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.popupContentDto.skipUrl">
+                                </li>
+                            </ui>
+
+                            <li>
+                                <img id='headPic3' src='${staticRoot}/img/9f_logo.png' width='50px' height='50px'
+                                     style='padding: 5px'>
+                                <span id='uploadPhoto3' class='btn btn-info btn-rounded btn-gradient btn-gradienta'
+                                      ng-click="uploadPicture()">上传图片</span>
+                                <input id='upload12' type='file' name='file' style='display: none'
+                                       accept='image/!*'><input id='fileUrl3' type='hidden' name='POP_PAGE_IMG'
+                                                                ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.popupContentDto.popPageImg"
+                                                                required='required'>
+                            </li>
+                            <ui ng-show="toUpdate.aioTouchWayDtoPara.parentContentDTO.popupContentDto.skipType == 'PRIMORDIAL'">
+                                <li>页面类型：<b style="color: red;">*</b>
+                                    <select ng-model="add.pageType"
+                                            ng-options="x.key as x.value for x in rDictList2"
+                                            ng-change="selectPageTwo(add.pageType)">
+                                        <option>{{x.label}}</option>
+                                    </select>
+                                </li>
+                                <li>跳转页面
+                                    <select style="width: 188px;" class="interests"
+                                            ng-model="add.jumpPage">
+                                        <option ng-repeat="pageTwo in rPositionDictList" value="{{pageTwo.key}}">
+                                            {{pageTwo.value}}
+                                        </option>
+                                    </select>
+                                </li>
+                            </ui>
+                        </ui>
+                        <ui ng-show="toUpdate.aioTouchWayDtoPara.touchWay == 'SOFT_POPUP'">
+                            <ui>
+                                <li>跳转类型:
+                                    <select ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.softPopupContentDto.skipType"
+                                            ng-change="selectPageOne()">
+                                        <option value="URL">链接跳转</option>
+                                        <option value="PRIMORDIAL">原生跳转</option>
+                                        <option value="NO_SKIP">无跳转</option>
+                                    </select>
+                                </li>
+                            </ui>
+                            <ui ng-show="toUpdate.aioTouchWayDtoPara.parentContentDTO.softPopupContentDto.skipType == 'URL'">
+                                <li>链接地址<b style="color: red;">*</b>
+                                    <input style="width:368px;" type="text"
+                                           ng-model="add.aioTouchWayDtoPara.parentContentDTO.softPopupContentDto.skipUrl">
+                                </li>
+                            </ui>
+                            <ui ng-show="toUpdate.aioTouchWayDtoPara.parentContentDTO.softPopupContentDto.skipType == 'PRIMORDIAL'">
+                                <li>页面类型：<b style="color: red;">*</b>
+                                    <select ng-model="add.pageType"
+                                            ng-options="x.key as x.value for x in rDictList2"
+                                            ng-change="selectPageTwo(add.pageType)">
+                                        <option>{{x.label}}</option>
+                                    </select>
+                                </li>
+                                <li>跳转页面
+                                    <select style="width: 188px;" class="interests"
+                                            ng-model="add.jumpPage">
+                                        <option ng-repeat="pageTwo in rPositionDictList" value="{{pageTwo.key}}">
+                                            {{pageTwo.value}}
+                                        </option>
+                                    </select>
+                                </li>
+                            </ui>
+                        </ui>
+                        <ui class="start-a" ng-show="toUpdate.aioTouchWayDtoPara.touchWay == 'SOFT_POPUP'">
+                            <li>弹窗内容:
+                                <textarea
+                                        style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"
+                                        placeholder="不超过20个字"
+                                        maxlength="20"
+                                        ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.softPopupContentDto.popPageContent"></textarea>
+                            </li>
+                        </ui>
+                        <ui ng-show="toUpdate.aioTouchWayDtoPara.touchWay == 'SOFT_POPUP'">
+                            <li>按钮文案:
+                                <input type="text" placeholder="不超过4个字"
+                                       ng-model="toUpdate.aioTouchWayDtoPara.parentContentDTO.softPopupContentDto.btnContent">
+                            </li>
+                        </ui>
+                    </ui>
+
+                    <li><label>触达时间:&nbsp;&nbsp;&nbsp;</label>
+                        <select name="touchTimeType" ng-model="toUpdate.aioTouchWayDtoPara.touchTimeType">
+                            <option value="THIS">当次</option>
+                            <option value="SMARTTOUCH">智能触达</option>
+                        </select></li>
+                    <li ng-show="toUpdate.aioTouchWayDtoPara.touchTimeType == 'SMARTTOUCH'">
+                        时间配置:&nbsp;&nbsp;&nbsp;<input type="number" min="5" max="1440" placeholder="5-1440" style='margin-left: 15px; width:80px'
+                                                      ng-model="toUpdate.aioTouchWayDtoPara.muchTime">分钟内未达到预期结果
+                    </li>
+                    <li ><label>限制配置：<input placeholder='1-30' min='1' max='30' type='number'
+                                            ng-model="toUpdate.aioActionStrategyDtoPara.touchTimeCount"
+                                            style='margin-left: 15px; width:80px'
+                                            name='touchTimeCount'/>个自然日内最多触发</label><input
+                            placeholder='1-10' ng-model="toUpdate.aioActionStrategyDtoPara.touchCount" min='1' max='10'
+                            type='number'
+                            style='margin-left: 15px; width:80px' name='touchCount'/>次 <input type='hidden'
+                                                                                              name='touchCountType'
+                                                                                              value='DAY'></li>
+
+                </ul>
+                <ul>
+                    <li class="biaoti">监控配置</li>
+                    <li><label>预期结果状态：</label>
+                        <select  ng-model="toUpdate.aioActionStrategyDtoPara.strategyResult"
+                                 name="strategyResult">
+                            <option ng-repeat="x in selectExpectedStatus" value={{x.key}}>{{x.value}}</option>
+                        </select>
+                    </li>
+                    <!--预期结果银行修改-->
+                    <li><div ng-if=" toUpdate.aioActionStrategyDtoPara.strategyResult == 'BANK_OPEN_SUCCESS'||toUpdate.aioActionStrategyDtoPara.strategyResult == 'BANK_OPEN_SUCCESS'">
+                        <div><input type = "checkbox" ng-click="addupdAll(4)" id="updyqAllchecked">全部</div>
+                        <div class="look-pageb" ng-repeat="x in add.tabel1.checkboxParamList" >
+                            <span style="width:100px; height:50px;float: left"><input type = "checkbox" class="updyqBankCode" ng-click="addupdChangeBank(4)" name="updyqbanks"  value = "{{x.bankCode}}">{{x.bankName}}</span>
+                        </div>
+                    </div>
+                    </li>
+                    <li><label>执行触达后</label> <input type="number" min="1" max="7"
+                                                    required="required"
+                                                    ng-model="toUpdate.aioActionStrategyDtoPara.strategyCycle"
+                                                    placeholder="1-7"
+                                                    style="width: 80px; margin: 0px 15px;" name="strategyCycle">
+                        <label>自然日内有效</label></li>
+                </ul>
+
+            </div>
+            <div id="auditing2">
+                <div>
+
+                    <label>上线时间：</label><input id="upTime2" type="text"
+                                               ng-model="toUpdate.aioActionStrategyDtoPara.validTime"
+                                               style="width: 200px;" name="validTime" required="required">
+                    <label>下线时间：</label><input id="downTime2" type="text"
+                                               ng-model="toUpdate.aioActionStrategyDtoPara.invalidTime"
+                                               style="width: 200px;" name="invalidTime" required="required">
+                </div>
+                <div style="margin-top: 20px; float: none;">
+                    <label>审核人：</label> <select id="appover"
+                                                style="width: 200px; margin-left: 39px; margin-right: 50px"
+                                                name="approverId" ng-model="toUpdate.approverId" >
+                    <option ng-repeat="x in shenheList" value={{x.key}}>{{x.value}}</option>
+                </select> <label>审核留言：</label><input ng-model="toUpdate.approverNote"
+                                                     type="text"
+                                                     name="approverNote" />
+                </div>
+            </div>
+            <div style="text-align: center; float: none;">
+                <a class="btn btn-danger btn-rounded bottom-btna start-btna"  href="#"
+                   ng-click="commitUpdate()">修改</a>
+            </div>
+            <br> <br>
+        </div>
+    </div>
+    <div class="small-content anx" id="tz" ng-show="viewPage=='effect'">
+        <div class="look-pagea">
+            <div class='beautifyBtnBack'><a class="btn btn-danger btn-rounded btn-gradient btn-gradienta"
+                                            ng-click="viewPage = 'pageTwo'"><i
+                    class="fa fa-plus-square-o"></i> <span>返回</span></a></div>
+        </div>
+        <!-- 第二部分 -->
+        <div class="small-boxb col-md-12 look-pagea" style="height: 300px">
+            <h2 style="color: #0e0e0e">服务策略信息</h2>
+            <hr/>
+            <div>
+                <p style="margin-top:20px;" id="qd"></p>
+                <p style="margin-top:20px;" id="servicetype"></p>
+            </div>
+            <div>
+                <p style="margin-top:20px;" id="xw"></p>
+                <p style="margin-top:20px;" id="cfjd"></p>
+            </div>
+            <div>
+                <p style="margin-top:20px;" id="strategy"></p>
+                <p style="margin-top:20px;" id="serviceId"></p>
+            </div>
+        </div>
+
+        <div class="small-boxb col-md-12 look-pagea" style="height: 200px">
+            <h2 style="color: #0e0e0e">名单信息</h2>
+            <hr/>
+            <div class="boxb-a">
+                <p style="margin-top:20px;" id="rosterName"></p>
+                <p style="margin-top:20px;" id="createTime"></p>
+            </div>
+            <div class="boxb-a">
+                <p style="margin-top:20px;" id="channelCode"></p>
+                <p style="margin-top:20px;" id="updateTime"></p>
+            </div>
+            <div class="boxb-a">
+                <p style="margin-top:20px;" id="type"></p>
+                <p style="margin-top:20px;" id="createPeople"></p>
+            </div>
+            <div class="boxb-a">
+                <p style="margin-top:20px;" id="rosterNumber"></p>
+            </div>
+        </div>
+
+
+        <div class="small-boxb col-md-12 look-pagea" style="height: auto;">
+            <h2>策略信息报告</h2>
+            <hr/>
+            <h4 style="margin-left: 30px;">用户特征成功率</h4>
+
+            <div class="boxb-a">
+                <div>
+                    <p style="margin-top:20px;">用户标签：
+                        <select class="chosen-select" id="testSelect" style="width:160px;" ng-model="testSelect"
+                                ng-change="showBar(rosterId,strategyId)">
+                            <option value="1">性别</option>
+                            <option value="2">年龄</option>
+                            <option value="3">手机号地区</option>
+                            <option value="4">出借次数</option>
+                            <option value="5">出借偏好期限</option>
+                            <option value="6">会员等级</option>
+                            <option value="7">推广渠道</option>
+                            <option value="8">来源渠道</option>
+                            <option value="9">可用卡券数</option>
+                        </select>
+                        </n>
+                        </n>
+                    </p>
+                </div>
+                <div style="width: 550px; height: 400px; margin: 0 auto;">
+                    <div id="container"></div>
+                </div>
+
+            </div>
+
+
+        </div>
+        <div class="ibox float-e-margins" style="margin-top:10px;">
+            <h4 style="margin-left: 30px;">每日触发数据</h4>
+            <div class="ibox-content">
+                <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+                    <thead>
+                    <tr>
+                        <!-- <th></th> -->
+                        <th>日期</th>
+                        <th>累计总触发数</th>
+                        <th>当日触发数</th>
+                        <th>累计成功数</th>
+                        <th>当日成功数</th>
+                    </tr>
+                    </thead>
+                    <tbody id="daily">
+                    </tbody>
+                </table>
+                <div class="bottom-page">
+                    <div class="bottom-pagea">
+                        <select style="width:58px;height:23px;" name="pageSize" ng-model="daily.pageSize"
+                                ng-change="dailyTouch()">
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                        </select>
+                    </div>
+                    <div class="bottom-pageb">
+                        <i class="fa fa-step-backward" ng-click="dailyTouch()"></i>
+                        <i style="font-size:16px;" class="fa fa-caret-left"
+                           ng-click="dailyTouch(daily.pageNo-1)"></i>
+                        <p>第<span class="pageN" name="currentPage"
+                                  ng-model="daily.pageNo">{{daily.pageNo}}</span>共<span>{{daily.pageCount}}</span>页
+                        </p>
+                        <i style="font-size:16px;" class="fa fa-caret-right"
+                           ng-click="dailyTouch(daily.pageNo+1)"></i>
+                        <i style="margin-left:8px;" class="fa fa-step-forward"
+                           ng-click="dailyTouch(daily.pageCount)"></i>
+                        <i class="fa fa-refresh" ng-click="dailyTouch(daily.pageNo)"></i>
+                    </div>
+
+                    <div class="bottom-pagec">
+                        <p>显示<span>{{(daily.pageNo-1)*manage.pageSize+1}}</span>到{{daily.pageNo*daily.pageSize
+                            >= daily.totalRowSize && daily.totalRowSize ||
+                            daily.pageNo*daily.pageSize < daily.totalRowSize &&
+                            daily.pageNo*daily.pageSize || daily.totalRowSize < 1&& 0 }}条，共<span>{{daily.totalRowSize}}</span>记录
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="add-award-Model" id="s" style="display: none;">
+        <div class="confirmModelInfo" style="width: 500px;">
+            <div class="confirmModel-title">
+                添加奖励
+            </div>
+            <div class="addInp">
+                <div class="ipt_up_add">
+                    <span class="ipt_right">奖励类型:</span>
+                    <select name="" style="width: 242px;" class="head_select" ng-model="add.reward.awardType">
+                        <option value="">请选择</option>
+                        <option value="JIFEN">积分</option>
+                        <option value="CARD">卡券</option>
+                        <option value="newCoupon">新卡券</option>
+                        <option value="mallCoupon">商城卡券</option>
+                    </select>
+                </div>
+                <div class="ipt_up_add">
+                    <span class="ipt_right" ng-show="add.reward.awardType != 'JIFEN' && add.reward.awardType != 'CARD' && add.reward.awardType != 'newCoupon' && add.reward.awardType != 'mallCoupon'">输入项:</span>
+                    <span class="ipt_right" ng-show="add.reward.awardType == 'CARD' || add.reward.awardType == 'newCoupon' || add.reward.awardType == 'mallCoupon'">*卡券ID:</span>
+                    <span class="ipt_right2" ng-show="add.reward.awardType == 'JIFEN'">*积分规则ID:&nbsp;
+                        <input type="text" style="width: 242px;" ng-model="add.reward.jfRuleId"><br><br>
+                    </span>
+                    <input type="text" ng-model="add.reward.awardDesc" style="display: none;">
+                    <span class="ipt_right" style="width:78px;" ng-show="add.reward.awardType == 'JIFEN'">*积分数:</span>
+                    <input type="text" style="width: 242px;" ng-model="add.reward.awardContent">
+                    <br/><br/>
+                    <span class="ipt_right" style="width:78px;" ng-show="add.reward.awardType == 'JIFEN'">*积分描述:</span>
+                    <input type="text" style="width: 242px;" ng-show="add.reward.awardType == 'JIFEN'"
+                           ng-model="add.reward.jiFenDesc" placeholder="积分记录中用户可见,20字符以内">
+                </div>
+                <div class="confirmModel-btn">
+                        <span class="confirmModel-sure btn btn-danger btn-rounded bottom-btna start-btna"
+                              ng-click="commitAddAction(add.reward,viewPage)">添加</span>
+                    <span class="confirmModel-cancel btn btn-danger btn-rounded bottom-btnb start-btnb"
+                          ng-click="closeAddAward()">关闭</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--查看 功能-->
+    <div class="small-content" ng-show="viewPage == 'check'">
+        <div style="height: 60px; line-height: 60px;">
+            <a class="btn btn-blueW " ng-click="viewPage='pageTwo'">返回</a>
+            <span style="font-size: 20px; margin-left: 20px" ></span>
+        </div>
+        <div class="small-boxb col-md-12">
+            <!-- <div> -->
+            <div class="boxb-a" style="width: 100%">
+                <ul >
+                    <li class="biaoti">行为策略配置</li>
+                    <li><label id="checkService">服务类型：</label></li>
+                    <li><label id="checkUser">用户行为：</label></li>
+                    <li>
+                        <div ng-show ="showText.serviceCode !='QB_USER_DEFINED'&& showText.serviceCode !='WK_USER_DEFINED'">
+                            <label>触发节点：<b style="color: red;">*</b></label>
+                            <select>
+                                <option ng-repeat="x in checkNodeCode" ng-if="x.key===strategyDetail.strategyDto.touchCode">
+                                    {{x.value}}
+                                </option>
+                            </select></div>
+                    </li>
+                    <li>
+                        <div ng-show ="showText.serviceCode =='QB_USER_DEFINED'||showText.serviceCode =='WK_USER_DEFINED'">
+                            <label>触发节点：<b style="color: red;">*</b></label>
+                            <select >
+                                <option  ng-repeat="x in tagSelectList" ng-if="x.english===touchCode" >{{x.chinese}}</option>
+                            </select></div>
+                    </li>
+
+                    <li class="deploy-item radio-flex">
+                        <label>是否配触发策略：</label>
+                        <label ng-show="isEffect==1">
+                            <input type="radio" ng-show="isEffect==1" checked="checked">
+                            <span>是</span>
+                        </label>
+                        <label ng-show="isEffect==0">
+                            <input type="radio" ng-show="isEffect==0" checked="checked">
+                            <span>否</span>
+                        </label>
+                    </li>
+
+                    <li class="deploy-item fold">
+                        <label id="checkTriggerStrategy">触发策略：</label>
+                        <div id="checkTriggerStrategyContext" ng-show="isEffect==1">
+                            <div ng-show="sumMinAmount && sumMaxAmount">
+                                <label>累计订单金额范围:</label>
+                                <p>大于等于:</p>
+                                <input type="text" value="{{sumMinAmount}}" readonly>
+                                <p>小于</p>
+                                <input type="text" value="{{sumMaxAmount}}" readonly>
+                            </div>
+                            <div ng-show="sumMinFailCount && sumMaxFailCount">
+                                <label>订单取消次数范围:</label>
+                                <p>大于等于:</p>
+                                <input type="text" value="{{sumMinFailCount}}" readonly>
+                                <p>小于</p>
+                                <input type="text" value="{{sumMaxFailCount}}" readonly>
+                            </div>
+                        </div>
+                        <!--实时标签查看-->
+                        <!--ng-show =" (isEffect==1 && showText.serviceCode == QB_USER_DEFINED)||(isEffect==1 && showText.serviceCode == WK_USER_DEFINED) "-->
+                        <div class="clearMarLeftsele"  ng-show="(isEffect==1 && showText.serviceCode == 'QB_USER_DEFINED')||(isEffect==1 && showText.serviceCode == 'WK_USER_DEFINED')" >
+                            <div class="query-selewrap">
+                            </div>
+                        </div>
+                        <!--银行查看-->
+                        <span ng-show="(isEffect==1 && showText.serviceCode == 'WK_BANK_FLOW')||( isEffect==1 && showText.serviceCode == 'WK_BANK_FLOW' )">
+                            <div><input type = "checkbox" id="allselect" disabled="disabled">全部</div>
+                            <div class="look-pageb" ng-model="bankschecked" ng-repeat="x in add.tabel1.checkboxParamList">
+                                <span style="width: 100px;height: 50px;float: left"><input type = "checkbox" value = "{{x.bankCode}}" class="queryBankCode"  disabled="disabled">{{x.bankName}}</span>
+                            </div>
+                        </span>
+                    </li>
+                </ul>
+
+                <ul>
+                    <li class="biaoti">服务策略策略配置</li>
+                    <li>
+                        <label>名单类型：</label>
+                        <select name="userTagType">
+                            <option ng-repeat="x in strategyList"
+                                    ng-if="x.key===strategyDetail.strategyDto.userTagType">{{x.value}}
+                            </option>
+                        </select>
+                    </li>
+                    <li ng-show="strategyDetail.strategyDto.userTagType!='NO_RULE'">
+                        <label>模糊搜索:</label>
+                        <select class="mySelect" class="filter-select">
+                            <option ng-if="x.rosterId==strategyDetail.strategyDto.userTag" ng-repeat="x in strCheckChannelGroups">{{x.rosterName}}
+                            </option>
+                        </select>
+                    </li>
+
+                    <li>
+                        <label>触达类型：</label>
+                        <select name="touchType">
+                            <option ng-repeat="x in selectResultType"
+                                    ng-if="x.key===strategyDetail.strategyDto.touchType">{{x.value}}
+                            </option>
+                        </select>
+                    </li>
+
+                    <ui ng-show="strategyDetail.strategyDto.touchType == 'QA'">
+                        <li><label>触达方式：</label><span
+                                class="noneConfig">无配置</span></li>
+                        <li><label>触达时间：</label><span
+                                class="noneConfig">无配置</span></li>
+                        <li><label>触达页面：</label><span
+                                class="noneConfig">无配置</span></li>
+                        <li><label>触达配置：</label><span
+                                class="noneConfig">无配置</span></li>
+                    </ui>
+
+                    <ui ng-show="strategyDetail.strategyDto.touchType == 'CUSTOMER_SERVICE' || strategyDetail.strategyDto.touchType == 'PHONE'">
+                        <li>
+                            触达方式:
+                            <select>
+                                <!--<option ng-if="strategyDetail.touchWayDto.touchWay==='SOFT_POPUP'">软弹窗</option>-->
+                                <option ng-if="strategyDetail.touchWayDto.touchWay==='BANNER'">专属banner</option>
+                            </select>
+
+                        </li>
+                    </ui>
+
+                    <ui ng-show="strategyDetail.strategyDto.touchType=='AWARD'">
+                        <li ng-show="checkAward">
+                            <label>添加奖励:</label>
+                            <!--<ul ng-repeat="p in awardContentList">-->
+                            <!--<li>{{p.awardDesc}}</li>-->
+                            <!--</ul>-->
+                            <!--ng-show="strategyDetail.touchWayDto.parentContentDTO.awardContentDto.awardType=='jf'"-->
+                            <table style="border: 1px solid #151515;width:300px;margin-bottom:5px">
+                                <tr ng-repeat="p in awardContentList">
+                                    <td style="text-align:center;">
+                                        {{p.awardDesc}}
+                                    </td>
+                                </tr>
+                            </table>
+                        </li>
+
+
+                        <li>触达方式:
+                            <select>
+                                <!--<option ng-if="strategyDetail.touchWayDto.touchWay==='SOFT_POPUP'">软弹窗</option>-->
+                                <option ng-if="strategyDetail.touchWayDto.touchWay==='BANNER'">专属banner</option>
+                                <!--<option ng-if="strategyDetail.touchWayDto.touchWay==='POPUP'">弹窗</option>-->
+                                <option ng-if="strategyDetail.touchWayDto.touchWay==='MESSAGE'">短信</option>
+                                <option ng-if="strategyDetail.touchWayDto.touchWay==='PUSH'">推送</option>
+                                <option ng-if="strategyDetail.touchWayDto.touchWay==='PUSH_MAIL'">站内信</option>
+                            </select>
+                        </li>
+
+                        <li ng-show="strategyDetail.touchWayDto.touchWay=='SOFT_POPUP'">
+                            <p>弹窗内容:</p>
+                            <textarea style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"
+                                      placeholder="不超过20个字" readonly
+                                      maxlength="20">{{strategyDetail.touchWayDto.parentContentDTO.softPopupContentDto.popPageContent}}</textarea>
+                        </li>
+
+                        <li ng-show="strategyDetail.touchWayDto.touchWay=='POPUP'">
+                            <p>弹窗内容:</p>
+                            <textarea
+                                    style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"
+                                    placeholder="不超过20个字"  readonly
+                                    maxlength="20">{{strategyDetail.touchWayDto.parentContentDTO.popupContentDto.popPageContent}}</textarea>
+
+                            <ui ng-show="strategyDetail.touchWayDto.touchWay=='POPUP'">
+                                <p>跳转类型:</p>
+                                <select>
+                                    <option ng-if="strategyDetail.touchWayDto.parentContentDTO.popupContentDto.skipType==='URL'">
+                                        链接跳转:
+                                    </option>
+                                    <option ng-if="strategyDetail.touchWayDto.parentContentDTO.popupContentDto.skipType==='PRIMORDIAL'">
+                                        原生跳转:
+                                    </option>
+                                </select>
+                            </ui>
+                            <ui ng-show="strategyDetail.touchWayDto.parentContentDTO.popupContentDto.skipType == 'URL'">
+                                <p>链接地址:<b style="color: red;">*</b></p>
+                                <input style="width:368px;" type="text"  readonly
+                                       value="{{strategyDetail.touchWayDto.parentContentDTO.popupContentDto.skipUrl}}">
+                            </ui>
+
+                            <!--图片-->
+                        <li ng-show="strategyDetail.touchWayDto.touchWay == 'POPUP'">
+                            <label>图片:</label>
+                            <!--<img ng-if="strategyDetail.touchWayDto.touchWay == 'POPUP'" src="{{strategyDetail.touchWayDto.parentContentDTO.popupContentDto.popPageImg}}"/>-->
+                        </li>
+                        </li>
+                        </li>
+
+                        <li ng-show="strategyDetail.touchWayDto.touchWay == 'MESSAGE'">
+                            <p>短信内容:</p>
+                            <textarea style="resize:none;width: 300px;height: 200px;overflow-y: scroll;"
+                                      placeholder="不超过140个字" readonly
+                                      maxlength="140">{{strategyDetail.touchWayDto.parentContentDTO.messageContentDto.messageContent}}</textarea>
+                        </li>
+
+                        <li ng-show="strategyDetail.touchWayDto.touchWay == 'PUSH'">
+                            <ui>
+                                <p>跳转类型:</p>
+                                <select>
+                                    <option ng-if="strategyDetail.touchWayDto.parentContentDTO.pushContentDto.skipType==='URL'">
+                                        链接跳转
+                                    </option>
+                                    <option ng-if="strategyDetail.touchWayDto.parentContentDTO.pushContentDto.skipType==='PRIMORDIAL'">
+                                        原生跳转
+                                    </option>
+                                    <option ng-if="strategyDetail.touchWayDto.parentContentDTO.pushContentDto.skipType==='NO_SKIP'">
+                                        无跳转
+                                    </option>
+                                </select>
+                            </ui>
+                            <ui ng-show="strategyDetail.touchWayDto.parentContentDTO.pushContentDto.skipType == 'URL'">
+                                <p>链接地址<b style="color: red;">*</b></p>
+                                <input style="width:368px;" type="text" readonly
+                                       value="{{strategyDetail.touchWayDto.parentContentDTO.pushContentDto.skipUrl}}">
+                            </ui>
+                            <ui ng-show="strategyDetail.touchWayDto.parentContentDTO.pushContentDto.skipType == 'PRIMORDIAL'">
+                                <p>页面类型：<b style="color: red;">*</b></p>
+                                <select>
+                                    <option ng-repeat="x in checkDictList2" ng-if="x.key==strategyDetail.touchWayDto.parentContentDTO.pushContentDto.pageType">
+                                        {{x.value}}
+                                    </option>
+                                </select>
+                                <p>跳转页面</p>
+                                <select style="width: 188px;" class="interests">
+                                    <option ng-repeat="x in checkPositionDictList" ng-if="x.key===strategyDetail.touchWayDto.parentContentDTO.pushContentDto.primordialPage">
+                                        {{x.value}}
+                                    </option>
+                                </select>
+                            </ui>
+
+                            <ui>
+                                <p>标题内容:</p>
+                                <textarea style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"
+                                          placeholder="不超过20个字" readonly
+                                          maxlength="20">{{strategyDetail.touchWayDto.parentContentDTO.pushContentDto.touchPushTitle}}</textarea>
+                            </ui>
+                            <ui>
+                                <p>推送内容:</p>
+                                <textarea style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"
+                                          placeholder="不超过50个字" readonly
+                                          maxlength="50">{{strategyDetail.touchWayDto.parentContentDTO.pushContentDto.touchPushContent}}</textarea>
+                            </ui>
+                        </li>
+
+                        <li ng-show="strategyDetail.touchWayDto.touchWay == 'PUSH_MAIL'">
+                            <p>站内信标题:</p>
+                            <textarea style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"
+                                      placeholder="不超过30个字" readonly
+                                      maxlength="30">{{strategyDetail.touchWayDto.parentContentDTO.pushMailContentDto.touchPushTitle}}</textarea>
+                            <p>站内信内容:</p>
+                            <textarea style="resize:none;width: 420px;height: 180px;overflow-y: scroll;"
+                                      placeholder="不超过100个字" readonly
+                                      maxlength="100">{{strategyDetail.touchWayDto.parentContentDTO.pushMailContentDto.touchPushContent}}</textarea>
+                        </li>
+
+                        <li ng-show="strategyDetail.touchWayDto.touchWay == 'BANNER'">
+                            <ui ng-show="strategyDetail.touchWayDto.touchWay== 'BANNER'">
+                                <p>banner内容:</p>
+                                <textarea
+                                        style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"
+                                        placeholder="不超过20个字"  readonly
+                                        maxlength="20">{{strategyDetail.touchWayDto.parentContentDTO.bannerContentDto.bannerContent}}</textarea>
+                            </ui>
+
+                            <ui ng-show="strategyDetail.touchWayDto.touchWay== 'BANNER'">
+                                <p>按钮文案:</p>
+                                <input type="text" maxlength="4" placeholder="不超过4个字"  readonly
+                                       value="{{strategyDetail.touchWayDto.parentContentDTO.bannerContentDto.bannerBtnContent}}">
+                            </ui>
+
+                            <ui ng-show="strategyDetail.touchWayDto.touchWay== 'BANNER'">
+                                <p>跳转类型:</p>
+                                <select>
+                                    <option ng-if="strategyDetail.touchWayDto.parentContentDTO.bannerContentDto.bannerBtnUrlType==='URL'">链接跳转</option>
+                                    <option ng-if="strategyDetail.touchWayDto.parentContentDTO.bannerContentDto.bannerBtnUrlType==='PRIMORDIAL'">原生跳转</option>
+                                    <option ng-if="strategyDetail.touchWayDto.parentContentDTO.bannerContentDto.bannerBtnUrlType==='NO_SKIP'">无跳转</option>
+                                </select>
+                            </ui>
+                            <ui ng-show="strategyDetail.touchWayDto.parentContentDTO.bannerContentDto.bannerBtnUrlType == 'URL'">
+                                <p>链接地址<b style="color: red;">*</b></p>
+                                <input style="width:368px;" type="text" readonly  value="{{strategyDetail.touchWayDto.parentContentDTO.bannerContentDto.bannerBtnUrl}}">
+                            </ui>
+                            <ui ng-show="strategyDetail.touchWayDto.parentContentDTO.bannerContentDto.bannerBtnUrlType == 'PRIMORDIAL'">
+                                <p>页面类型：<b style="color: red;">*</b></p>
+                                <select>
+                                    <option ng-repeat="x in checkDictList2" ng-if="x.key==strategyDetail.touchWayDto.parentContentDTO.bannerContentDto.pageType">
+                                        {{x.value}}
+                                    </option>
+                                </select>
+                                <p>跳转页面</p>
+                                <select style="width: 188px;" class="interests">
+                                    <option ng-repeat="x in checkPositionDictList" ng-if="x.key===strategyDetail.touchWayDto.parentContentDTO.bannerContentDto.primordialPage">
+                                        {{x.value}}
+                                    </option>
+                                </select>
+                            </ui>
+                        </li>
+                    </ui>
+
+                    <ui ng-show="strategyDetail.strategyDto.touchType == 'USER_DEFINED'">
+                        <li>
+                            <label>触达方式:&nbsp;&nbsp;
+                                <select style="width: 158px;" class="interests">
+                                    <option ng-if="strategyDetail.touchWayDto.touchWay==='SOFT_POPUP'">软弹窗</option>
+                                    <option ng-if="strategyDetail.touchWayDto.touchWay==='BANNER'">专属banner</option>
+                                    <option ng-if="strategyDetail.touchWayDto.touchWay==='POPUP'">弹窗</option>
+                                    <option ng-if="strategyDetail.touchWayDto.touchWay==='MESSAGE'">短信</option>
+                                    <option ng-if="strategyDetail.touchWayDto.touchWay==='PUSH'">推送</option>
+                                    <option ng-if="strategyDetail.touchWayDto.touchWay==='PUSH_MAIL'">站内信</option>
+                                </select>
+                            </label>
+                        </li>
+                        <ui ng-show="strategyDetail.touchWayDto.touchWay== 'BANNER'">
+                            <ui ng-show="strategyDetail.touchWayDto.touchWay== 'BANNER'">
+                                <li>
+                                    <label>banner内容:</label></li>
+                                <li>
+                                        <textarea
+                                                style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"
+                                                placeholder="不超过20个字"  readonly
+                                                maxlength="20">{{strategyDetail.touchWayDto.parentContentDTO.bannerContentDto.bannerContent}}</textarea>
+
+                                </li>
+                            </ui>
+
+                            <ui ng-show="strategyDetail.touchWayDto.touchWay== 'BANNER'">
+                                <li><label>按钮文案:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="text" style="width:158px;"  maxlength="4" placeholder="不超过4个字" readonly
+                                           value="{{strategyDetail.touchWayDto.parentContentDTO.bannerContentDto.bannerBtnContent}}">
+                                </label>
+                                </li>
+                            </ui>
+                            <ui ng-show="strategyDetail.touchWayDto.touchWay== 'BANNER'">
+                                <li>
+                                    <label>跳转类型:&nbsp;&nbsp;
+                                        <select>
+                                            <option ng-if="'URL'==strategyDetail.touchWayDto.parentContentDTO.bannerContentDto.bannerBtnUrlType">链接跳转</option>
+                                            <option ng-if="'PRIMORDIAL'==strategyDetail.touchWayDto.parentContentDTO.bannerContentDto.bannerBtnUrlType">原生跳转</option>
+                                            <option ng-if="'NO_SKIP'==strategyDetail.touchWayDto.parentContentDTO.bannerContentDto.bannerBtnUrlType">无跳转</option>
+                                        </select>
+                                    </label>
+                                </li>
+                            </ui>
+
+                            <ui ng-show="strategyDetail.touchWayDto.parentContentDTO.bannerContentDto.bannerBtnUrlType == 'URL'">
+                                <li>
+                                    <label>链接地址:<b style="color: red;">*</b>
+                                        <input style="width:168px;" type="text" readonly
+                                               value="{{strategyDetail.touchWayDto.parentContentDTO.bannerContentDto.bannerBtnUrl}}">
+                                    </label>
+                                </li>
+                            </ui>
+                            <ui ng-show="strategyDetail.touchWayDto.parentContentDTO.bannerContentDto.bannerBtnUrlType== 'PRIMORDIAL'">
+                                <li>
+                                    <label>页面类型:<b style="color: red;">*</b>
+                                        <select>
+                                            <option ng-repeat="x in checkDictList2" ng-if="x.key==strategyDetail.touchWayDto.parentContentDTO.bannerContentDto.pageType">
+                                                {{x.value}}
+                                            </option>
+                                        </select>
+                                    </label>
+                                </li>
+                                <li>
+                                    <label>跳转页面:&nbsp;&nbsp;
+                                        <select style="width: 188px;" class="interests">
+                                            <option ng-repeat="x in checkPositionDictList" ng-if="x.key===strategyDetail.touchWayDto.parentContentDTO.bannerContentDto.primordialPage">
+                                                {{x.value}}
+                                            </option>
+                                        </select>
+                                    </label>
+                                </li>
+                            </ui>
+                        </ui>
+                        <ui ng-show="strategyDetail.touchWayDto.touchWay=='MESSAGE'">
+                            <p>短信内容:</p>
+                            <textarea style="resize:none;width: 300px;height: 200px;overflow-y: scroll;"
+                                      placeholder="不超过140个字"  readonly
+                                      maxlength="140">{{strategyDetail.touchWayDto.parentContentDTO.messageContentDto.messageContent}}</textarea>
+                        </ui>
+
+                        <ui ng-show="strategyDetail.touchWayDto.touchWay=='PUSH'">
+                            <ui>
+                                <p>跳转类型:</p>
+                                <select>
+                                    <option ng-if="strategyDetail.touchWayDto.parentContentDTO.pushContentDto.skipType=='URL'">链接跳转</option>
+                                    <option ng-if="strategyDetail.touchWayDto.parentContentDTO.pushContentDto.skipType=='PRIMORDIAL'">原生跳转</option>
+                                    <option ng-if="strategyDetail.touchWayDto.parentContentDTO.pushContentDto.skipType=='NO_SKIP'">无跳转</option>
+                                </select>
+                            </ui>
+                            <ui ng-show="strategyDetail.touchWayDto.parentContentDTO.pushContentDto.skipType== 'URL'">
+                                <p>链接地址:<b style="color: red;">*</b></p>
+                                <input style="width:368px;" type="text" readonly
+                                       value="{{strategyDetail.touchWayDto.parentContentDTO.pushContentDto.skipUrl}}">
+                            </ui>
+                            <ui ng-show="strategyDetail.touchWayDto.parentContentDTO.pushContentDto.skipType== 'PRIMORDIAL'">
+                                <p>页面类型:<b style="color: red;">*</b></p>
+                                <select>
+                                    <option ng-repeat="x in checkDictList2"
+                                            ng-if="x.key===strategyDetail.touchWayDto.parentContentDTO.pushContentDto.pageType">
+                                        {{x.value}}
+                                    </option>
+                                </select>
+                                <p>跳转页面:</p>
+                                <select style="width: 188px;" class="interests">
+                                    <option ng-repeat="x in checkPositionDictList" ng-if="x.key===strategyDetail.touchWayDto.parentContentDTO.pushContentDto.primordialPage">
+                                        {{x.value}}
+                                    </option>
+                                </select>
+                            </ui>
+                            <ui>
+                                <p>标题内容:</p>
+                                <textarea style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"
+                                          placeholder="不超过20个字"  readonly
+                                          maxlength="20">{{strategyDetail.touchWayDto.parentContentDTO.pushContentDto.touchPushTitle}}</textarea>
+                            </ui>
+                            <ui>
+                                <p>推送内容:</p>
+                                <textarea style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"
+                                          placeholder="不超过50个字"  readonly
+                                          maxlength="50">{{strategyDetail.touchWayDto.parentContentDTO.pushContentDto.touchPushContent}}</textarea>
+                            </ui>
+                        </ui>
+
+                        <ui ng-show="strategyDetail.touchWayDto.touchWay=='PUSH_MAIL'">
+                            <p>站内信标题:</p>
+                            <textarea style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"
+                                      placeholder="不超过30个字"  readonly
+                                      maxlength="30">{{strategyDetail.touchWayDto.parentContentDTO.pushMailContentDto.touchPushTitle}}</textarea>
+                            <p>站内信内容:</p>
+                            <textarea style="resize:none;width: 420px;height: 180px;overflow-y: scroll;"
+                                      placeholder="不超过100个字"  readonly
+                                      maxlength="100">{{strategyDetail.touchWayDto.parentContentDTO.pushMailContentDto.touchPushContent}}</textarea>
+                        </ui>
+
+                        <ui ng-show="strategyDetail.touchWayDto.touchWay == 'POPUP'">
+                            <ui>
+                                <p>跳转类型:</p>
+                                <select ng-model="strategyDetail.touchWayDto.parentContentDTO.popupContentDto.skipType">
+                                    <option ng-if="strategyDetail.touchWayDto.parentContentDTO.popupContentDto.skipType=='URL'">链接跳转</option>
+                                    <option ng-if="strategyDetail.touchWayDto.parentContentDTO.popupContentDto.skipType=='PRIMORDIAL'">原生跳转</option>
+                                    <option ng-if="strategyDetail.touchWayDto.parentContentDTO.popupContentDto.skipType=='NO_SKIP'">无跳转</option>
+                                </select>
+                            </ui>
+                            <ui ng-show="strategyDetail.touchWayDto.parentContentDTO.popupContentDto.skipType == 'URL'">
+                                <p>链接地址:<b style="color: red;">*</b></p>
+                                <input style="width:368px;" type="text"  readonly
+                                       value="{{strategyDetail.touchWayDto.parentContentDTO.popupContentDto.skipUrl}}">
+                            </ui>
+                            <li ng-if="strategyDetail.touchWayDto.touchWay == 'POPUP'">
+                                <label>图片</label>
+                                <!--<img src="{{strategyDetail.touchWayDto.parentContentDTO.popupContentDto.popPageImg}}"/>-->
+                            </li>
+                            <ui ng-show="strategyDetail.touchWayDto.parentContentDTO.popupContentDto.skipType == 'PRIMORDIAL'">
+                                <p>页面类型：<b style="color: red;">*</b></p>
+                                <select>
+                                    <option ng-repeat="x in checkDictList2" ng-if="strategyDetail.touchWayDto.parentContentDTO.popupContentDto.pageType==x.key">
+                                        {{x.value}}
+                                    </option>
+                                </select>
+                                <p>跳转页面:</p>
+                                <select style="width: 188px;" class="interests">
+                                    <option ng-repeat="x in checkPositionDictList" ng-if="x.key===strategyDetail.touchWayDto.parentContentDTO.popupContentDto.primordialPage">
+                                        {{x.value}}
+                                    </option>
+                                </select>
+                            </ui>
+                        </ui>
+
+                        <ui ng-show="strategyDetail.touchWayDto.touchWay == 'SOFT_POPUP'">
+                            <ui>
+                                <p>跳转类型:</p>
+                                <select>
+                                    <option ng-if="strategyDetail.touchWayDto.parentContentDTO.softPopupContentDto.skipType=='URL'">链接跳转</option>
+                                    <option ng-if="strategyDetail.touchWayDto.parentContentDTO.softPopupContentDto.skipType=='PRIMORDIAL'">原生跳转</option>
+                                    <option ng-if="strategyDetail.touchWayDto.parentContentDTO.softPopupContentDto.skipType=='NO_SKIP'">无跳转</option>
+                                </select>
+                            </ui>
+                            <ui ng-show="strategyDetail.touchWayDto.parentContentDTO.softPopupContentDto.skipType== 'URL'">
+                                <p>链接地址:<b style="color: red;">*</b></p>
+                                <input style="width:368px;" type="text" readonly
+                                       value="{{strategyDetail.touchWayDto.parentContentDTO.softPopupContentDto.skipUrl}}">
+                            </ui>
+                            <ui ng-show="strategyDetail.touchWayDto.parentContentDTO.softPopupContentDto.skipType== 'PRIMORDIAL'">
+                                <p>页面类型:<b style="color: red;">*</b></p>
+                                <select>
+                                    <option ng-repeat="x in checkDictList2" ng-if="x.key===strategyDetail.touchWayDto.parentContentDTO.softPopupContentDto.pageType">
+                                        {{x.value}}
+                                    </option>
+                                </select>
+                                <p>跳转页面</p>
+                                <select style="width: 188px;">
+                                    <option ng-repeat="x in checkPositionDictList" ng-if="x.key===strategyDetail.touchWayDto.parentContentDTO.softPopupContentDto.primordialPage">
+                                        {{x.value}}
+                                    </option>
+                                </select>
+                            </ui>
+                        </ui>
+
+                        <ui class="start-a" ng-show="strategyDetail.touchWayDto.touchWay == 'SOFT_POPUP'">
+                            <p>弹窗内容:</p>
+                            <textarea
+                                    style="resize:none;width: 220px;height: 120px;overflow-y: scroll;"
+                                    placeholder="不超过20个字"  readonly
+                                    maxlength="20">{{strategyDetail.touchWayDto.parentContentDTO.softPopupContentDto.popPageContent}}</textarea>
+                        </ui>
+                        <ui ng-show="strategyDetail.touchWayDto.touchWay== 'SOFT_POPUP'">
+                            <p>按钮文案:</p>
+                            <input type="text" placeholder="不超过4个字" readonly
+                                   value="{{strategyDetail.touchWayDto.parentContentDTO.softPopupContentDto.btnContent}}">
+                        </ui>
+                    </ui>
+                    <li>
+                        <label>触达时间：</label>
+                        <select name="touchTimeType">
+                            <option ng-if="strategyDetail.touchWayDto.touchTimeType==='THIS'">当次</option>
+                            <option ng-if="strategyDetail.touchWayDto.touchTimeType==='SMARTTOUCH'">智能触达</option>
+                        </select>
+                        <input ng-if="strategyDetail.touchWayDto.touchTimeType=='SMARTTOUCH'" type="text" max="60" placeholder="分钟数" style='margin-left: 15px; width:80px'
+                               ng-value="{{strategyDetail.touchWayDto.muchTime}}" readonly>
+                    </li>
+                    <li>
+                        <label>限制配置：
+                            <input placeholder='1-30' min='1' max='30' type='number'
+                                   value="{{strategyDetail.strategyDto.touchTimeCount}}"
+                                   style='margin-left: 15px; width:80px' readonly
+                                   name='touchTimeCount'/>个自然日内最多触发</label>
+                        <input
+                                placeholder='1-10' value="{{strategyDetail.strategyDto.touchCount}}" min='1'
+                                max='10'
+                                type='number' readonly
+                                style='margin-left: 15px; width:80px' name='touchCount'/>次
+                        <input type='hidden' name='touchCountType' readonly
+                               value='{{strategyDetail.strategyDto.touchCountType}}'>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="biaoti">监控配置</li>
+                    <li><label>预期结果状态：</label>
+                        <select name="strategyResult">
+                            <option ng-repeat="x in selectExpectedStatus"
+                                    ng-if="x.key==strategyDetail.strategyDto.strategyResult">{{x.value}}
+                            </option>
+                        </select>
+                    </li>
+                    <!--预期结果银行查看-->
+                    <li>
+                        <div ng-if=" strategyDetail.strategyDto.strategyResult == 'BANK_OPEN_SUCCESS'||strategyDetail.strategyDto.strategyResult == 'BANK_PAY_SUCCESS'">
+                            <div><input type = "checkbox" id="yqallselect" disabled="disabled">全部</div>
+                            <div class="look-pageb" ng-repeat="x in add.tabel1.checkboxParamList" >
+                                <span style="height: 50px;width:100px;float: left"><input type = "checkbox" class="queryyqBankCode" value = "{{x.bankCode}}" disabled="disabled">{{x.bankName}}</span>
+                            </div>
+                         </div>
+                    </li>
+                    <li><label>执行触达后</label> <input type="number" min="1" max="7"
+                                                    required="required"  readonly
+                                                    value="{{strategyDetail.strategyDto.strategyCycle}}"
+                                                    placeholder="1-7"
+                                                    style="width: 80px; margin: 0px 15px;" name="strategyCycle">
+                        <label>自然日内有效</label></li>
+
+                </ul>
+            </div>
+            <div id="auditing3">
+                <div>
+                    <label>上线时间：</label>
+                    <input type="text" value="{{strategyDetail.strategyDto.validTime}}"
+                           style="width: 200px;" name="validTime" required="required" readonly>
+                    <label>下线时间：</label>
+                    <input type="text" value="{{strategyDetail.strategyDto.invalidTime}}"
+                           style="width: 200px;" name="invalidTime" required="required" readonly>
+                </div>
+                <div style="margin-top: 20px; float: none;">
+                    <label>审核人：</label>
+                    <select style="width: 200px; margin-left: 39px; margin-right: 50px" name="approverId">
+                        <option ng-repeat="x in shenheList" ng-if="x.key==strategyDetail.approverId">{{x.value}}
+                        </option>
+                    </select>
+                    <label>审核留言：</label>
+                    <input value="{{strategyDetail.approverNote}}" type="text"
+                           name="approverNote" readonly/>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<script src="${jsRoot}/angular/angular.min.js"></script>
+<script src="${jsRoot}/plugins/laydate/laydate.js"></script>
+<script src="${jsRoot}/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- Mainly scripts -->
+<script src="${jsRoot}/jquery-2.1.1.js"></script>
+<script src="${jsRoot}/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="${jsRoot}/bootstrap.min.js"></script>
+<script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="${jsRoot}/plugins/jeditable/jquery.jeditable.js"></script>
+<script src="${jsRoot}/oms/operation/smartService.js"></script>
+<!-- Data Tables -->
+<script src="${jsRoot}/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.responsive.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.tableTools.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="${jsRoot}/inspinia.js"></script>
+<script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.iframe-transport.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.ui.widget.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-process.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-validate.js"></script>
+<script src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+<script src="${jsRoot}/biz/offlineactivitymanage/auditOfflineActivity.js?rand=${random}"></script>
+<script type="text/javascript" src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+<script src="${jsRoot}/plugins/sweetalert/sweetalert.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="${jsRoot}/plugins/select2/select2.full.min.js"></script>
+<script src="${jsRoot}/oms/ruleconfig/jquery.searchableSelect.js"></script>
+<script src="${jsRoot}/plugins/jeditable/select2.full.min.js"></script>
+<script type="text/javascript" charset="utf-8"></script>
+
+<!--实时数据引入-->
+<script src="${staticRoot}/js/jquery-2.1.1.js"></script>
+<script src="${jsRoot}/plugins/laydate/laydate.js"></script>
+<script src="${staticRoot}/js/bootstrap.min.js"></script>
+<script src="${staticRoot}/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="${staticRoot}/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="${staticRoot}/js/plugins/jeditable/jquery.jeditable.js"></script>
+
+<!-- Data Tables -->
+<script src="${staticRoot}/js/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="${staticRoot}/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="${staticRoot}/js/plugins/dataTables/dataTables.responsive.js"></script>
+<script src="${staticRoot}/js/plugins/dataTables/dataTables.tableTools.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="${staticRoot}/js/inspinia.js"></script>
+<script src="${staticRoot}/js/plugins/pace/pace.min.js"></script>
+<!-- 插件select -->
+
+<script type="text/javascript" src="${staticRoot}/js/select-mania.js"></script>
+<style>
+    .circleLetter {
+        display: block;
+        width: 30px;
+        height: 30px;
+        background: #8aa0e7;
+        text-align: center;
+        line-height: 30px;
+        color: white;
+        font-size: 14px;
+        border-radius: 100%;
+    }
+    .beautifyInput {
+        width: 300px;
+        height: 30px;
+        border-width: 1px;
+        border-style: solid;
+        border-color: #b6b6b6;
+        border-image: initial;
+        border-radius: 5px;
+    }
+    .beautifyBtn {
+        width: 160px;
+        height: 46px;
+        color: white;
+        border-radius: 5px;
+        background: #8aa0e7;
+        text-align: center;
+        font-size: 16px;
+        margin-top: 10px;
+    }
+    .bg {
+        height: 30px;
+        line-height: 30px;
+        background: #f4f5f6;
+    }
+    .selectChecked {
+        display: flex;
+    div {
+        display: flex;
+        just
+    }
+    }
+    .beautifyBtnBack {
+        width: 75px;
+        height: 40px;
+        line-height: 40px;
+        color: white;
+        border-radius: 5px;
+        color: #8aa0e7;
+        text-align: center;
+        font-size: 16px;
+        border: 1px solid #8aa0e7;
+        margin-top: 10px;
+        margin-left: 18px;
+    }
+    .checkSelect-wrap {
+        display: flex;
+    }
+    .checkSelect {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100px;
+        margin-right: 40px;
+    }
+    .checkSelect input {
+        margin: 0;
+        margin-right: 10px;
+    }
+    .andOrBtn {
+        width: 75px;
+        height: 30px;
+    }
+</style>
+<script>
+    //实时数据初始化
+    //根据渠道查询的条件信息初始化列表
+    var initSelectDataList="";
+    //查询条件名称初始化列表
+    var initQueryNameList="";
+    //查询条件符号初始化列表
+    var initQueryCriteriaList="";
+    //查询条件值的输入框初始化类型
+    var initQueryValue="";
+    //查询条件符号动态列表
+    var QueryCriteriaList="";
+    //and组HTML元素
+    var strBigGroup;
+    //or组html元素
+    var strSmallGroupInit;
+    //or组多选框html元素（预留，暂时未使用）
+    var strMultiGroup;
+    //三期--查询条件返回值集合
+    var selectCreateGroupList="";
+    var getRulesList = "";
+    //三期--渠道
+    var channel="";
+    var strBigGroup2;
+    var strSmallGroupInit2;
+
+    var navHight = $('.navbar-static-side').height()
+    $('.navbar-static-side').css('height', navHight - 60)
+    $('.content-box').css('height', navHight - 60);
+    $("#menus li").removeClass("active");
+    $("#strategyIndexs li").removeClass("active");
+    $("#smartService").addClass("active");
+    $("#strategyIndexs").addClass("collapse in");
+    $("#strategyIndex_menus").addClass("active");
+
+
+
+    function clickAll() {
+        $(".checkOne").prop("checked", $(".checkAll").prop("checked"));
+    }
+
+
+    function clickOne() {
+        var allChecked = true;
+        $(".checkOne").each(function () {
+            if ($(this).prop("checked") == false) {
+                allChecked = false;
+            }
+            ;
+        });
+
+
+        if (allChecked) {
+            $(".checkAll").prop("checked", true);
+        } else {
+            $(".checkAll").prop("checked", false);
+        }
+    }
+
+
+
+
+</script>
+<script>
+
+</script>
+
+</body>
+</html>
+
+
+

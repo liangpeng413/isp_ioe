@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>会员等级</title>
+  <link href="${cssRoot}/bootstrap.min.css" rel="stylesheet">
+  <link href="${staticRoot}/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+  <!-- FooTable -->
+  <link href="${cssRoot}/plugins/footable/footable.core.css" rel="stylesheet">
+
+  <link href="${cssRoot}/animate.css" rel="stylesheet">
+  <link href="${cssRoot}/style.css?rand=${random}" rel="stylesheet">
+  <link href="${cssRoot}/styleT.css?rand=${random}" rel="stylesheet">
+    <script>
+        var globalConfig = {
+            basePath: "${ctx}",
+            staticRoot: "${staticRoot}",
+            loginName:"${Session.sessionUser.loginName}"
+        };
+        function swalMsg(msg) {
+            swal({
+                title:"",
+                text:msg,
+                confirmButtonColor: "#1ab394",
+                confirmButtonText:"确定"
+            });
+        }
+  </script>
+</head>
+<body ng-app="vipLevelApp" ng-controller="vipLevelController">
+<div id="wrapper">
+    <div class="header-box">
+        <#include "/common/top.html" encoding="UTF-8" />
+    </div>
+    <nav class="navbar-default navbar-static-side" role="navigation" id="HeadTitle">
+        <div class="sidebar-collapse"  style="height: 675px;overflow-y: scroll;">
+            <#include "/common/left.html" encoding="UTF-8" />
+        <div>
+    </nav>
+</div>
+<div class="content-box">
+  <div class="small-content">
+    <!-- 第一部分 -->
+      <div class="small-boxa">
+          <a class="ivr-button btn btn-danger btn-rounded btn-gradient btn-gradienta"  href="${ctx}/vip/rights"><i
+                  class="fa fa-plus-square-o"></i> <span>权益管理</span></a>
+      </div>
+    <!-- 第二部分 -->
+      <div class="small-boxb col-md-12">
+         
+          <div class="boxb-b">
+              <p >理财渠道：
+                  <select id="productChannel" class="chosen-select" style="width:120px;" tabindex="2" ng-model="search.investChannel" >
+                      <option value="0">悟空理财</option>
+                      <option value="1">玖富钱包</option>
+                  </select>
+              </p>
+          </div>
+          <div class="boxb-c" style="padding-left: 750px;">
+              <p>
+                  <a class="btn btn-success btn-rounded btn-blueW btn-blueWa"  ng-click="queryVipLevel()"><i class="fa fa-search"></i> <span>查询</span></a>
+                  <a class="btn btn-success btn-rounded btn-blueW btn-blueWb"  ng-click="reset()"><i class="fa fa-refresh"></i> <span>重置</span></a>
+              </p>
+          </div>
+      </div>
+    <!-- 第二部分 -->
+    <!-- 第三部分 -->
+      <div class="row">
+          <div class="col-lg-12">
+              <div class="ibox float-e-margins" style="margin-top:10px;">
+                  <div class="ibox-content">
+                      <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+                          <thead>
+                          <tr>
+                              <th>ID</th>
+                              <th>理财渠道</th>
+                              <th>会员等级</th>
+                              <th>置顶权益</th>
+                              <th style="width: 300px;">操作</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                          <tr ng-repeat="x in pageList">
+                              <td>{{x.id}}</td>
+                              <td>{{x.investChannel}}</td>
+                              <td>{{x.vipLevel}}</td>
+                              <td>{{x.stickEquity}}</td>
+                              <td>
+                                 <a href="javaScript:void(0)" class="modify-start" ng-click="toSetEquity(x.vipLevelNum,x.investChannel)"><span>设置权益</span></a>&nbsp;&nbsp;
+                                 <a href="#" class="look-start" ng-click="lookLog(x.vipLevelNum,x.investChannel)"> <span>操作日志</span></a>&nbsp;&nbsp;
+                                 <a href="#" class="look-start" ng-click="sort(x.vipLevelNum,x.investChannel)"><span>优先级排序</span></a>
+                              </td>
+                          </tr>
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  <!-- 第三部分 -->
+  
+<!-- 优先级排序 -->
+ <div class="priority-ranking" id="addSort">
+    <div class="priority-ranking-small">
+      <h1>会员权益优先级排序</h1>
+      <div class="ranking-small">
+      	<div class="ranking-smalla">优先级排序
+          <i class="fa fa-caret-down smalla-red" ng-click="moveDown()"></i>
+          <i class="fa fa-caret-up" ng-click="moveUp()"></i>
+          <p><span style="color:#ff2327;">*</span>编号越大，优先级越低</p>
+        </div>
+        <div class="ranking-smallb" >
+      		<table>
+            <thead>
+            <tr>
+              <td></td>
+              <td class="tdNumber">优先级编号</td>
+              <td >权益名称</td>
+            </tr>
+            </thead>
+            <tbody ng-if="strotList && strotList.length>0">
+            <tr ng-repeat="x in strotList">
+              <td style="display: none"> <input ng-model="hehe.id" >{{x.priority}}</td>
+              <td class="iptCheck"><input type="checkbox" class="moveCheckbox sort" value="{{$index}}"></td>
+              <td class="tdNumber"><input type="hidden" ng-model="hehe.a">{{$index+1}}</td>
+             <td><input type="hidden" ng-model="hehe.b">{{x.priName}}</td>
+            </tr>
+            </tbody>
+        	</table>
+        </div>
+        </div>    
+      <div class="bottom-btn">
+        <a class="btn btn-danger btn-rounded bottom-btna" href="#" ng-click="moveSave()">确定</a>
+        <a class="btn btn-danger btn-rounded bottom-btnb" href="#" ng-click="moveCancel()">取消</a>
+      </div>
+    </div>
+  </div>
+  <!-- 优先级排序 -->
+  <!-- 查看任务详情 -->
+  <div class="look-start-box" id="detailLog" >
+    <div class="add-look-start">
+        <h1>操作日志</h1>
+        <div ng-if="logtList.length>0"  ng-repeat="x in logtList">
+          <div class="look-start-a">
+            <p>操作人：</p>
+            <span>{{x.operationPersonnel}}</span>
+          </div>
+          <div class="look-start-a">
+            <p>理财渠道：</p>
+            <span>{{x.investChannel}}</span>
+          </div>
+           <div class="look-start-a">
+            <p>操作会员等级：</p>
+            <span>{{x.levelName}}</span>
+          </div>
+           <div class="look-start-a">
+            <p>操作动作：</p>
+            <span>{{x.executeAction}}</span>
+          </div>
+          
+          <div class="look-start-a" >
+            <p>操作内容：</p>
+            <span >
+            {{x.describeContent}}
+            </span>
+          </div>
+          
+          <div class="look-start-a">
+            <p>-------------------------------------------------------
+            --------------------------------------------------------------</p>
+          </div>
+        </div>
+        <div class="bottom-btn" style="margin-top: 280px;">
+          <a class="btn btn-danger btn-rounded bottom-btna start-btna" href="#" onclick="$('#detailLog').hide()">关闭</a>
+        </div>
+      </div>
+    </div>
+
+<!-- Mainly scripts -->
+<script src="${jsRoot}/jquery-2.1.1.js"></script>
+<script src="${jsRoot}/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="${jsRoot}/angular/angular.min.js"></script>
+<script type="text/javascript" src="${staticRoot}/js/plugins/sweetalert/sweetalert.min.js"></script>
+<script src="${jsRoot}/plugins/laydate/laydate.js"></script>
+<script src="${jsRoot}/bootstrap.min.js"></script>
+<script src="${jsRoot}/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="${jsRoot}/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="${jsRoot}/plugins/jeditable/jquery.jeditable.js"></script>
+
+<!-- Data Tables -->
+<script src="${jsRoot}/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.responsive.js"></script>
+<script src="${jsRoot}/plugins/dataTables/dataTables.tableTools.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="${jsRoot}/inspinia.js"></script>
+<script src="${jsRoot}/plugins/pace/pace.min.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload.js"></script> 
+<script src="${jsRoot}/plugins/fileUpload/jquery.iframe-transport.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.ui.widget.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-process.js"></script>
+<script src="${jsRoot}/plugins/fileUpload/jquery.fileupload-validate.js"></script>
+<script src="${jsRoot}/biz/baseFoot.js?rand=${random}"></script>
+<script src="${jsRoot}/biz/vip/vipLevel.js?rand=${random}"></script>
+<script type="text/javascript" src="${staticRoot}/js/plugins/ajaxfileupload/ajaxfileupload.js"></script>
+
+<!-- 日期控件  -->
+<script type="text/javascript" src="${jsRoot}/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+<!-- 日期控件中文包  -->
+<script type="text/javascript" src="${jsRoot}/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="${jsRoot}/plugins/datapicker/bootstrap-datepicker.js"></script>
+<script src="${jsRoot}/plugins/datapicker/bootstrap-datepicker.zh-CN.min.js"></script>
+<script>
+  var navHight = $('.navbar-static-side').height()
+  $('.navbar-static-side').css('height', navHight - 60)
+  $('.content-box').css('height', navHight - 60)
+
+
+</script>
+</body>
+</html>
