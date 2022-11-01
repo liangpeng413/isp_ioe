@@ -47,5 +47,14 @@ public class IndexController {
         return "/scripts/jiaobook";
     }
 
+    /**
+     * @deprecated 跳转至榜单创建
+     * @return
+     */
+    @RequestMapping(value="/ranking/updateRanking")
+    public String updateRanking(){
+        return "/ranking/updateRanking";
+    }
+
 
 }

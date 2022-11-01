@@ -36,7 +36,7 @@
                                  type="XMLMAPPER"/>
 
             <!--  表对应的名称 -->
-             <table tableName="category_selected" domainObjectName="CategorySelected" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableCountByExample="false"></table>
+             <table tableName="ranking_detail" domainObjectName="RankingDetail" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableCountByExample="false"></table>
         </context>
     <!--mybatis-generator:generate -->
 </generatorConfiguration>
