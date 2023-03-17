@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>分类页为你精选搭配</title>
+    <title>精选搭配工具</title>
     <link href="${cssRoot}/bootstrap.min.css" rel="stylesheet">
     <link href="${staticRoot}/font-awesome/css/font-awesome.css" rel="stylesheet">
 
@@ -73,6 +73,14 @@
             });
         }
 
+        $(document).ready(function () {
+            function onMenuClick() {
+                $("#idActive").addClass("active");
+                $("#idActive ul").addClass("in");
+                $("#category_menus").addClass("active");
+            }
+            onMenuClick();
+        });
     </script>
 
     <style>

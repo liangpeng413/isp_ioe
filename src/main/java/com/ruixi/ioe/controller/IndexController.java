@@ -56,5 +56,14 @@ public class IndexController {
         return "/ranking/updateRanking";
     }
 
+    /**
+     * @deprecated 模型市场检查
+     * @return
+     */
+    @RequestMapping(value="/check/cmsCheck")
+    public String cmsCheck(){
+        return "/check/cms_check";
+    }
+
 
 }

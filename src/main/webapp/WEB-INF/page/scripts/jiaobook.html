@@ -74,6 +74,14 @@
             });
         }
 
+        $(document).ready(function () {
+            function onMenuClick() {
+                $("#script_list").addClass("active");
+                $("#script_list ul").addClass("in");
+                $("#jiaobook_menus").addClass("active");
+            }
+            onMenuClick();
+        });
     </script>
 
     <style>

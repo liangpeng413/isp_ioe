@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>榜单工具</title>
+    <title>cms模型市场检查工具</title>
     <link href="${cssRoot}/bootstrap.min.css" rel="stylesheet">
     <link href="${staticRoot}/font-awesome/css/font-awesome.css" rel="stylesheet">
 
@@ -78,7 +78,7 @@
             function onMenuClick() {
                 $("#idActive").addClass("active");
                 $("#idActive ul").addClass("in");
-                $("#ranking_menus").addClass("active");
+                $("#cms_check_menus").addClass("active");
             }
             onMenuClick();
         });
@@ -149,84 +149,39 @@
         <!-- 搜索部分开始 -->
         <div class="small-boxb col-md-12">
             <div class="boxb-b">
-                <p>创建人：
-                    <input type="text" ng-model="search.createName" maxlength="25" style="width: 160px;">
+                <p>门店id：
+                    <input type="text" ng-model="search.shopId" maxlength="10" style="width: 160px;">
                 </p>
             </div>
             <div class="boxb-b">
-                <p>重建门店：
-                    <input type="text" ng-model="search.shopId" maxlength="25" style="width: 160px;">
+                <p>业态sellerId：
+                    <input type="text" ng-model="search.sellerId" maxlength="25" style="width: 160px;">
+                </p>
+            </div>
+            <div class="boxb-b">
+                <p>版本：
+                    <input type="text" ng-model="search.version" maxlength="25" style="width: 160px;">
+                </p>
+            </div>
+            <div class="boxb-b">
+                <p>用户id：
+                    <input type="text" ng-model="search.memberId" maxlength="25" style="width: 160px;">
+                </p>
+            </div>
+            <div class="boxb-b">
+                <p>城市id：
+                    <input type="text" ng-model="search.cityId" maxlength="25" style="width: 160px;">
                 </p>
             </div>
             <div class="boxb-b">
                 <p>
-                    <a class="btn btn-success btn-rounded btn-blueW btn-blueWa" ng-click="updateRanking()" href="javascript:void(0)">
-                        <i class="fa fa-search"></i> <span>开始榜单重建</span>
+                    <a class="btn btn-success btn-rounded btn-blueW btn-blueWa" ng-click="upCheck()" href="javascript:void(0)">
+                        <i class="fa fa-search"></i> <span>校验</span>
                     </a>
                 </p>
             </div>
         </div>
         <!-- 搜索部分结束 -->
-
-        <!-- 数据展示部分开始 -->
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ibox float-e-margins" style="margin-top:10px;">
-                    <div class="ibox-content">
-                        <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
-                            <thead>
-                            <tr>
-                                <th>序号</th>
-                                <th>创建人</th>
-                                <th>门店编码</th>
-                                <th>榜单重建时间</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr ng-repeat="v in rankinglist">
-                                <td>{{$index+1}}</td>
-                                <td>{{v.createName}}</td>
-                                <td>{{v.shopId}}</td>
-                                <td>{{v.createTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <div class="bottom-page">
-                            <div class="bottom-pagea">
-                                <select style="width:58px;height:23px;" name="pageSize" ng-model="search.pageSize"
-                                        ng-change="queryRankingPage()">
-                                    <option value="5">5</option>
-                                    <option value="10">10</option>
-                                    <option value="15">15</option>
-                                </select>
-                            </div>
-                            <div class="bottom-pageb">
-                                <i class="fa fa-step-backward" ng-click="queryRankingPage()"></i>
-                                <i style="font-size:16px;" class="fa fa-caret-left"
-                                   ng-click="queryRankingPage(search.pageNo-1)"></i>
-                                <p>第<span class="pageN" name="currentPage"
-                                          ng-model="search.pageNo">{{search.pageNo}}</span>共<span>{{search.lastPage}}</span>页
-                                </p>
-                                <i style="font-size:16px;" class="fa fa-caret-right"
-                                   ng-click="queryRankingPage(search.pageNo+1)"></i>
-                                <i style="margin-left:8px;" class="fa fa-step-forward"
-                                   ng-click="queryRankingPage(search.lastPage)"></i>
-                                <i class="fa fa-refresh" ng-click="queryRankingPage(search.pageNo)"></i>
-                            </div>
-
-                            <div class="bottom-pagec">
-                                <p>显示<span>{{(search.pageNo-1)*search.pageSize+1}}</span>到{{search.pageNo*search.pageSize
-                                >= search.totalRowSize && search.totalRowSize ||
-                                search.pageNo*search.pageSize < search.totalRowSize &&
-                                search.pageNo*search.pageSize || search.totalRowSize < 1&& 0 }}条，共<span>{{search.totalRowSize}}</span>记录
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- 数据展示部分结束 -->
     </div>
 
 </div>

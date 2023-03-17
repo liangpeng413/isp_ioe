@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>脚本</title>
+    <title>菜谱工具</title>
     <link href="${cssRoot}/bootstrap.min.css" rel="stylesheet">
     <link href="${staticRoot}/font-awesome/css/font-awesome.css" rel="stylesheet">
 
@@ -74,6 +74,14 @@
             });
         }
 
+        $(document).ready(function () {
+            function onMenuClick() {
+                $("#idActive").addClass("active");
+                $("#idActive ul").addClass("in");
+                $("#cookbook_menus").addClass("active");
+            }
+            onMenuClick();
+        });
     </script>
 
     <style>
@@ -284,7 +292,7 @@
                 </div>
                 <div class="start-a" ng-show="addCookbook.associationType != '3' && addCookbook.associationType != '5'">
                     <p>商品sku:</p>
-                    <input style="width:368px;" type="text" maxlength="20" placeholder="必填,20字符以内" ng-model="addCookbook.skuCode">
+                    <input style="width:368px;" type="text" maxlength="20" placeholder="必填,20字符以内不带业态" ng-model="addCookbook.skuCode">
                 </div>
                 <div class="start-a" ng-show="addCookbook.associationType == '5'">
                     <p>场景id:</p>
@@ -292,7 +300,7 @@
                 </div>
                 <div class="start-a">
                     <p>菜谱id:</p>
-                    <textarea style="resize:none;width: 360px;height: 180px;overflow-y: scroll; margin-top: 15px;" maxlength="50" placeholder="50字符以内" ng-model="addCookbook.cookbookIds"></textarea>
+                    <textarea style="resize:none;width: 360px;height: 180px;overflow-y: scroll; margin-top: 15px;" maxlength="50" placeholder="英文逗号分割50字符以内" ng-model="addCookbook.cookbookIds"></textarea>
                 </div>
                 <div class="start-a">
                     <p>创建人:</p>
