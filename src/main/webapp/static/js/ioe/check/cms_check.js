@@ -34,9 +34,9 @@ App.controller("rootController",['$scope', '$http', '$timeout', function ($scope
             function (data) {
                 if (data.data.code == '000') {
                     if('' == data.data.resp || data.data.resp == null){
-                        swalMsg(self.search.shopId+"门店无异常模型");
+                        swalMsg(self.search.shopId+" 门店无异常模型");
                     }else{
-                        alert(self.search.shopId+"门店异常模型如下"+data.data.resp);
+                        alert(self.search.shopId+" 门店异常模型如下"+data.data.resp);
                     }
                 } else {
                     swalMsg(data.data.message)

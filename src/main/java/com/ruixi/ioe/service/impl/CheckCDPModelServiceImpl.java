@@ -6,15 +6,22 @@ import com.alibaba.fastjson.JSONObject;
 import com.ruixi.ioe.core.ReturnCode;
 import com.ruixi.ioe.dao.CDPModel;
 import com.ruixi.ioe.dao.CDPModelQuery;
+import com.ruixi.ioe.dao.CookbookTools;
+import com.ruixi.ioe.dao.page.PageResult;
 import com.ruixi.ioe.dto.ReqMarketRecommendDTO;
 import com.ruixi.ioe.dto.ResModelDTO;
 import com.ruixi.ioe.service.CheckCDPModelService;
 import com.ruixi.ioe.utils.HttpClientUtils;
+import com.ruixi.ioe.utils.RestTemplateUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
