@@ -6,22 +6,15 @@ import com.alibaba.fastjson.JSONObject;
 import com.ruixi.ioe.core.ReturnCode;
 import com.ruixi.ioe.dao.CDPModel;
 import com.ruixi.ioe.dao.CDPModelQuery;
-import com.ruixi.ioe.dao.CookbookTools;
-import com.ruixi.ioe.dao.page.PageResult;
 import com.ruixi.ioe.dto.ReqMarketRecommendDTO;
 import com.ruixi.ioe.dto.ResModelDTO;
 import com.ruixi.ioe.service.CheckCDPModelService;
 import com.ruixi.ioe.utils.HttpClientUtils;
-import com.ruixi.ioe.utils.RestTemplateUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,7 +30,9 @@ public class CheckCDPModelServiceImpl implements CheckCDPModelService {
     @Override
     public Map<String, Object> toCheck(CDPModelQuery param) throws Exception {
         String url = "http://internet-prod.web-search.gw.yonghui.cn/actuator/dubbo/api";
-//        String url = "http://internet-sit.web-search.sitgw.yonghui.cn/actuator/dubbo/api";
+        if("sit" == param.getIsSit()){
+            url = "http://internet-sit.web-search.sitgw.yonghui.cn/actuator/dubbo/api";
+        }
         HashMap<String, Object> reqMap = new HashMap<>();
         reqMap.put("secret","1234567890");
         reqMap.put("className","com.yonghui.web.search.api.SkuCodeRecommendFacadeService");

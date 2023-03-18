@@ -20,4 +20,6 @@ public class CDPModelQuery {
 
     private Long cityId;
 
+    private String isSit;
+
 }
