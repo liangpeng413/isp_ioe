@@ -65,5 +65,14 @@ public class IndexController {
         return "/check/cms_check";
     }
 
+    /**
+     * @deprecated 品牌关键字
+     * @return
+     */
+    @RequestMapping(value="/mock/categoryKeyWord")
+    public String categoryKeyWord(){
+        return "/mock/categoryKeyWord";
+    }
+
 
 }
